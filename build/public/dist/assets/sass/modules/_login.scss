@@ -1,0 +1,255 @@
+.accessApp {
+	width: 100%;
+	height: 100vh;
+	position: fixed;
+	left: 0;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	overflow: hidden;
+	overflow-y: auto;
+	@include phone {
+		flex-direction: column;
+	}
+	@include tabletP {
+		flex-direction: row;
+	}
+	.chatLogoBlue {
+		position: relative;
+		width: 100px;
+		height: 100px;
+		margin: 0px auto 30px auto;
+		border-radius: 50%;
+		box-sizing: border-box;
+		> span,
+		> img {
+			width: 100px;
+			height: 100px;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			border-radius: 50%;
+		}
+		> span {
+			border-width: 1px;
+			border-style: solid;
+			border-color: var(--white-alpha4) var(--black-light);
+			animation: spin 3.6s infinite linear;
+		}
+		> img {
+			padding: 25px;
+		}
+	}
+	h2 {
+		@include phone {
+			width: 100%;
+		}
+		@include tabletP {
+			width: inherit;
+		}
+	}
+	.accessForm {
+		background: transparent url('/assets/img/backgrounds/add-contact-bg.jpg') center center no-repeat;
+		background-size: cover;
+		color: var(--white);
+		margin: 0 !important;
+		border-radius: 0;
+		border: 0;
+		padding: 0;
+		@include phone {
+			width: 100%;
+			height: auto;
+		}
+		@include tabletP {
+			width: 400px;
+			height: 100vh;
+		}
+		@include tabletL {
+			width: 500px;
+		}
+		.activateScrollbar {
+			@include phone {
+				padding: 20px;
+			}
+			@include tabletP {
+				padding: 50px;
+			}
+		}
+		form {
+			@extend %formValidation;
+			.ng-pristine.ng-invalid:not(form):not(fieldset),
+			.ng-invalid.ng-untouched:not(form):not(fieldset),
+			.ng-invalid.ng-touched:not(form):not(fieldset),
+			.ng-valid.ng-untouched:not(form):not(fieldset),
+			.ng-valid.ng-touched:not(form):not(fieldset) {
+				border-width: 1px 1px 1px 48px !important;
+			}
+			.pretty {
+				label {
+					color: var(--white);
+				}
+			}
+		}
+		.iconFields {
+			position: relative;
+			fieldset {
+				display: none;
+			}
+			fieldset#first {
+				display: block;
+			}
+			input,
+			select {
+				display: block;
+				padding: 0 10px;
+				margin: 0;
+				@include transition(border 0.25s ease-in);
+				&:-webkit-autofill {
+					-webkit-text-fill-color: var(--black);
+					@include box-shadow(0 0 0 30px var(--off-white) inset);
+					@include transition(box-shadow 0ms ease);
+					&:focus {
+						-webkit-text-fill-color: var(--black);
+					}
+				}
+			}
+			.svg,
+			.icon {
+				width: 48px;
+				@extend %floatToYCenter;
+				left: 0;
+				@include transition(all 0.35s ease-in);
+				overflow: hidden;
+				color: var(--white);
+			}
+			.svg {
+				@extend %p14;
+			}
+			&.loading {
+				.spinner {
+					opacity: 1;
+					top: 40%;
+				}
+				fieldset {
+					opacity: 0.5;
+				}
+			}
+		}
+		.error {
+			color: #d64646;
+			margin-bottom: 2px;
+			font-size: 10px;
+		}
+		.toggle-password {
+			position: absolute;
+			right: 10px;
+			top: 0px;
+			bottom: 0;
+			margin: auto;
+			height: 20px;
+			line-height: 20px;
+			color: var(--off-white);
+			cursor: pointer;
+		}
+		.loading {
+			button {
+				position: absolute;
+				left: 0;
+				height: 100vh;
+				padding-top: 50px;
+			}
+		}
+		&.ok button {
+			&[type='submit'] {
+				background-color: var(--green);
+			}
+		}
+		.socialIcons {
+			@extend %width100;
+			margin-bottom: 15px;
+			text-align: center;
+			li {
+				display: inline-block;
+				a {
+					position: relative;
+					padding: 10px;
+					outline: none;
+					border: none;
+					display: block;
+					text-decoration: none;
+					color: var(--white);
+				}
+			}
+		}
+	}
+	.accessContent {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		margin: 0 !important;
+		border-radius: 0;
+		border: 0;
+		@include phone {
+			width: 100%;
+			position: relative;
+			margin: 0;
+		}
+		@include tabletP {
+			height: 100vh;
+			width: calc(100% - 400px);
+			background-color: var(--gray-light);
+		}
+		@include tabletL {
+			width: calc(100% - 500px);
+		}
+		.activateScrollbar {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			@include phone {
+				padding: 20px;
+			}
+			@include tabletP {
+				padding: 50px;
+				height: 100vh;
+			}
+		}
+		.title {
+			h5 {
+				span {
+					font-size: 30px;
+					height: 46px;
+					line-height: 46px;
+					color: var(--black-light);
+					@include phone {
+						text-align: center;
+						width: 100%;
+						display: block;
+					}
+					@include tabletP {
+						text-align: left;
+						width: inherit;
+					}
+				}
+				> span {
+					@include phone {
+						margin-top: 20px;
+						padding-right: 0px;
+						float: none;
+					}
+					@include tabletP {
+						margin-top: 0px;
+						padding-right: 10px;
+						float: left;
+					}
+				}
+			}
+		}
+		footer {
+			margin-top: auto;
+			@extend %width100;
+			color: var(--charcoal);
+		}
+	}
+}

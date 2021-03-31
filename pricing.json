@@ -1,0 +1,759 @@
+//honeycomb Package
+{
+    name : 'farm',
+    "chats": { //Ahsan done
+        "allowed": true,
+        "customizations": {
+            "theme": false,
+            "brand": false
+        },
+        "cannedMessage": {
+            "allowed": true,
+            "quota": 5
+        },
+        "chatEngagement": {
+            "allowed": true,
+            "bot": false,
+            "priorityAgent": false
+        },
+        "permssions": {
+            "allowed": true
+        },
+        "greetingMessage": {
+            "bot": true,
+            "visitors": true
+        },
+        "transcriptForwarding": {
+            "allowed": true
+        },
+        "chatTimeouts": {
+            "allowed": true
+        },
+        "banning": {
+            "allowed": true
+        },
+        "tags": {
+            "allowed": true,
+            "quota": 5
+        }
+    },
+    "visitors": { //Ahsan done
+        "allowed": true,
+        "quota": 50
+    },
+    "contacts": { //Done
+        "allowed": false,
+        "quota": 0 //Remaining
+    },
+    "knowledgebase": { // Donoe
+        "allowed": false,
+        "quota": 0 //In MB's
+    },
+    "tickets": {
+        "widget": true,
+        "incomingEmail": {
+            "allowed": false,
+            "maxIncomingEmails": 0
+        },
+        "rulesets": {
+            "allowed": false,
+            "quota": 5
+        },
+        "groups": {
+            "allowed": true,
+            "automation": false,
+            "quota": 5
+        },
+        "team": {
+            "allowed": true,
+            "quota": 5
+        },
+        "notificationSettings": {
+            "allowed": true
+        },
+        "ticketTemplate": {
+            "allowed": true,
+            "quota": 2
+        },
+        "permissions": {
+            "allowed": true
+        },
+        "formDesigner": {
+            "allowed": true,
+            "quota": 2
+        },
+        "greetingMessage": {
+            "allowed": true
+        },
+        "SLA": {
+            "allowed": true,
+            "quota": 1
+        },
+        "scenarioAutomation": {
+            "allowed": true,
+            "quota": 2
+        },
+        "customFields": {
+            "allowed": false
+        },
+        "satisfactionSurvey": {
+            "allowed": false
+        },
+        "signatures": false
+    },
+    "agents": { //Done
+        "quota": 3,
+        "attachmentLimit": 5, //In MB's
+        "maxConcurrentChats": 10,
+        "chat": false
+    },
+    "dashboard": { //Done
+        "realtime": true
+    },
+    "marketing": { //Done
+        "news": {
+            "quota": 1,
+        },
+        "banner": {
+            "quota": 1,
+        },
+        "promotion": {
+            "quota": 1
+        },
+        "faqs": {
+            "quota": 10
+        }
+    },
+    "tracking": { //Done
+        "allowed": true
+    },
+    "history": {
+        "chats": 90, //In days
+        "tickets": 120 //In days
+    },
+    "integratons": { //Done
+        "allowed": false,
+        "customScript": false
+    },
+    "security": { //Done
+        "rolesPermissions": {
+            "addRoles": false
+        },
+        "authsettings": {
+            "allowed": false
+        }
+    },
+    "analytics": { //Done
+        "allowed": false
+    }
+}
+//hive Package
+{
+    "chats": { //Ahsan done
+        "allowed": true,
+        "customizations": {
+            "theme": true,
+            "brand": false
+        },
+        "cannedMessage": {
+            "allowed": true,
+            "quota": -1
+        },
+        "chatEngagement": {
+            "allowed": true,
+            "bot": true,
+            "priorityAgent": true
+        },
+        "permssions": {
+            "allowed": true
+        },
+        "greetingMessage": {
+            "bot": true,
+            "visitors": true
+        },
+        "transcriptForwarding": {
+            "allowed": true
+        },
+        "chatTimeouts": {
+            "allowed": true
+        },
+        "banning": {
+            "allowed": true
+        },
+        "tags": {
+            "allowed": true,
+            "quota": 100
+        }
+    },
+    "visitors": { //Ahsan done
+        "allowed": true,
+        "quota": 500
+    },
+    "contacts": { //Done
+        "allowed": true,
+        "quota": 500 //Remaining
+    },
+    "knowledgebase": { // Donoe
+        "allowed": false,
+        "quota": 0 //In MB's
+    },
+    "tickets": {
+        "widget": true,
+        "incomingEmail": {
+            "allowed": true,
+            "maxIncomingEmails": 1
+        },
+        "rulesets": {
+            "allowed": true,
+            "quota": 20
+        },
+        "groups": {
+            "allowed": true,
+            "automation": false,
+            "quota": 20
+        },
+        "team": {
+            "allowed": true,
+            "quota": 20
+        },
+        "notificationSettings": {
+            "allowed": true
+        },
+        "ticketTemplate": {
+            "allowed": true,
+            "quota": -1
+        },
+        "permissions": {
+            "allowed": true
+        },
+        "formDesigner": {
+            "allowed": true,
+            "quota": -1
+        },
+        "greetingMessage": {
+            "allowed": true
+        },
+        "SLA": {
+            "allowed": true,
+            "quota": -1
+        },
+        "scenarioAutomation": {
+            "allowed": true,
+            "quota": -1
+        },
+        "customFields": {
+            "allowed": true
+        },
+        "satisfactionSurvey": {
+            "allowed": true
+        },
+        "signatures": true
+    },
+    "agents": { //Done
+        "quota": 30,
+        "attachmentLimit": 5, //In MB's
+        "maxConcurrentChats": 10,
+        "chat": false
+    },
+    "dashboard": { //Done
+        "realtime": true
+    },
+    "marketing": { //Done
+        "news": {
+            "quota": 10,
+        },
+        "banner": {
+            "quota": 10,
+        },
+        "promotion": {
+            "quota": 10
+        },
+        "faqs": {
+            "quota": 100
+        }
+    },
+    "tracking": { //Done
+        "allowed": true
+    },
+    "history": {
+        "chats": 180, //In days
+        "tickets": 180 //In days
+    },
+    "integratons": { //Done
+        "allowed": true,
+        "customScript": true
+    },
+    "security": { //Done
+        "rolesPermissions": {
+            "addRoles": false
+        },
+        "authsettings": {
+            "allowed": false
+        }
+    },
+    "analytics": { //Done
+        "allowed": false
+    }
+}
+//farm Package
+{
+    "chats": { //Ahsan done
+        "allowed": true,
+        "customizations": {
+            "theme": true,
+            "brand": true
+        },
+        "cannedMessage": {
+            "allowed": true,
+            "quota": -1
+        },
+        "chatEngagement": {
+            "allowed": true,
+            "bot": true,
+            "priorityAgent": true
+        },
+        "permssions": {
+            "allowed": true
+        },
+        "greetingMessage": {
+            "bot": true,
+            "visitors": true
+        },
+        "transcriptForwarding": {
+            "allowed": true
+        },
+        "chatTimeouts": {
+            "allowed": true
+        },
+        "banning": {
+            "allowed": true
+        },
+        "tags": {
+            "allowed": true,
+            "quota": -1
+        }
+    },
+    "visitors": { //Ahsan done
+        "allowed": true,
+        "quota": 1000
+    },
+    "contacts": { //Done
+        "allowed": true,
+        "quota": 2000 //Remaining
+    },
+    "knowledgebase": { // Donoe
+        "allowed": false,
+        "quota": 0 //In MB's
+    },
+    "tickets": {
+        "widget": true,
+        "incomingEmail": {
+            "allowed": true,
+            "maxIncomingEmails": 5
+        },
+        "rulesets": {
+            "allowed": true,
+            "quota": -1
+        },
+        "groups": {
+            "allowed": true,
+            "automation": true,
+            "quota": -1
+        },
+        "team": {
+            "allowed": true,
+            "quota": -1
+        },
+        "notificationSettings": {
+            "allowed": true
+        },
+        "ticketTemplate": {
+            "allowed": true,
+            "quota": -1
+        },
+        "permissions": {
+            "allowed": true
+        },
+        "formDesigner": {
+            "allowed": true,
+            "quota": -1
+        },
+        "greetingMessage": {
+            "allowed": true
+        },
+        "SLA": {
+            "allowed": true,
+            "quota": -1
+        },
+        "scenarioAutomation": {
+            "allowed": true,
+            "quota": -1
+        },
+        "customFields": {
+            "allowed": true
+        },
+        "satisfactionSurvey": {
+            "allowed": true
+        },
+        "signatures": true
+    },
+    "agents": { //Done
+        "quota": 80,
+        "attachmentLimit": 5, //In MB's
+        "maxConcurrentChats": 10,
+        "chat": true
+    },
+    "dashboard": { //Done
+        "realtime": true
+    },
+    "marketing": { //Done
+        "news": {
+            "quota": 50,
+        },
+        "banner": {
+            "quota": 50,
+        },
+        "promotion": {
+            "quota": 50
+        },
+        "faqs": {
+            "quota": -1
+        }
+    },
+    "tracking": { //Done
+        "allowed": true
+    },
+    "history": {
+        "chats": 365, //In days
+        "tickets": 365 //In days
+    },
+    "integratons": { //Done
+        "allowed": true,
+        "customScript": true
+    },
+    "security": { //Done
+        "rolesPermissions": {
+            "addRoles": true
+        },
+        "authsettings": {
+            "allowed": true
+        }
+    },
+    "analytics": { //Done
+        "allowed": true
+    }
+}
+//Unlimited Package
+//#region Unlimited Package
+// use companiesDB
+// let basic_package = {
+//     "chats": { //Ahsan done
+//         "allowed": true,
+//         "customizations": {
+//             "theme": true,
+//             "brand": true
+//         },
+//         "cannedMessage": {
+//             "allowed": true,
+//             "quota": -1
+//         },
+//         "chatEngagement": {
+//             "allowed": true,
+//             "bot": true,
+//             "priorityAgent": true
+//         },
+//         "permssions": {
+//             "allowed": true
+//         },
+//         "greetingMessage": {
+//             "bot": true,
+//             "visitors": true
+//         },
+//         "transcriptForwarding": {
+//             "allowed": true
+//         },
+//         "chatTimeouts": {
+//             "allowed": true
+//         },
+//         "banning": {
+//             "allowed": true
+//         },
+//         "tags": {
+//             "allowed": true,
+//             "quota": -1
+//         }
+//     },
+//     "visitors": { //Ahsan done
+//         "allowed": true,
+//         "quota": -1
+//     },
+//     "contacts": { //Done
+//         "allowed": true,
+//         "quota": -1 //Remaining
+//     },
+//     "knowledgebase": { // Donoe
+//         "allowed": false,
+//         "quota": 0 //In MB's
+//     },
+//     "tickets": {
+//         "widget": true,
+//         "incomingEmail": {
+//             "allowed": true,
+//             "maxIncomingEmails": -1
+//         },
+//         "rulesets": {
+//             "allowed": true,
+//             "quota": -1
+//         },
+//         "groups": {
+//             "allowed": true,
+//             "automation": true,
+//             "quota": -1
+//         },
+//         "team": {
+//             "allowed": true,
+//             "quota": -1
+//         },
+//         "notificationSettings": {
+//             "allowed": true
+//         },
+//         "ticketTemplate": {
+//             "allowed": true,
+//             "quota": -1
+//         },
+//         "permissions": {
+//             "allowed": true
+//         },
+//         "formDesigner": {
+//             "allowed": true,
+//             "quota": -1
+//         },
+//         "greetingMessage": {
+//             "allowed": true
+//         },
+//         "SLA": {
+//             "allowed": true,
+//             "quota": -1
+//         },
+//         "scenarioAutomation": {
+//             "allowed": true,
+//             "quota": -1
+//         },
+//         "customFields": {
+//             "allowed": true
+//         },
+//         "satisfactionSurvey": {
+//             "allowed": true
+//         },
+//         "signatures": true
+//     },
+//     "agents": { //Done
+//         "quota": 80,
+//         "attachmentLimit": 5, //In MB's
+//         "maxConcurrentChats": 10,
+//         "chat": true
+//     },
+//     "dashboard": { //Done
+//         "realtime": true
+//     },
+//     "marketing": { //Done
+//         "news": {
+//             "quota": -1,
+//         },
+//         "banner": {
+//             "quota": -1,
+//         },
+//         "promotion": {
+//             "quota": -1
+//         },
+//         "faqs": {
+//             "quota": -1
+//         }
+//     },
+//     "tracking": { //Done
+//         "allowed": true
+//     },
+//     "history": {
+//         "chats": 365, //In days
+//         "tickets": 365 //In days
+//     },
+//     "integratons": { //Done
+//         "allowed" : true,
+//         "customScript": true
+//     },
+//     "security": { //Done
+//         "rolesPermissions": {
+//             "addRoles": true
+//         },
+//         "authsettings": {
+//             "allowed": true
+//         }
+//     },
+//     "analytics": { //Done
+//         "allowed": true
+//     }
+// };
+// db.companies.find({}).forEach(function (x) {
+//     if(x.name != '/formydearest.com'){
+//         x.package = basic_package;
+//         db.companies.save(x);
+//     }
+// });
+//#endregion.
+
+use local
+db.packages.insertOne({
+name: 'farm',
+details: {
+    "chats": { //Ahsan done
+        "allowed": true,
+        "customizations": {
+            "theme": true,
+            "brand": true
+        },
+        "cannedMessage": {
+            "allowed": true,
+            "quota": -1
+        },
+        "chatEngagement": {
+            "allowed": true,
+            "bot": true,
+            "priorityAgent": true
+        },
+        "permssions": {
+            "allowed": true
+        },
+        "greetingMessage": {
+            "bot": true,
+            "visitors": true
+        },
+        "transcriptForwarding": {
+            "allowed": true
+        },
+        "chatTimeouts": {
+            "allowed": true
+        },
+        "banning": {
+            "allowed": true
+        },
+        "tags": {
+            "allowed": true,
+            "quota": -1
+        }
+    },
+    "visitors": { //Ahsan done
+        "allowed": true,
+        "quota": 1000
+    },
+    "contacts": { //Done
+        "allowed": true,
+        "quota": 2000 //Remaining
+    },
+    "knowledgebase": { // Donoe
+        "allowed": false,
+        "quota": 0 //In MB's
+    },
+    "tickets": {
+        "widget": true,
+        "incomingEmail": {
+            "allowed": true,
+            "maxIncomingEmails": 5
+        },
+        "rulesets": {
+            "allowed": true,
+            "quota": -1
+        },
+        "groups": {
+            "allowed": true,
+            "automation": true,
+            "quota": -1
+        },
+        "team": {
+            "allowed": true,
+            "quota": -1
+        },
+        "notificationSettings": {
+            "allowed": true
+        },
+        "ticketTemplate": {
+            "allowed": true,
+            "quota": -1
+        },
+        "permissions": {
+            "allowed": true
+        },
+        "formDesigner": {
+            "allowed": true,
+            "quota": -1
+        },
+        "greetingMessage": {
+            "allowed": true
+        },
+        "SLA": {
+            "allowed": true,
+            "quota": -1
+        },
+        "scenarioAutomation": {
+            "allowed": true,
+            "quota": -1
+        },
+        "customFields": {
+            "allowed": true
+        },
+        "satisfactionSurvey": {
+            "allowed": true
+        },
+        "signatures": true
+    },
+    "agents": { //Done
+        "quota": 80,
+        "attachmentLimit": 5, //In MB's
+        "maxConcurrentChats": 10,
+        "chat": true
+    },
+    "dashboard": { //Done
+        "realtime": true
+    },
+    "marketing": { //Done
+        "news": {
+            "quota": 50,
+        },
+        "banner": {
+            "quota": 50,
+        },
+        "promotion": {
+            "quota": 50
+        },
+        "faqs": {
+            "quota": -1
+        }
+    },
+    "tracking": { //Done
+        "allowed": true
+    },
+    "history": {
+        "chats": 365, //In days
+        "tickets": 365 //In days
+    },
+    "integratons": { //Done
+        "allowed": true,
+        "customScript": true
+    },
+    "security": { //Done
+        "rolesPermissions": {
+            "addRoles": true
+        },
+        "authsettings": {
+            "allowed": true
+        }
+    },
+    "analytics": { //Done
+        "allowed": true
+    }
+},
+pricing : {
+    packagePrice : 16,
+    agentPrice : 16
+}
+
+})

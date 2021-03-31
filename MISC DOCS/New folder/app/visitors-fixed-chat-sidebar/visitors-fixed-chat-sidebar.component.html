@@ -1,0 +1,238 @@
+<div class="chatWindow">
+	<div class="vis-list">
+		<ul class="activateScrollbar clearfix">
+			<li class="notif animated flipInX-delay"
+				[title]="conversation.visitorName + '\n' + conversation.visitorEmail"
+				*ngFor="let conversation of chatList" (click)="_chatService.setCurrentConversation(conversation._id)"
+				[ngClass]="currentConversation && currentConversation._id == conversation._id ? 'active' : ''">
+				<a class="avatar ava-sm">
+					<div class="nameInitials"
+						[ngStyle]="conversation.viewColor	? { 'background-color': conversation.viewColor + '40' }	: ''">
+						{{conversation.visitorName ? (conversation.visitorName | slice: 0:1) : ""}}{{conversation.visitorName ? (conversation.visitorName | split: " ") : ""}}
+					</div>
+				</a>
+				<div class="availability">
+					<svg class="svg w-11 h-11 p-2 svg-default active">
+						<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-gray"
+							*ngIf="conversation.state == 3" />
+						<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-green"
+							*ngIf="conversation.state == 2 && !conversation.inactive" />
+						<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-orange"
+							*ngIf="conversation.state == 2 && conversation.inactive" />
+					</svg>
+				</div>
+				<span class="notif-count no-rad" style="top:10px;left:0;"
+					*ngIf="conversation.messageReadCount && conversation.state == 2">{{ conversation.messageReadCount }}</span>
+			</li>
+		</ul>
+	</div>
+	<div class="box clearfix">
+		<div class="box-header">
+			<div class="vis-tabs"></div>
+			<div class="vis-icon svgOnHover" (click)="toggleChatBar()">
+				<svg class="svg w100 h100 active">
+					<use href="/assets/img/icons/icons-sprite.svg#logo" class="text-white" />
+				</svg>
+			</div>
+		</div>
+		<div class="overlay-drag" *ngIf="isDragged"></div>
+		<div class="box-body clearfix p-0" (dragover)="OnDragOver($event)" (drop)="onDrop($event)"
+			(dragleave)="onDragLeave($event)">
+			<div class="chatBody">
+				<app-messages (scroll)="scrollChanged()" *ngIf="(currentConversation | json) != ({} | json)">
+				</app-messages>
+				<!--
+				<div class="notAvailable" *ngIf="!(currentConversation | json) != ({} | json)">
+					<svg class="svg w-100 h-100 active">
+						<use href="/assets/img/icons/icons-sprite.svg#chats" class="text-gray"/>
+					</svg>
+					<span>No Chat Selected</span>
+				</div>
+				<div *ngIf="(currentConversation.typingState && currentConversation.state == 2)"
+					class="new-chat-loader dot-loader from">
+					<img class="svg w-30 h-20" src="/assets/img/loaders/msg-loader.svg">
+					<em>{{ currentConversation.visitorName}} is typing &nbsp;&nbsp;</em>
+					<br>
+				</div>
+				-->
+				<app-blob-attachment [uploading]="uploading" [fileValid]="fileValid" [fileArray]="attachmentGallery"
+					(onClear)="onClear($event)" [actionForm]="actionForm" *ngIf="ShowAttachmentAreaDnd">
+				</app-blob-attachment>
+			</div>
+			<div class="chatFooter"
+				*ngIf="(currentConversation | json) != ({} | json) && currentConversation.state < 3">
+				<form novalidate>
+					<div class="msgArea">
+						<textarea appAutoGrow [minHeight]="42" [maximumHeight]="200" class="form-control" #chatMessage
+							[restrictAutoSize]="restrictAutoSize" autocomplete="off" name="message" maxlength="10000"
+							placeholder="Type Message ..." [ngModelOptions]="{ standalone: true }" [(ngModel)]="msgBody"
+							(keydown)="keydown($event)" (keyup)="keyup($event)" (keypress)="keyPress($event)"
+							[matAutocomplete]="auto" [disabled]="currentConversation.ended"
+							(input)="TypingEvent($event)"></textarea>
+						<mat-autocomplete class="ccAutoComplete" #auto="matAutocomplete"
+							(optionSelected)="ItemSelected($event)" autoActiveFirstOption>
+							<mat-option *ngFor="let automatedMessage of filteredAutomatedMessages"
+								[value]="!formHashQuery ? automatedMessage.responseText : automatedMessage.formName">
+								{{!formHashQuery ? automatedMessage.hashTag : automatedMessage.formName}}
+							</mat-option>
+						</mat-autocomplete>
+						<div class="tools">
+							<label class="btn btn-transparent svgOnHover tooltip top-left"
+								[ngClass]="!chatPermissions.allowAttachments ? 'disabled' : ''">
+								<svg class="svg w-25 h-25 svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#attachment" />
+								</svg>
+								<span class="tooltip-inner">Attach File</span>
+								<input #fileInput [disabled]="!fileSharePermission" type="file" class="hide"
+									(change)="FileSelected($event)" multiple>
+							</label>
+							<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="seconds"
+								(click)="cancelRecording()">
+								<svg class="svg w-25 h-25 svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+								</svg>
+								<svg class="svg w-25 h-25 colored">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+								</svg>
+								<span class="tooltip-inner">Cancel Recording</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" (click)="startRecording()"
+								*ngIf="!seconds && !loading">
+								<svg class="svg w-25 h-25 svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#mic-on" />
+								</svg>
+								<span class="tooltip-inner">Voice Note</span>
+							</button>
+							<button class="btn text-black-light fs-13" *ngIf="seconds">
+								<span>{{ mins | numberpad: 1 }}:{{ seconds | numberpad: 2 }}</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="loading"
+								style="cursor:default">
+								<img class="svg w-25 h-25" src="/assets/img/loaders/spin-loader-gray.svg">
+								<span class="tooltip-inner">Loading ...</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="seconds"
+								(click)="stopRecording()">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#ok-circle" />
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#ok-circle-colored" />
+								</svg>
+								<span class="tooltip-inner">Submit Recording</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top"
+								(click)="EmojiWrapper = !EmojiWrapper" [ngClass]="EmojiWrapper ? 'active' : ''">
+								<svg class="svg w-25 h-25 svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#smiley" />
+								</svg>
+								<svg class="svg w-25 h-25 colored">
+									<use href="/assets/img/icons/icons-sprite.svg#smiley-colored"
+										class="text-mustard-light" />
+								</svg>
+								<span class="tooltip-inner">Emojis</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top-right"
+								[disabled]="currentConversation.ended || !(msgBody || (attachmentGallery && attachmentGallery.length))"
+								(click)="keyDownFunction($event)">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#send-message" />
+								</svg>
+								<span class="tooltip-inner">Send</span>
+							</button>
+						</div>
+						<!--
+						<mat-autocomplete class="ccAutoComplete" #auto="matAutocomplete" autoActiveFirstOption>
+							<mat-option *ngFor="let automatedMessage of filteredAutomatedMessages"
+								[value]="ItemSelected(automatedMessage.responseText)" (click)="setShift()">
+								{{ automatedMessage.hashTag }}
+							</mat-option>
+						</mat-autocomplete>
+						-->
+						<app-emoji *ngIf="EmojiWrapper" (emojiClicked)="Emoji($event)"></app-emoji>
+						<!--
+						<div [ngClass]="(EmojiWrapper) ? 'showEmoji' : 'hideEmoji'" id="emoji-div-wrapper" *ngIf="EmojiWrapper">
+							<ul id="emoji-menu" #emoji_header>
+								<li id="emoji-icon-Smileys" class="active" (click)="EmojiHeader('Smileys')">
+									<a id="emoji-icon-li-Smileys" class="icon-emoji-size" data-title="Smileys">
+										<i class="icon-emoji-smiley"></i>
+									</a>
+								</li>
+								<li id="emoji-icon-Animals" (click)="EmojiHeader('Animals')">
+									<a id="emoji-icon-li-Animals" class="icon-emoji-size" data-title="Animals & Nature">
+										<i class="icon-emoji-animal"></i>
+									</a>
+								</li>
+								<li id="emoji-icon-Activities" (click)="EmojiHeader('Activities')">
+									<a id="emoji-icon-li-Activities" class="icon-emoji-size" data-title="Activities">
+										<i class="icon-emoji-activity"></i>
+									</a>
+								</li>
+								<li id="emoji-icon-People" (click)="EmojiHeader('People')">
+									<a id="emoji-icon-li-People" class="icon-emoji-size" data-title="People">
+										<i class="icon-emoji-people"></i>
+									</a>
+								</li>
+								<li id="emoji-icon-Objects" (click)="EmojiHeader('Objects')">
+									<a id="emoji-icon-li-Objects" class="icon-emoji-size" data-title="Objects & Symbols">
+										<i class="icon-emoji-object"></i>
+									</a>
+								</li>
+								<li id="emoji-icon-Places" (click)="EmojiHeader('Places')">
+									<a id="emoji-icon-li-Places" class="icon-emoji-size" data-title="Travel & Places">
+										<i class="icon-emoji-place"></i>
+									</a>
+								</li>
+								<li id="emoji-icon-Food" (click)="EmojiHeader('Food')">
+									<a id="emoji-icon-li-Food" class="icon-emoji-size" data-title="Food & Drink">
+										<i class="icon-emoji-food"></i>
+									</a>
+								</li>
+								<li id="emoji-icon-Clothing" (click)="EmojiHeader('Clothing')">
+									<a id="emoji-icon-li-Clothing" class="icon-emoji-size" data-title="Clothing & Accessories">
+										<i class="icon-emoji-cloth"></i>
+									</a>
+								</li>
+								<li id="emoji-icon-Sports" (click)="EmojiHeader('Sports')">
+									<a id="emoji-icon-li-Sports" class="icon-emoji-size" data-title="Sports & Games">
+										<i class="icon-emoji-sport"></i>
+									</a>
+								</li>
+							</ul>
+							<div id="emoji-div" #emoji_content (click)="EmojiContentAppend($event)">
+								<p id="Activities" class="show">
+									<a id="emoji-{{activity}}" [innerHTML]="activity" *ngFor="let activity of Emojis.Activities ; let i = index"></a>
+								</p>
+								<p id="Smileys" class="hide">
+									<a id="emoji-{{smileys}}" [innerHTML]="smileys" *ngFor="let smileys of Emojis.Smileys; let i = index"></a>
+								</p>
+								<p id="Animals" class="hide">
+									<a id="emoji-{{animals}}" [innerHTML]="animals" *ngFor="let animals of Emojis.Animals; let i = index"></a>
+								</p>
+								<p id="People" class="hide">
+									<a id="emoji-{{people}}" [innerHTML]="people" *ngFor="let people of Emojis.People; let i = index"></a>
+								</p>
+								<p id="Objects" class="hide">
+									<a id="emoji-{{objects}}" [innerHTML]="objects" *ngFor="let objects of Emojis.Objects; let i = index"></a>
+								</p>
+								<p id="Places" class="hide">
+									<a id="emoji-{{place}}" [innerHTML]="place" *ngFor="let place of Emojis.Places; let i = index"></a>
+								</p>
+								<p id="Food" class="hide">
+									<a id="emoji-{{food}}" [innerHTML]="food" *ngFor="let food of Emojis.Food; let i = index"></a>
+								</p>
+								<p id="Clothing" class="hide">
+									<a id="emoji-{{clothing}}" [innerHTML]="clothing" *ngFor="let clothing of Emojis.Clothing; let i = index"></a>
+								</p>
+								<p id="Sports" class="hide">
+									<a id="emoji-{{sport}}" [innerHTML]="sport" *ngFor="let sport of Emojis.Sports; let i = index"></a>
+								</p>
+							</div>
+						</div>
+						-->
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

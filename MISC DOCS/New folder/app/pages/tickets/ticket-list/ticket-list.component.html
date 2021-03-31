@@ -1,0 +1,650 @@
+<!-- <app-ticket-types class="nav nav-tabs filters clearfix"></app-ticket-types> -->
+
+<div class="viewChat">
+    <div class="content-list clearfix" [ngClass]="!filterArea ? 'no-filters' : ''">
+        <div class="nav-tabs-custom clearfix">
+            <div class="tab-content clearfix">
+                <div class="toolbox content-toolbox clearfix">
+                    <div class="actions ticket-list-buttons">
+                        <ul class="clearfix">
+                            <li>
+                                <button class="btn btn-xs btn-theme p-l-r-0 b-0 bg-transparent">
+									<div class="pretty p-svg p-fill p-smooth" #selectAllCheckboxes>
+										<input type="checkbox" [(ngModel)]="selectedAll" (change)="selectAll($event);"
+											class="selectAll_input"/>
+										<div class="state svgOnHover">
+											<svg class="svg svg-icon active">
+												<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+											</svg>
+											<label></label>
+										</div>
+									</div>
+									<span *ngIf="checkedList && checkedList.length" class="text-black">Selected
+										({{checkedList.length}})</span>
+								</button>
+                            </li>
+                            <li *ngIf="permissions.canMerge">
+                                <button class="btn btn-xs btn-theme" [disabled]="(this.checkedList.length < 2) ? true : false" title="Merge Tickets" (click)="ShowMergeDialogBox()">
+									<span>Merge</span>
+								</button>
+                            </li>
+                            <li *ngIf="permissions.canAddNote">
+                                <button class="btn btn-xs btn-theme" [disabled]="!(this.checkedList.length) ? true : false" title="Quick Note" (click)="ShowQuickNoteDialogBox()">
+									<span>Quick Note</span>
+								</button>
+                            </li>
+                            <li *ngIf="permissions.canChangeState">
+                                <button class="btn btn-xs btn-theme" [disabled]="!(checkedList.length) ? true : false" [popper]="statePopper" [popperDisabled]="!permissions.canChangeState" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false"
+                                    [popperPlacement]="'bottom'" (popperOnUpdate)="popperStateUpdate($event)" (popperOnHidden)="popperOnHidden($event)" (popperOnShown)="popperStateShow($event)">
+									Move To
+								</button>
+                            </li>
+                            <li>
+                                <button class="btn btn-xs btn-theme" [disabled]="!(checkedList.length) ? true : false" [popper]="viewStatePopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'">
+									Mark as
+								</button>
+                            </li>
+
+                            <li [attr.disabled]="!(checkedList.length) ? true : null">
+                                <button class="btn btn-xs btn-theme" [popper]="watcherAddPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperPlacement]="'bottom'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="true">
+									<span>Assign Watchers</span>
+								</button>
+                            </li>
+
+                            <!-- <li [attr.disabled]="!(this.checkedList.length) ? true : null">
+								<button class="btn btn-xs btn-theme" [popper]="tagAddPopper"
+									[popperShowOnStart]="false" [popperTrigger]="'click'" [popperPlacement]="'bottom'"
+									[popperHideOnClickOutside]="true" [popperHideOnScroll]="true">
+									<span>Assign Tag</span>
+								</button>
+							</li> -->
+
+                            <li *ngIf="permissions.canExport">
+                                <button class="btn btn-xs btn-theme" title="Export ticket" (click)="ShowExportTicketDialog()">
+									<span>Export</span>
+								</button>
+
+                            </li>
+                            <li *ngIf="permissions.canExport">
+                                <button class="btn btn-xs btn-theme" title="Export SLA Report" (click)="ShowSLAExportTicketDialog()">
+									<span>Export SLA Report</span>
+								</button>
+                            </li>
+                            <!-- <li>
+								<button class="btn btn-xs btn-theme" title="send agent"
+									(click)="SendABC()">
+									<span>SendAgent</span>
+								</button>
+							</li>
+							<li>
+								<button class="btn btn-xs btn-theme"
+									(click)="Response()">
+									<span>Response Check</span>
+								</button>
+							</li> -->
+                            <!--
+							<li>
+								<button class="btn btn-xs btn-theme" title="Export SLA Report"
+									(click)="SendCC()">
+									<span>SendCC</span>
+								</button>
+							</li> -->
+                            <!-- 	<li>
+								<button class="btn btn-xs btn-theme" title="Export SLA Report"
+									(click)="SendGHI()">
+									<span>SendAllAgent</span>
+								</button>
+							</li> -->
+                            <li>
+                                <button class="btn btn-xs btn-theme" [disabled]="!(checkedList.length) ? true : false" [popper]="scenarioPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'"
+                                    (popperOnUpdate)="popperStateUpdate($event)" (popperOnHidden)="popperOnHidden($event)" (popperOnShown)="popperStateShow($event)">
+									Execute Scenario
+								</button>
+                            </li>
+                            <li *ngIf="permissions.canAssignAgent" [attr.disabled]="!(this.checkedList.length) ? true : null">
+                                <app-custom-select class="input-xs" [items]="all_agents" [selectLabel]="'Assign agent'" [bindLabel]="'email'" [bindValue]="'email'" [(ngModel)]="selectedAgent" [multiple]="false" [lazyLoading]="true" (onLoadMore)="loadMoreAgents($event)" [clearOnSubmit]="true"
+                                    (onSearch)="onSearch($event)" (onSelect)="UpdateAgent(selectedAgent)">
+                                </app-custom-select>
+                            </li>
+                            <!-- <li>
+								<button class="btn btn-xs btn-theme"
+									(click)="TestTicket()">
+									<span>Create Test Ticket</span>
+								</button>
+							</li> -->
+                        </ul>
+                    </div>
+                    <div class="actions ticket-list-pagination">
+                        <ul class="clearfix">
+                            <li>
+                                <a class="p-l-r-10 disabled" *ngIf="(ticketsList).length">
+                                    <span class="fw-6">{{ (1 + (paginationLimit * pageIndex)) }} -
+										{{( ((pageIndex + 1) * paginationLimit  > ticketCount) ? ticketCount : (pageIndex + 1) * paginationLimit)}}
+										of
+										{{ ticketCount }}</span>
+                                </a>
+                                <a class="p-l-r-10 disabled" *ngIf="!(ticketsList).length && !loadingTickets">
+                                    <span class="fw-6">{{0 }} - {{0}} of 0 </span>
+                                </a>
+                            </li>
+                            <li>
+                                <button class="btn btn-xs btn-theme svgOnHover tooltip bottom" (click)="getPrevious()" [disabled]="(ticketsList).length < 50 || !(ticketsList).length || !pageIndex">
+									<svg class="svg svg-white active">
+										<use href="/assets/img/icons/icons-sprite.svg#arrow-prev"/>
+									</svg>
+									<span class="tooltip-inner">PREV</span>
+								</button>
+                            </li>
+                            <li>
+                                <button class="btn btn-xs btn-theme svgOnHover tooltip bottom" (click)="getNext()" [disabled]="(ticketsList).length < 50 || !(ticketsList).length || (pageIndex + 1) > (ticketCount / paginationLimit) || loadingMoreTickets">
+									<svg class="svg svg-white active">
+										<use href="/assets/img/icons/icons-sprite.svg#arrow-next"/>
+									</svg>
+									<span class="tooltip-inner">NEXT</span>
+								</button>
+                            </li>
+                            <li>
+                                <button class="btn btn-xs btn-theme svgOnHover tooltip bottom" (click)="toggleFilters()" [ngClass]="filterArea ? 'active bg-blue' : ''">
+									<svg class="svg svg-white active">
+										<use href="/assets/img/icons/icons-sprite.svg#filter"/>
+									</svg>
+									<span class="tooltip-inner">Toggle Filter</span>
+								</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Pre Installation Data List Starts Here -->
+                <div class="tab-pane active preInstallation" *ngIf="!verified">
+                    <div class="list-items clearfix style2">
+                        <ul class="activateScrollbar clearfix p-0">
+                            <li class="item clearfix notif" *ngFor="let item of [1,2,3,4,5,6,7,8]">
+                                <div class="clearfix">
+                                    <div>
+                                        <div class="avatar ava-lg">&nbsp;</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Pre Installation Data List Ends Here -->
+
+                <!-- Ticket List -->
+                <div class="tab-pane active clearfix" *ngIf="verified">
+                    <div class="list-items clearfix style2" #checkboxes>
+                        <!-- <p *ngIf="newTickets.length" (click)="refreshList()" class="text-center">
+							<span *ngIf="newTickets.length == 1">1 new ticket</span>
+							<span *ngIf="newTickets.length > 1">{{newTickets.length}} new tickets</span>
+						</p> -->
+                        <ul class="activateScrollbar clearfix p-0" *ngIf="!loadingTickets && !loadingMoreTickets && (ticketsList && ticketsList.length) && (ticketsList | slice:((pageIndex) * paginationLimit) : (((pageIndex + 1) * paginationLimit)))">
+                            <li class="item clearfix notif" *ngFor="let ticket of ticketsList | slice:((pageIndex) * paginationLimit) : (((pageIndex + 1) * paginationLimit)); let i=index">
+                                <div class="clearfix animated flipInX-delay">
+                                    <div class="info" [ngStyle]="{'border-left-color': ticket.viewColor}" [ngClass]="(ticket.viewState && ticket.viewState != 'READ') ? 'unread' : ''">
+                                        <div class="selection" *ngIf="i < 50">
+                                            <div class="pretty p-svg p-fill p-smooth">
+                                                <input type="checkbox" (change)="onCheckboxChange(ticket,$event);" class="option_input" />
+                                                <div class="state svgOnHover">
+                                                    <svg class="svg active">
+														<use href="/assets/img/icons/icons-sprite.svg#ok"
+															class="text-white"/>
+													</svg>
+                                                    <label></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div [ngClass]="(ticket.state == 'CLOSED') ? 'op-0-5' : ''">
+                                            <a class="avatar ava-lg m-0" [routerLink]="'/tickets/ticket-view/' + (ticket._id)">
+                                                <span class="nameInitials" [ngStyle]="{'background-color': ticket.viewColor + '70'}">{{ticket.visitor.name | slice:0:2 | uppercase}}</span>
+                                            </a>
+                                        </div>
+                                        <div class="w-230" [ngClass]="(ticket.state == 'CLOSED') ? 'op-0-5' : ''">
+                                            <div class="name" (click)="setSelectedThread(ticket._id)">
+                                                <h4 class="ellipsis" (click)="StopPropagation($event)">
+                                                    {{ticket.visitor.name}}
+                                                </h4>
+                                            </div>
+                                            <div class="subject" title="{{ticket.subject}} {{ticket.CustomerInfo && ticket.CustomerInfo.customerId ? ' - CM ID: ' + ticket.CustomerInfo.customerId : ''}} {{ seeCMID(ticket) ?  ' - (Possible DUAL Id)' : ''}}">
+                                                <span class="ellipsis"><span>Subject: </span>{{ticket.subject}} {{ticket.CustomerInfo && ticket.CustomerInfo.customerId ? ' - CM ID: ' + ticket.CustomerInfo.customerId : ''}} {{ seeCMID(ticket) ? ' - (Possible
+                                                DUAL Id)' : ''}}</span>
+                                            </div>
+                                            <div class="email" title="{{ticket.visitor.email}}">
+                                                <span class="ellipsis"><span>From:
+													</span>{{ticket.visitor.email}}</span>
+                                            </div>
+                                            <!-- <div class="id" title="{{ ticket._id }}">
+												<span class="ellipsis text-blue">ID: {{ ticket._id }}</span>
+											</div> -->
+                                            <div class="id" title="{{ ticket.clientID }}">
+                                                <span class="ellipsis text-blue">ID: {{ticket.clientID}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-150">
+                                            <div class="status" [popper]="statePopper" [popperDisabled]="!permissions.canChangeState" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'" (popperOnShown)="popperStateShow($event,ticket)"
+                                                (popperOnHidden)="popperOnHidden($event)" (popperOnUpdate)="popperStateUpdate($event)">
+                                                <span *ngIf="!ticket.state">Set State</span>
+                                                <span *ngIf="ticket.state && ticket.state == 'OPEN'" class="text-red"><b>{{ticket.state | uppercase}}</b></span>
+                                                <span *ngIf="ticket.state && ticket.state == 'CLOSED'" class="text-black"><b>{{ticket.state | uppercase}}</b></span>
+                                                <span *ngIf="ticket.state && ticket.state == 'PENDING'" class="text-orange"><b>{{ticket.state | uppercase}}</b></span>
+                                                <span *ngIf="ticket.state && ticket.state == 'SOLVED'" class="text-green"><b>{{ticket.state | uppercase}}</b></span>
+                                                <button class="btn btn-transparent svgOnHover">
+													<svg class="svg svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#more"/>
+													</svg>
+												</button>
+                                            </div>
+
+                                            <div class="priority" [popper]="priorityPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperDisabled]="!permissions.canSetPriority" [popperHideOnScroll]="false" [popperPlacement]="'top'" (popperOnShown)="onShownPriority($event,ticket)"
+                                                (popperOnHidden)="popperOnHidden($event)" (popperOnUpdate)="popperOnUpdatePriority($event)">
+                                                <svg class="svg w-10 h-10 svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#square-colored"
+														[ngClass]="(ticket.priority == 'LOW') ? 'text-green' : (ticket.priority == 'HIGH') ? 'text-orange' : (ticket.priority == 'URGENT') ? 'text-red' : (ticket.priority == 'MEDIUM') ? 'text-yellow' : 'text-gray-dark'">
+													</use>
+												</svg>
+                                                <span *ngIf="!ticket.priority">Set Priority</span>
+                                                <span *ngIf="ticket.priority">{{ticket.priority | uppercase}}</span>
+                                                <button class="btn btn-transparent svgOnHover">
+													<svg class="svg svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#more"/>
+													</svg>
+												</button>
+                                            </div>
+
+                                            <!-- <div class="assigned-to" (click)="(ticket.state == 'CLOSED' || permissions.canAssignGroup) ? '' :  ToggleGroup(ticket)" -->
+                                            <div class="assigned-to" [popper]="groupPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperDisabled]="(ticket.state == 'CLOSED' || !permissions.canAssignGroup || permissions.canView == 'team')" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false"
+                                                [popperPlacement]="'bottom'" (popperOnShown)="popperGroupShow($event,ticket)" (popperOnHidden)="popperOnHidden($event)" (popperOnUpdate)="popperGroupUpdate($event)" *ngIf="permissions.canView != 'team'">
+                                                <span class="ellipsis" *ngIf="ticket.group">{{ticket.group}}</span>
+                                                <span class="ellipsis" *ngIf="!ticket.group">None</span>
+                                                <button class="btn btn-transparent svgOnHover">
+													<svg class="svg svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#more"/>
+													</svg>
+												</button>
+                                            </div>
+
+                                            <div class="assigned-to" [popper]="agentPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperDisabled]="(ticket.state == 'CLOSED' || !permissions.canAssignAgent)" [popperPlacement]="'bottom'"
+                                                (popperOnShown)="popperAgentShow($event,ticket)" (popperOnHidden)="popperOnHidden($event)" (popperOnUpdate)="popperAgentUpdate($event)">
+                                                <span class="ellipsis" *ngIf="ticket.assigned_to">{{ticket.assigned_to}}</span>
+                                                <span class="text-gray-dark" *ngIf="!ticket.assigned_to" title="Unassigned">Unassigned</span>
+                                                <button class="btn btn-transparent svgOnHover">
+													<svg class="svg svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#more"/>
+													</svg>
+												</button>
+                                            </div>
+                                        </div>
+                                        <div class="w-130">
+                                            <div class="select-tools">
+                                                <!-- ({{ticket.mergedTicketIds}}) -->
+                                                <div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="!ticket.merged">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#not-merged" class="text-gray"/>
+														</svg>
+                                                        <span class="tooltip-inner">Not Merged</span>
+                                                    </div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="ticket.merged">
+                                                        <svg class="svg active">
+															<use [attr.href]="(ticket.mergedTicketIds && ticket.mergedTicketIds.length) ? '/assets/img/icons/icons-sprite.svg#primary-merged-colored' : '/assets/img/icons/icons-sprite.svg#merged-colored'"/>
+														</svg>
+                                                        <span class="tooltip-inner">{{ (ticket.mergedTicketIds && ticket.mergedTicketIds.length) ? 'Merged Ticket (PRIMARY)' : 'Merged Ticket'}}</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="!ticket.ticketNotes || !ticket.ticketNotes.length">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#note" class="text-gray"/>
+														</svg>
+                                                        <span class="tooltip-inner">No Note Available</span>
+                                                    </div>
+                                                    <div class="svgOnHover tooltip top" [popper]="notePopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'" (popperOnShown)="popperNoteShow($event,ticket)"
+                                                        (popperOnHidden)="popperOnHidden($event)" *ngIf="ticket.ticketNotes && ticket.ticketNotes.length">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#note-colored"/>
+														</svg>
+                                                        <span class="tooltip-inner">Note Added (Click To see list)</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="!ticket.source">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#agents" class="text-gray"/>
+														</svg>
+                                                        <span class="tooltip-inner">N/A</span>
+                                                    </div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="ticket.source">
+                                                        <svg class="svg active">
+															<use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + displaySource(ticket.source).img"/>
+														</svg>
+                                                        <span class="tooltip-inner">Created By: {{displaySource(ticket.source).name}}</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="!ticket.assigned_to">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#assigned-agent" class="text-gray"/>
+														</svg>
+                                                        <span class="tooltip-inner">No Assigned Agents</span>
+                                                    </div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="ticket.assigned_to">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#assigned-agent-colored"/>
+														</svg>
+                                                        <span class="tooltip-inner">Assigned to {{ticket.assigned_to}}</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="!ticket.snoozes">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#snooze" class="text-gray"/>
+														</svg>
+                                                        <span class="tooltip-inner">Not Snoozed</span>
+                                                    </div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="ticket.snoozes">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#snooze-colored"/>
+														</svg>
+                                                        <span class="tooltip-inner">Snoozed for {{ticket.snoozes.snooze_time | date :'mediumDate'}}
+															{{ ticket.snoozes.snooze_time | date :'shortTime' }}</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="!ticket.watchers || !ticket.watchers.length">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#watchers" class="text-gray"/>
+														</svg>
+                                                        <span class="tooltip-inner">No Watchers</span>
+                                                    </div>
+                                                    <div class="svgOnHover tooltip top" [popper]="watcherPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'" (popperOnShown)="popperWatcherShow($event,ticket)"
+                                                        (popperOnHidden)="popperOnHidden($event)" *ngIf="ticket.watchers && ticket.watchers.length">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#watchers"
+																class="text-blue"/>
+														</svg>
+                                                        <span class="tooltip-inner">Watchers Added (Click to see
+															list)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="snoozed">
+                                                    <div class="svgOnHover tooltip top" *ngIf="allActivatedPolicies && !allActivatedPolicies.length && !ticket.InternalSlaPolicy">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#calendar" class="text-gray"/>
+														</svg>
+                                                        <div class="tooltip-inner">No Policies</div>
+                                                    </div>
+                                                    <div class="svgOnHover tooltip top" *ngIf="allActivatedPolicies && allActivatedPolicies.length && ticket.InternalSlaPolicy && (ticket.InternalSlaPolicy.reminder && ticket.InternalSlaPolicy.escalation)">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#calendar" class="text-blue"/>
+														</svg>
+                                                        <div class="tooltip-inner">Policies applied successfully</div>
+                                                    </div>
+                                                    <div class="svgOnHover tooltip top" [popper]="policiesPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'" (popperOnShown)="popperPoliciesShow($event,ticket)"
+                                                        (popperOnHidden)="popperOnHidden($event)" *ngIf="allActivatedPolicies && allActivatedPolicies.length && ticket.InternalSlaPolicy && (!ticket.InternalSlaPolicy.reminder || !ticket.InternalSlaPolicy.escalation)">
+                                                        <svg class="svg active">
+															<use href="/assets/img/icons/icons-sprite.svg#calendar" class="text-blue"/>
+														</svg>
+                                                        <div class="tooltip-inner">Policies (Click To see list)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- *ngIf="allActivatedPolicies && allActivatedPolicies.length && (ticket.InternalSlaPolicy && (!ticket.InternalSlaPolicy.reminder || !ticket.InternalSlaPolicy.escalation))"> -->
+
+                                                <!-- <div class="created-date">
+													<div class="svgOnHover tooltip top-right">
+														<svg class="svg svg-blue active">
+															<use href="/assets/img/icons/icons-sprite.svg#calendar"/>
+														</svg>
+														<span class="tooltip-inner">Created: {{ ticket.datetime | date :'mediumDate'}} {{ ticket.datetime | date :'shortTime' }}</span>
+													</div>
+												</div> -->
+                                            </div>
+                                            <!-- <div class="custom-actions"></div> -->
+                                        </div>
+                                        <div class="m-r-0 w-250">
+                                            <div class="tags" *ngIf="ticket.tags && ticket.tags.length">
+                                                <div class="badge badge-sm" *ngFor="let tags of ticket.tags" [title]="tags">
+                                                    <span [title]="tags">{{tags}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="tags" *ngIf="!ticket.tags || ticket.tags && !ticket.tags.length">
+                                                <div class="badge badge-sm bg-gray">
+                                                    <span>No Tag</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="link">
+                                        <a class="tooltip top-right svgOnHover" [routerLink]="'/tickets/ticket-view/' + (ticket._id)">
+                                            <svg class="svg svg-blue active">
+												<use href="/assets/img/icons/icons-sprite.svg#internal-link"/>
+											</svg>
+                                            <span class="tooltip-inner">View Ticket</span>
+                                        </a>
+                                        <!--
+										<div class="w-250">
+											<div class="created-by fs-10">
+												<b class="text-blue">Created Date:</b>
+												<span class="text-blue">{{ ticket.datetime | date :'mediumDate'}} {{ ticket.datetime | date :'shortTime' }}</span>
+											</div>
+											<div class="updated-date fs-10" title="{{ticket.lasttouchedTime | agoPipe}}">
+												<b class="text-blue">Updated Date:</b>
+												<span class="text-blue">{{ticket.lasttouchedTime | date :'mediumDate'}} {{ ticket.lasttouchedTime | date :'shortTime' }}</span>
+											</div>
+										</div>
+										<div class="notif-count right bg-transparent p-0">
+											<span
+												[ngClass]="(!ticket.viewState || ticket.viewState == 'READ') ? 'text-gray-dark' : 'text-black'"
+												title="Status">{{(!ticket.viewState || ticket.viewState == 'READ') ? 'read' : 'unread'}}</span>
+										</div>
+										-->
+                                    </div>
+                                    <div class="notif-count right bg-transparent p-0">
+                                        <span title="Created Date" class="svgOnHover">
+											<svg class="svg w-15 h-15 active">
+												<use href="/assets/img/icons/icons-sprite.svg#created-date"
+													class="text-red"/>
+											</svg>
+											<span class="text-red">{{ticket.datetime | date :'mediumDate'}}
+												{{ ticket.datetime | date :'shortTime' }}</span>
+                                        </span>
+                                        <span title="Updated Date" class="svgOnHover">
+											<svg class="svg w-15 h-15 active">
+												<use href="/assets/img/icons/icons-sprite.svg#updated-date" class="text-blue"/>
+											</svg>
+											<span class="text-blue">{{ticket.lasttouchedTime | date :'mediumDate'}}
+												{{ ticket.lasttouchedTime | date :'shortTime' }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="notAvailable" *ngIf="!(ticketsList && ticketsList.length) && !loadingTickets && !loadingMoreTickets">
+                            <svg class="svg w-100 h-100 active">
+								<use href="/assets/img/icons/icons-sprite.svg#tickets" class="text-gray"/>
+							</svg>
+                            <span>No Tickets Available</span>
+                        </div>
+                        <div class="notAvailable floatToCenter" *ngIf="loadingTickets || loadingMoreTickets">
+                            <app-preloader type="spin-loader-page"></app-preloader>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-ticket-filters *ngIf="filterArea" class="viewHistory card p-0"></app-ticket-filters>
+</div>
+
+
+<popper-content #priorityPopper>
+    <ul class="activateScrollbar clearfix">
+        <li *ngFor="let priority of filteredOptions" (click)="UpdatePriority(priority)">
+            <a>
+                <span>{{priority}}</span>
+            </a>
+        </li>
+    </ul>
+</popper-content>
+
+<popper-content #statePopper id="statePopper">
+    <ul class="activateScrollbar clearfix">
+        <li *ngFor="let state of filteredOptions" (click)="UpdateState(state)">
+            <a>
+                <span>{{state}}</span>
+            </a>
+        </li>
+    </ul>
+</popper-content>
+
+<popper-content #viewStatePopper>
+    <ul class="activateScrollbar clearfix">
+        <li *ngFor="let viewState of MarkAsOptions" (click)="UpdateViewState(viewState)">
+            <a><span>{{viewState}}</span></a>
+        </li>
+    </ul>
+</popper-content>
+
+<popper-content #groupPopper>
+    <ul class="activateScrollbar clearfix">
+        <li *ngFor="let group of filteredOptions" (click)="UpdateGroup(group,true)">
+            <a>
+                <span>{{group}}</span>
+            </a>
+        </li>
+    </ul>
+</popper-content>
+
+<popper-content #scenarioPopper>
+    <ul class="activateScrollbar clearfix">
+        <li *ngIf="!scenarios || scenarios && !scenarios.length">
+            <span>No scenarios</span>
+            <a class="link" (click)="gotoScenario()"><b>Create new scenario</b></a>
+        </li>
+        <li *ngFor="let scenario of scenarios" (click)="ExecuteScenario(scenario)">
+            <a>
+                <span><b>{{scenario.scenarioTitle}}</b><br>{{scenario.scenarioDesc}}</span> </a>
+        </li>
+    </ul>
+</popper-content>
+
+<popper-content #agentPopper>
+    <ul class="activateScrollbar clearfix">
+        <li *ngFor="let agent of filteredOptions" (click)="UpdateAgent(agent,true)">
+            <a>
+                <span>{{(option == currAgent.email) ? "Assign to me" : agent}}</span>
+            </a>
+        </li>
+    </ul>
+</popper-content>
+
+<popper-content #notePopper>
+    <ul class="activateScrollbar clearfix">
+        <li *ngFor="let note of filteredNotes; let index = index">
+            <a>
+                <span>{{(index + 1) + '. '}}</span><span [innerHTML]="note.ticketNote"></span>
+            </a>
+        </li>
+    </ul>
+</popper-content>
+
+<popper-content #watcherPopper>
+    <ul class="list-items clearfix style4 activateScrollbar clearfix">
+        <li class="item clerfix notif" *ngFor="let watcher of filteredWatchers; let index = index">
+            <div>
+                <div class="info">
+                    <span title="{{watcher}}">{{watcher}}</span>
+                </div>
+                <div class="actions" *ngIf="watcher == currAgent.email">
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip left" (click)="deleteWatcher(watcher)">
+						<svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#minus-circle"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#minus-circle-colored"/>
+						</svg>
+						<span class="tooltip-inner">Unwatch Agent</span>
+					</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</popper-content>
+
+<!-- <popper-content #tagAddPopper>
+	<div class="clearfix notif watcher-popper">
+		<h5>
+			<span>Ticket Tags</span>
+		</h5>
+		<div class="input-group-sm">
+			<input type="text" class="form-control w100" placeholder="#tag" [(ngModel)]="bulkTags" maxlength="33" [pattern]="tagPattern">
+		<div class="input-group-btn">
+			<button type="submit" class="btn btn-theme min-w-80"
+				(click)="addTags(bulkTags)"
+				[disabled]="!bulkTags">
+				<span>Add</span>
+			</button>
+		</div>
+		</div>
+		<button class="btn btn-transparent svgOnHover tooltip left m-0" (click)="ClosePopper()"
+			style="position:absolute;right:0;top:0;">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+			</svg>
+			<span class="tooltip-inner">Close</span>
+		</button>
+	</div>
+</popper-content> -->
+
+<popper-content #watcherAddPopper>
+    <div class="clearfix notif watcher-popper">
+        <h5>
+            <span>Ticket Watchers</span>
+            <span *ngIf="selectedThread && selectedThread.watchers && selectedThread.watchers.length">({{selectedThread.watchers.length}})</span>
+        </h5>
+        <div class="input-group-sm">
+            <app-custom-select class="input-xs" style="height: max-content;" [items]="watch_agents" [selectLabel]="'Select Watchers'" (onSelect)="AddWatchers($event)" [(ngModel)]="selectedWatcher" [selectedItems]="selectedWatcher" [bindLabel]="'email'" [bindValue]="'email'"
+                [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreWatchers($event)" (onSearch)="onSearchWatchers($event)">
+            </app-custom-select>
+        </div>
+        <button class="btn btn-transparent svgOnHover tooltip left m-0" (click)="ClosePopper()" style="position:absolute;right:0;top:0;">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+			</svg>
+			<span class="tooltip-inner">Close</span>
+		</button>
+    </div>
+</popper-content>
+
+<popper-content #policiesPopper>
+    <div class="toggleList activityLog" *ngIf="allActivatedPolicies">
+        <div class="clearfix" *ngFor="let activity of allActivatedPolicies">
+            <div class="logGroup">
+                <div class="dateLog">
+                    <span>{{ activity.policyName }}</span>
+                </div>
+                <ul class="list-items clearfix style4">
+                    <li class="item clearfix notif">
+                        <div>
+                            <div class="info">
+                                <p>Perform these actions:</p>
+                                <div *ngFor="let operate of activity.operations;let index=index">
+                                    <span>{{index+1 }} Set {{operate.operationName}} :- </span>
+                                    <span>{{operate.operationValue}}</span>
+                                    <br>
+                                </div>
+                                <br>
+                                <span>within: {{ShowTime()}}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</popper-content>

@@ -1,0 +1,38 @@
+<div mat-dialog-title>
+	<h3>Forward message as Ticket</h3>
+</div>
+
+<div mat-dialog-content>
+	<div class="input-block">
+		<label>Email</label>
+		<input type="text" class="form-control input-sm" placeholder="email"
+			[ngStyle]="(invalidEmail) ? {'border-color': 'red'} : ''" [(ngModel)]="email">
+		<p class="text-red clearfix" *ngIf="invalidEmail">Invalid Email</p>
+	</div>
+	<div class="input-block">
+		<!--
+			<textarea [ngxSummernote]="config" name="message" [(ngModel)]="msgBody" rows="4" autocomplete="off"
+			class="form-control" (keyup)="keyupX($event)" (keydown)="keydownX($event)">
+		</textarea> -->
+		<label>Your Message</label>
+		<!-- for testing -->
+		<textarea name="message" [(ngModel)]="selectedMmessage" rows="4" autocomplete="off"
+			class="form-control">
+		</textarea>
+		<!-- <textarea class="form-control input-sm" [ngxSummernote]="config" name="Message" [(ngModel)]="selectedMmessage" rows="4" autocomplete="off"
+			(keyup)="keyupX($event)" (keydown)="keydownX($event)">
+		</textarea> -->
+	</div>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+	<mat-dialog-actions>
+		<button type="button" [disabled]="!email" class="btn btn-xs bg-blue" (click)="Forward()"
+			[ngClass]="(loading) ? 'btnSpinner' : ''">
+			<span>Send</span>
+		</button>
+		<button type="button" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Cancel</span>
+		</button>
+	</mat-dialog-actions>
+</div>

@@ -1,0 +1,194 @@
+
+<div class="box clearfix animated fadeIn delay-400" id="stateMachineComponent">
+    <div class="box-body clearfix p-0">
+        <div class="row clearfix">
+            <div class="col-md-4 col-sm-5 col-xs-12"
+                *ngIf="!fetching">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Machine List</h5>
+                    </div>
+                    <div>
+						<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="ShowForm()"
+							[ngClass]="(!showForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+                </div>
+                <div class="popover-form" *ngIf="showForm">
+                    <form class="clearfix" [formGroup]="addMachineForm">
+                        <div class="input-block">
+                            <input type="text" class="form-control input-sm" placeholder="Enter Machine Name" [formControl]="addMachineForm.controls['machineName']">
+                            <p>State Machine Name should be less than 50 characters.</p>
+                            <br>
+                            <p class="text-red m-b-5" [hidden]="!addMachineForm.get('machineName').hasError('matched')"><strong>Machine Name has been used already.</strong></p>
+                        </div>
+                        <button type="submit" class="btn btn-sm bg-blue"
+                            [ngClass]="(loading) ? 'btnSpinner' : ''"
+                            [disabled]="addMachineForm.invalid"
+                            (click)="AddMachine()">
+                            <span>Add Machine</span>
+                        </button>
+                    </form>
+                </div>
+                <div class="document-list clearfix">
+                    <ul class="activateScrollbar clearfix">
+                        <li class="clearfix"
+                            *ngFor="let machine of stateMachineList">
+                            <div class="info"
+                                [ngClass]="(selectedMachine && (selectedMachine._id == machine._id)) ? 'active' : ''">
+                                <div class="desc" (click)="SelectCurrentMachine(machine._id)">
+                                    <span class="ellipsis">{{machine.name}}</span>
+                                </div>
+                                <div class="actions">
+                                    <button class="btn btn-transparent svgOnHover tooltip left">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <app-preloader *ngIf="fetching" type="bubble-pop"></app-preloader>
+            </div>
+            <div class="col-md-8 col-sm-7 col-xs-12"
+                *ngIf="selectedMachine">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>State Machines Tuning</h5>
+                    </div>
+                    <div>
+                        <button class="btn btn-xs btn-icon right bg-white svgOnHover"
+                            [disabled]="!(selectedMachine)"
+                            (click)="ShowStateForm()"
+							[ngClass]="(!ShowStateForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!ShowStateForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!ShowStateForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!ShowStateForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+                </div>
+                <div class="popover-form" *ngIf="ShowStateForm">
+                    <form class="clearfix" [formGroup]="addStateForm">
+                        <div class="input-group-sm">
+                            <input type="text" class="form-control" placeholder="State Name" [formControl]="addStateForm.controls['stateName']">
+                            <p class="text-red" [hidden]="!addStateForm.get('stateName').hasError('matched')"><strong>State Name has been used already</strong><br></p>
+                            <div class="input-group-btn">
+                                <button class="btn bg-green" (click)="AddState()" [disabled]="addStateForm.invalid">
+                                    <span>Add State Machine</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="document-list clearfix">
+                    <ul class="activateScrollbar clearfix">
+                        <li  *ngFor="let state of selectedMachine.states; index as i">
+                            <div class="info">
+                                <div class="desc">
+                                    <label class="text-black">{{state.name}}</label>
+                                </div>
+                                <div class="actions">
+                                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="ShowCases(state.name)">
+										<svg class="svg svg-default active">
+											<use [attr.href]="(showCasesList == state.name && state.handlers.length) ? '/assets/img/icons/icons-sprite.svg#arrow-double-up' : '/assets/img/icons/icons-sprite.svg#arrow-double-down'"/>
+										</svg>
+                                        <span class="tooltip-inner">Cases</span>
+                                    </button>
+                                    <button class="btn btn-transparent svgOnHover tooltip top"
+                                        [ngClass]="(!!deleting[stateName]) ? 'btnSpinner' : ''"
+                                        (click)="DeleteState(state.name,i)">
+                                        <svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+                                        <span class="tooltip-inner">Delete</span>
+                                    </button>
+                                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="EnableEdit(state.name)">
+                                        <svg class="svg svg-orange">
+											<use href="/assets/img/icons/icons-sprite.svg#plus-circle"/>
+										</svg>
+                                        <span class="tooltip-inner">Add Case</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="info card">
+                                <div class="cases">
+                                    <div class="caseForm" *ngIf="(enableEdit == state.name)">
+                                        <form [formGroup]="addCaseForm" >
+                                            <div class="input-group-sm">
+                                                <input #caseNameElement type="text" class="form-control" placeholder="Case Name" formControlName="caseName" (keyup)="keyupCase($event)" [matAutocomplete]="autoCase">
+                                                <mat-autocomplete class="form-control smAutoComplete" #autoCase="matAutocomplete" autoActiveFirstOption>
+                                                    <mat-option *ngFor="let case of filteredCases" [value]="case.tagName"> {{ case.tagName }}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                                <div class="sel style1 sel-xs">
+                                                    <select class="form-control" formControlName="action">
+                                                        <option value='sa' [selected]='true'>Select Action</option>
+                                                        <option value='tr'>Transition</option>
+                                                        <option value='gt'>Generate Ticket</option>
+                                                        <option value='ca'>Connect To Agent</option>
+                                                    </select>
+                                                </div>
+                                                <input #transitionElement type="text" class="form-control" (keyup)="keyupState($event)" [matAutocomplete]="autoState" value="" placeholder="Transition" formControlName="transition" *ngIf="(addCaseForm.get('action').value == 'tr')">
+                                                <mat-autocomplete class="form-control smAutoComplete" #autoState="matAutocomplete" autoActiveFirstOption>
+                                                    <mat-option *ngFor="let state of filteredStateNames" [title]="state.name" [value]="state.name">
+                                                        {{ state.name }}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                                <div class="input-group-btn">
+                                                    <button class="btn bg-olive" [disabled]="addCaseForm.invalid" (click)="AddHandler()" >
+                                                        <span>Save</span>
+                                                    </button>
+                                                    <button class="btn bg-black" (click)="CancelEdit()">
+                                                        <span>Cancel</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="caseList" *ngIf="(showCasesList == state.name && state.handlers.length)">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-12 col-xs-12 clearfix">
+                                                <ul>
+                                                    <li class="clearfix" *ngFor="let case of state.handlers; index as i">
+                                                        <div class="pull-left no-select">
+                                                            <i *ngIf="(case.action == 'tr')" class="icon-exchange">Move To {{case.transition}}</i>
+                                                            <i *ngIf="(case.action == 'gt')" class="icon-ticket">Generate Ticket</i>
+                                                            <i *ngIf="(case.action == 'ca')" class="icon-user-secret">Connect To Agent</i>
+                                                        </div>
+                                                        <button class="btn btn-xs btn-transparent pull-right svgOnHover tooltip left" (click)="DeleteHandler(case.caseId,i,state.name)">
+															<svg class="svg w-15 h-15 svg-default">
+																<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+															</svg>
+															<svg class="svg w-15 h-15 colored">
+																<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+															</svg>
+															<span class="tooltip-inner">Delete</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

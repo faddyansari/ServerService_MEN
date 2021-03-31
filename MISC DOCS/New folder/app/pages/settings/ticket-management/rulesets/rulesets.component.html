@@ -1,0 +1,23 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Ticket Email Rulesets</h5>
+			</div>
+			<div *ngIf="!SelectedRule && !addRule && (rulesetPermissions && rulesetPermissions.enabled && rulesetPermissions.canCreate)">
+				<button class="btn btn-xs btn-icon bg-white right"
+					[ngClass]="(!SelectedRule && !addRule) ? 'border-blue' : 'border-red'"
+					(click)="AddRule()">
+					<span>{{(!SelectedRule && !addRule) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!SelectedRule && !addRule) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!SelectedRule && !addRule) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<app-ruleset-list class="document-list clearfix" *ngIf="!SelectedRule && !addRule"></app-ruleset-list>
+		<app-ruleset-add-new *ngIf="(addRule || SelectedRule)"
+			[RuleObject]="(addRule) ? newObject : SelectedRule">
+		</app-ruleset-add-new>
+	</div>
+</div>

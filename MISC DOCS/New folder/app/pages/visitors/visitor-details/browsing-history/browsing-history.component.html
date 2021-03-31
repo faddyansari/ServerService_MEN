@@ -1,0 +1,17 @@
+<ul class="list-items clearfix style4">
+	<li class="item clearfix" *ngFor="let url of urls">
+		<div>
+			<div class="avatar ava-xs">
+				<div class="nameInitials p-0">
+					<img src="https://www.google.com/s2/favicons?domain=http://localhost:8001/testing"
+						width="100%">
+				</div>
+			</div>
+			<div class="info">
+				<b class="text-black">Website Name</b>
+				<a href="{{url}}" target="_blank"
+					class="text-black ellipsis p-0">{{url}}</a>
+			</div>
+		</div>
+	</li>
+</ul>

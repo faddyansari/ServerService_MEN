@@ -1,0 +1,274 @@
+<button class="btn btn-xxs bg-red closeInfo" (click)="CloseViewHistory()">
+    <span>Close</span>
+</button>
+<div class="box clearfix animated fadeIn delay-400">
+    <div class="box-body clearfix p-0">
+        <div class="activateScrollbar clearfix p-0" [ngClass]="((selectedThread.assigned_to || selectedThread.group) || (selectedThread.assigned_to && selectedThread.group)) ? 'assigned' : ''">
+            <div class="vhDetails notif clearfix">
+                <div class="avatar ava-xl" title="{{selectedThread.visitor.name}}">
+                    <div class="nameInitials" [ngStyle]="(selectedThread.viewColor) ? {'background-color' : selectedThread.viewColor} : ''">
+                        <span>{{selectedThread.visitor.name | slice:0:2 | uppercase}}</span>
+                    </div>
+                </div>
+                <div class="details notif">
+                    <div title="{{selectedThread.visitor.name}}">
+                        <b class="ellipsis">{{selectedThread.visitor.name}}</b>
+                    </div>
+                    <div title="{{selectedThread.visitor.email}}">
+                        <span class="ellipsis">{{selectedThread.visitor.email}}</span>
+                    </div>
+                    <!-- *ngIf="(selectedThread.sbtVisitor || selectedThread.source == 'livechat' || selectedThread.source == 'email') && (permissions.canRegisterIconCustomer || permissions.canSeeRelatedCustomerInfo || permissions.canSeeRegisteredIconCustomer) && (currAgent.nsp == '/sbtjapan.com' || currAgent.nsp == '/sbtjapaninquiries.com')" -->
+                    <div>
+                        <span class="ellipsis">{{selectedThread.CustomerInfo && selectedThread.CustomerInfo.customerId ? 'Registered Customer' : 'Unregistered Customer'}}</span>
+                    </div>
+                    <div title="{{selectedThread.group}}" *ngIf="selectedThread.group">
+                        <span class="ellipsis">Group :{{selectedThread.group}}</span>
+                    </div>
+                    <div>
+                        <span>
+                            <b title="{{selectedThread.state}}" *ngIf="((selectedThread.state | lowercase) == 'open')"
+                                class="text-red">OPEN</b>
+                            <b title="{{selectedThread.state}}"
+                                *ngIf="((selectedThread.state | lowercase) == 'pending')"
+                                class="text-orange">PENDING</b>
+                            <b title="{{selectedThread.state}}" *ngIf="((selectedThread.state | lowercase) == 'solved')"
+                                class="text-green">SOLVED</b>
+                            <b title="{{selectedThread.state}}"
+                                *ngIf="((selectedThread.state | lowercase) == 'facebook')"
+                                class="text-green">FACEBOOK</b>
+                            <b title="{{(selectedThread.merged) ? (selectedThread.state + ' (Merged)') : selectedThread.state}}"
+                                *ngIf="((selectedThread.state | lowercase) == 'closed')" class="text-black">CLOSED
+                                <b *ngIf="selectedThread.merged">(Merged)</b>
+                                <a class="svgOnHover tooltip top-right" *ngIf="selectedThread.primaryTicketId"
+                                    [routerLink]="'/tickets/ticket-view/' + (selectedThread.primaryTicketId)">
+                                    <svg class="svg w-15 h-15 svg-blue active">
+                                        <use href="/assets/img/icons/icons-sprite.svg#internal-link" />
+                                    </svg>
+                                    <span class="tooltip-inner">Go to primary ticket</span>
+                        </a>
+                        </b>
+                        </span>
+                    </div>
+                    <!-- <div title="{{selectedThread.assigned_to}}" *ngIf="selectedThread.assigned_to">
+                        <span class="ellipsis">Agent :{{selectedThread.assigned_to}}</span>
+                    </div>
+
+                    <div title="{{displaySource(selectedThread.source).name}}" *ngIf="selectedThread.source">
+                        <span class="ellipsis">Source: {{displaySource(selectedThread.source).name}}</span>
+                    </div> -->
+
+                    <div>
+                        <div class="svgOnHover tooltip top" *ngIf="!selectedThread.source">
+                            <svg class="svg active">
+                                <use href="/assets/img/icons/icons-sprite.svg#agents" class="text-gray"/>
+                            </svg>
+                            <span class="tooltip-inner">N/A</span>
+                        </div>
+                        <div class="svgOnHover tooltip top" *ngIf="selectedThread.source">
+                            <svg class="svg active">
+                                <use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + displaySource(selectedThread.source).img"/>
+                            </svg>
+                            <span class="tooltip-inner">Created By: {{displaySource(selectedThread.source).name}}</span>
+                        </div>
+
+
+                        <div class="svgOnHover tooltip top" *ngIf="!selectedThread.assigned_to">
+                            <svg class="svg active">
+                                <use href="/assets/img/icons/icons-sprite.svg#assigned-agent" class="text-gray"/>
+                            </svg>
+                            <span class="tooltip-inner">No Assigned Agents</span>
+                        </div>
+                        <div class="svgOnHover tooltip top" *ngIf="selectedThread.assigned_to">
+                            <svg class="svg active">
+                                <use href="/assets/img/icons/icons-sprite.svg#assigned-agent-colored"/>
+                            </svg>
+                            <span class="tooltip-inner">Assigned to {{selectedThread.assigned_to}}</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="notif-count">
+                    <span>{{selectedThread.datetime | date:'shortTime'}}
+                        {{selectedThread.datetime | date:'mediumDate'}}</span>
+                    <br>
+                    <span class="id" *ngIf="selectedThread.clientID">ID: {{selectedThread.clientID }}</span>
+                    <!--
+					<a class="svgOnHover tooltip bottom-left" *ngIf="selectedThread.primaryTicketId"
+						[routerLink]="'/tickets/ticket-view/' + (selectedThread.primaryTicketId)">
+						<svg class="svg w-15 h-15 svg-blue active">
+							<use href="/assets/img/icons/icons-sprite.svg#internal-link"/>
+						</svg>
+						<span class="tooltip-inner">Go to primary ticket</span>
+					</a> -->
+                </div>
+            </div>
+            <div class="vhList notif clearfix">
+                <div class="nav-tabs-custom">
+                    <ul class="nav-tabs f-wrap">
+                        <!-- TICKET DETAIL -->
+                        <li [ngClass]="(tabs['ticketDetail']) ? 'active' : ''">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-left" (click)="vhListTabs('ticketDetail')">
+                                <svg class="svg active" [ngClass]="(tabs['ticketDetail']) ? '' : 'svg-default'">
+                                    <use
+                                        [attr.href]="(tabs['ticketDetail']) ? '/assets/img/icons/icons-sprite.svg#ticket-detail-colored' : '/assets/img/icons/icons-sprite.svg#ticket-detail'" />
+                                </svg>
+                                <span class="tooltip-inner">Ticket Actions</span>
+                            </h5>
+                        </li>
+                        <!-- TASK LIST -->
+                        <li [ngClass]="(tabs['taskList']) ? 'active' : ''" *ngIf="permissions.canAddTask">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" (click)="vhListTabs('taskList')">
+                                <svg class="svg active" [ngClass]="(tabs['taskList']) ? '' : 'svg-default'">
+                                    <use
+                                        [attr.href]="(tabs['taskList']) ? '/assets/img/icons/icons-sprite.svg#task-list-colored' : '/assets/img/icons/icons-sprite.svg#task-list'" />
+                                </svg>
+                                <span class="tooltip-inner">Task List</span>
+                            </h5>
+                        </li>
+                        <li [ngClass]="(tabs['editNote']) ? 'active' : ''" *ngIf="permissions.canAddNote">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" (click)="vhListTabs('editNote')">
+                                <svg class="svg active" [ngClass]="(tabs['editNote']) ? '' : 'svg-default'">
+                                    <use
+                                        [attr.href]="(tabs['editNote']) ? '/assets/img/icons/icons-sprite.svg#add-note-colored' : '/assets/img/icons/icons-sprite.svg#add-note'" />
+                                </svg>
+                                <span class="tooltip-inner">Notes</span>
+                            </h5>
+                        </li>
+                        <!-- ACTIVITY LOG -->
+                        <li [ngClass]="(tabs['activityLog']) ? 'active' : ''" *ngIf="permissions.canViewLog">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" (click)="vhListTabs('activityLog')">
+                                <svg class="svg active" [ngClass]="(tabs['editNote']) ? '' : 'svg-default'">
+                                    <use
+                                        [attr.href]="(tabs['activityLog']) ? '/assets/img/icons/icons-sprite.svg#activity-log-colored' : '/assets/img/icons/icons-sprite.svg#activity-log'" />
+                                </svg>
+                                <span class="tooltip-inner">Activity Log</span>
+                            </h5>
+                        </li>
+                        <!-- TICKET HISTORY -->
+                        <li [ngClass]="(tabs['ticketHistory']) ? 'active' : ''">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" (click)="vhListTabs('ticketHistory')">
+                                <svg class="svg active" [ngClass]="(tabs['ticketHistory']) ? '' : 'svg-default'">
+                                    <use
+                                        [attr.href]="(tabs['ticketHistory']) ? '/assets/img/icons/icons-sprite.svg#ticket-history-colored' : '/assets/img/icons/icons-sprite.svg#ticket-history'" />
+                                </svg>
+                                <span class="tooltip-inner">Ticket History</span>
+                            </h5>
+                        </li>
+                        <!-- BROWSING HISTORY -->
+                        <li [ngClass]="(tabs['browsingHistory']) ? 'active' : ''">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-right" (click)="vhListTabs('browsingHistory')">
+                                <svg class="svg active">
+                                    <use href="/assets/img/icons/icons-sprite.svg#browsing-history"
+                                        [ngClass]="(tabs['browsingHistory']) ? 'text-teal' : 'text-theme-pro-gray'" />
+                                </svg>
+                                <span class="tooltip-inner">Browsing History</span>
+                            </h5>
+                        </li>
+                        <!-- MERGED TICKETS -->
+                        <li [ngClass]="(tabs['mergedTickets']) ? 'active' : ''" *ngIf="selectedThread.merged && selectedThread.isPrimary">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-right" (click)="vhListTabs('mergedTickets')">
+                                <svg class="svg active">
+                                    <use
+                                        [attr.href]="(tabs['mergedTickets']) ? '/assets/img/icons/icons-sprite.svg#merged-tickets-colored' : '/assets/img/icons/icons-sprite.svg#merged-tickets'" />
+                                </svg>
+                                <span class="tooltip-inner">Merged Tickets Members</span>
+                            </h5>
+                        </li>
+                        <!-- ACTIVATED POLICIES -->
+                        <li [ngClass]="(tabs['activatedPolicies']) ? 'active' : ''" *ngIf="allActivatedPolicies && allActivatedPolicies.length && selectedThread.InternalSlaPolicy && (!selectedThread.InternalSlaPolicy.reminder || !selectedThread.InternalSlaPolicy.escalation)">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-right" (click)="vhListTabs('activatedPolicies')">
+                                <svg class="svg active">
+                                    <use
+                                        [attr.href]="(tabs['activatedPolicies']) ? '/assets/img/icons/icons-sprite.svg#separator-field-colored' : '/assets/img/icons/icons-sprite.svg#separator-field'" />
+                                </svg>
+                                <div class="tooltip-inner">Activated Policies</div>
+                            </h5>
+                        </li>
+                        <!-- ICON REGISTER -->
+                        <!-- *ngIf="(selectedThread.sbtVisitor || selectedThread.source == 'livechat' || selectedThread.source == 'email') && (permissions.canRegisterIconCustomer || permissions.canSeeRelatedCustomerInfo || permissions.canSeeRegisteredIconCustomer) && (currAgent.nsp == '/sbtjapan.com' || currAgent.nsp == '/sbtjapaninquiries.com')" -->
+                        <li [ngClass]="(tabs['iconRegistration']) ? 'active' : ''" *ngIf="(selectedThread.sbtVisitor || selectedThread.source == 'livechat' || selectedThread.source == 'email' || selectedThread.visitor.phone) && (permissions.canRegisterIconCustomer || permissions.canSeeRelatedCustomerInfo || permissions.canSeeRegisteredIconCustomer) && (currAgent.nsp == '/sbtjapan.com' || currAgent.nsp == '/sbtjapaninquiries.com')">
+                            <h5 class=" title-with-border border-black-alpha2 svgOnHover tooltip top-right " (click)="vhListTabs( 'iconRegistration') ">
+                                <svg class="svg active " [ngClass]="(tabs[ 'iconRegistration']) ? '' : 'svg-default' ">
+                                    <use
+                                        [attr.href]="tabs[ 'iconRegistration'] ? '/assets/img/icons/icons-sprite.svg#additional-data-colored' : '/assets/img/icons/icons-sprite.svg#additional-data' " />
+                                </svg>
+                                <div class="tooltip-inner ">Icon Registration</div>
+                            </h5>
+                        </li>
+                        <!-- ICON CUSTOMER SEARCH -->
+                        <!-- *ngIf="(selectedThread.sbtVisitor || selectedThread.source=='livechat' || selectedThread.source=='email' ) && (permissions.canSearchIconCustomer) && (currAgent.nsp=='/sbtjapan.com' || currAgent.nsp=='/sbtjapaninquiries.com'
+                            ) " -->
+                        <li [ngClass]="(tabs[ 'searchIconCustomer']) ? 'active' : '' " *ngIf="(selectedThread.sbtVisitor || selectedThread.source=='livechat' || selectedThread.source=='email' || selectedThread.visitor.phone) && (permissions.canSearchIconCustomer) && (currAgent.nsp == '/sbtjapan.com' || currAgent.nsp == '/sbtjapaninquiries.com')">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-right " (click)="vhListTabs( 'searchIconCustomer') ">
+                                <svg class="svg active ">
+                                    <use
+                                        [attr.href]="(tabs[ 'searchIconCustomer']) ? '/assets/img/icons/icons-sprite.svg#settings-colored' : '/assets/img/icons/icons-sprite.svg#settings' " />
+                                </svg>
+                                <span class="tooltip-inner ">Icon Customer Search</span>
+                            </h5>
+                        </li>
+                    </ul>
+                    <div class="tab-content clearfix ">
+                        <!-- TICKET DETAIL -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'ticketDetail']) ? 'active' : '' ">
+                            <app-ticket-actions [permissions]="permissions " [selectedThread]="selectedThread " [ended]="ended " [loadingMoreAgents]="loadingMoreAgents " [fields]="fields " [tagList]="tagList " (status)="changeState($event)
+                            " (TagToAdd)="addTags($event) " (TagToDelete)="deleteTags($event) " (assignedAgent)="AssignAgentForTicket($event) " (assignedGroup)="AssignGroup($event) " (snoozeTime)="Snooze($event) " (loadMoreArg)="loadMoreAgent($event) "
+                                (SearchAgents)="OnSearchAgent($event) " (SaveCustomFields)="SaveCustomField($event) " [all_agents]="all_agents " [all_groups]="all_groups " [agentList_original]="agentList_original ">
+                            </app-ticket-actions>
+
+                        </div>
+                        <!-- TASK LIST -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'taskList']) ? 'active' : '' ">
+                            <app-ticket-tasks *ngIf="permissions.canAddTask " [ticketTasks]="selectedThread.todo " (tasks)="onEnter($event) " (checkedTask)="TaskDone($event) " (removeId)="deleteTask($event) " (updateTask)="editedTask($event) ">
+                            </app-ticket-tasks>
+                        </div>
+                        <div class="tab-pane " [ngClass]="(tabs[ 'editNote']) ? 'active' : '' ">
+                            <app-ticket-notes *ngIf="permissions.canAddNote " (ticketnote)="SaveNote($event) " (deleteNote)="DeleteNote($event) " [Ticketnotes]="selectedThread.ticketNotes ">
+                            </app-ticket-notes>
+                        </div>
+                        <!-- ACTIVITY LOG -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'activityLog']) ? 'active' : '' ">
+                            <app-ticket-activity-log [ticketlog]="selectedThread.ticketlog " *ngIf="permissions.canViewLog ">
+                            </app-ticket-activity-log>
+                        </div>
+                        <!-- TICKET HISTORY -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'ticketHistory']) ? 'active' : '' ">
+                            <app-ticket-history *ngIf="visitor_ticket_history " [visitor_ticket_history]="visitor_ticket_history " (threadId)="SetSelectedThread($event) "></app-ticket-history>
+                        </div>
+                        <!-- BROWSING HISTORY -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'browsingHistory']) ? 'active' : '' ">
+                            <app-ticket-browsing-history *ngIf="selectedThread.visitor " [visitorData]="selectedThread.visitor "></app-ticket-browsing-history>
+                        </div>
+                        <!-- MERGED TICKETS -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'mergedTickets']) ? 'active' : '' ">
+                            <app-ticket-merged *ngIf="selectedThread.merged " [selectedThread]="selectedThread " (demergeInfo)="Demerge($event) ">
+                            </app-ticket-merged>
+                        </div>
+                        <!-- ACTIVATED POLICIES -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'activatedPolicies']) ? 'active' : '' ">
+                            <app-activated-policies *ngIf="allActivatedPolicies && allActivatedPolicies.length && selectedThread.InternalSlaPolicy " [allActivatedPolicies]="allActivatedPolicies " [priority]="selectedThread.priority ">
+                            </app-activated-policies>
+                        </div>
+                        <!-- ICON REGISTER -->
+                        <!-- *ngIf="(selectedThread.sbtVisitor || selectedThread.source=='livechat' || selectedThread.source=='email' ) && (permissions.canRegisterIconCustomer || permissions.canSeeRelatedCustomerInfo || permissions.canSeeRegisteredIconCustomer)
+                            && (currAgent.nsp=='/sbtjapan.com' || currAgent.nsp=='/sbtjapaninquiries.com' ) " -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'iconRegistration']) ? 'active' : '' " *ngIf="(selectedThread.sbtVisitor || selectedThread.source=='livechat' || selectedThread.source=='email' || selectedThread.visitor.phone) && (permissions.canRegisterIconCustomer
+                            || permissions.canSeeRelatedCustomerInfo || permissions.canSeeRegisteredIconCustomer) && (currAgent.nsp == '/sbtjapan.com' || currAgent.nsp == '/sbtjapaninquiries.com')">
+                            <app-icon-customer-registation [visitorEmail]="(selectedThread.sbtVisitor) ? selectedThread.sbtVisitor : selectedThread.visitor.email " [CustomerInfo]="selectedThread.CustomerInfo " [selectedThreadId]="selectedThread._id
+                            " [visitorPhone]="(selectedThread.sbtVisitorPhone) ? selectedThread.sbtVisitorPhone : selectedThread.visitor.phone ? selectedThread.visitor.phone: '' " [visitorName]="selectedThread.visitor.name " [RelatedCustomerInfo]="selectedThread.RelatedCustomerInfo "
+                                [CustomerInfo]="selectedThread.CustomerInfo " [agentEmail]="currAgent.email " [loadingReg]="loadingReg
+                            " [agentName]="agentName " [permissions2]="permissions " (registrationData)="RegisterCustomer($event) " [countryName]="countryName ">
+                            </app-icon-customer-registation>
+                        </div>
+                        <!-- SEARCH ICON CUSTOMER -->
+                        <!-- *ngIf="(selectedThread.sbtVisitor || selectedThread.source=='livechat' || selectedThread.source=='email' ) && (permissions.canSearchIconCustomer) && (currAgent.nsp=='/sbtjapan.com' || currAgent.nsp=='/sbtjapaninquiries.com'
+                            ) " -->
+                        <div class="tab-pane " [ngClass]="(tabs[ 'searchIconCustomer']) ? 'active' : '' " *ngIf="(selectedThread.sbtVisitor || selectedThread.source=='livechat' || selectedThread.source=='email' || selectedThread.visitor.phone) && (permissions.canSearchIconCustomer) && (currAgent.nsp == '/sbtjapan.com' || currAgent.nsp == '/sbtjapaninquiries.com')">
+                            <app-icon-customer-search [loadingIconSearch]="loadingIconSearch " [searchedData]="searchedData " (searchData)="SearchData($event) " [selectedThread]="selectedThread._id "></app-icon-customer-search>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

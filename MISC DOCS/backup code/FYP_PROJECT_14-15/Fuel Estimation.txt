@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>AdminPanel</title>
+	<link media="all" rel="stylesheet" type="text/css" href="../static/all.css" />
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="js/jquery-1.7.2.min.js"><\/script>');</script>
+	<script type="text/javascript" src="../static/jquery.main.js"></script>
+	<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="css/ie.css" /><![endif]-->
+	<style type="text/css">
+		input[type=date] {
+    width: 20%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+.rio{
+	 width: 50%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+	input[type=text] {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+input[type=date]:focus {
+    border: 3px solid #555;
+}
+input[type=text]:focus {
+    border: 3px solid #555;
+}
+.rio:focus {
+    border: 3px solid #555;
+}
+.butto {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    margin-left:6%;
+}
+	</style>
+	
+
+
+
+</head>
+<body>
+	<div id="wrapper">
+		<div id="content">
+			<div class="c1">
+				<div class="controls">
+					
+					<p>Flight Deals!</p>
+					
+				</div>
+				<div class="tabs">
+					<div id="tab-1" class="tab">
+						<article>
+							<div class="text-section">
+							<center>
+								<h1>Fuel Consumption Estimation</h1>
+
+
+								<select id="sourcef" class="rio">
+	<option  value="" selected disabled hidden>Select Source</option>
+</select>
+
+<br/>
+
+<select id="destinationf" class="rio">
+	<option  value="" selected disabled hidden>Select Destination</option>
+</select>
+  <select id="airlinef"  class="rio">
+		<option value="" selected disabled hidden>Select Airline</option>
+
+</select>
+
+
+
+<br/>
+ 
+    <label for="fname">From date?</label>
+    <input type="date" id="fname" >
+<label for="lname">To date?</label>
+    <input type="date" id="lname" ><br/>
+  
+   <button id="fuel_btn" class="butto">Submit</button>
+</center>
+		
+		<table>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Icao</th>
+					<th>Model</th>
+					<th>Country</th>
+					<th>Average Speed</th>
+					<th>Average Altitude</th>
+					<th>Miles</th>
+					<th>Fuel</th>
+				</tr>
+			</thead>
+			<tbody id="flight_details">
+				
+			</tbody>
+		</table>	
+
+		<p id="fuel_details"></p>			
+					
+						</article>
+					</div>
+					<div id="tab-2" class="tab">
+					<center>	
+						<article>
+							<div class="text-section">
+								 <h1>Charge Estimation</h1>
+  <select id="airlinec"  class="rio">
+		<option value="" selected disabled hidden>Select Airline</option>
+
+</select>
+
+  <select id="sourcec" class="rio">
+	<option  value="" selected disabled hidden>Select Source</option>
+</select>
+
+<br/>
+
+<select id="destinationc" class="rio">
+	<option  value="" selected disabled hidden>Select Destination</option>
+</select>
+
+
+ <script >
+      Array.prototype.unique = function() {
+        return this.filter(function (value, index, self) { 
+          return self.indexOf(value) === index;
+        });
+      }
+
+        //******************************TO/FROM/AIRLINE***************************//
+              function find(id,arr)
+              {
+	              var sel = document.getElementById(id);
+	              arr=arr.unique();
+	              for(var i = 0; i < arr.length; i++) 
+	              {
+	                  var opt = document.createElement('OPTION');
+	                  txt = document.createTextNode(arr[i]);
+	                  opt.appendChild(txt);
+	                  opt.setAttribute("value",arr[i]);
+	                  id.insertBefore(opt,id.lastChild);
+	              }
+         		}		
+
+      var res;
+      $(document).ready(function(){
+
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:5000/flights",
+            success: function(response)
+            {
+              var to=[];
+              var from=[];
+              
+              var airline=[];
+
+              res= JSON.parse(response);
+              length=res.length;
+              for (var i=0; i<length;i++)
+              {
+                to.push(res[i]["To"]);
+                from.push(res[i]["From"]); 
+                airline.push(res[i]["Op"]); 
+              }
+
+
+              find(sourcef,from)
+              
+
+              find(sourcec,from)
+              find(destinationc,to)
+
+              find(airlineg,airline)
+              
+              find(airlinec,airline)
+              var count=0
+              
+               document.getElementById("destinationf").disabled=true;
+               document.getElementById("airlinef").disabled=true;
+
+
+               document.getElementById("sourcef").onchange=function()
+               {
+               		var airf=["Select Airline"]
+               		var tof=["Select Destination"];
+               		var fromf = document.getElementById("sourcef");
+			 		var from_chkf=fromf.options[fromf.selectedIndex].value;	
+			 		// var des= document.getElementById("destinationf");
+			 		// var des_chkf=des.options[des.selectedIndex].value;	
+			 		// console.log(des_chkf);
+			 		
+               		for (var i=0; i<res.length;i++)
+	                {
+				        if (res[i]["From"]==from_chkf)
+				        {
+		            		tof.push(res[i]["To"]);
+				        }
+
+		            	// if(res[i]["From"]==from_chkf && res[i]["To"]==des_chkf)
+		            	// 	airf.push(res[i]["Op"]);
+		            	// else
+		            	// 	airf.push("Select Airline");
+		            }
+
+		            var select = document.getElementById('destinationf');
+  					select.innerHTML="";
+  					
+  					// var select = document.getElementById('airlinef');
+  					// select.innerHTML="";
+  					// find(airlinef,airf);
+               		find(destinationf,tof);
+               		document.getElementById("destinationf").disabled=false;
+
+               }
+
+
+                document.getElementById("destinationf").onchange=function()
+               {
+               		var airf=["Select Airline"]
+               		var fromf = document.getElementById("sourcef");
+			 		var from_chkf=fromf.options[fromf.selectedIndex].value;	
+			 		var des= document.getElementById("destinationf");
+			 		var des_chkf=des.options[des.selectedIndex].value;
+			 		console.log(des_chkf);	
+
+               		for (var i=0; i<res.length;i++)
+	                {
+				        if(res[i]["From"]==from_chkf && res[i]["To"]==des_chkf)
+		            		airf.push(res[i]["Op"]);
+		            }
+		            var select = document.getElementById('airlinef');
+  					select.innerHTML="";
+  					find(airlinef,airf);
+  					document.getElementById("airlinef").disabled=false;
+
+		        }
+
+
+
+
+
+              document.getElementById("airlineg").onchange = function() 
+        	{ 
+        		  var model=[];
+	              var air = document.getElementById("airlineg");
+				  var air_chk=air.options[air.selectedIndex].value;	
+				  for (var i=0; i<res.length;i++)
+	              {
+				  if (res[i]["Op"]==air_chk)
+		            	model.push(res[i]["Mdl"]);
+		           }
+
+				
+  				var select = document.getElementById('modelg');
+  			    select.innerHTML="";
+				
+                find(modelg,model);
+
+             
+            }
+
+            document.getElementById("fuel_btn").onclick = function() 
+        	{ 
+        		var data={};
+        		data["airline"]=document.getElementById("airlinef").value;
+        		data["to"]=document.getElementById("destinationf").value;
+        		data["From"]=document.getElementById("sourcef").value;
+
+        		        		//call ajax request
+        		$.ajax({
+	            type: "POST",
+	            url: "http://127.0.0.1:5000/fuel_result",
+	            data: data,
+	            success: function(response)
+	            {
+	            	var res= JSON.parse(response);
+	            	console.log(res);
+              		length=res.length;
+           
+			        var table = document.getElementById("flight_details");
+			        table.innerHTML="";
+			       
+			        for(var i=0; i<length-1; i++)
+			        {
+			        	var row = table.insertRow(i);
+			        	var cell0 = row.insertCell(0);
+				    	var cell1 = row.insertCell(1);
+				    	var cell2 = row.insertCell(2);
+				    	var cell3 = row.insertCell(3);
+				    	var cell4 = row.insertCell(4);
+				    	var cell5 = row.insertCell(5);
+				    	var cell6 = row.insertCell(6);
+				    	var cell7 = row.insertCell(7);
+				    	cell0.innerHTML = res[i]["Id"];
+				    	cell1.innerHTML = res[i]["Icao"];
+				    	cell2.innerHTML = res[i]["Mdl"];
+				    	cell3.innerHTML = res[i]["Cou"];
+				    	cell4.innerHTML = res[i]["Spd"];
+				    	cell5.innerHTML = res[i]["Alt"];
+				    	cell6.innerHTML = res[i]["Miles"];
+				    	cell7.innerHTML = res[i]["Fuel"];
+			        }
+
+			        para=document.getElementById("fuel_details");
+			        para.innerHTML="Total Fuel is: " + res[res.length-1]["TFuel"] + " Total Miles is: " + res[res.length-1]["TMiles"];
+			    }
+				});
+
+        	}
+
+
+			}        
+        })
+
+
+        });
+
+
+      
+
+
+</script>
+
+<br/>
+    <label for="fname">From date?</label>
+    <input type="date" id="fname" >
+<label for="lname">To date?</label>
+    <input type="date" id="lname" ><br/>
+    <button class="butto">Submit</button>
+						</article></center>
+					</div>
+
+
+
+					<div id="tab-3" class="tab">
+						<article>
+							<center>
+							<div class="text-section">
+								<h1>Flight Tracking & Delay Report</h1>
+								<div class="form-group">
+								<input type="text" id="Id" placeholder="Enter ID of flight to be tracked ">
+								<!-- <label for="hello">Which date?</label><input type="date" id="hello">
+									 --></br>
+								<button id="Btn" class="butto">Submit</button>
+								</div>
+								<div class="container-fluid" id="googleMap" style=" width: 100%; height: 660px; "></div>
+								<div id="content" style="margin-top: 6%; font-weight: bolder; font-size: 110%;">
+								  <div id="bodyContent" >
+									<p id="ans"></p>
+								  </div>
+								</div>
+								
+						</center>
+						</article>
+					</div>
+					<script>
+	
+						var ans;
+						
+						window.onload = function() {
+					  // setup the button click
+					  timeDiv=document.getElementById("ans");
+					  document.getElementById("Btn").onclick = function() {
+						var iD = document.getElementById("Id").value;
+						var data_send = {"Id" : iD};
+						
+						// prompt(data_send["Id"]);
+					
+						doWork(data_send);
+					  };
+					}
+					
+					function doWork(data) {
+					  $.ajax({
+					  type: "POST",
+					  url: "http://127.0.0.1:5000/receiver",
+					  data: data,
+					  success: function(response){
+						var res= JSON.parse(response);
+						var speed= res["Spd"];
+						var lat= res["Lat"];
+						var longi= res["Long"];
+						var to= res["To"];
+						calculate(speed,lat,longi,to);
+						
+					  }
+					  })
+					  // stop link reloading the page
+					 event.preventDefault();
+					}
+					
+					
+					//calculating distance
+					
+					function calculate(spd,lati,longi,to)
+					{
+						//converting speed from knots to m/s
+						var speed = spd * 0.5144;
+						var x=lati;
+						var y=longi;
+						myMap();
+						
+						//finding latitude and longitude of destination
+						var geocoder =  new google.maps.Geocoder();
+						geocoder.geocode( { 'address': to},    
+						function(results, status) 
+						{
+							if (status == google.maps.GeocoderStatus.OK)
+							{
+								var a=results[0].geometry.location.lat();
+								var b=results[0].geometry.location.lng();
+								
+								//calculating distance(m) b/w (x,y) and (a,b) using Heversine Formula
+								var Radius = 6371e3; 
+								var angle1 = (x*Math.PI)/180;
+								var angle2 = (a*Math.PI)/180;
+								var angle_diff1 = ((a-x)*Math.PI)/180;
+								var angle_diff2 = ((b-y)*Math.PI)/180;
+								var A = Math.sin(angle_diff1/2) * Math.sin(angle_diff1/2) +
+								Math.cos(angle1) * Math.cos(angle2) *
+								Math.sin(angle_diff2/2) * Math.sin(angle_diff2/2);
+								var c = 2 * Math.atan2(Math.sqrt(A), Math.sqrt(1-A));
+								distance = Radius * c;
+								
+								//calculating elapsed time(sec) to reach destination
+								var time= distance/speed;
+								
+								//converting sec in standard format of time hh:mm:ss
+								var MHSTime=new Date(time * 1000).toISOString().substr(11, 8)
+								
+								ans=MHSTime;
+								marker(x,y);
+								
+								
+							} 
+							  else 
+							{
+								alert("Something got wrong " + status); 
+							}	
+							
+						});
+						
+						
+					}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+						  function myMap() 
+						  {
+							var speed= 400.0*0.5144;    //here
+							var distance=0;
+							var x= 33.2232;           //here
+							var y= 43.6793;           //here
+							var myLatlng = new google.maps.LatLng(x,y);
+							var mapProp= 
+							{
+							  center:myLatlng,
+							  zoom:4
+							 };
+							var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+						  }
+						 
+						  
+						  
+						  function marker(lat,longi)
+						  {
+							var myLatlng = new google.maps.LatLng(lat,longi);
+							
+							var mapProp= 
+							{
+							  center:myLatlng,
+							  zoom:7
+							 };
+							 
+							var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+							
+							
+							var image = 
+							{ 
+							  url: "http://www.boeing.com/resources/boeingdotcom/commercial/777x/assets/images/hotspots/product-01_960x410-mobile.png", // url -->
+							  scaledSize: new google.maps.Size(130, 130), // scaled size -->
+							}; 
+					
+							var marker = new google.maps.Marker 
+							({ 
+								position: myLatlng,
+								map: map, 
+								icon: image 
+							}); 
+							
+					
+							 var contentString =document.getElementById("content");
+							 
+							 var infowindow = new google.maps.InfoWindow({content: "Time left: "+ ans });
+							 infowindow.open(map, marker);
+							 console.log(ans)
+							 infowindow.close();  
+							 infowindow.open(map, marker);
+						//	 timeDiv.innerHTML = "Time left: "+ ans ;
+							 
+						  }
+						  
+						  
+						  
+						</script>
+
+					
+
+					<div id="tab-4" class="tab">
+						<article><center>
+							<div class="text-section">
+								<h1>General Tasks</h1>
+						
+							
+<select id="airlineg"  class="rio">
+		<option value="" selected disabled hidden>Select Airline</option>
+
+</select>
+<select id="modelg"  class="rio">
+		<option value="" selected disabled hidden>Select Model</option>
+
+</select>
+</br><input type="radio" name="gender" value="passengers"> Average number of passengers
+  <input type="radio" name="gender" value="Type"> Type
+  <input type="radio" name="gender" value="others"> Others</br><br>
+<button class="butto">Submit</button>
+						</article></center>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<aside id="sidebar">
+			<strong class="logo"><a href="#">Dashboard</a></strong>
+			<ul class="tabset buttons">
+				<li class="active">
+					<a href="#tab-1" class="ico1"><span>Fuel consumption</span><em></em></a>
+					<span class="tooltip"><span>Fuel consumption</span></span>
+				</li>
+				<li>
+					<a href="#tab-2" class="ico2"><span>Charge estimation</span><em></em></a>
+					<span class="tooltip"><span>Charge estimation</span></span>
+				</li>
+				<li>
+					<a href="#tab-3" class="ico3"><span>Flight Tracking</span><em></em></a>
+					<span class="tooltip"><span>Flight Tracking</span></span>
+				</li>
+				<li>
+					<a href="#tab-4" class="ico4"><span>General Tasks</span><em></em></a>
+					<span class="tooltip"><span>General Tasks</span></span>
+				</li>
+				
+			</ul>
+			<span class="shadow"></span>
+		</aside>
+	</div>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhv5a8EMnu3Vle0QC7c_QjjeVbMw2Ffr0&callback=myMap"></script>
+
+</body>
+</html>

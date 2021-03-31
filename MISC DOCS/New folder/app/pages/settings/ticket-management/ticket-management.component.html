@@ -1,0 +1,74 @@
+<ul class="card-container clearfix style2" *ngIf="permissions && package">
+    <a routerLink="/settings/ticket-management/groups" [routerLinkActive]="['active']" *ngIf="permissions.groupManagement.enabled && package.groups.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/groups-filled.svg">
+        <h5>Groups<br>Management</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/teams" [routerLinkActive]="['active']" *ngIf="permissions.teamManagement.enabled && package.team.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/team-management-filled.svg">
+        <h5>Teams<br>Management</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/rulesets" [routerLinkActive]="['active']" *ngIf="permissions.rulesetSettings.enabled && package.rulesets.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/rulesets-settings-filled.svg">
+        <h5>Rulesets<br>Settings</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/ruleset-scheduler" *ngIf="permissions.rulesetScheduler.enabled && package.rulesets.allowed" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/rulesets-settings-filled.svg">
+        <h5>Ruleset<br>Scheduler</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/notifications" *ngIf="permissions.generalNotifications.enabled && package.notificationSettings.allowed" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/general-notifications-filled.svg">
+        <h5>General<br>Notifications</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/ticket-template" [routerLinkActive]="['active']" *ngIf="permissions.ticketTemplateDesigner.enabled && package.ticketTemplate.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/rulesets-filled.svg">
+        <h5>Ticket Template<br>Designer</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/permissions" [routerLinkActive]="['active']" *ngIf="permissions.permissionSettings.enabled && package.permissions.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/ticket-permissions-filled.svg">
+        <h5>Permissions<br>Settings</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/form-designer" [routerLinkActive]="['active']" *ngIf="permissions.formDesigner.enabled && package.formDesigner.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/form-designer-filled.svg">
+        <h5>Form<br>Designer</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/acknowledge-message" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/rulesets-filled.svg">
+        <h5>Greeting <br>Message</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/bulk-marketing-email" [routerLinkActive]="['active']" *ngIf="permissions.emailTemplateDesigner.enabled && package.ticketTemplate.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/email-template-designer-filled.svg">
+        <h5>Email Template<br>Designer</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/autoforwarding" [routerLinkActive]="['active']" *ngIf="permissions.incomingEmails.enabled && package.incomingEmail.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/incoming-emails-filled.svg">
+        <h5>Incoming<br>Emails</h5>
+    </a>
+
+    <a routerLink="/settings/ticket-management/sla-policies" [routerLinkActive]="['active']" *ngIf="permissions.SLAPolicies.enabled && package.SLA.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/sla-policy-filled.svg">
+        <h5>SLA<br>Policies</h5>
+    </a>
+
+    <a routerLink="/settings/ticket-management/scenario-automation" [routerLinkActive]="['active']" *ngIf="permissions.ticketScenarioAutomation.enabled && package.scenarioAutomation.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/scenario-automation-filled.svg">
+        <h5>Ticket Scenario<br>Automation</h5>
+    </a>
+
+    <a routerLink="/settings/ticket-management/customfields" [routerLinkActive]="['active']" *ngIf="permissions.customFields.enabled && package.customFields.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/custom-fields-filled.svg">
+        <h5>Custom<br>Fields</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/survey" [routerLinkActive]="['active']" *ngIf="permissions.customSatisfactionSurvey.enabled && package.satisfactionSurvey.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/survey-form-filled.svg">
+        <h5>Customer Satisfaction<br>Survey</h5>
+    </a>
+    <!-- *ngIf="agent.nsp == '/sbtjapan.com' || agent.nsp == '/sbtjapaninquiries.com'" -->
+    <a routerLink="/settings/ticket-management/internal-sla-policies" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)" *ngIf="agent.nsp == '/sbtjapan.com' || agent.nsp == '/sbtjapaninquiries.com'">
+        <img class="svg" src="/assets/img/icons/settings/sla-policy-filled.svg">
+        <h5>Internal SLA<br>Policy</h5>
+    </a>
+    <a routerLink="/settings/ticket-management/tag-cloud" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/chat-tags-filled.svg">
+        <h5>Tag Cloud</h5>
+    </a>
+</ul>

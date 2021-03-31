@@ -1,0 +1,172 @@
+@charset "utf-8";
+
+@import '../../../assets/sass/partials/variables';
+@import '../../../assets/sass/partials/mixins';
+@import '../../../assets/sass/partials/extensions';
+
+#agentComponent {
+	> .content-view {
+		> .activateScrollbar {
+			@include phone {
+				flex-direction: column;
+			}
+			@include tabletL {
+				flex-direction: row;
+			}
+			.contacts-detail {
+				@extend %width100;
+				display: flex;
+				align-items: flex-start;
+				height: fit-content;
+				@extend %p0;
+				@extend %formValidation;
+				.agentData {
+					@extend %displayFlex;
+					align-items: center;
+					min-height: 110px;
+					justify-content: start;
+					text-align: left;
+					@include phone {
+						width: 100%;
+						flex-direction: column;
+					}
+					@include tabletL {
+						width: calc(100% - 128px);
+						flex-direction: row;
+					}
+					li {
+						margin-bottom: 10px;
+						@include phone {
+							width: 100%;
+						}
+						@include tabletL {
+							width: 50%;
+						}
+						> h4 {
+							width: 100%;
+						}
+					}
+				}
+				ul {
+					width: 100%;
+					@extend %fs13;
+					display: flex;
+					flex-direction: column;
+					> li {
+						@extend %width100;
+						display: flex;
+						@include phone {
+							flex-direction: column;
+						}
+						@include phoneL {
+							flex-direction: row;
+							flex-wrap: wrap;
+						}
+						@include desktop {
+							flex-wrap: nowrap;
+						}
+						> div {
+							@extend %p28;
+							@extend %posRelative;
+							@include phone {
+								width: 100%;
+								border-bottom: 1px solid var(--border);
+							}
+							@include phoneL {
+								width: 50%;
+								border-left: 1px solid var(--border);
+								&:first-child {
+									border-left: 0;
+								}
+							}
+							@include tabletL {
+								flex: 1;
+							}
+							@include desktop {
+								border-bottom: 0;
+							}
+							&.box-title {
+								@include desktop {
+									width: 200px;
+								}
+								display: flex;
+								flex-direction: column;
+								align-items: center;
+								text-align: center;
+								flex: none;
+								.actions {
+									margin-top: 10px;
+								}
+							}
+							&.personal-details {
+								@include desktop {
+									width: 320px;
+								}
+								padding-right: 60px;
+								.actions {
+									@extend %posAbsolute;
+									top: 20px;
+									right: 15px;
+									display: flex;
+									flex-direction: column;
+									> .btn {
+										width: 30px;
+										height: 30px;
+									}
+								}
+							}
+							p {
+								margin-bottom: 5px;
+							}
+						}
+						&.box-tools {
+							@extend %width100;
+							padding: 30px 0;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							> div {
+								flex: 1;
+								display: flex;
+								flex-direction: column;
+								align-items: center;
+								justify-content: center;
+								text-align: center;
+								margin-bottom: 15px;
+								button {
+									margin-left: 7px;
+									&:first-child {
+										margin-left: 0;
+									}
+								}
+								> span {
+									@extend %fs10;
+									margin-top: 7px;
+								}
+							}
+						}
+					}
+				}
+			}
+			.viewChat {
+				display: flex;
+				@include phone {
+					flex-direction: column;
+				}
+				@include tabletL {
+					flex-direction: row;
+				}
+				.chatWindow {
+					border: 1px solid var(--border);
+					margin: 7px;
+				}
+			}
+			.contacts-stats {
+				margin: 7px;
+			}
+			.contacts-chats {
+				position: relative;
+			}
+		}
+	}
+}

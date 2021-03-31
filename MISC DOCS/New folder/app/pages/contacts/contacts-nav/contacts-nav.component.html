@@ -1,0 +1,31 @@
+<ul class="activateScrollbar clearfix">
+	<li [ngClass]="(sortBy == 'ALL') ? 'active' : ''" (click)="setFilter('ALL')">
+		<a>
+			<span>All</span>
+			<span class="badge" *ngIf="((onlineCount + offlineCount) < 1000)">{{onlineCount + offlineCount}}</span>
+			<span class="badge" *ngIf="((onlineCount + offlineCount) >= 1000)">999+</span>
+			<!-- <span class="badge" *ngIf="(contactList.length)">{{contactList.length}}</span> -->
+		</a>
+	</li>
+	<li [ngClass]="(sortBy == 'ONLINE') ? 'active' : ''" (click)="setFilter('ONLINE')">
+		<a>
+			<span>ONLINE</span>
+			<span class="badge" *ngIf="(onlineCount < 1000)">{{onlineCount}}</span>
+			<span class="badge" *ngIf="(onlineCount >= 1000)">999+</span>
+		</a>
+	</li>
+	<li [ngClass]="(sortBy == 'OFFLINE') ? 'active' : ''" (click)="setFilter('OFFLINE')">
+		<a>
+			<span>OFFLINE</span>
+			<span class="badge" *ngIf="(offlineCount < 1000)">{{offlineCount}}</span>
+			<span class="badge" *ngIf="(offlineCount >= 1000)">999+</span>
+		</a>
+	</li>
+	<li [ngClass]="(showConversations) ? 'active' : ''" (click)="displayConversations()">
+		<a>
+			<span>CHATS</span>
+			<span class="badge" *ngIf="(conversationList.length < 1000)">{{conversationList.length}}</span>
+			<span class="badge" *ngIf="(conversationList.length >= 1000)">999+</span>
+		</a>
+	</li>
+</ul>

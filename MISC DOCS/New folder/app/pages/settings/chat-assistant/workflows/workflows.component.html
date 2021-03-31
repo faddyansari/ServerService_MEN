@@ -1,0 +1,211 @@
+<div class="row clearfix">
+    <div class="col-md-4 col-sm-5 col-xs-12">
+        <div class="box clearfix animated fadeIn delay-400">
+            <div class="box-body clearfix p-0">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Workflow List</h5>
+                    </div>
+					<div>
+						<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="ShowAddWorkflowForm()"
+							[ngClass]="(!showAddWorkFlowForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showAddWorkFlowForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showAddWorkFlowForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showAddWorkFlowForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="(showAddWorkFlowForm)">
+					<form class="clearfix"  [formGroup]="addWorkFlowForm">
+						<div class="input-block">
+							<div class="text">
+								<label>Workflow Name</label>
+								<br>
+								<input type="text" class="form-control input-sm m-b-5" placeholder="Enter WorkFlow Name"
+									[formControl]="addWorkFlowForm.controls['workflowName']">
+								<p class="text-red clearfix" [ngClass]="!addWorkFlowForm.get('workflowName').hasError('matched') ? 'hide' : ''">Workflow
+									Name has been used already.</p>
+								<br>
+								<!-- <label>State Machine Name</label>
+								<br>
+								<input #machineNameElement type="text" class="form-control input-sm m-b-5" placeholder="Enter StateMachine Name"
+									[formControl]="addWorkFlowForm.controls['machineName']" [matAutocomplete]="autoMachineName"
+									(keyup)="keyupMachineList($event)">
+								<br>
+								<mat-autocomplete class="smAutoComplete" #autoMachineName="matAutocomplete"
+									autoActiveFirstOption>
+									<mat-option *ngFor="let machine of filteredstateMachineList" [value]="machine.name">
+										{{ machine.name }}
+									</mat-option>
+								</mat-autocomplete> -->
+								<label>Greeting Message</label>
+								<input type="text" class="form-control input-sm m-b-5" placeholder="Enter Greeting Message"
+									[formControl]="addWorkFlowForm.controls['greetingMessage']">
+							</div>
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue"
+							(click)="AddWorkFlow()"
+							[disabled]="addWorkFlowForm.invalid">
+							<span>Add Workflow</span>
+						</button>
+					</form>
+				</div>
+                <div class="document-list clearfix f-column">
+					<ul class="activateScrollbar clearfix">
+                        <li [ngClass]="(selectedWorkflow && selectedWorkflow._id == workflow._id) ? 'active' : ''" *ngFor="let workflow of WorkFlowsList" (click)="SelectWorkFlow(workflow.name)">
+                            <div class="info">
+                                <div class="name">
+                                    <span class="ellipsis"><b>{{workflow.name}}</b></span>
+                                </div>
+                                <div class="actions">
+                                    <span *ngIf="workflow.primary">P</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- <app-preloader *ngIf="fetching" type="bubble-pop"></app-preloader> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xs-12">
+        <div class="box clearfix animated fadeIn delay-400">
+            <div class="box-body clearfix p-0">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Design Workflows &nbsp;<small *ngIf="selectedWorkflow && selectedWorkflow.primary" class="text-green">(Primary)</small></h5>
+                    </div>
+                </div>
+                <form>
+                    <div class="document-list formFieldArea clearfix" *ngIf="selectedWorkflow && selectedWorkflow.form.length">
+                        <ul class="activateScrollbar clearfix p-0">
+                            <li class="notif clearfix fieldsetData checkboxField" *ngFor="let elem of selectedWorkflow.form; index as i">
+                                <div class="info">
+                                    <div class="name" *ngIf="elem.type == 'checkBox'">
+                                        <div class="pretty p-svg p-fill p-smooth">
+                                            <input type="checkbox" value="{{elem.value}}" checked>
+                                            <div class="state svgOnHover">
+                                                <svg class="svg active">
+													<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+												</svg>
+                                                <label>{{elem.label}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="name" *ngIf="elem.type == 'radioBtn'">
+                                        <div class="pretty p-round p-thick p-smooth p-default">
+                                            <input type="radio" value="{{elem.value}}" checked>
+                                            <div class="state">
+                                                <label>{{elem.label}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="name" *ngIf="elem.type == 'testBox'">
+                                        <div class="input-block">
+                                            <label>{{elem.label}}</label>
+                                            <input type="email" class="form-control input-sm pull-left" placeholder="elem.placeholder">
+                                        </div>
+                                    </div>
+                                    <div class="actions">
+                                        <button class="btn btn-transparent svgOnHover tooltip left"
+                                            (click)="DeleteElement(i)"
+                                            *ngIf="elem.type == 'checkBox'">
+                                            <svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+											</svg>
+											<svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+											</svg>
+											<span class="tooltip-inner">Delete</span>
+                                        </button>
+                                        <button class="btn btn-transparent svgOnHover tooltip left"
+                                            (click)="DeleteElement(i)"
+                                            *ngIf="elem.type == 'radioBtn'">
+                                            <svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+											</svg>
+											<svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+											</svg>
+											<span class="tooltip-inner">Delete</span>
+                                        </button>
+                                        <button class="btn btn-transparent svgOnHover tooltip left"
+                                            (click)="DeleteElement(i)"
+                                            *ngIf="elem.type == 'testBox'">
+                                            <svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+											</svg>
+											<svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+											</svg>
+											<span class="tooltip-inner">Delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                            <button class="btn btn-sm bg-blue"
+                                (click)="SubmitWorkFlow()">
+                                <span>Submit</span>
+                            </button>
+                            <button class="btn btn-sm bg-blue"
+                                *ngIf="selectedWorkflow"
+                                (click)="MakePrimary(selectedWorkflow._id)">
+                                <span>Make Primary</span>
+                            </button>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-5 col-xs-12" *ngIf="selectedWorkflow">
+        <div class="box clearfix animated fadeIn delay-400">
+            <div class="box-body clearfix p-0">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Form Fields List</h5>
+                    </div>
+                </div>
+                <ul class="activateScrollbar clearfix p-0">
+                    <li>
+                        <label>Radio Field</label>
+                        <form [formGroup]="addRadioBtnForm">
+                            <div class="input-block clearfix dataFields">
+                                <input type="text" class="form-control input-sm" placeholder="Define Value" formControlName="value">
+                                <input type="text" class="form-control input-sm" placeholder="Define Label" formControlName="label">
+                                <input #rdioBtnMachineNameElement type="text" class="form-control input-sm" placeholder="Define State Machine"
+                                [matAutocomplete]="rdioBtnMachineName"
+                                (keyup)="keyupRdioBtn($event)"
+                                (focus)="Focus('radio')"
+                                formControlName="machineName">
+                                <mat-autocomplete class="smAutoComplete" #rdioBtnMachineName="matAutocomplete" autoActiveFirstOption>
+                                    <mat-option *ngFor="let machine of filteredstateMachineList" [value]="machine.name">
+                                        {{ machine.name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </div>
+                            <button (click)="AddRadioButton()" [disabled]="addRadioBtnForm.invalid" class="btn btn-xs bg-blue clearfix">ADD</button>
+                        </form>
+                    </li>
+                    <li>
+                        <label>Text Field</label>
+                        <div class="input-block clearfix dataFields">
+                            <select class="form-control input-sm">
+                                <option>Select Type</option>
+                                <option>Text</option>
+                                <option>Email</option>
+                                <option>Password</option>
+                                <option>Tel</option>
+                                <option>Number</option>
+                            </select>
+                            <input type="text" class="form-control input-sm" placeholder="Define Label">
+                            <input type="text" class="form-control input-sm" placeholder="Define State">
+                        </div>
+                        <button class="btn btn-xs bg-blue clearfix">ADD</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

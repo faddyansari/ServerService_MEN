@@ -1,0 +1,124 @@
+<h3>Set rules to create tickets</h3>
+<form [formGroup]="ruleForm">
+  <fieldset class="m-b-20">
+    <div class="card clearfix m-0">
+      <div class="input-block">
+
+        <div class="pretty p-switch p-smooth p-fill p-toggle top m-0">
+          <input type="checkbox" formControlName="postToTicketsAllow" />
+          <div class="state p-on">
+            <label></label>
+          </div>
+          <div class="state p-off">
+            <label></label>
+          </div>
+          <label>Convert posts and comments into tickets</label>
+        </div>
+        <div>
+        </div>
+        <br><br>
+        <div class="input-block" *ngIf="ruleForm.get('postToTicketsAllow').value == true">
+          <div class="clearfix">
+            <div class="pretty p-svg p-fill p-smooth">
+              <input type="checkbox" name='visitor' #status
+               
+                formControlName="visitorsToTickets">
+              <div class="state">
+                <svg class="svg svg-icon active">
+                  <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+                </svg>
+                <label> Convert posts added by visitors into tickets </label>
+                <p class="text-red">This option cannot be turned off when comments
+                  on each page post are threaded to the same ticket</p>
+              </div>
+            </div>
+            <br>
+            <div class="pretty p-svg p-fill p-smooth">
+              <input type="checkbox" name='page' formControlName="pagesToTickets">
+              <div class="state">
+                <svg class="svg svg-icon active">
+                  <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+                </svg>
+                <label> Convert posts added by the page into tickets </label>
+              </div>
+              <br><br>
+              <div *ngIf="ruleForm.get('pagesToTickets').value == true">
+                <div class="input-block"
+                  *ngIf="ruleForm.get('pagesToTickets').value == true">
+                  <div class="clearfix">
+                    <div class="pretty p-default p-round p-smooth">
+                      <input type="radio" name="ticketChoice" (change)="ChangeTicketChoice($event)"
+                        value="singleTicket" formControlName="ticketChoice">
+                      <div class="state">
+                        <label> Thread comments on each post to a single
+                          ticket </label>
+                      </div>
+                    </div>
+                    <div class="pretty p-default p-round p-smooth">
+                      <input type="radio" name="ticketChoice" (change)="ChangeTicketChoice($event)"
+                        value="newTicket" formControlName="ticketChoice">
+                      <div class="state">
+                        <label> Create a new ticket for every comment on the
+                          post </label>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div *ngIf="ruleForm.get('ticketChoice').value == 'newTicket'">
+                    <div class="pretty p-svg p-fill p-smooth">
+                      <input type="checkbox" name='visitor'
+                        formControlName="SpecificKeywords">
+                      <div class="state">
+                        <svg class="svg svg-icon active">
+                          <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+                        </svg>
+                        <label> Only convert comments which have the
+                          following keywords</label>
+                      </div>
+                    </div>
+                    <div class="input-block"
+                      *ngIf="ruleForm.get('SpecificKeywords').value == true">
+                      <app-chips-input
+                        class="form-control input-sm tag-input wAuto"
+                        [items]="ruleForm.get('keywords').value"
+                        name="keywords" [placeholder]="'Add Keywords..'"
+                        [delimiters]="[',']" formControlName="keywords"
+                        [errorMsg]="'Invalid keyword'">
+                      </app-chips-input>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix">
+            <div class="input-block">
+              <label>Assign To Group</label>
+              <div class="input-group-xs">
+                <div class="sel style1 sel-xs w100">
+                  <select class="form-control" formControlName="assignToGroup">
+                    <option value='' selected=selected>Select</option>
+                    <option value="{{group.group_name}}"
+                      *ngFor="let group of all_groups;let i=index">
+                      {{group.group_name}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix">
+        <button type="button" class="btn btn-xs bg-blue" (click)="UpdateRule()"
+          [disabled]="!ruleForm.valid">
+          <span>Update</span>
+        </button>
+        <button type="button" class="btn btn-xs bg-red" (click)="CancelRule()">
+          <span>Cancel</span>
+        </button>
+      </div>
+
+    </div>
+  </fieldset>
+</form>

@@ -1,0 +1,279 @@
+.btn {
+  display: inline-flex;
+  @include appearance(none);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--black-alpha2);
+  color: var(--white);
+  cursor: pointer;
+  @extend %themeRadius;
+  @extend %p0;
+  line-height: initial;
+  @extend %posRelative;
+  @include text-shadow(0px, 1px, 2px, var(--black-alpha1));
+  @extend %noUserSelect;
+  @extend %transitionAll150;
+  overflow: visible;
+  white-space: nowrap;
+  &:hover,
+  &:active {
+    outline: 0;
+    text-decoration: none;
+    @extend %noShadow;
+    // @include box-shadow-dual (0 1px 1px 0 var(--black-alpha1), 0 10px 20px 0 var(--black-alpha2));
+    // @include box-shadow-tri(0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12));
+    // @include box-shadow-tri (0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12));
+  }
+  &:after {
+    content: '';
+    @extend %op0;
+    @include transition-dual(
+      opacity 0.2s cubic-bezier(0.35, 0, 0.25, 1),
+      background-color 0.2s cubic-bezier(0.35, 0, 0.25, 1)
+    );
+  }
+  > i,
+  > img,
+  > span {
+    @extend %noUserSelect;
+    pointer-events: none;
+  }
+  > span {
+    &:first-child {
+      margin-right: 7px;
+    }
+    &:last-child {
+      margin-left: 7px;
+    }
+    &:only-child {
+      margin: 0px;
+    }
+  }
+  &.btn-xxs {
+    @include btn-generator('xxs');
+  }
+  &.btn-xs {
+    @include btn-generator('xs');
+  }
+  &.btn-sm {
+    @include btn-generator('sm');
+  }
+  &.btn-md {
+    @include btn-generator('md');
+  }
+  &.btn-lg {
+    @include btn-generator('lg');
+  }
+  &.btn-xl {
+    @include btn-generator('xl');
+  }
+
+  &.btn-transparent {
+    background: none;
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+    min-width: inherit;
+  }
+  @each $color, $value in $colors {
+    $dashColor: '--' + $color;
+    &.bg-#{$color} {
+      &:hover {
+        background-color: var(#{$dashColor}-dark);
+      }
+    }
+  }
+  @each $color, $value in $elements {
+    $dashColor: '--' + $color;
+    &.bg-#{$color} {
+      &:hover {
+        background-color: var(#{$dashColor}-dark);
+      }
+    }
+  }
+  &.btn-theme {
+    font-weight: 500;
+    min-width: inherit;
+    border-color: var(--theme-gray);
+    background-color: transparent;
+    color: var(--theme-pro-gray);
+    letter-spacing: 0.03em;
+    &:hover {
+      background: transparent;
+      background-color: var(--blue);
+      color: var(--white);
+      > span {
+        color: var(--white);
+      }
+    }
+    > svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
+  &.btn-icon {
+    line-height: 28px;
+    overflow: hidden;
+    > .svg,
+    > .icon {
+      width: 20px;
+      height: 20px;
+      padding: 5px 10px;
+      @extend %floatToYCenter;
+      @extend %transitionAll150;
+    }
+    > span {
+      margin: 0 !important;
+    }
+    &.left {
+      padding-left: 60px;
+      > .svg,
+      > .icon {
+        left: 0;
+        border-right: 1px solid var(--black-alpha2);
+      }
+    }
+    &.right {
+      padding-right: 60px;
+      > .svg,
+      > .icon {
+        right: 0;
+        border-left: 1px solid var(--black-alpha2);
+      }
+    }
+  }
+  &.btn-round {
+    min-width: inherit;
+    width: 40px;
+    height: 40px;
+    padding: 0 !important;
+    @extend %radCircle;
+    i,
+    img {
+      @extend %floatToCenter;
+    }
+    > label {
+      width: 40px;
+      height: 40px;
+      @extend %cursorPointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  &.btnSpinner {
+    @extend %posRelative;
+    pointer-events: none;
+    @extend %noUserSelect;
+    overflow: hidden;
+    &:before {
+      content: '';
+      @extend %width100;
+      @extend %height100;
+      display: block;
+      @extend %posAbsolute;
+      top: 0;
+      left: 0;
+      background: var(--black-alpha7);
+    }
+    span {
+      content: '';
+      text-indent: -999px;
+      &:before {
+        content: '';
+        font-size: 18px !important;
+        width: 20px;
+        height: 20px;
+        line-height: 21px;
+        @extend %posAbsolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+        text-align: center;
+        display: inline-block;
+        background: url('/assets/img/loaders/spin-loader.svg') no-repeat;
+        background-size: cover;
+      }
+    }
+  }
+}
+
+.btn-block {
+  display: block;
+  @extend %width100;
+
+  + .btn-block {
+    margin-top: 5px;
+  }
+}
+
+.btn-group {
+  @extend %posRelative;
+  @extend %displayFlex;
+  flex: 1;
+  @extend %flexRow;
+  vertical-align: middle;
+  > .btn {
+    @extend %posRelative;
+    > .btn-lg + .dropdown-toggle {
+      padding-right: 12px;
+      padding-left: 12px;
+    }
+    &:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+      border-radius: 0;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    &:first-child {
+      margin-left: 0;
+    }
+    &:first-child:not(:last-child) {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+    &:last-child:not(:first-child) {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+    }
+    > .dropdown-toggle {
+      &:not(:first-child) {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+      }
+    }
+  }
+
+  .btn + .btn,
+  .btn + .btn-group,
+  .btn-group + .btn,
+  .btn-group + .btn-group {
+    margin-left: -1px;
+  }
+}
+
+.floatingBubble {
+	display: flex;
+	@extend %floatToCenter;
+	position: absolute;
+	top: -28px;
+	z-index: 9999;
+	> div {
+		padding: 10px;
+    @extend %card;
+    border-radius: 18px;
+		background-color: var(--orange);
+		border-color: var(--orange-dark);
+		color: var(--white);
+		cursor: pointer;
+		display: flex;
+    flex-direction: row;
+    width: 150px;
+		> span {
+			padding-left: 7px;
+			margin-left: 7px;
+			// border-left: 1px solid;
+		}
+	}
+}

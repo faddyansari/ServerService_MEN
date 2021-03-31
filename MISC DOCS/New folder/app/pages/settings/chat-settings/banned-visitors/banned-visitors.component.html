@@ -1,0 +1,119 @@
+<!-- <div class="tab-pane clearfix" *ngIf="(pageState == 'left') && verified">
+	<div class="list-items clearfix style3" *ngIf="(leftVisitors(visitorList) | filter: searchValue : ['fullCountryName','country','username', 'url,0','deviceInfo,name','deviceInfo,os'] : false).length">
+		<ul class="activateScrollbar clearfix p-0">
+			<li class="item clearfix notif"
+				*ngFor="let visitor of leftVisitors(visitorList) | filter: searchValue : ['fullCountryName','country','username', 'url,0','deviceInfo,name','deviceInfo,os'] : false">
+				<div class="info animated flipInX-delay"
+					[ngClass]="(selectedVisitor && (visitor.id == selectedVisitor.id)) ? 'active' : ''"
+					(click)="SelectVisitor(visitor.id)">
+					<div>
+						<div class="avatar" [ngStyle]="(visitor.viewColor) ? {'background-color' : visitor.viewColor + '40'} : {'background-color' : '#ccc'}">{{visitor.username | slice:0:2 | uppercase}}</div>
+					</div>
+					<div class="w-150">
+						<div class="name" title="{{visitor.username}}">
+							<span class="ellipsis">{{visitor.username}}</span>
+						</div>
+					</div>
+					<div class="w-150">
+						<div class="text-black" title="{{ visitor.email }}">
+							<span class="ellipsis">{{ visitor.email }}</span>
+						</div>
+					</div>
+					<div class="w-120">
+						<div class="timer">
+
+							<span *ngIf="visitor.hours > 0">{{visitor.hours}}h</span>
+							<span *ngIf="visitor.minutes > 0">{{visitor.minutes}}m</span>
+							<span *ngIf="visitor.seconds > 0">{{visitor.seconds}}s</span>
+						</div>
+					</div>
+					<div class="w-50">
+						<div class="flags">
+							<i class="flag ff-sm flag-{{visitor.country}}" title="{{visitor.fullCountryName}}"></i>
+							<span>{{visitor.country}}</span>
+						</div>
+					</div>
+					<div class="w-140">
+						<div class="select-tools">
+							<div class="returning svgOnHover" *ngIf="!visitor.returningVisitor">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#returning" class="text-gray"/>
+								</svg>
+							</div>
+							<div class="returning svgOnHover" *ngIf="visitor.returningVisitor">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#returning" class="text-blue"/>
+								</svg>
+							</div>
+							<div class="android svgOnHover" *ngIf="visitor.deviceInfo && (visitor.deviceInfo.name | lowercase) == 'android'" title="Andriod">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#android-colored"/>
+								</svg>
+							</div>
+							<div class="windows svgOnHover" *ngIf="visitor.deviceInfo && (visitor.deviceInfo.name | lowercase) == 'windows'" title="Windows">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#windows-colored"/>
+								</svg>
+							</div>
+							<div class="apple svgOnHover" *ngIf="visitor.deviceInfo && (visitor.deviceInfo.name | lowercase) == 'apple'" title="Apple">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#apple-colored"/>
+								</svg>
+							</div>
+							<div class="chrome svgOnHover" *ngIf="visitor.deviceInfo && (visitor.deviceInfo.os | lowercase) == 'chrome'" title="{{visitor.deviceInfo.version}}">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#chrome-colored"/>
+								</svg>
+							</div>
+							<div class="safari svgOnHover" *ngIf="visitor.deviceInfo && (visitor.deviceInfo.os | lowercase) == 'safari'" title="{{visitor.deviceInfo.version}}">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#safari-colored"/>
+								</svg>
+							</div>
+							<div class="firefox svgOnHover" *ngIf="visitor.deviceInfo && (visitor.deviceInfo.os | lowercase) == 'firefox'" title="{{visitor.deviceInfo.version}}">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#firefox-colored"/>
+								</svg>
+							</div>
+						</div>
+					</div>
+					<div class="w-150">
+						<div class="ip">
+							<span class="clearfix">{{ visitor.ip }}</span>
+						</div>
+					</div>
+					<div class="w-250">
+						<div class="url">
+							<span class="ellipsis" title="{{visitor.url[0]}}">{{visitor.url[0]}}</span>
+						</div>
+					</div>
+					<div class="w-150" *ngIf="visitor.state == 3 || visitor.state == 4">
+						<div class="name" title="{{ visitor.agent.name }}">
+							<svg class="svg w-12 h-12">
+								<use href="/assets/img/icons/icons-sprite.svg#agents-colored"/>
+							</svg>
+							<span> {{ visitor.agent.name }}</span>
+						</div>
+					</div>
+					<div class="w-150" *ngIf="visitor.state != 3 && visitor.state != 4">
+						<div class="name">
+							<svg class="svg w-12 h-12">
+								<use href="/assets/img/icons/icons-sprite.svg#agents-colored"/>
+							</svg>
+							<span> N/A</span>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="notAvailable" *ngIf="!(leftVisitors(visitorList) | filter: searchValue : ['fullCountryName','country'] : false).length && !loading">
+		<svg class="svg w-100 h-100 active">
+			<use href="/assets/img/icons/icons-sprite.svg#no-visitors-colored" class="text-gray"/>
+		</svg>
+		<span>No Visitors Left</span>
+	</div>
+	<div class="notAvailable" *ngIf="loading">
+		<app-preloader type="cube-grid" class="floatToCenter"></app-preloader>
+	</div>
+</div> -->

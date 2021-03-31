@@ -1,0 +1,25 @@
+<div class="toggleList activityLog" *ngIf="ticketlog">
+	<div class="clearfix" *ngFor="let log of ToArray(ticketlog)">
+		<div class="logGroup">
+			<div class="dateLog">
+				<span>{{ log.date | dayDifferencePipe }}</span>
+			</div>
+			<ul class="list-items clearfix style4">
+				<li class="item clearfix notif" *ngFor="let ticketlog of log.groupedticketlogList">
+					<div>
+						<div class="info">
+
+							<span>{{(ticketlog.title) ? (ticketlog.title | uppercase) : 'Marked As '}}
+								<span [innerHTML]="ticketlog.status"
+									[ngClass]="(ticketlog.status == 'PENDING') ? 'text-orange' : (ticketlog.status == 'OPEN') ? 'text-red' : 'text-green'">
+								</span>
+							</span>by <b>{{ticketlog.updated_by}}</b>
+						</div>
+						<span
+							class="notif-count right bg-transparent p-0 text-blue">{{ticketlog.time_stamp | date:'shortTime'}}</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

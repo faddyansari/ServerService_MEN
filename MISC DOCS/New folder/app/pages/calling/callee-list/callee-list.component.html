@@ -1,0 +1,54 @@
+<ul class="list-items clearfix style1 activateScrollbar p-0" style="height: 450px;">
+	<li class="item clearfix animated flipInX-delay notif clearfix p-0 m-l-r-0">
+		<div class="clearfix">
+			<div>
+				<div class="avatar ava-xs">
+					<div class="nameInitials">
+						<span>AA</span>
+					</div>
+				</div>
+			</div>
+			<div class="availability">
+				<svg class="svg w-11 h-11 p-2 svg-default active">
+					<use *ngIf="conversation.state == 3" href="/assets/img/icons/icons-sprite.svg#dot" class="text-green"/>
+				</svg>
+			</div>
+			<div class="info">
+				<b class="name ellipsis fw-6">Full Name</b>
+				<span class="ellipsis msg svgOnHover">
+					<svg class="svg w-12 h-12 active">
+						<use href="/assets/img/icons/icons-sprite.svg#call-start" class="text-green"/>
+					</svg>
+					<svg class="svg w-12 h-12 active">
+						<use href="/assets/img/icons/icons-sprite.svg#call-end" class="text-red"/>
+					</svg>
+					<span>Call Connected / Disconnected</span>
+				</span>
+				<div class="notif-count right p-0 bg-transparent">
+					<span class="text-blue">Duration 22:00</span>
+				</div>
+			</div>
+		</div>
+	</li>
+	<!-- <li class="notAvailable">
+		<svg class="svg w-100 h-100 active">
+			<use href="/assets/img/icons/icons-sprite.svg#chats" class="text-gray"/>
+		</svg>
+		<span>No Calls Found!</span>
+	</li> -->
+</ul>
+<!-- <div class="notAvailable">
+	<app-preloader type="cube-grid" class="floatToCenter"></app-preloader>
+</div>
+<div class="notAvailable">
+	<svg class="svg w-100 h-100 active">
+		<use href="/assets/img/icons/icons-sprite.svg#contacts" class="text-gray"/>
+	</svg>
+	<span>No Chats Available</span>
+</div>
+<div class="notAvailable">
+	<svg class="svg w-100 h-100 active">
+		<use href="/assets/img/icons/icons-sprite.svg#contacts" class="text-gray"/>
+	</svg>
+	<span>No Archives Available</span>
+</div> -->

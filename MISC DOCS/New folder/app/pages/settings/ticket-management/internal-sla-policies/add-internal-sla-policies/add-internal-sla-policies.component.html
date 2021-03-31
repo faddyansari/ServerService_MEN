@@ -1,0 +1,476 @@
+<div class="activateScrollbar clearfix p-0">
+    <form class="require-validation" [formGroup]="InternalPolicyForm">
+        <!-- Policy Name -->
+        <div class="input-block">
+            <label>Policy Name</label>
+            <input type="text" class="form-control input-sm" autocomplete="off" formControlName="policyName" placeholder="Enter policy name.. Keep meaningful name">
+        </div>
+
+        <!-- Description of policy -->
+        <div class="input-block clearfix">
+            <label>Policy Description</label>
+            <textarea autocomplete="off" class="form-control input-sm no-resize" rows="5" placeholder="Description for policy" name="policyDesc" formControlName="policyDesc"></textarea>
+        </div>
+
+        <hr class="clearfix bg-border">
+
+        <!-- Apply To -->
+        <fieldset class="w100 clearfix m-b-20">
+            <div class="input-block">
+                <h5 class="m-0 p-0">Apply this to:</h5>
+                <p>Choose when this SLA policy must be enforced</p>
+            </div>
+            <div class="list-items clearfix style4 p-0">
+                <li class="item clearfix m-l-r-0 notif f-column" formArrayName="policyApplyTo">
+                    <div class="input-block f-align-start">
+                        <p class="text-red">Select at least one trigger condition.</p>
+                    </div>
+                    <ng-template ngFor let-applyTo [ngForOf]="GetControls('policyApplyTo')" let-index="index">
+                        <div class="clearfix m-b-10">
+                            <div class="info" [formGroupName]="index">
+                                <div class="input-block">
+                                    <div class="sel style1 sel-sm">
+                                        <select class="form-control input-sm" formControlName="name">
+											<option value="" selected disabled>Select Category</option>
+											<option value="{{applyTo.name}}"
+												*ngFor="let applyTo of GetAvailableApplyTo(index) | keys">
+												{{applyTo.details}}</option>
+										</select>
+                                    </div>
+                                </div>
+                                <div class="input-block">
+                                    <div *ngIf="applyTo.get('name').value == 'group'">
+                                        <app-custom-select class="input-sm" [items]="Groups" [selectLabel]="'Select Group'" formControlName="value" [bindLabel]="'group_name'" [bindValue]="'group_name'" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value"
+                                            [multiple]="true" [search]="false"></app-custom-select>
+                                        <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                            Please Select Group</p>
+                                    </div>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'source'">
+                                    <app-custom-select class="input-sm" [items]="SrcList" [selectLabel]="'Select Source'" formControlName="value" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value" [multiple]="true" [search]="false"></app-custom-select>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Select Source</p>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'state'">
+                                    <app-custom-select class="input-sm" [items]="StateList" [selectLabel]="'Select State'" formControlName="value" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value" [multiple]="true" [search]="false"></app-custom-select>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Select State</p>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'assigned_to'">
+                                    <app-custom-select class="input-sm" style="height: max-content;" [items]="all_agents" [selectLabel]="'Select Agents'" formControlName="value" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value" [bindLabel]="'email'"
+                                        [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMore()" (onSearch)="onSearch($event)"></app-custom-select>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Select Agent</p>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'merged'">
+                                    <app-custom-select class="input-sm" [items]="Merge" [selectLabel]="'Select Merge Status'" formControlName="value" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value" [multiple]="false" [search]="false"></app-custom-select>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Select Merge Status</p>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'viewState'">
+                                    <app-custom-select class="input-sm" [items]="Viewstate" [selectLabel]="'Select View State'" formControlName="value" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value" [multiple]="false" [search]="false"></app-custom-select>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Select View State</p>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'priority'">
+                                    <app-custom-select class="input-sm" [items]="PriorityList" [selectLabel]="'Select Priority'" formControlName="value" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value" [multiple]="true" [search]="false"></app-custom-select>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Select Priority</p>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'cannedForm'">
+                                    <app-custom-select class="input-sm" [items]="cannedForms" [selectLabel]="'Select Form'" formControlName="value" [bindLabel]="'formName'" [bindValue]="'formName'" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value"
+                                        [multiple]="true" [search]="false"></app-custom-select>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Select Canned Form</p>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'tags'">
+                                    <app-chips-input class="input-sm tag-input" name="tags" formControlName="value" [regex]="tagPattern" [maxTag]="6" formControlName="value" [placeholder]="'Add Tags start with #'" [delimiters]="[',']" [errorMsg]="'Incorrect tag'"></app-chips-input>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Add Tags</p>
+                                </div>
+                                <div class="input-block" *ngIf="applyTo.get('name').value == 'watchers'">
+                                    <app-custom-select class="input-sm" [items]="watchers_list" [selectLabel]="'Select Watchers'" formControlName="value" [bindLabel]="'email'" [bindValue]="'email'" [selectedItems]="((InternalPolicyForm.controls['policyApplyTo']).controls[index]).controls['value'].value"
+                                        [multiple]="true"></app-custom-select>
+                                    <p class="text-red m-b-5" *ngIf="!applyTo.valid && applyTo.dirty" class="text-red">
+                                        Please Select Watchers</p>
+                                </div>
+                            </div>
+
+                            <div class="actions" *ngIf="InternalPolicyForm.get('policyApplyTo')['controls'].length > 1 ">
+                                <button class="btn btn-transparent svgOnHover tooltip top-right" (click)="DeleteApplyTo(index)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" />
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="clearfix">
+                        <button class="btn btn-sm btn-theme" (click)="addApplyTo()" *ngIf="InternalPolicyForm.get('policyApplyTo')['controls'].length < 12 ">
+							<span>Add New</span>
+						</button>
+                    </div>
+                </li>
+            </div>
+        </fieldset>
+        <hr class="clearfix bg-border">
+
+        <!-- Actions -->
+        <fieldset class="w100 clearfix m-b-20">
+            <div class="input-block">
+                <h5 class="m-0 p-0">Add Actions</h5>
+                <p>Check these actions sequentially</p>
+            </div>
+
+            <div class="list-items clearfix style4 p-0">
+                <div>
+                    <div class="pretty p-default p-round">
+                        <input type="radio" formControlName="operator" value="or" checked>
+                        <div class="state">
+                            <label>Match any of the below</label>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="pretty p-default p-round">
+                        <input type="radio" formControlName="operator" value="and">
+                        <div class="state">
+                            <label>Match all of the below</label>
+                        </div>
+                    </div>
+                </div>
+                <li class="item clearfix m-l-r-0 notif f-column" formArrayName="operations">
+                    <div class="input-block f-align-start">
+                        <p class="text-red">Select at least one action</p>
+                    </div>
+                    <ng-template ngFor let-action [ngForOf]="GetControls('operations')" let-index="index">
+                        <div class="clearfix m-b-10">
+                            <div class="info" [formGroupName]="index">
+                                <div class="row clearfix">
+                                    <div class="col-sm-2 col-xs-12">
+                                        <div class="sel style1 sel-sm">
+                                            <select class="form-control input-sm m-b-0" formControlName="operationName">
+												<option value="" selected disabled>Select Action</option>
+												<option value="{{avAction.name}}"
+													[disabled]="avAction.name.includes('null')"
+													*ngFor="let avAction of GetAvailableActions(index) | keys">
+													{{avAction.details}}</option>
+											</select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8 col-xs-12" *ngIf="action.get('operationName').value == 'tags'">
+                                        <div class="input-block">
+                                            <app-chips-input class="input-sm tag-input" name="tags" [regex]="tagPattern" [(ngModel)]="selectedTags" [placeholder]="'Add Tags start with #'" [delimiters]="[',']" [items]="selectedTags" formControlName="operationValue" [errorMsg]="'Incorrect tag'">
+                                            </app-chips-input>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8 col-xs-12" *ngIf="action.get('operationName').value == 'ticketNotes'">
+                                        <div class="input-block">
+                                            <textarea class="form-control input-sm" [ngxSummernote]="config" name="note" formControlName="operationValue" rows="4" autocomplete="off">
+											</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12">
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'priority'">
+                                            <div class="sel style1 sel-sm">
+                                                <select formControlName="operationValue" class="form-control input-sm m-b-0">
+													<option value="" selected disabled>Select Priority</option>
+													<option value="{{priority}}" *ngFor="let priority of PriorityList">
+														{{priority}} </option>
+												</select>
+                                            </div>
+                                        </div>
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'assigned_to'">
+                                            <app-custom-select class="input-sm" style="height: max-content;" [items]="all_agents" [selectLabel]="'Select Agents'" formControlName="operationValue" [selectedItems]="((InternalPolicyForm.controls['operations']).controls[index]).controls['operationValue'].value"
+                                                [bindLabel]="'email'" [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreRem()" (onSearch)="onSearchRem($event)">
+                                            </app-custom-select>
+
+                                        </div>
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'snoozes'">
+                                            <input class="form-control input-sm" mode="daytime" name="date" placeholder="Select Date and Time" theme="dp-material" [dpDayPicker]="datePickerConfig" formControlName="operationValue">
+                                        </div>
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'viewState'">
+                                            <div class="sel style1 sel-sm">
+                                                <select class="form-control input-sm" formControlName="operationValue">
+													<option value='' selected disabled>Select ViewState</option>
+													<option value="READ">READ</option>
+													<option value="UNREAD">UNREAD</option>
+												</select>
+                                            </div>
+                                        </div>
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'group'">
+                                            <div class="sel style1 sel-sm">
+                                                <select class="form-control input-sm" formControlName="operationValue" (change)="GetAvailableAgents($event)">
+													<option value='' selected disabled>Select Group</option>
+													<option value={{group.group_name}} *ngFor="let group of Groups">
+														{{group.group_name}}</option>
+												</select>
+
+                                            </div>
+                                        </div>
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'state'">
+                                            <div class="sel style1 sel-sm">
+                                                <select formControlName="operationValue" class="form-control input-sm m-b-0">
+													<option value="" selected disabled>Select State</option>
+													<option value="{{state}}" *ngFor="let state of StateList">
+														{{state}} </option>
+												</select>
+                                            </div>
+                                        </div>
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'lastScenarioExecuted'">
+                                            <div class="sel style1 sel-sm">
+                                                <select formControlName="operationValue" class="form-control input-sm m-b-0">
+													<option value="" selected disabled>Select Scenario</option>
+													<option value="{{scenario.scenarioTitle}}"
+														*ngFor="let scenario of allscenarios">
+														{{scenario.scenarioTitle}} </option>
+												</select>
+                                            </div>
+                                        </div>
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'watchers'">
+                                            <app-custom-select class="input-sm" style="height: max-content;" [items]="all_agents" [selectLabel]="'Select Agents'" formControlName="operationValue" [selectedItems]="((InternalPolicyForm.controls['operations']).controls[index]).controls['operationValue'].value"
+                                                [bindLabel]="'email'" [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreRem()" (onSearch)="onSearchRem($event)">
+                                            </app-custom-select>
+                                        </div>
+                                        <div class="input-block m-b-0" *ngIf="action.get('operationName').value == 'todo'">
+                                            <input type="text" formControlName="operationValue" class="form-control input-sm b-0 b-b-2 no-shadow border-gray-dark no-rad" placeholder="Enter task..">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions" *ngIf="InternalPolicyForm.get('operations').controls.length > 1">
+                                <button class="btn btn-transparent svgOnHover tooltip top-right" (click)="DeleteAction(index)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" />
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="clearfix">
+                        <button class="btn btn-sm btn-theme" (click)="AddAction()" *ngIf="InternalPolicyForm.get('operations')['controls'].length < 12">
+							<span>Add New</span>
+						</button>
+                    </div>
+                </li>
+            </div>
+        </fieldset>
+        <hr class="clearfix bg-border">
+
+        <!-- Policy Target -->
+        <fieldset class="w100 clearfix m-b-20">
+            <div class="input-block">
+                <h5 class="m-b-0 p-0">SLA Targets</h5>
+                <p>Set Service Level Targets for each ticket priority</p>
+            </div>
+            <div class="p-14 bg-theme-bg">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="avgWaitTime" formArrayName="policyTarget">
+                        <thead>
+                            <tr>
+                                <th>Priority</th>
+                                <!-- <th>Activity</th> -->
+                                <th>Perform within</th>
+                                <th>Reminder email</th>
+                                <th>Escalation email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let slatarget of GetControls('policyTarget');let index=index" [formGroupName]="index">
+                                <td>{{slatarget.value.priority}}</td>
+
+                                <td>
+                                    <div class="input-group-sm">
+                                        <input type="number" name="TimeKey" min="0" max="50" class="form-control" formControlName="TimeKey" value="15" min="1">
+                                        <div class="sel style1 sel-sm">
+                                            <select class="form-control input-sm m-0" formControlName="TimeVal">
+												<option value="mins">Mins</option>
+												<option value="hour">Hours</option>
+												<option value="day">Days</option>
+												<option value="month">Months</option>
+											</select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                        <input type="checkbox" formControlName="emailActivationReminder" />
+                                        <div class="state p-on">
+                                            <label></label>
+                                        </div>
+                                        <div class="state p-off">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                        <input type="checkbox" formControlName="emailActivationEscalation" />
+                                        <div class="state p-on">
+                                            <label></label>
+                                        </div>
+                                        <div class="state p-off">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+        <hr class="clearfix bg-border">
+
+        <!-- Reminder -->
+        <fieldset class="w100 clearfix m-b-20">
+            <div class="input-block">
+                <h5 class="m-0 p-0">Due Time</h5>
+                <button class="btn btn-xxs bg-red m-b-10" (click)="UnsetReminder()" *ngIf="setReminder">Close</button>
+
+                <p>What happens when this SLA due time approaches?</p>
+            </div>
+            <button class="btn btn-sm btn-theme m-b-10" (click)="setSLAreminders()" *ngIf="!setReminder">
+				<span>Set SLA reminder</span>
+			</button>
+            <div class="list-items clearfix style4 p-0" *ngIf="setReminder">
+                <li class="item clearfix m-l-r-0 notif f-column" formArrayName="reminder">
+                    <div class="input-block f-align-start">
+                        <span>Set reminder rule when a activity due time approaches</span>
+                    </div>
+                    <ng-template ngFor let-remind [ngForOf]="GetControls('reminder')" let-index="index">
+                        <div class="clearfix m-b-10" [formGroupName]="index">
+                            <div class="info clearfix">
+                                <div class="input-block">
+                                    <label>Remind Before</label>
+                                    <div class="input-group-sm m-0">
+                                        <input type="number" name="timeKey" class="form-control w-100" min="1" formControlName="timeKey" value="15">
+                                        <div class="sel style1 sel-sm w-100">
+                                            <select class="form-control input-sm" formControlName="timeVal">
+												<option value="mins">Mins</option>
+												<option value="hour">Hours</option>
+												<option value="day">Days</option>
+												<option value="month">Months</option>
+											</select>
+                                        </div>
+                                        <div class="input-group-sm">
+                                            <app-custom-select class="input-sm" style="height: max-content;" [items]="all_agents" [selectLabel]="'Select Agents'" formControlName="notifyTo" [selectedItems]="((InternalPolicyForm.controls['reminder']).controls[0]).controls['notifyTo'].value" [bindLabel]="'email'"
+                                                [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreRem()" (onSearch)="onSearchRem($event)">
+                                            </app-custom-select>
+                                        </div>
+                                        <div class="input-block">
+                                            <app-chips-input class="input-sm tag-input" [regex]="emailPattern" name="emails" [items]="((InternalPolicyForm.controls['reminder']).controls[0]).controls['emails'].value" [placeholder]="'Additional Emails'" [delimiters]="[',']" formControlName="emails"
+                                                [errorMsg]="'Email is not valid'" [maxTag]="5">
+                                            </app-chips-input>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-transparent svgOnHover tooltip left" (click)="deleteReminder(index)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" />
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                </li>
+            </div>
+        </fieldset>
+
+        <!-- Escalation -->
+        <fieldset class="w100 clearfix m-b-20">
+            <div class="input-block">
+                <h5 class="m-0 p-0">Violations</h5>
+                <p>What happens when this SLA is violated?</p>
+            </div>
+            <div class="list-items clearfix style4 p-0">
+                <li class="item clearfix m-l-r-0 notif f-column" formArrayName="escalation">
+                    <div class="input-block f-align-start">
+                        <p>Set escalation hierarchy when SLA target is violated</p>
+                    </div>
+                    <ng-template ngFor let-violate [ngForOf]="GetControls('escalation')" let-j="index">
+                        <div class="clearfix m-b-10" [formGroupName]="j">
+                            <div class="info clearfix">
+                                <div class="input-block">
+                                    <label>Escalate</label>
+                                    <div class="input-group-sm">
+                                        <div class="sel style1 sel-sm w-150">
+                                            <select class="form-control input-sm" formControlName="duration">
+
+												<option value="" selected>Select Duration</option>
+												<ng-template ngFor let-violate
+													[ngForOf]="GetAvailableViolationDurations(j) | keys"
+													let-index="index">
+													<option value="{{violate.name}}">{{violate.details}}
+													</option>
+												</ng-template>
+											</select>
+                                        </div>
+                                        <div class="input-group-sm">
+                                            <app-custom-select class="input-sm" style="height: max-content;" [items]="all_agents" [selectLabel]="'Select Agents'" formControlName="notifyTo" [selectedItems]="((InternalPolicyForm.controls['escalation']).controls[j]).controls['notifyTo'].value" [bindLabel]="'email'"
+                                                [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreEsc()" (onSearch)="onSearchEsc($event)">
+                                            </app-custom-select>
+                                        </div>
+                                        <div class="input-block">
+                                            <app-chips-input class="input-sm tag-input" [regex]="emailPattern" name="emails" [items]="((InternalPolicyForm.controls['escalation']).controls[j]).controls['emails'].value" [placeholder]="'Additional Emails'" [delimiters]="[',']" formControlName="emails"
+                                                [errorMsg]="'Email is not valid'" [maxTag]="5">
+                                            </app-chips-input>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions" *ngIf="InternalPolicyForm.get('escalation')['controls'].length > 1">
+                                <button class="btn btn-transparent svgOnHover tooltip left" (click)="deleteEscalation(j)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" />
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="clearfix">
+                        <button class="btn btn-sm btn-theme" (click)="addEscalation()" *ngIf="InternalPolicyForm.get('escalation')['controls'].length <4">
+							<span>Add level {{InternalPolicyForm.get('escalation').controls.length + 1}} rule</span>
+						</button>
+                    </div>
+                </li>
+            </div>
+        </fieldset>
+
+        <!-- Action Buttons -->
+        <div class="clearfix actions">
+            <button type="button" class="btn btn-xs bg-blue" *ngIf="!selectedIntPolicy" (click)="AddIntPolicy()" [disabled]="!InternalPolicyForm.valid">
+				<span>Save</span>
+			</button>
+            <button type="button" class="btn btn-xs bg-blue" *ngIf="selectedIntPolicy" (click)="UpdateIntPolicy()">
+				<span>Update</span>
+			</button>
+            <button type="button" class="btn btn-xs bg-red" (click)="Cancel()">
+				<span>Cancel</span>
+			</button>
+        </div>
+
+    </form>
+</div>

@@ -1,0 +1,136 @@
+<section class="content clearfix animated fadeIn info-hidden" id="visitorsComponent">
+    <div class="content-view">
+        <div class="activateScrollbar clearfix p-7">
+            <div class="viewChat">
+                <div class="content-list clearfix">
+                    <div class="nav-tabs-custom clearfix">
+                        <div class="tab-content clearfix">
+                            <div class="nav nav-tabs filters cleafix">
+                                <li class="card clearfix" [ngClass]="(pageState == 'browsing') ? 'active' : ''"
+                                    (click)="changeState('browsing');">
+                                    <a>
+                                        <h6>Browsing</h6>
+                                        <span>{{browsingVisitorsCount}}</span>
+                                    </a>
+                                </li>
+                                <li class="card clearfix" [ngClass]="(pageState == 'queued') ? 'active' : ''"
+                                    (click)="changeState('queued');">
+                                    <a>
+                                        <h6>Unassigned</h6>
+                                        <span>{{queuedVisitorsCount}}</span>
+                                    </a>
+                                </li>
+                                <li class="card clearfix" [ngClass]="(pageState == 'chatting') ? 'active' : ''"
+                                    (click)="changeState('chatting');">
+                                    <a>
+                                        <h6>Chatting</h6>
+                                        <span>{{chattingVisitorsCount}}</span>
+                                    </a>
+                                </li>
+                                <li class="card clearfix" [ngClass]="(pageState == 'invited') ? 'active' : ''"
+                                    (click)="changeState('invited');">
+                                    <a>
+                                        <h6>Invited</h6>
+                                        <span>{{invitedVisitorsCount}}</span>
+                                    </a>
+                                </li>
+                                <li class="card clearfix" [ngClass]="(pageState == 'inactive') ? 'active' : ''"
+                                    (click)="changeState('inactive');">
+                                    <a>
+                                        <h6>Inactive</h6>
+                                        <span>{{inactiveVisitorsCount}}</span>
+                                    </a>
+                                </li>
+                                <li class="card clearfix" [ngClass]="(pageState == 'left') ? 'active' : ''"
+                                    (click)="changeState('left');">
+                                    <a>
+                                        <h6>Left</h6>
+                                        <span>{{leftVisitorsCount}}</span>
+                                    </a>
+                                </li>
+                            </div>
+                            <div class="toolbox content-toolbox clearfix m-t-b-7">
+                                <a class="btn btn-xs bg-gray-light no-shadow">
+                                    <span>Search</span>
+                                    <div class="ticketSearch active">
+                                        <form [formGroup]="searchForm">
+                                            <input type="text" class="p-l-10 no-rad" placeholder="search..."
+                                                autocomplete="off" formControlName="searchValue">
+                                        </form>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- Pre Installation Data List Starts Here -->
+                            <div class="tab-pane active preInstallation" *ngIf="!verified">
+                                <div class="list-items clearfix style1">
+                                    <ul class="activateScrollbar clearfix p-0">
+                                        <li class="item clearfix notif" *ngFor="let item of [1,2,3,4,5,6,7,8]">
+                                            <div class="info animated flipInX-delay">
+                                                <div>
+                                                    <div class="name">
+                                                        <div class="avatar ava-xs" style="background-color:#ccc;">&nbsp;
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Pre Installation Data List Ends Here -->
+
+                            <app-browsing *ngIf="verified && pageState == 'browsing'"
+                                [performingAction]="performingAction"
+                                [searchValue]="searchForm.get('searchValue').value" [aEng]="aEng" [loading]="loading"
+                                [tick]="tick" [action]="action"
+                                [visitorList]="visitorList | filterByPageState : 'browsing'"
+                                [selectedVisitor]="selectedVisitor" (SelectedVisitorId)="SelectVisitor($event)"
+                                (InitiateChatVisitorId)="InitiateChat($event)">
+                            </app-browsing>
+
+                            <app-chatting *ngIf="verified && pageState == 'chatting'" [permissions]="permissions"
+                                [performingAction]="performingAction" [agent]="agent"
+                                [searchValue]="searchForm.get('searchValue').value" [loading]="loading" [tick]="tick"
+                                [action]="action" [visitorList]="visitorList | filterByPageState : 'chatting'"
+                                [selectedVisitor]="selectedVisitor" (SelectedVisitorId)="SelectVisitor($event)"
+                                [SuperVisedChatList]="SuperVisedChatList" (SuperviseChat)="SuperviseChat($event)"
+                                (TransferChatDetails)="TransferChat($event)" (endSuperVision)="EndSuperVision($event)">
+                            </app-chatting>
+
+                            <app-invited *ngIf="verified && pageState == 'invited'"
+                                [searchValue]="searchForm.get('searchValue').value" [loading]="loading" [tick]="tick"
+                                [visitorList]="visitorList | filterByPageState : 'invited'"
+                                [selectedVisitor]="selectedVisitor" (SelectedVisitorId)="SelectVisitor($event)">
+                            </app-invited>
+
+                            <app-inactive *ngIf="verified && pageState == 'inactive'"
+                                [searchValue]="searchForm.get('searchValue').value" [loading]="loading" [tick]="tick"
+                                [action]="action" [visitorList]="visitorList | filterByPageState : 'inactive'"
+                                [selectedVisitor]="selectedVisitor" (SelectedVisitorId)="SelectVisitor($event)"
+                                (ManualAssignmentVisitorId)="ManualQueueAssignment($event)">
+                            </app-inactive>
+
+                            <app-left *ngIf="verified && pageState == 'left'"
+                                [searchValue]="searchForm.get('searchValue').value" [loading]="loading" [tick]="tick"
+                                [LeftvisitorList]="LeftvisitorList" [selectedVisitor]="selectedVisitor"
+                                (SelectedVisitorIdLeft)="SelectedVisitorLeft($event)">
+                            </app-left>
+
+                            <app-queued *ngIf="verified && pageState == 'queued'" [performingAction]="performingAction"
+                                [searchValue]="searchForm.get('searchValue').value" [loading]="loading" [tick]="tick"
+                                [ManualAssign]="ManualAssign" [action]="action"
+                                [visitorList]="visitorList  | filterByPageState : 'queued'"
+                                [selectedVisitor]="selectedVisitor" (SelectedVisitorId)="SelectVisitor($event)"
+                                (ManualAssignmentVisitorId)="ManualQueueAssignment($event)">
+                            </app-queued>
+                        </div>
+                    </div>
+                </div>
+                <app-visitor-details class="viewHistory card p-0" [visitor]="selectedVisitor" [agent]="agent"
+                    [pageState]="pageState" [Logs]="Logs" 
+                    (BanVisitorEmitter)="BanVisitor($event)" (actionValue)="performAction($event)">
+                </app-visitor-details>
+            </div>
+        </div>
+    </div>
+</section>

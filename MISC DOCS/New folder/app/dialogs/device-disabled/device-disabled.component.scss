@@ -1,0 +1,52 @@
+@charset "utf-8";
+
+@import '../../../assets/sass/partials/variables';
+@import '../../../assets/sass/partials/mixins';
+@import '../../../assets/sass/partials/extensions';
+
+.info_wrap {
+    position: absolute;
+    overflow: hidden;
+    top: 10%;
+    right: 10%;
+    bottom: 85px;
+    left: 10%;
+    padding: 20px 50px;
+    display: block;
+    @extend %themeRadius;
+    box-shadow: 0px 20px 50px -20px #000;
+    border: 1px solid #666;
+    background-color: var(--white);
+}
+
+.info_wrap:before {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background-color: var(--white);
+    content: "";
+    bottom: 10px;
+    left: 50%;
+    top: 95%;
+    color: #fff;
+    border-radius: 50%;
+}
+
+.info_wrap .info {
+    @extend %posRelative;
+    z-index: 1;
+}
+
+@media scren and (min-width:768px) {
+    .info_wrap,
+    .info_wrap .info {
+        display: block;
+    }
+}
+
+@media scren and (min-width:1024px) {
+    .info_wrap,
+    .info_wrap .info {
+        display: none;
+    }
+}

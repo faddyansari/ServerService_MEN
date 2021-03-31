@@ -1,0 +1,107 @@
+<div class="accessForm clearfix card">
+    <div class="activateScrollbar clearfix">
+        <form [formGroup]="accessForm" *ngIf="!authCode">
+            <h2 class="title-with-border border-gray">Log In</h2>
+            <div class="iconFields input-block svgOnHover">
+                <input type="email" class="form-control input-lg" id="email" placeholder="Email" [formControl]="accessForm.controls['email']">
+				<svg class="svg p-l-r-0 h-25 svg-default active">
+					<use href="/assets/img/icons/icons-sprite.svg#agents"/>
+				</svg>
+            </div>
+            <div class="iconFields input-block">
+                <input [type]="(showPassword) ? 'text' : 'password'" class="form-control input-lg" id="password" placeholder="Password" [formControl]="accessForm.controls['password']">
+                <svg class="svg p-l-r-0 h-25 svg-default active">
+					<use href="/assets/img/icons/icons-sprite.svg#key"/>
+				</svg>
+                <span class="toggle-password" (click)="ShowPassword()"></span>
+            </div>
+            <p class="text-red clearfix" *ngIf="_authService.incorrect">Incorrect Password</p>
+            <div class="pretty p-svg p-fill p-smooth pull-left">
+                <input type="checkbox">
+                <div class="state svgOnHover">
+                    <svg class="svg svg-icon active">
+						<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+					</svg>
+                    <label> Remember Me </label>
+                </div>
+            </div>
+            <a class="forgot clearfix pull-right" (click)="forgotPassword()">Forgot password?</a>
+            <br>
+            <br>
+            <button type="submit" class="btn btn-lg bg-blue clearfix" [disabled]="accessForm.invalid" [ngClass]="!(loading) ? '' : 'btnSpinner'" routerLink="/home" (click)="Login(accessForm)">
+                <span>Log in</span>
+            </button>
+        </form>
+        <form *ngIf="authCode">
+            <h5 class="title-with-border border-gray text-white" *ngIf="tempEmail">An Access Code has been sent to <br>{{tempEmail}}</h5>
+            <span class="text-white">Note: The code is only valid for 1 Hour.</span>
+			<br>
+			<br>
+            <div class="iconFields input-block svgOnHover">
+                <input type="text" class="form-control input-lg" id="email" placeholder="Access Code" [(ngModel)]="aCode" [ngModelOptions]="{standalone: true}">
+                <svg class="svg p-l-r-0 h-25 svg-default active">
+					<use href="/assets/img/icons/icons-sprite.svg#agents"/>
+				</svg>
+            </div>
+            <p class="text-red clearfix" *ngIf="_authService.incorrect">Incorrect Access Code</p>
+			<br>
+			<br>
+            <button type="submit" class="btn btn-lg bg-blue clearfix" [ngClass]="!(loadingAccessCode) ? '' : 'btnSpinner'" routerLink="/home" (click)="SubmitAccessCode()">
+                <span>Submit</span>
+            </button>
+            <button type="submit" class="btn btn-lg m-l-20 bg-charcoal-light clearfix" [disabled]="loadingAccessCode" (click)="GoBack()">
+                <span>Go Back</span>
+            </button>
+        </form>
+    </div>
+</div>
+<div class="accessContent">
+    <div class="activateScrollbar clearfix">
+        <div class="title">
+            <h2 class="title-with-border border-gray">Be There For Your <span class="text-orange">Customers</span></h2>
+            <h5 class="clearfix">
+                Beelinks offers an innovative chatting solution that connects you with your customers in real time.
+            </h5>
+        </div>
+        <ul class="card-container clearfix features">
+            <li>
+                <img class="svg" src="assets/img/icons/feature-icon-1.svg" alt="">
+                <h5>Setup</h5>
+            </li>
+            <li>
+                <img class="svg" src="assets/img/icons/feature-icon-2.svg" alt="">
+                <h5>Integration</h5>
+            </li>
+            <li>
+                <img class="svg" src="assets/img/icons/feature-icon-3.svg" alt="">
+                <h5>Communication</h5>
+            </li>
+            <li>
+                <img class="svg" src="assets/img/icons/feature-icon-4.svg" alt="">
+                <h5>Monitoring</h5>
+            </li>
+            <li>
+                <img class="svg" src="assets/img/icons/feature-icon-5.svg" alt="">
+                <h5>Get Feedback</h5>
+            </li>
+            <li>
+                <img class="svg" src="assets/img/icons/feature-icon-6.svg" alt="">
+                <h5>Fast Response Time</h5>
+            </li>
+            <!-- <li>
+                <button type="submit" class="btn btn-lg bg-blue clearfix" (click)="loadRegisterForm()">
+                    <span>Register</span>
+                </button>
+            </li> -->
+        </ul>
+        <footer>
+            <p>&copy;
+                <span id="newYear">{{copyRightYear}}</span> All Rights Reserved. beelinks.solutions
+                <br>
+                <a href="https://beelinks.solutions/en/privacyPolicy">Privacy Policy</a> &nbsp; | &nbsp;
+                <a href="https://beelinks.solutions/en/termsOfService">Terms of Service</a> &nbsp; | &nbsp;
+                <a href="https://beelinks.solutions/en/cookiePolicy">Cookie Policy</a>
+            </p>
+        </footer>
+    </div>
+</div>

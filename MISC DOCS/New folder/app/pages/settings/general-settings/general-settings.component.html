@@ -1,0 +1,32 @@
+<ul class="card-container clearfix style2">
+    <a class="svgOnHover" routerLink="/settings/general/automated-responses" [routerLinkActive]="['active']" *ngIf="permissions.automatedResponses.enabled && package && package.chats.cannedMessage.allowed" (click)="STOPPROPAGATION($event)">
+        <svg class="svg active">
+			<use href="/assets/img/icons/icons-sprite.svg#automated-responses-colored"/>
+		</svg>
+        <h5>Automated<br>Responses</h5>
+    </a>
+    <a class="svgOnHover" routerLink="/settings/general/roles-and-permissions" [routerLinkActive]="['active']" *ngIf="permissions.rolesAndPermissions.enabled && package && package.security.rolesPermissions" (click)="STOPPROPAGATION($event)">
+        <svg class="svg active">
+			<use href="/assets/img/icons/icons-sprite.svg#roles-permissions-colored"/>
+		</svg>
+        <h5>Roles &amp;<br>Permissions</h5>
+    </a>
+    <a routerLink="/settings/general/auth-settings" [routerLinkActive]="['active']" *ngIf="agent && agent.role == 'superadmin' && package && package.security.authsettings.allowed" (click)="STOPPROPAGATION($event)">
+        <svg class="svg active">
+			<use href="/assets/img/icons/icons-sprite.svg#auth-settings-colored"/>
+		</svg>
+        <h5>Authentication<br>Settings</h5>
+    </a>
+    <a class="svgOnHover" routerLink="/settings/general/keyboard-shortcuts" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <svg class="svg active">
+			<use href="/assets/img/icons/icons-sprite.svg#shortcuts-colored"/>
+		</svg>
+        <h5>Keyboard<br>Shortcuts</h5>
+    </a>
+    <a class="svgOnHover" routerLink="/settings/general/response" [routerLinkActive]="['active']" *ngIf="package && package.tickets.signatures" (click)="STOPPROPAGATION($event)">
+        <svg class="svg active">
+			<use href="/assets/img/icons/icons-sprite.svg#ticket-signature-colored"/>
+		</svg>
+        <h5>Signature<br>Settings</h5>
+    </a>
+</ul>

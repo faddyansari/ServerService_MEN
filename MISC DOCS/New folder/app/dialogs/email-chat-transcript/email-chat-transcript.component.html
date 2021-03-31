@@ -1,0 +1,24 @@
+<div mat-dialog-title>
+	<h3>Email Chat Transcript</h3>
+</div>
+
+<div mat-dialog-content>
+	<div class="input-block">
+		<label>Email</label>
+		<input type="text" class="form-control input-sm" placeholder="email" [ngStyle]="(invalidEmail) ? {'border-color': 'red'} : ''" [(ngModel)]="email">
+		<p class="text-red clearfix" *ngIf="invalidEmail">Invalid Email</p>
+	</div>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+	<mat-dialog-actions>
+		<button type="button" [disabled]="!email" class="btn btn-xs bg-blue"
+			(click)="SendTranscript()"
+			[ngClass]="(loading) ? 'btnSpinner' : ''">
+			<span>Send</span>
+		</button>
+		<button type="button" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Cancel</span>
+		</button>
+	</mat-dialog-actions>
+</div>

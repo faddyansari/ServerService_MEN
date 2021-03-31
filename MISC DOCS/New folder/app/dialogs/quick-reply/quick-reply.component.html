@@ -1,0 +1,38 @@
+<div mat-dialog-title>
+    <h3>QUICK REPLY:</h3>
+</div>
+
+<div mat-dialog-content>
+    <div class="vhList notif clearfix" [ngClass]="(editNote) ? 'active' : ''" *ngIf="this.ticketViewState !='MERGED'">
+        <div><b><i>Disclaimer: You can only send message from this window </i></b></div><br/>
+        <div *ngFor="let val of data.details">
+            <b>Ticket Subject:</b>
+            <span> {{val.subject}}</span> <br>
+            <b>Ticket Created By:</b>
+            <span> {{val.createdBy}}</span><br>
+            <b>Agent:</b>
+            <span> {{val.agentName}}</span><br>
+        </div>
+        <br>
+        <textarea [ngxSummernote]="config" name="message" [(ngModel)]="msgBody" rows="4" autocomplete="off"
+            class="form-control" (keyup)="keyupX($event)" (keydown)="keydownX($event)">
+        </textarea>
+    </div>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+     <mat-dialog-actions>
+        <button type="submit" class="btn btn-xs bg-blue"
+            (click)="SendTicketMessage()"
+            [ngClass]="(loading) ? 'btnSpinner' : ''"
+            [disabled]="!msgBody">
+            <span>Send</span>
+        </button>
+        <!-- <label class="btn">
+            <input #fileInput type="file" class="hide" (change)="FileSelected($event)">
+        </label> -->
+        <button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+            <span>Cancel</span>
+        </button>
+    </mat-dialog-actions>
+</div>

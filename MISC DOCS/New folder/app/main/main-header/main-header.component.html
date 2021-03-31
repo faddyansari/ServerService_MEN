@@ -1,0 +1,483 @@
+<section class="sidebar">
+    <div class="sidebar-header">
+        <div class="navbar-toggle" (click)="toggleNavbarSidebar()">
+            <svg class="svg w-25 h-25 svg-orange active">
+				<use href="/assets/img/icons/icons-sprite.svg#menu" class="text-orange" />
+			</svg>
+        </div>
+
+        <div class="searchbar">
+            <div class="input-block m-0" #searchContainer (blur)="blur()" (focus)="focus()" (click)="clicked()" tabindex="0">
+                <input type="text" #searchBox class="form-control input-sm m-b-0" placeholder="search tickets ..." (blur)="inputBlur()" (focus)="ShowPopper()" [(ngModel)]="searchValue" (input)="searchInput.next()" (keyup)="KeyUp($event);">
+                <div class="popover-form clearfix" *ngIf="showPopper" (mousedown)="popperClicked($event)">
+                    <div class="list-items clearfix style1">
+                        <ul class="activateScrollbar clearfix p-0">
+                            <li class="item clearfix notif bg-transparent" *ngFor="let ticket of searchedTickets">
+                                <div class="clearfix" [ngClass]="(ticket.viewState && ticket.viewState != 'READ') ? 'unread' : ''" [ngStyle]="{'border-left-color': ticket.viewColor}">
+                                    <div>
+                                        <a class="avatar ava-lg" [routerLink]="'/tickets/ticket-view/' + (ticket._id)" (click)="closePopper()">
+                                            <div class="nameInitials" [ngStyle]="{'background-color': ticket.viewColor + '70'}">
+                                                <span>{{ticket.visitor.name | slice:0:2 | uppercase}}</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="info flex f-row w100 f-align-center">
+                                        <div class="name f-column">
+                                            <b class="fw-6">{{ticket.subject}} {{ticket.CustomerInfo && ticket.CustomerInfo.customerId ? ' - CM ID: ' + ticket.CustomerInfo.customerId : ''}} {{ seeCMID(ticket) ?  ' - (Possible DUAL Id)' : ''}}</b>
+                                            <span class="text-blue" title="{{ ticket._id }}">ID:
+												{{ ticket.clientID }}</span>
+                                        </div>
+                                        <div class="select-tools w-160">
+                                            <!-- ({{ticket.mergedTicketIds}}) -->
+                                            <div>
+                                                <div class="svgOnHover tooltip top" *ngIf="!ticket.merged">
+                                                    <svg class="svg svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#not-merged" />
+													</svg>
+                                                    <span class="tooltip-inner">Not Merged</span>
+                                                </div>
+                                                <div class="svgOnHover tooltip top" *ngIf="ticket.merged">
+                                                    <svg class="svg active">
+														<use
+															[attr.href]="(ticket.mergedTicketIds && ticket.mergedTicketIds.length) ? '/assets/img/icons/icons-sprite.svg#primary-merged-colored' : '/assets/img/icons/icons-sprite.svg#merged-colored'" />
+													</svg>
+                                                    <span class="tooltip-inner">{{ (ticket.mergedTicketIds && ticket.mergedTicketIds.length) ? 'Merged Ticket (PRIMARY)' : 'Merged Ticket'}}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="svgOnHover tooltip top" *ngIf="!ticket.ticketNotes">
+                                                    <svg class="svg svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#note" />
+													</svg>
+
+                                                    <span class="tooltip-inner">No Note Available</span>
+                                                </div>
+                                                <div class="svgOnHover tooltip top" *ngIf="ticket.ticketNotes && ticket.ticketNotes.length">
+                                                    <svg class="svg active">
+														<use
+															href="/assets/img/icons/icons-sprite.svg#note-colored" />
+													</svg>
+                                                    <span class="tooltip-inner">Note Added</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="svgOnHover tooltip top" *ngIf="!ticket.source">
+                                                    <svg class="svg svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#agents" />
+													</svg>
+                                                    <span class="tooltip-inner">N/A</span>
+                                                </div>
+                                                <div class="svgOnHover tooltip top" *ngIf="ticket.source">
+                                                    <svg class="svg svg-default active">
+														<use
+															[attr.href]="'/assets/img/icons/icons-sprite.svg#' + displaySource(ticket.source).img" />
+													</svg>
+                                                    <span class="tooltip-inner">Created By:
+														{{displaySource(ticket.source).name}}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="svgOnHover tooltip top" *ngIf="!ticket.assigned_to">
+                                                    <svg class="svg svg-default active">
+														<use
+															href="/assets/img/icons/icons-sprite.svg#assigned-agent" />
+													</svg>
+                                                    <span class="tooltip-inner">No Assigned Agents</span>
+                                                </div>
+                                                <div class="svgOnHover tooltip top" *ngIf="ticket.assigned_to">
+                                                    <svg class="svg active">
+														<use
+															href="/assets/img/icons/icons-sprite.svg#agents-colored" />
+													</svg>
+                                                    <span class="tooltip-inner">Assigned to
+														{{ticket.assigned_to}}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="svgOnHover tooltip top" *ngIf="!ticket.snoozes && ticket.state != 'MERGED' && ticket.state != 'CLOSED'">
+                                                    <svg class="svg svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#snooze" />
+													</svg>
+                                                    <span class="tooltip-inner">Not Snoozed</span>
+                                                </div>
+                                                <div class="svgOnHover tooltip top" *ngIf="ticket.snoozes && ticket.state != 'MERGED' && ticket.state != 'CLOSED'">
+                                                    <svg class="svg active">
+														<use
+															href="/assets/img/icons/icons-sprite.svg#snooze-colored" />
+													</svg>
+                                                    <span class="tooltip-inner">Snoozed</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="notif-count right bg-transparent p-0">
+                                        <span class="text-blue">Updated: {{ticket.lasttouchedTime | agoPipe}}</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li *ngIf="!searchedTickets.length">
+                                <span>No tickets found!</span>
+                            </li>
+                        </ul>
+                        <div class="p-7">
+                            <a class="link text-black fs-10" *ngIf="searchedTickets.length == 5" (click)="searchAllTickets()" routerLink="/tickets">
+                                <span>View all</span>
+                            </a>
+                            <a class="link text-red fs-10 pull-right svgOnHover" (click)="closePopper()">
+                                <svg class="svg w-25 h-25 svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel"/>
+								</svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbox">
+            <div class="flex f-row f-fill clearfix">
+                <div class="actions right clearfix">
+                    <ul class="clearfix">
+                        <!--
+                        <li>
+                            <a class="svgOnHover tooltip bottom notif" (click)="showCallmenu = !showCallmenu">
+                                <svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#call" class="text-olive"/>
+								</svg>
+                                <span class="tooltip-inner">Calls</span>
+                                <span class="notif-count right animated pulse b-3 border-charcoal" style="right:-10px;top:-10px;">3</span>
+                            </a>
+                        </li>
+						-->
+                        <li class="" (click)="toggleDrawer()">
+                            <a class="svgOnHover tooltip left">
+                                <svg class="svg svg-orange active">
+									<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-orange" />
+								</svg>
+                                <span class="tooltip-inner">Add / Create</span>
+                            </a>
+                        </li>
+                        <li [ngClass]="currentRoute=='/installation' ? 'active' : ''" *ngIf="permissions && permissions.installation.enabled">
+                            <a class="svgOnHover tooltip left" routerLink="/installation">
+                                <svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#installation" clas></use>
+								</svg>
+                                <svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#installation-colored" />
+								</svg>
+                                <span class="tooltip-inner">Installation</span>
+                            </a>
+                        </li>
+                        <li class="dropdown mega-menu" id="settingsDropdownComponent" *ngIf="permissions && permissions.settings.enabled" [ngClass]="(showSettingsMenu || currentRoute.includes('settings')) ? 'active' : ''">
+                            <a class="dropdown_btn svgOnHover tooltip left" (click)="toggleSettingsMenu()">
+                                <svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#settings" class="text-white" />
+								</svg>
+                                <svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#settings-colored" />
+								</svg>
+                                <span class="tooltip-inner">Settings</span>
+                                <div class="caret m-l-10">
+                                    <svg class="svg w-15 h-15">
+										<use href="/assets/img/icons/icons-sprite.svg#arrow-next"
+											class="text-theme-gray" />
+									</svg>
+                                </div>
+                                <span class="arrow" [ngClass]="(showSettingsMenu) ? 'active' : ''"></span>
+                            </a>
+                            <div class="dropdown_list right w100" [ngClass]="(showSettingsMenu) ? 'active' : ''">
+                                <div class="nav-tabs-custom vertical clearfix">
+                                    <div class="nav nav-tabs">
+                                        <ul class="activateScrollbar clearfix">
+                                            <li (click)="selectSettings('general')">
+                                                <a [ngClass]="(settingsSelectedRoute == 'general') ? 'active' : ''">General</a>
+                                            </li>
+                                            <li *ngIf="permissions.settings.ticketManagement.enabled" (click)="selectSettings('ticket-management')">
+                                                <a [ngClass]="(settingsSelectedRoute == 'ticket-management') ? 'active' : ''">Ticket
+													Management</a>
+                                            </li>
+                                            <li *ngIf="permissions.settings.chatTimeouts.enabled" (click)="selectSettings('chat-settings')">
+                                                <a [ngClass]="(settingsSelectedRoute == 'chat-settings') ? 'active' : ''">Chat
+													& Timeout
+													Settings</a>
+                                            </li>
+                                            <li (click)="selectSettings('call-settings')" *ngIf="(!production || sbt) && permissions.settings.callSettings.enabled">
+                                                <a [ngClass]="(settingsSelectedRoute == 'call-settings') ? 'active' : ''">Call
+													Settings</a>
+                                            </li>
+                                            <li [hidden]="true" (click)="selectSettings('contact-settings')" *ngIf="(nsp == '/hrm.sbtjapan.com' || nsp == '/sps-uat' || !production) && permissions.settings.contactSettings.enabled">
+                                                <a [ngClass]="(settingsSelectedRoute == 'contact-settings') ? 'active' : ''">Contact
+													Settings</a>
+                                            </li>
+                                            <li *ngIf="permissions.settings.chatWindowSettings.enabled && package && package.chats.customizations.theme" (click)="selectSettings('chat-window')">
+                                                <a [ngClass]="(settingsSelectedRoute == 'chat-window') ? 'active' : ''">Chat
+													Window
+													Customizations</a>
+                                            </li>
+                                            <li (click)="selectSettings('webhooks')" *ngIf="permissions.settings.webhooks.enabled && package && package.integratons">
+                                                <a [ngClass]="(settingsSelectedRoute == 'webhooks') ? 'active' : ''">Webhooks</a>
+                                            </li>
+                                            <li *ngIf="permissions.settings.integerations.enabled && package && package.integratons && package.integratons.allowed" (click)="selectSettings('integerations')">
+                                                <a [ngClass]="(settingsSelectedRoute == 'integerations') ? 'active' : ''">Integrations</a>
+                                            </li>
+                                            <li (click)="selectSettings('knowledge-base')" *ngIf="(nsp == '/hrm.sbtjapan.com' || nsp == '/sps-uat' || !production) && permissions.settings.knowledgeBase.enabled && package && package.knowledgebase.allowed">
+                                                <a [ngClass]="(settingsSelectedRoute == 'knowledge-base') ? 'active' : ''">Knowledge
+													Base</a>
+                                            </li>
+                                            <li (click)="selectSettings('widget-marketing')" *ngIf="permissions.settings.widgetMarketing.enabled">
+                                                <a [ngClass]="(settingsSelectedRoute == 'widget-marketing') ? 'active' : ''">Widget
+													Marketing</a>
+                                            </li>
+                                            <!-- <li (click)="selectSettings('assignment-rules')" >
+												<a [ngClass]="(settingsSelectedRoute == 'assignment-rules') ? 'active' : ''">Assignment Rules</a>
+											</li> -->
+                                        </ul>
+                                    </div>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active">
+                                            <div class="activateScrollbar clearfix">
+                                                <app-general-settings *ngIf="settingsSelectedRoute == 'general'">
+                                                </app-general-settings>
+                                                <app-ticket-management *ngIf="settingsSelectedRoute == 'ticket-management'">
+                                                </app-ticket-management>
+                                                <app-chat-settings *ngIf="settingsSelectedRoute == 'chat-settings'">
+                                                </app-chat-settings>
+                                                <app-call-settings *ngIf="settingsSelectedRoute == 'call-settings'">
+                                                </app-call-settings>
+                                                <app-contact-settings *ngIf="settingsSelectedRoute == 'contact-settings'">
+                                                </app-contact-settings>
+                                                <app-chat-customizations *ngIf="settingsSelectedRoute == 'chat-window'">
+                                                </app-chat-customizations>
+                                                <app-web-hooks *ngIf="settingsSelectedRoute == 'webhooks'">
+                                                </app-web-hooks>
+                                                <app-integrations *ngIf="settingsSelectedRoute == 'integerations'">
+                                                </app-integrations>
+                                                <app-knowledge-base *ngIf="settingsSelectedRoute == 'knowledge-base'">
+                                                </app-knowledge-base>
+                                                <app-widget-marketing *ngIf="settingsSelectedRoute == 'widget-marketing'">
+                                                </app-widget-marketing>
+                                                <!-- <app-assignment-rules *ngIf="settingsSelectedRoute == 'assignment-rules'"></app-assignment-rules> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li id="has-submenu" class="user-info has-submenu" [popper]="popperToolboxContent" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'" (click)="hideSettingsMenu()">
+                            <a>
+                                <div class="avatar ava-xs b-2" [ngClass]="(acceptingChatMode) ? 'border-green' : 'border-yellow-alpha6'">
+                                    <span *ngIf="!agent.image">{{(agent.first_name | slice:0:1)}}{{(agent.last_name) ? (agent.last_name | slice:0:1): ''}}</span>
+                                    <img class="svg" *ngIf="agent.image" src="{{agent.image}}" width="100%" height="100%" alt="User Image" />
+                                </div>
+                                <div class="caret">
+                                    <svg class="svg w-15 h-15">
+										<use href="/assets/img/icons/icons-sprite.svg#arrow-next"
+											class="text-theme-gray" />
+									</svg>
+                                </div>
+                            </a>
+                            <popper-content #popperToolboxContent>
+                                <ul class="activateScrollbar clearfix sub-menu">
+                                    <li class="user-info">
+                                        <a>
+                                            <div class="avatar ava-xl b-2 statusPicture" title="{{agent.first_name}} {{agent.last_name}}" [ngClass]="(acceptingChatMode) ? 'border-green' : 'border-yellow-alpha6'">
+                                                <span class="nameInitials" *ngIf="agent.image">{{(agent.first_name | slice:0:1)}}{{(agent.last_name) ? (agent.last_name | slice:0:1): ''}}</span>
+                                                <!-- <img class="svg" *ngIf="agent.image" src="{{agent.image}}" width="100%" height="100%" alt="User Image"/> -->
+                                            </div>
+                                            <div class="clearfix">
+                                                <b class="ellipsis w-103" title="{{agent.first_name}} {{agent.last_name}}">{{agent.first_name}}
+													{{agent.last_name}}</b>
+                                                <small class="ellipsis w-103" title="{{agent.nickname}}">{{agent.nickname}}</small>
+                                                <small class="ellipsis w-103 text-blue" title="({{ agent.role | uppercase }})">({{ agent.role | uppercase }})</small>
+
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li (click)="ToogleAcceptingChatMode()">
+                                        <a class="ios-switch-div" title="{{ (acceptingChatMode) ? 'Accepting Chats' : 'Not Accepting Chats' }}">
+                                            <label>
+												<input type="checkbox" [(ngModel)]='acceptingChatMode'
+													class="ios-switch green" />
+												<div>
+													<div></div>
+												</div>
+											</label>
+                                            <span class="m-l-7">{{(acceptingChatMode) ? 'Accepting Chats' : 'Not Accepting Chats'}}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a routerLink="/agents/{{agentId}}" class="svgOnHover" (click)="HidePopper($event)">
+                                            <svg class="svg svg-default active">
+												<use href="/assets/img/icons/icons-sprite.svg#agents" />
+											</svg>
+                                            <span>View Profile</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a (click)="Logout($event);" class="svgOnHover">
+                                            <svg class="svg svg-default active">
+												<use href="/assets/img/icons/icons-sprite.svg#login-logout" />
+											</svg>
+                                            <span>Log Out</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </popper-content>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+	<button *ngIf="(!production)" (click)="Disconnect()">Disconnect Socket</button>
+	<button *ngIf="(!production)" (click)="Reconnect()">Reconnect Socket</button>
+	-->
+    <ul class="sidebar-menu">
+        <li [routerLinkActive]="['active']" (click)="hideSettingsMenu()">
+            <a class="svgOnHover" routerLink="/home" [ngClass]="currentRoute.includes('home') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#home" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#home-colored" />
+				</svg>
+                <span>Home</span>
+            </a>
+        </li>
+        <li [routerLinkActive]="['active']" (click)="hideSettingsMenu()" *ngIf="permissions && permissions.dashboard.enabled">
+            <a class="svgOnHover" routerLink="/dashboard" [ngClass]="currentRoute.includes('dashboard') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#dashboard" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#dashboard-colored" />
+				</svg>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li [routerLinkActive]="['active']" (click)="hideSettingsMenu()" *ngIf="permissions && permissions.chats.enabled && package && package.chats.allowed">
+            <a class="svgOnHover" routerLink="/chats" [ngClass]="currentRoute.includes('chats') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#chats" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#chats-colored" />
+				</svg>
+                <span>Chats</span>
+                <!-- <div class="badge bg-red m-t-b-0"
+                    *ngIf="messageReadCount && (messageReadCount > 0)">
+                    <span *ngIf="messageReadCount < 100">{{ messageReadCount }}</span>
+                    <span *ngIf="messageReadCount >= 100">99+</span>
+                </div> -->
+                <div class="badge bg-red m-t-b-0" title="Active Chats" *ngIf="chattingVisitorsCount && (chattingVisitorsCount > 0)">
+                    <span *ngIf="chattingVisitorsCount < 100 ">{{ chattingVisitorsCount }}</span>
+                    <span *ngIf="chattingVisitorsCount >= 100 ">99+</span>
+                </div>
+            </a>
+        </li>
+        <li class="notif" [routerLinkActive]="['active']" (click)="hideSettingsMenu()" *ngIf="permissions && permissions.agents.enabled">
+            <a class="svgOnHover" routerLink="/agents" [ngClass]="currentRoute.includes('agents') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#agents" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#agents-colored" />
+				</svg>
+                <span>Agents</span>
+                <div class="badge bg-red m-t-b-0" *ngIf="agentMessageReadCount && (agentMessageReadCount > 0)">
+                    <span *ngIf="agentMessageReadCount < 100">{{agentMessageReadCount}}</span>
+                    <span *ngIf="agentMessageReadCount >= 100">99+</span>
+                </div>
+            </a>
+        </li>
+        <li [routerLinkActive]="['active']" (click)="hideSettingsMenu()" *ngIf="permissions && permissions.tickets.enabled">
+            <a class="svgOnHover" routerLink="/tickets" [ngClass]="currentRoute.includes('tickets') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#tickets" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#tickets-colored" />
+				</svg>
+                <span>Tickets</span>
+                <div class="badge bg-red m-t-b-0" *ngIf="openTicketsCount > 0" title="Opened">
+                    <span>{{openTicketsCount}}</span>
+                </div>
+                <div class="badge bg-orange m-t-b-0" *ngIf="pendingTicketsCount > 0" title="Pending">
+                    <span>{{pendingTicketsCount}}</span>
+                </div>
+            </a>
+        </li>
+        <li [routerLinkActive]="['active']" (click)="hideSettingsMenu()" *ngIf="permissions && permissions.visitors.enabled && package && package.tracking.allowed">
+            <a class=" svgOnHover " routerLink="/visitors" [ngClass]="currentRoute.includes( 'visitors') ? 'active' : '' ">
+                <svg class="svg svg-default ">
+					<use href="/assets/img/icons/icons-sprite.svg#visitors " class="text-white " />
+				</svg>
+                <svg class="svg colored ">
+					<use href="/assets/img/icons/icons-sprite.svg#visitors-colored " />
+				</svg>
+                <span>Visitors</span>
+                <div class="badge bg-red m-t-b-0 " title="Unassigned Visitors " *ngIf="queuedVisitorsCount && (queuedVisitorsCount> 0)">
+                    <span *ngIf="queuedVisitorsCount < 100 ">{{ queuedVisitorsCount }}</span>
+                    <span *ngIf="queuedVisitorsCount >= 100 ">99+</span>
+                </div>
+            </a>
+        </li>
+        <li *ngIf="permissions && permissions.analytics.enabled && package && package.analytics.allowed" [routerLinkActive]="['active']" (click)="hideSettingsMenu()">
+            <a class="svgOnHover" routerLink="/analytics" [ngClass]="currentRoute.includes('analytics') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#analytics" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#analytics-colored" />
+				</svg>
+                <span>Analytics</span>
+            </a>
+        </li>
+        <li *ngIf="package && package.contacts.allowed && permissions && permissions.crm.enabled" [routerLinkActive]="['active']" (click)="hideSettingsMenu()">
+            <a class="svgOnHover" routerLink="/crm" [ngClass]="currentRoute.includes('crm') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#contacts" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#contacts-colored" />
+				</svg>
+                <span>CRM</span>
+            </a>
+        </li>
+        <li *ngIf="permissions && permissions.chatbot.enabled" [routerLinkActive]="['active']" (click)="hideSettingsMenu()">
+            <a class="svgOnHover" routerLink="/chatbot" [ngClass]="currentRoute.includes('chatbot') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#chatbot" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#chatbot-colored" />
+				</svg>
+                <span>Chatbot</span>
+            </a>
+        </li>
+        <!--
+        <li [routerLinkActive]="['active']">
+            <a class="svgOnHover" routerLink="/whatsapp" [ngClass]="currentRoute.includes('whatsapp') ? 'active' : ''">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#whatsapp" class="text-white" />
+				</svg>
+                <svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#whatsapp-colored" />
+				</svg>
+                <span>Whatsapp</span>
+                <div class="badge bg-red m-t-b-0" *ngIf="WapUnreadCount">
+                    <span *ngIf="WapUnreadCount < 100">{{WapUnreadCount}}</span>
+                    <span *ngIf="WapUnreadCount >= 100">99+</span>
+                </div>
+            </a>
+		</li>
+		-->
+    </ul>
+</section>
+
+<app-calling id="callingDropdownComponent" class="sh12" *ngIf="showCallmenu"></app-calling>
+
+<!-- <popper-content #searchPopper class="search-popper"> -->
+
+<!-- </popper-content> -->

@@ -1,0 +1,296 @@
+popper-content {
+    >.ngxp__container {
+        background-color: transparent !important;
+        z-index: 99999;
+        border: 0 !important;
+        box-shadow: none;
+        @extend %p0;
+        @extend %themeRadius;
+        .ngxp__inner {
+            padding: 7px;
+            border: 1px solid var(--theme-gray);
+            background-color: var(--dropdown);
+            @extend %themeRadius;
+            transition: none !important;
+            .activateScrollbar {
+                height: inherit !important;
+                min-width: 200px !important;
+                max-height: 195px !important;
+                @extend %p0;
+                @extend %b0;
+                @extend %themeRadius;
+                list-style: none;
+                border-bottom: 0;
+                @extend %transitionAll300;
+                display: flex;
+                flex-direction: column;
+                >li {
+                    display: flex;
+                    align-items: center;
+                    @extend %p0;
+                    @extend %m0;
+                    >a {
+                        @extend %width100;
+                        @extend %p7;
+                        @extend %fw-5;
+                        display: flex;
+                        align-items: center;
+                        color: var(--theme-pro);
+                        @extend %transitionAll300;
+                        border: 1px solid transparent;
+                        i,
+                        label {
+                            padding: 0;
+                            height: inherit;
+                            width: 20px;
+                        }
+                        span {
+                            height: inherit;
+                            line-height: inherit;
+                        }
+                    }
+                    &:hover,
+                    &.active {
+                        >a {
+                            border-color: var(--border);
+                            background-color: var(--card);
+                            background-image: -webkit-gradient(linear, left top, left bottom, from(var(--card)), to(var(--shadow)));
+                            background-image: -webkit-linear-gradient(top, var(--card), var(--shadow));
+                            background-image: -moz-linear-gradient(top, var(--card), var(--shadow));
+                            background-image: -ms-linear-gradient(top, var(--card), var(--shadow));
+                            background-image: -o-linear-gradient(top, var(--card), var(--shadow));
+                            background-image: linear-gradient(to bottom, var(--card), var(--shadow));
+                            // filter: progid: DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=var(--card), endColorstr=var(--shadow));
+                        }
+                    }
+                }
+            }
+            .custom-option {
+                position: relative;
+                font-size: 12px;
+                cursor: pointer;
+                @extend %width100;
+                @extend %p7;
+                @extend %fw-5;
+                display: block;
+                color: var(--theme-pro);
+                @extend %transitionAll300;
+                @extend %themeRadius;
+                max-height: 160px;
+                border: 1px solid transparent;
+                &:hover,
+                &.selected {
+                    border-color: var(--border);
+                    background-color: var(--card);
+                    background-image: -webkit-gradient(linear, left top, left bottom, from(var(--card)), to(var(--shadow)));
+                    background-image: -webkit-linear-gradient(top, var(--card), var(--shadow));
+                    background-image: -moz-linear-gradient(top, var(--card), var(--shadow));
+                    background-image: -ms-linear-gradient(top, var(--card), var(--shadow));
+                    background-image: -o-linear-gradient(top, var(--card), var(--shadow));
+                    background-image: linear-gradient(to bottom, var(--card), var(--shadow));
+                    // filter: progid: DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=var(--card), endColorstr=var(--shadow));
+                }
+                .custom-option-search {
+                    position: relative;
+                    margin-top: -1px;
+                    >input {
+                        border-left: 0;
+                        border-right: 0;
+                        border-radius: 0;
+                    }
+                }
+            }
+        }
+        .ngxp__arrow {
+            display: none;
+        }
+    }
+}
+
+.search-popper {
+    .ngxp__container {
+        width: 500px;
+        min-height: 0 !important;
+        .ngxp__inner {
+            .activateScrollbar {
+                overflow-x: hidden;
+                max-height: 340px !important;
+                @extend %p7;
+            }
+        }
+        .ngxp__arrow {
+            display: none;
+        }
+    }
+    .ngxp__container[aria-hidden=true] {
+        .ngxp__inner {
+            @extend %b0;
+        }
+        &:focus {
+            .ngxp__inner {
+                @extend %b0;
+            }
+        }
+    }
+}
+
+.popover-form {
+    @extend %posAbsolute;
+    top: 37px;
+    left: 0;
+    @extend %sh14;
+    @extend %m10;
+    @extend %p14;
+    @extend %themeRadius;
+    z-index: 999;
+    background-color: var(--dropdown);
+    box-shadow: 0px 2px 30px var(--shadow);
+    border: 1px solid var(--border);
+    @include phone {
+        width: calc(100% - 20px);
+    }
+    @include tabletL {
+        width: 380px;
+    }
+    .form-control {
+        height: inherit;
+    }
+}
+
+.viewHistory {
+    .input-group-sm {
+        app-custom-select {
+            max-width: 205px;
+        }
+    }
+}
+
+app-custom-select {
+    background: #ffffff;
+    border: 1px solid var(--theme-gray);
+    position: relative;
+    user-select: none;
+    @extend %themeRadius;
+    width: 100%;
+    popper-content {
+        >.ngxp__container {
+            width: 280px;
+        }
+    }
+    .custom-select__trigger {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        color: var(--black-light);
+        cursor: pointer;
+        @extend %fs11;
+        @extend %fw-5;
+        border: 0;
+        background-color: transparent;
+        @extend %posRelative;
+        @extend %selectOptionArrow;
+        // .arrow {
+        // 	height: 15px;
+        // 	width: 15px;
+        // 	position: absolute;
+        // 	right: 5px;
+        // 	top: 50%;
+        // 	transform: translateY(-50%) scale(0.6);
+        // 	&:before,
+        // 	&:after {
+        // 		content: "";
+        // 		position: absolute;
+        // 		bottom: 0px;
+        // 		width: 3px;
+        // 		height: 100%;
+        // 		transition: all 0.5s;
+        // 	}
+        // 	&:before {
+        // 		left: -5px;
+        // 		transform: rotate(45deg);
+        // 		background-color: var(--theme-gray);
+        // 	}
+        // 	&:after {
+        // 		left: 5px;
+        // 		transform: rotate(-45deg);
+        // 		background-color: var(--theme-gray);
+        // 	}
+        // }
+        .badge {
+            border-radius: 3px;
+            background-color: var(--blue-alpha4);
+            border: 1px solid var(--blue);
+            max-width: fit-content;
+            >span {
+                width: 100%;
+                padding: 0 7px !important;
+            }
+            .dismiss {
+                border-radius: 3px;
+                width: 20px;
+                margin: 0;
+                border-top-left-radius: 0;
+                border-left: 1px solid var(--blue);
+                border-bottom-left-radius: 0;
+                background-color: var(--blue-alpha3);
+                transform: scale(1);
+                &:hover {
+                    background-color: var(--blue-alpha8);
+                }
+            }
+        }
+    }
+    &.input-xs {
+        .custom-select__trigger {
+            @include input-generator('xs');
+            padding-right: 32px;
+        }
+    }
+    &.input-sm {
+        .custom-select__trigger {
+            @include input-generator('sm');
+        }
+    }
+    &.input-md {
+        .custom-select__trigger {
+            @include input-generator('md');
+        }
+    }
+    &.input-lg {
+        .custom-select__trigger {
+            @include input-generator('lg');
+        }
+    }
+    &.input-xl {
+        .custom-select__trigger {
+            @include input-generator('xl');
+        }
+    }
+    .open {
+        .custom-select {
+            .custom-select__trigger {
+                .arrow::before {
+                    left: -5px;
+                    transform: rotate(-45deg);
+                }
+                .arrow::after {
+                    left: 5px;
+                    transform: rotate(45deg);
+                }
+            }
+        }
+        popper-content {
+            >.ngxp__container {
+                .ngxp__inner {
+                    .custom-options {
+                        @extend %width100;
+                        opacity: 1;
+                        line-height: initial;
+                        visibility: visible;
+                        pointer-events: all;
+                    }
+                }
+            }
+        }
+    }
+}

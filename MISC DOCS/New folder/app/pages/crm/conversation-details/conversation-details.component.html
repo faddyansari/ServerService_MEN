@@ -1,0 +1,48 @@
+<div class="box clearfix animated fadeIn delay-400">
+    <div class="box-header clearfix">
+        <h5 class="box-title ellipsis" title="{{Conversation.visitorName}}">
+            <span class="ellipsis">Conversation</span>
+        </h5>
+        <div class="box-tools">
+            <div class="btn-group">
+                <button class="btn btn-xs btn-theme" (click)="toggleChat()">
+                    <span>BACK</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="box-body clearfix p-0">
+        <div class="chatBody">
+            <div class="chat-messages" *ngIf="MessageList"  (scroll)="ScrollChanged($event)">
+                <div class="chat-msg" [ngClass]="message.from == agent.nickname ? 'msg_sent' : (message.type == 'Visitors') ? 'msg_recieved' : 'msg_transfer'" *ngFor="let message of MessageList">
+                    <div *ngIf="message.body != '' && message.attachment" class="chat-text">
+                        <div *ngIf="message.body != '' && message.attachment" class="attachment"
+                            [ngClass]="((message.body | attachmentType) == 'data') ? 'file' : ((message.body | attachmentType) == 'image') ? 'image' : ((message.body | attachmentType) == 'audio') ? 'audio' : ((message.body | attachmentType) == 'document') ? 'document' : ''">
+                            <a class="svgOnHover" href="{{message.body}}" [target]="((message.body | attachmentType) == 'document') ? '_parent' : '_blank'">
+                                <img class="svg active" *ngIf="message.attachment && ((message.body | attachmentType) == 'image')" src='{{message.body}}' width="auto" height="100"/>
+								<svg class="svg active" *ngIf="(message.body | attachmentType) == 'document'">
+									<use href="/assets/img/icons/icons-sprite.svg#file" class="text-black"/>
+								</svg>
+                                <span *ngIf="message.attachment && ((message.body | attachmentType) == 'data' || (message.body | attachmentType) == 'document')">{{message.filename}}</span>
+                            </a>
+                            <audio *ngIf="message.attachment && ((message.body | attachmentType) == 'audio')" src='{{message.body}}' controls controlsList="nodownload"></audio>
+                            <span class="arrow" [ngStyle]="(message.type == 'Visitors' && Conversation.viewColor) ? {'border-top-color' : Conversation.viewColor + '40'} : ''"></span>
+                        </div>
+                    </div>
+                    <div *ngIf="message.body != '' && !message.attachment" class="chat-text">
+                        <p [ngClass]="(message.body | emojicheck) ? 'onlyEmoji' : ''">
+                            <span>{{message.body}}</span>
+                        </p>
+                        <span class="arrow"
+                            [ngStyle]="(message.type == 'Visitors' && Conversation.viewColor) ? {'border-top-color' : Conversation.viewColor + '40'} : ''"></span>
+                    </div>
+                    <div *ngIf="message.body != ''" class="chat-info">
+                        <span *ngIf="message.body != ''"><b>{{ message.from }}</b>,
+                            {{ message.date | date :'mediumDate'}}
+                            {{ message.date | date :'shortTime' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

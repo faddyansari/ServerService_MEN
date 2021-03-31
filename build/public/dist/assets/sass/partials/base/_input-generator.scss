@@ -1,0 +1,43 @@
+@mixin input-generator($size) {
+	@if $size == 'xs' {
+		padding: 0px 8px;
+		@extend %fs11;
+		min-height: 30px;
+		line-height: 28px;
+		&[type='file'] {
+			padding: 4px 8px;
+		}
+	} @else if $size == 'sm' {
+		padding: 0px 12px;
+		@extend %fs12;
+		min-height: 36px;
+		line-height: 34px;
+		&[type='file'] {
+			padding: 6px;
+		}
+	} @else if $size == 'md' {
+		padding: 0px 16px;
+		@extend %fs14;
+		min-height: 42px;
+		line-height: 40px;
+		&[type='file'] {
+			padding: 8px;
+		}
+	} @else if $size == 'lg' {
+		padding: 0px 20px;
+		@extend %fs16;
+		min-height: 48px;
+		line-height: 46px;
+		&[type='file'] {
+			padding: 10px;
+		}
+	} @else if $size == 'xl' {
+		padding: 0px 24px;
+		@extend %fs18;
+		min-height: 54px;
+		line-height: 52px;
+		&[type='file'] {
+			padding: 12px;
+		}
+	}
+}

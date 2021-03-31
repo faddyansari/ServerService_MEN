@@ -1,0 +1,190 @@
+<button class="btn btn-xxs bg-red closeInfo" (click)="CloseViewHistory()">
+	<span>Close</span>
+</button>
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="activateScrollbar clearfix p-0">
+			<!--
+			<div class="vhDetails notif clearfix">
+				<div class="avatar ava-xl">
+					<div class="nameInitials">
+						<span
+							*ngIf="conversation.type == 'single'">{{((conversation.members[0].email == this.agent.email) ? conversation.members[1].email : conversation.members[0].email) | slice:0:2 | uppercase}}</span>
+						<span
+							*ngIf="conversation.type == 'group'">{{conversation.group_name | slice:0:2 | uppercase}}</span>
+					</div>
+				</div>
+				<div class="details">
+					<div>
+						<span
+							*ngIf="conversation.type == 'single'">{{(conversation.members[0].email == this.agent.email) ? conversation.members[1].email : conversation.members[0].email}}</span>
+						<span *ngIf="conversation.type == 'group'">{{conversation.group_name}}</span>
+					</div>
+				</div>
+			</div>
+			<div class="vhActions notif clearfix">
+				<div class="want-to-actions">
+					<div class="svgOnHover tooltip top">
+						<svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#ok-done"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#ok-done" class="text-green"/>
+						</svg>
+						<span class="tooltip-inner">Delete chat</span>
+					</div>
+				</div>
+			</div>
+			-->
+			<div class="vhList notif clearfix">
+				<div class="nav-tabs-custom">
+					<ul class="nav-tabs" *ngIf="conversation.type == 'group'">
+						<li class="w50" [ngClass]="(tabs['group_info']) ? 'active' : ''">
+							<h5 class="title-with-border border-black-alpha2 svgOnHover tooltip bottom">
+								<svg class="svg w-40 h-40 active" (click)="vhListTabs('group_info')">
+									<use [attr.href]="!(tabs['group_info']) ? '/assets/img/icons/icons-sprite.svg#agent-group-info' : '/assets/img/icons/icons-sprite.svg#agent-group-info-colored'" [ngClass]="!(tabs['group_info']) ? 'text-theme-gray' : ''"/>
+								</svg>
+								<span class="tooltip-inner">Group Info</span>
+							</h5>
+						</li>
+						<li class="w50" [ngClass]="(tabs['members']) ? 'active' : ''">
+							<h5 class="title-with-border border-black-alpha2 svgOnHover tooltip bottom">
+								<svg class="svg w-40 h-40 active" (click)="vhListTabs('members')">
+									<use [attr.href]="!(tabs['members']) ? '/assets/img/icons/icons-sprite.svg#agent-group-settings' : '/assets/img/icons/icons-sprite.svg#agent-group-settings-colored'" [ngClass]="!(tabs['members']) ? 'text-theme-gray' : ''"/>
+								</svg>
+								<span class="tooltip-inner">Group Members</span>
+							</h5>
+						</li>
+						<!--
+						<li [ngClass]="(tabs['media']) ? 'active' : ''">
+							<h5 class="w50" class="title-with-border border-black-alpha2 tooltip top" (click)="vhListTabs('media')">
+								<svg class="svg w-40 h-40 active" (click)="vhListTabs('media')">
+									<use [attr.href]="!(tabs['media']) ? '/assets/img/icons/icons-sprite.svg#agent-group-media' : '/assets/img/icons/icons-sprite.svg#agent-group-media-colored'" [ngClass]="!(tabs['media']) ? 'text-theme-gray' : ''"/>
+								</svg>
+								<span class="tooltip-inner">Shared Media</span>
+							</h5>
+						</li>
+						-->
+					</ul>
+					<ul class="nav-tabs" *ngIf="conversation.type == 'single'">
+						<li class="w50" [ngClass]="(tabs['group_info']) ? 'active' : ''">
+							<h5 class="title-with-border border-black-alpha2 svgOnHover tooltip bottom">
+								<svg class="svg w-40 h-40 active" (click)="vhListTabs('group_info')">
+									<use [attr.href]="!(tabs['group_info']) ? '/assets/img/icons/icons-sprite.svg#agent-group-info' : '/assets/img/icons/icons-sprite.svg#agent-group-info-colored'" [ngClass]="!(tabs['group_info']) ? 'text-theme-gray' : ''"/>
+								</svg>
+								<span class="tooltip-inner">Agent Info</span>
+							</h5>
+						</li>
+						<!--
+						<li [ngClass]="(tabs['media']) ? 'active' : ''">
+							<h5 class="w50" class="title-with-border border-black-alpha2 tooltip top" (click)="vhListTabs('media')">
+								<svg class="svg w-40 h-40 active" (click)="vhListTabs('media')">
+									<use [attr.href]="!(tabs['media']) ? '/assets/img/icons/icons-sprite.svg#agent-group-media' : '/assets/img/icons/icons-sprite.svg#agent-group-media-colored'" [ngClass]="!(tabs['media']) ? 'text-theme-gray' : ''"/>
+								</svg>
+								<span class="tooltip-inner">Shared Media</span>
+							</h5>
+						</li>
+						-->
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane" [ngClass]="(tabs['group_info']) ? 'active' : ''">
+							<ng-template [ngIf]="conversation.type == 'group'">
+								<div class="input-block">
+									<label>Group Name</label>
+									<p>{{conversation.group_name}}</p>
+									<br>
+									<label>Created By</label>
+									<p>{{conversation.createdBy}}</p>
+									<br>
+									<label>Created On</label>
+									<p>{{ conversation.createdOn | date :'mediumDate'}}
+										{{ conversation.createdOn | date :'shortTime' }}</p>
+									<br>
+									<label>Last Updated</label>
+									<p>{{conversation.LastUpdated | agoPipe}}</p>
+								</div>
+							</ng-template>
+							<ng-template [ngIf]="conversation.type == 'single'">
+								<div class="input-block">
+									<label>Initiated By</label>
+									<p>{{conversation.createdBy}}</p>
+									<br>
+									<label>Created On</label>
+									<p>{{ conversation.createdOn | date :'mediumDate'}}
+										{{ conversation.createdOn | date :'shortTime' }}</p>
+									<br>
+									<label>Last Updated</label>
+									<p>{{conversation.LastUpdated | agoPipe}}</p>
+								</div>
+							</ng-template>
+						</div>
+						<div class="tab-pane" [ngClass]="(tabs['members']) ? 'active' : ''"
+							*ngIf="conversation.type == 'group'">
+							<form [formGroup]="searchForm">
+								<div class="input-block">
+									<input type="search" class="form-control input-sm"
+										placeholder="Search member" autocomplete="off"
+										formControlName="searchValue">
+								</div>
+							</form>
+							<ul class="list-items clearfix style4">
+								<li class="item notif clearfix" *ngFor="let member of conversation.members | filter: searchForm.get('searchValue').value : ['email'] : false">
+									<div class="clearfix">
+										<div class="info">
+											<b class="ellipsis">{{member.email}}</b>
+											<b *ngIf="member.isAdmin" class="text-green">(admin)</b>
+										</div>
+										<div class="actions" *ngIf="displayActions() && member.email != agent.email">
+											<button class="btn btn-transparent p-0 svgOnHover tooltip top-right"
+												[popper]="actionsPopper" [popperShowOnStart]="false"
+												[popperTrigger]="'click'" [popperHideOnClickOutside]="true"
+												[popperHideOnScroll]="false">
+												<svg class="svg svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#more"/>
+												</svg>
+												<span class="tooltip-inner">More Options</span>
+											</button>
+										</div>
+									</div>
+									<popper-content #actionsPopper>
+										<ul class="activateScrollbar clearfix">
+											<li>
+												<a (click)="makeAdmin(member.email, !member.isAdmin)">
+													<span>{{(member.isAdmin) ? 'Dismiss as group admin' : 'Make group admin'}}</span>
+												</a>
+											</li>
+											<li>
+												<a (click)="removeMember(member.email)">
+													<span>Remove</span>
+												</a>
+											</li>
+										</ul>
+									</popper-content>
+								</li>
+								<!-- <button class="btn btn-green">Add</button> -->
+							</ul>
+							<div class="input-block clearfix" *ngIf="displayActions()">
+								<label>Add Members</label>
+								<div class="input-group-sm">
+									<app-custom-select class="input-sm" [items]="agentList"
+										[selectLabel]="'Select Agents'" [(ngModel)]="selectedAgents"
+										[selectedItems]="selectedAgents" [bindLabel]="'email'" [bindValue]="'email'"
+										[multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMore($event)"
+										(onSearch)="onSearch($event)">
+									</app-custom-select>
+									<div class="input-group-btn">
+										<button type="submit" class="btn btn-theme min-w-80" (click)="addMember()">
+											<span>Add</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" [ngClass]="(tabs['media']) ? 'active' : ''">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

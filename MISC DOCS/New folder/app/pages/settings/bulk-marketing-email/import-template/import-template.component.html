@@ -1,0 +1,59 @@
+<ul class="clearfix">
+    <li>
+        <div class="input-block clearfix">
+            <div class="input-group-lg m-b-10">
+                <input type="text" class="form-control input-sm" name="template_name" id="template_name"
+                    placeholder="Enter Template Name" [(ngModel)]="template_name" (ngModelChange)="Validation()">
+                <br>
+            </div>
+        </div>
+
+        <div class="box has-advanced-upload" enctype="multipart/form-data">
+            <div class="box-input">
+                <i class="fa fa-upload box-icon"></i>
+                <input type="file" class="box-file" (change)="onFileSelected()" accept=".html" #fileInput id="file"/>
+                <!-- <div class="box-file-label-text" style="text-align: center;">
+                        <label class="box-file-label" for="file"><strong>Browse File</strong><span
+                                class="box-dragndrop"> Or drop them here</span></label>
+                    </div> -->
+                <div class="box-file-label-text" style="text-align: center;" *ngIf="file">
+
+                    <div class="badge bg-olive">
+                        <span>
+                            {{file[0].name}}
+                        </span>
+                        <span>
+                            <button class="btn btn-xs bg-red pull-right" (click)="RemoveFile()">
+                                Remove File
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <br><br><br>
+                <!-- <button type="button" class="btn btn-sm bg-blue" (click)="SaveTemplate('importTemplate', template_name)"
+                    [disabled]="!(template_name && file)" *ngIf="!selectedTemplate">Save Template</button>
+
+                <button type="button" class="btn btn-sm bg-blue" (click)="UpdateTemplate('importTemplate', template_name)"
+                    [disabled]="!(template_name && file)" *ngIf="selectedTemplate">Update Template</button>
+
+                <button class="btn btn-sm bg-red" (click)="Cancel()">
+                    <span>Cancel</span>
+                </button> -->
+                <button type="button" class="btn btn-xs bg-blue" (click)="SaveTemplate()" *ngIf="!selectedTemplate"
+                    [disabled]="!(template_name && file)">
+                    <span>Save Template</span>
+                </button>
+                <button class="btn btn-xs bg-blue" (click)="UpdateTemplate()" *ngIf="selectedTemplate">
+                    <span>Update Template</span>
+                </button>
+                <button type="button" class="btn btn-xs bg-blue" (click)="SaveTemplate()" *ngIf="selectedTemplate">
+                    <span>Save as new template</span>
+                </button>
+                <button class="btn btn-xs bg-red" (click)="Cancel()">
+                    <span>Cancel</span>
+                </button>
+
+            </div>
+        </div>
+    </li>
+</ul>

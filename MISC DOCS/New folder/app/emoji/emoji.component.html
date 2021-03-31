@@ -1,0 +1,78 @@
+<div id="emoji-div-wrapper" class="showEmoji">
+  <ul id="emoji-menu" #emoji_header>
+      <li id="emoji-icon-Smileys" class="active" (click)="EmojiHeader('Smileys')">
+          <a id="emoji-icon-li-Smileys" class="icon-emoji-size" data-title="Smileys">
+              <i class="icon-emoji-smiley"></i>
+          </a>
+      </li>
+      <li id="emoji-icon-Animals" (click)="EmojiHeader('Animals')">
+          <a id="emoji-icon-li-Animals" class="icon-emoji-size" data-title="Animals & Nature">
+              <i class="icon-emoji-animal"></i>
+          </a>
+      </li>
+      <li id="emoji-icon-Activities" (click)="EmojiHeader('Activities')">
+          <a id="emoji-icon-li-Activities" class="icon-emoji-size" data-title="Activities">
+              <i class="icon-emoji-activity"></i>
+          </a>
+      </li>
+      <li id="emoji-icon-People" (click)="EmojiHeader('People')">
+          <a id="emoji-icon-li-People" class="icon-emoji-size" data-title="People">
+              <i class="icon-emoji-people"></i>
+          </a>
+      </li>
+      <li id="emoji-icon-Objects" (click)="EmojiHeader('Objects')">
+          <a id="emoji-icon-li-Objects" class="icon-emoji-size" data-title="Objects & Symbols">
+              <i class="icon-emoji-object"></i>
+          </a>
+      </li>
+      <li id="emoji-icon-Places" (click)="EmojiHeader('Places')">
+          <a id="emoji-icon-li-Places" class="icon-emoji-size" data-title="Travel & Places">
+              <i class="icon-emoji-place"></i>
+          </a>
+      </li>
+      <li id="emoji-icon-Food" (click)="EmojiHeader('Food')">
+          <a id="emoji-icon-li-Food" class="icon-emoji-size" data-title="Food & Drink">
+              <i class="icon-emoji-food"></i>
+          </a>
+      </li>
+      <li id="emoji-icon-Clothing" (click)="EmojiHeader('Clothing')">
+          <a id="emoji-icon-li-Clothing" class="icon-emoji-size" data-title="Clothing & Accessories">
+              <i class="icon-emoji-cloth"></i>
+          </a>
+      </li>
+      <li id="emoji-icon-Sports" (click)="EmojiHeader('Sports')">
+          <a id="emoji-icon-li-Sports" class="icon-emoji-size" data-title="Sports & Games">
+              <i class="icon-emoji-sport"></i>
+          </a>
+      </li>
+  </ul>
+  <div id="emoji-div" #emoji_content (click)="EmojiContentAppend($event)">
+      <p id="Activities" class="show">
+          <a id="emoji-{{activity}}" [innerHTML]="activity" *ngFor="let activity of Emojis.Activities ; let i = index"></a>
+      </p>
+      <p id="Smileys" class="hide">
+          <a id="emoji-{{smileys}}" [innerHTML]="smileys" *ngFor="let smileys of Emojis.Smileys; let i = index"></a>
+      </p>
+      <p id="Animals" class="hide">
+          <a id="emoji-{{animals}}" [innerHTML]="animals" *ngFor="let animals of Emojis.Animals; let i = index"></a>
+      </p>
+      <p id="People" class="hide">
+          <a id="emoji-{{people}}" [innerHTML]="people" *ngFor="let people of Emojis.People; let i = index"></a>
+      </p>
+      <p id="Objects" class="hide">
+          <a id="emoji-{{objects}}" [innerHTML]="objects" *ngFor="let objects of Emojis.Objects; let i = index"></a>
+      </p>
+      <p id="Places" class="hide">
+          <a id="emoji-{{place}}" [innerHTML]="place" *ngFor="let place of Emojis.Places; let i = index"></a>
+      </p>
+      <p id="Food" class="hide">
+          <a id="emoji-{{food}}" [innerHTML]="food" *ngFor="let food of Emojis.Food; let i = index"></a>
+      </p>
+      <p id="Clothing" class="hide">
+          <a id="emoji-{{clothing}}" [innerHTML]="clothing" *ngFor="let clothing of Emojis.Clothing; let i = index"></a>
+      </p>
+      <p id="Sports" class="hide">
+          <a id="emoji-{{sport}}" [innerHTML]="sport" *ngFor="let sport of Emojis.Sports; let i = index"></a>
+      </p>
+  </div>
+</div>

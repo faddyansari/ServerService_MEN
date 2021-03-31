@@ -1,0 +1,44 @@
+<div class="activateScrollbar clearfix" *ngIf="allAckMessage && allAckMessage.length">
+  <ul class="list-items clearfix style4">
+      <li class="item clearfix notif" *ngFor="let message of allAckMessage">
+          <div>
+              <div class="info f-row">
+                  <div class="name">
+                      <p>
+                          <b>Greeting Message Name:</b>
+                          <span class="text-blue">{{message.name}}</span>
+                      </p>
+                  </div>
+              </div>
+              <div class="actions">
+                  <div class="pretty p-switch p-smooth p-fill p-toggle tooltip top m-0">
+                      <span class="tooltip-inner" *ngIf="!message.activated">Activate this message</span>
+                      <span class="tooltip-inner" *ngIf="message.activated">De-activate this message</span>
+                      <input type="checkbox" [(ngModel)]="message.activated" (change)="toggleActivation(message.name, message.activated)"/>
+                      <div class="state p-on">
+                          <label></label>
+                      </div>
+                      <div class="state p-off">
+                          <label></label>
+                      </div>
+                  </div>
+                  <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="editMessage(message)">
+                      <svg class="svg svg-blue active">
+            <use href="/assets/img/icons/icons-sprite.svg#edit"/>
+          </svg>
+          <span class="tooltip-inner">Edit</span>
+                  </button>
+                  <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="deleteMessage(message.name)">
+                      <svg class="svg svg-default">
+            <use href="/assets/img/icons/icons-sprite.svg#delete"/>
+          </svg>
+          <svg class="svg colored">
+            <use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+          </svg>
+          <span class="tooltip-inner">Delete</span>
+                  </button>
+              </div>
+          </div>
+      </li>
+  </ul>
+</div>

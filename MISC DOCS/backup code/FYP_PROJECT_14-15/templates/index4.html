@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>FLIGHT DASHBOARD</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../static/plugins/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="../static/plugins/colorpicker/bootstrap-colorpicker.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../static/dist/css/adminlte.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="../static/plugins/iCheck/flat/blue.css">
+    <!-- Morris chart -->
+    <link rel="stylesheet" href="../static/plugins/morris/morris.css">
+    <link rel="stylesheet" href="../static/plugins/select2/select2.min.css">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="../static/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="../static/plugins/datepicker/datepicker3.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="../static/plugins/daterangepicker/daterangepicker-bs3.css">
+    <link rel="stylesheet" href="../static/plugins/timepicker/bootstrap-timepicker.min.css">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet" href="../static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <script type="text/javascript" src="../static/jquery.main.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="../static/plugins/jquery-ui/jquery-ui.min.css">
+    <style>
+    body {
+    font-family: "helvetica";
+    font-size: 100%
+    }
+    select{
+    border:2px solid #777;
+    padding: .8rem 9rem .5rem 7rem;
+    border-radius:3px;
+    color:#565656;
+    position: center;
+    }
+    .airline, .Source, .Destination{
+    display: inline-block;
+    position: relative;
+    }
+    .form-check-input {
+    position: inherit;
+    }
+    /*.airline select {background: transparent;}*/
+    /*.airline::after{
+    
+    content: "";
+    display: inline-block;
+    border-top: 10px solid #777;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    position:absolute;
+    top:calc(50% -5px);
+    top:50%;
+    right: .5rem;
+    
+    
+    /*z-index: -1; */
+    pointer-events: none;
+    */
+    }
+    .Source::after{
+    content: "";
+    display: inline-block;
+    border-top: 10px solid #777;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    position:absolute;
+    top:calc(50% -5px);
+    top:50%;
+    right: .5rem;
+    /*z-index: -1; */
+    pointer-events: none;
+    }
+    .Destination::after{
+    content: "";
+    display: inline-block;
+    border-top: 10px solid #777;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+    position:absolute;
+    top:calc(50% -5px);
+    top:50%;
+    right: .5rem;
+    /*z-index: -1; */
+    pointer-events: none;
+    }
+    
+    .show
+    {
+    padding: 4px; padding-left: 8px; padding-right: 8px; font-size: 14px; color: white;
+    }
+    .box{
+    
+    width: 600px 2px;
+    height: 100%;
+    padding: 20px;
+    box-shadow: 0px 0px 10px 2px grey;
+    border: 8px solid #49abc8;
+    font-family: helvetica;
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpUdrK-Dxydd2nJ7wfjQ8lFpfKUrmeF-zLL8Tyga2fcK7hq2Yo);
+    background-size: cover;
+    text-align: center;
+    }
+    
+    .butto {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border: 3px solid #3f8e48;
+    border-radius: 8%;
+    }
+    #tables
+    {
+    display: none;
+    padding-top: 20px;
+    }
+    .butto:hover
+    {
+    background-color: #3f8e48;
+    }
+    .rio{
+    width: 50%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+    }
+    .nrio{
+    padding: 9px 20px;
+    margin: 18px 12px;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+    color: #565656;
+    }
+    /*  input[type=text] {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+    }
+    input[type=text]:focus {
+    border: 3px solid #555;
+    }*/
+    .rio:focus {
+    border: 3px solid #555;
+    }
+    </style>
+  </head>
+  <body style= "background:white"; class="hold-transition sidebar-mini" >
+    <div class="wrapper">
+      <!-- Navbar -->
+      <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+        
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <div class="bg-info-gradient">
+              <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+            </li>
+            
+            <li class="nav-item d-none d-sm-inline-block">
+              <a href="index2.html" class="nav-link"><strong>Home</strong></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+              <a href="#" class="nav-link"><strong>Contact</strong></a>
+            </li>
+          </ul>
+          <!-- SEARCH FORM -->
+          <form class="form-inline ml-3">
+            <div class="input-group input-group-sm">
+              
+              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+          
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+          <!-- Brand Logo -->
+          <a href="Home.html" class="brand-link">
+            
+            <span  class="brand-text font-weight-light"> <strong>FLIGHT ANALYSIS</strong></span>
+          </a>
+          
+          <!-- Sidebar Menu -->
+          <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+              <!-- Add icons to the links using the .nav-icon class
+              with font-awesome or any other icon font library -->
+              <li class="nav-item has-treeview menu-open">
+                <a href="#" class="nav-link active">
+                  <i class="nav-secondary fa fa-dashboard"></i>
+                  <p>
+                    Dashboard
+                    <i class="right fa fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="showfuel" class="nav-link">
+                      <i class="fa fa-circle-o nav-icon"></i>
+                      <p><strong>FUEL CONSUMPTION</strong></p>
+                      
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./index2.html" class="nav-link ">
+                      <i class="fa fa-circle-o nav-icon"></i>
+                      <p><strong>CHARGE ESTIMATION</strong></p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="showmap" class="nav-link">
+                      <i class="fa fa-circle-o nav-icon"></i>
+                      <p><strong>FLIGHT TRACKING</strong></p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./index4.html" class="nav-link">
+                      <i class="fa fa-circle-o nav-icon"></i>
+                      <p><strong>GENERAL TASKS</strong></p>
+                    </a>
+                    
+                    
+                  </li>
+                  
+                  <li class="nav-item">
+                    <a href="comparision" class="nav-link">
+                      <i class="fa fa-circle-o nav-icon"></i>
+                      <p><strong>COMPARISON</strong></p>
+                    </a>
+                  </ul>
+                </li>
+              </li>
+              
+              
+              <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+          </aside>
+          <!-- Content Wrapper. Contains page content -->
+          
+          <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            
+            <!-- Main content -->
+            <div class="box">
+              <h1><b style="color: white"> COMPARISION</b></h1>
+              <div  class="card card-info">
+                
+                <div class="card-header">
+                  <h3 class="card-title">Information Required</h3>
+                </div>
+                <div class="card-body">
+                  
+                  <div class="form-group">
+                    <select class="form-control" id="source_comp" class="rio">
+                      <option  value="" selected disabled hidden>Select Source</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <select class="form-control" id="destination_comp" class="rio">
+                      <option  value="" selected disabled hidden>Select Destination</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <select class="form-control" id="airline1_comp" class="rio">
+                      <option  value="" selected disabled hidden>Select First Airline</option>
+                    </select>
+                  </div>
+                  <!-- <div class="form-group">
+                    <select class="form-control" id="src_mdl" class="rio">
+                      <option  value="" selected disabled hidden>Select First Airline's Model</option>
+                    </select>
+                  </div> -->
+                  <div class="form-group">
+                    <select class="form-control" id="airline2_comp" class="rio">
+                      <option  value="" selected disabled hidden>Select Second Airline</option>
+                    </select>
+                  </div>
+                  <!-- <div class="form-group">
+                    <select class="form-control" id="dst_mdl" class="rio">
+                      <option  value="" selected disabled hidden>Select Second Airline's Model</option>
+                    </select>
+                  </div> -->
+                  <!-- Date and time range -->
+                  
+                  <div class="card-body">
+                    <label class="float-left">Date</label>
+                    <div class="input-group">
+                      <button type="button" class="btn btn-info " id="daterange-btn">
+                      <i class="fa fa-calendar"></i> Date range picker
+                      <i class="fa fa-caret-down"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-5 col-sm-10">
+                      <div class="form-check float-left">
+                        <input type="checkbox" class="form-check-input float-left" id="exampleCheck2">
+                        <label class="form-check-label float-left" for="exampleCheck2">Check me if you are sure that the information provided is correct</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                  <button id="button_comp" type="submit" class="btn btn-success float-right">Submit</button>
+                  <button type="submit" class="btn btn-danger float-left">Cancel</button>
+                </div>
+                <!-- /.card-footer -->
+              </div>
+            </div>
+
+            <div id="fuel_graph1" style="width: 100%;position:relative;"></div>
+            <!-- /.card -->
+            <!-- /.form group -->
+            <div id="tables" class="container-fluid" >
+              <div class="row">
+                <div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                  <div >
+                    
+                    <div class="card">
+                      <!-- <div id="fuel_graph1" style="width: 100%"></div> -->
+                      <div class="bg-info-gradient">
+                        <div class="card-header">
+                          <h3 class="card-title"><strong>FIRST AIRLINE</strong></h3>
+                        </div>
+                        
+                        
+                        <div class="card-body table-responsive p-0 container">
+                          
+                          <table  class="table table-hover" style="text-align: center;">
+                            
+                            <tr>
+                              <th>ID</th>
+                              <th>FUEL CONSUMED <br>(gallons)</th>
+                              <th>FUEL PER PASSENGER <br>(gallons)</th>
+                              <th>DETAILS</th>
+                            </tr>
+                            <tbody id="table_body1">
+                              <tr >
+                                <td><span class="tag tag-success">11393571</span></td>
+                                <td><span class="tag tag-success">3349.526</span></td>
+                                <td><span class="tag tag-success">16747.632</span></td>
+                                <td><button id="show" type="submit" class="btn btn-success float-right" style="padding: 4%; padding-left: 8%; padding-right: 8%; font-size: 14px;">Submit</button>
+                                </tr>
+                                <tr >
+                                  <td><span class="tag tag-success">11393571</span></td>
+                                  <td><span class="tag tag-success">3349.526</span></td>
+                                  <td><span class="tag tag-success">16747.632</span></td>
+                                  <td><button id="show" type="submit" class="btn btn-success float-right" style="padding: 4%; padding-left: 8%; padding-right: 8%; font-size: 14px;">Submit</button></td>
+                                </tr>
+                                <tr >
+                                  <td><span class="tag tag-success">11393571</span></td>
+                                  <td><span class="tag tag-success">3349.526</span></td>
+                                  <td><span class="tag tag-success">16747.632</span></td>
+                                  <td><button id="show" type="submit" class="btn btn-success float-right" style="padding: 4%; padding-left: 8%; padding-right: 8%; font-size: 14px;">Submit</button></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.row (main row) -->
+                          </div><!-- /.container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                    
+                    <div class="card">
+                      <!-- <div id="fuel_graph2" style="width: 100%"></div> -->
+                      <div class="bg-info-gradient">
+                        <div class="card-header">
+                          <h3 class="card-title"><strong>SECOND AIRLINE</strong></h3>
+                        </div>
+                        <div class="card-body table-responsive p-0 container">
+                          <table  class="table table-hover" style="text-align: center;">
+                            <tr>
+                              <th>ID</th>
+                              <th>FUEL CONSUMED <br>(gallons)</th>
+                              <th>FUEL PER PASSENGER<br>(gallons)</th>
+                              <th>DETAILS</th>
+                            </tr>
+                            <tbody id="table_body2">
+                              <tr >
+                                <td><span class="tag tag-success">11393571</span></td>
+                                <td><span class="tag tag-success">3349.526</span></td>
+                                <td><span class="tag tag-success">16747.632</span></td>
+                                <td><button id="show" type="submit" class="btn btn-success float-right">Submit</button>
+                                </tr>
+                                <tr >
+                                  <td><span class="tag tag-success">11393571</span></td>
+                                  <td><span class="tag tag-success">3349.526</span></td>
+                                  <td><span class="tag tag-success">16747.632</span></td>
+                                  <td><button id="show" type="submit" class="btn btn-success float-right" style="padding: 4%; padding-left: 8%; padding-right: 8%; font-size: 14px;">Submit</button></td>
+                                </tr>
+                                <tr >
+                                  <td><span class="tag tag-success">11393571</span></td>
+                                  <td><span class="tag tag-success">3349.526</span></td>
+                                  <td><span class="tag tag-success">16747.632</span></td>
+                                  <td><button id="show" type="submit" class="btn btn-success float-right" style="padding: 4%; padding-left: 8%; padding-right: 8%; font-size: 14px;">Submit</button></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- /.row (main row) -->
+                          </div><!-- /.container-fluid -->
+                          <!-- /.content -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              
+              <div id="detail_table" style="display: none;" class="col-12">
+                
+                <div class="card">
+                  <div class="bg-info-gradient">
+                    <div class="card-header">
+                      <h3 class="card-title"><strong>ESTIMATIONS</strong></h3>
+                    </div>
+                    
+                    
+                    <div class="card-body table-responsive p-0">
+                      
+                      <table class="table table-hover">
+                        
+                        <tr>
+                          <th>Content</th>
+                          <th>Information</th>
+                          <th>Content</th>
+                          <th>Information</th>
+                          <th>Content</th>
+                          <th>Information</th>
+                          <td></td>
+                        </tr>
+                        <tbody id="detail_table_body">
+                          <tr >
+                            <td>ID</td>
+                            <td><span class="tag tag-success">11393571</span></td>
+                            <td>Icao</td>
+                            <td><span class="tag tag-success">ADDA23 2002</span></td>
+                            <td>Model</td>
+                            <td><span class="tag tag-success">BOEING 717-200</span></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td>Average Speed</td>
+                            <td><span class="tag tag-success">444.3586206896552</span></td>
+                            <td>Average Altitude</td>
+                            <td><span class="tag tag-success">29625.862068965518</span></td>
+                            <td>Miles</td>
+                            <td><span class="tag tag-success">3349.526411946571</span></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td>Countries in route</td>
+                            <td><span class="tag tag-success">United States Of America</span></td>
+                            <td>Country</td>
+                            <td><span class="tag tag-success">United States</span></td>
+                            <td>Fuel</td>
+                            <td><span class="tag tag-success">16747.632059732856</span></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td>Inspect Altitude</td>
+                            <td ><button id="show" type="submit" class="btn btn-success float-left show" style="padding: 3%; padding-left: 8%; padding-right: 8%; font-size: 14px;">Submit</button></td>
+                            <td>  </td>
+                            <td><span class="tag tag-success">  </span></td>
+                            <td>Inspect Speed</td>
+                            <td><button id="show" type="submit" class="btn btn-success float-left" style="padding: 3%; padding-left: 8%; padding-right: 8%; font-size: 14px;">Submit</button></td>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+              </div>
+                <div class="card" id="graph" style="display: none;">
+                  <div class="card-header d-flex p-0" style="color: white;background: #17becf;">
+                  <h3 class="card-title p-3">
+                  <i class="fa fa-pie-chart mr-1"></i>
+                  INSPECT GRAPHICALLY
+                  </h3> 
+                  </div>
+                <div class="card-body">
+                  <div class="tab-content p-0">
+                  <!-- Morris chart - Sales -->
+                  <div  id="time_series" 
+                  style="position: relative; height: 400px; width: 100%;"></div>
+                  </div>
+                  </div>
+                  </div>
+
+              
+                
+                <script>
+                Array.prototype.unique = function() {
+                return this.filter(function (value, index, self) {
+                return self.indexOf(value) === index;
+                });
+                }
+                //******************************TO/FROM/AIRLINE***************************//
+                function find(id,arr)
+                {
+                var sel = document.getElementById(id);
+                arr=arr.unique();
+                for(var i = 0; i < arr.length; i++)
+                {
+                var opt = document.createElement('OPTION');
+                txt = document.createTextNode(arr[i]);
+                opt.appendChild(txt);
+                opt.setAttribute("value",arr[i]);
+                id.insertBefore(opt,id.lastChild);
+                }
+                }
+                
+                $(document).ready(function()
+                {
+                
+                var x;
+                $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/flights",
+                success: function(response)
+                {
+                var data={}
+                var from=[];
+                var res= JSON.parse(response);
+                length=res.length;
+                for (var i=0; i<length;i++)
+                {
+                from.push(res[i]["From"]);
+                }
+                find(source_comp,from);
+                document.getElementById("destination_comp").disabled=true;
+                document.getElementById("airline1_comp").disabled=true;
+                document.getElementById("airline2_comp").disabled=true;
+                // document.getElementById("src_mdl").disabled=true;
+                // document.getElementById("dst_mdl").disabled=true;
+                //****************************** WHEN SOURCE IS SELECTED ***************************//
+                document.getElementById("source_comp").onchange=function()
+                {
+                //****************************** GETTING SELECTED VALUE FROM SOURCE DROPDOWN ***************************//
+                var fromf=get_dropdown_value("source_comp");
+                //****************************** FINDING DESTINATION W.R.T SOURCE ***************************//
+                var tof=[];
+                tof=find_one_chk_dropdown_value(res,"From",fromf,"To","Select Destination");
+                //****************************** SETTING DESTINATION DROPDOWN ***************************//
+                empty_dropdown("destination_comp")
+                find(destination_comp,tof);
+                //****************************** ENABELING DESTINATION/ SOURCE MODEL DROPDOWN ***************************//
+                document.getElementById("destination_comp").disabled=false;
+                }
+                //****************************** WHEN DESTINATION IS SELECTED ***************************//
+                document.getElementById("destination_comp").onchange=function()
+                {
+                //****************************** GETTING SELECTED VALUE FROM SOURCE DROPDOWN ***************************//
+                var airf=[];
+                var from_chk=get_dropdown_value("source_comp");
+                //****************************** GETTING SELECTED VALUE FROM DESTINATION DROPDOWN ***************************//
+                var des_chk= get_dropdown_value("destination_comp");
+                //****************************** FINDING AIRLINE W.R.T SOURCE AND DESTINATION ***************************//
+                airf=find_two_chk_dropdown_value(res,"From",from_chk,"To",des_chk,"Op","Select First Airline");
+                //****************************** SETTING AIRLINE DROPDOWN ***************************//
+                empty_dropdown("airline1_comp");
+                find(airline1_comp,airf);
+                airff=find_two_chk_dropdown_value(res,"From",from_chk,"To",des_chk,"Op","Select Second Airline");
+                empty_dropdown("airline2_comp");
+                find(airline2_comp,airff);
+                //****************************** ENABLING AIRLINE DROPDOWN ***************************//
+                
+                document.getElementById("airline1_comp").disabled=false;
+                document.getElementById("airline2_comp").disabled=false;
+                }
+                
+                //****************************** WHEN SOURCE ONE IS SELECTED ***************************//
+                document.getElementById("airline1_comp").onchange=function()
+                {
+                var model=[];
+                var from_chk=get_dropdown_value("source_comp");
+                var des_chk= get_dropdown_value("destination_comp");
+                var airline= get_dropdown_value("airline1_comp");
+                // model=find_three_chk_dropdown_value(res,"Op",airline,"From",from_chk,"To",des_chk,"Mdl","Select Model of First Airline");
+                // empty_dropdown("src_mdl");
+                // find(src_mdl,model);
+                // document.getElementById("src_mdl").disabled=false;
+                }
+                //****************************** WHEN SOURCE TWO IS SELECTED ***************************//
+                document.getElementById("airline2_comp").onchange=function()
+                {
+                var model=[];
+                var from_chk=get_dropdown_value("source_comp");
+                var des_chk= get_dropdown_value("destination_comp");
+                var airline= get_dropdown_value("airline2_comp");
+                // model=find_three_chk_dropdown_value(res,"Op",airline,"From",from_chk,"To",des_chk,"Mdl","Select Model of Second Airline");
+                // empty_dropdown("dst_mdl");
+                // find(dst_mdl,model);
+                // document.getElementById("dst_mdl").disabled=false;
+                }
+                }
+                });
+                document.getElementById("button_comp").onclick=function()
+                {
+                datas={};
+                document.getElementById("tables").setAttribute("style","display: block");
+                document.getElementById("detail_table").setAttribute("style","display: none");
+                document.getElementById("graph").setAttribute("style","display: none");
+                var src= get_dropdown_value("source_comp");
+                var dst= get_dropdown_value("destination_comp");
+                var air1= get_dropdown_value("airline1_comp");
+                var air2= get_dropdown_value("airline2_comp");
+                // var mdl1= get_dropdown_value("src_mdl");
+                // var mdl2= get_dropdown_value("dst_mdl");
+                // var y = document.getElementsByClassName("heading");
+                // for (var i = 0; i < y.length; i++)
+                // {
+                //   y[i].style.display = "block";
+                // }
+                
+                datas["source"]= src;
+                datas[ "destination"]= dst;
+                datas["airline1"]= air1;
+                datas["airline2"]= air2;
+                // datas["model1"]= mdl1;
+                // datas["model2"]= mdl2;
+                $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/Compare",
+                data: datas,
+                success: function(response)
+                {
+                var res= JSON.parse(response);
+                console.log(res["data"]);
+                plot_donut(res["data"],"fuel_graph1");
+                // plot_donut(res,"fuel_graph2");
+                comp_table(res["acList1"],res,"table_body1");
+                comp_table(res["acList2"],res,"table_body2");
+                
+                }
+                })
+                }
+                });
+                
+                function time_series_graph(y_data1,label) {
+                var x_data = [];
+                for(var i=0; i< y_data1.length/2; i++)
+                {
+                x_data.push(i);
+                }
+                var trace1={
+                type: "scatter",
+                mode: "lines",
+                x: x_data,
+                y: y_data1,
+                line: {color: '#17BECF'}
+                }
+
+                var layout = {
+                xaxis: {
+                  title: 'Time (min)',
+                  titlefont: {
+                    family: 'helvetica',
+                    size: 18
+                  }
+                },
+                yaxis: {
+                  title: label,
+                  titlefont: {
+                    family: 'helvetica',
+                    size: 18
+                  }
+                }
+              }
+                var data = [trace1];
+                Plotly.newPlot('time_series', data,layout);
+                }
+                function comp_table(res,result,id)
+                {
+                var table = document.getElementById(id);
+                table.innerHTML="";
+                length=res.length;
+                for(var i=0; i<length; i++)
+                {
+                var row = table.insertRow(i);
+                var cell0 = row.insertCell(0);
+                var cell1 = row.insertCell(1);
+                var cell2 = row.insertCell(2);
+                var cell3 = row.insertCell(3);
+                cell0.innerHTML = res[i]["Id"];
+                cell1.innerHTML = (res[i]["Miles"]*5).toFixed(3);
+                cell2.innerHTML = ((res[i]["Miles"]*5)/250).toFixed(3);
+                var btn = document.createElement('input');
+                btn.setAttribute('type','button');
+                btn.setAttribute('id',res[i]["Id"]);
+                btn.setAttribute('class','btn btn-success show');
+                btn.setAttribute('value','More');
+                x=result;
+                btn.onclick = function() 
+                {  
+                  document.getElementById("graph").setAttribute("style","display: none");
+                  var a=x["acList1"];
+                  var b=x["acList2"];
+                  var resu;
+                  var iterator=-1;
+                  ID=btn.id;
+                  found=0;
+                  for(var i=0; i<a.length;i++)
+                  {
+                    iterator++;
+                    if (a[i]["Id"]==ID)
+                    {
+                      resu=a;
+                      found=1;
+                      break;
+                    }
+                  }
+                  if (found!=1)
+                  {
+                    iterator=-1;
+                    for(var i=0; i<b.length;i++)
+                    {
+                      iterator++;
+                      if (b[i]["Id"]==ID)
+                      {
+                        resu=b;
+                        found=1;
+                        break;
+                      }
+                    }
+                  }
+                  
+                  document.getElementById("detail_table").setAttribute("style","display: block");   
+                  var table = document.getElementById("detail_table_body");
+                  table.innerHTML="";
+                  length=res.length;
+                  ID=btn.id;
+                  var row = table.insertRow(0);
+                  var cell0 = row.insertCell(0);
+                  var cell1 = row.insertCell(1);
+                  var cell2 = row.insertCell(2);
+                  var cell3 = row.insertCell(3);
+                  var cell4 = row.insertCell(4);
+                  var cell5 = row.insertCell(5);
+                  var cell6 = row.insertCell(6);
+
+                  cell0.innerHTML = "Id";
+                  cell1.innerHTML = resu[iterator]["Id"];
+                  cell2.innerHTML = "Icao";
+                  cell3.innerHTML = resu[iterator]["Icao"];
+                  cell4.innerHTML = "Model";
+                  cell5.innerHTML = resu[iterator]["Mdl"];
+                  cell6.innerHTML = " ";
+
+                  var row = table.insertRow(1);
+                  var cell0 = row.insertCell(0);
+                  var cell1 = row.insertCell(1);
+                  var cell2 = row.insertCell(2);
+                  var cell3 = row.insertCell(3);
+                  var cell4 = row.insertCell(4);
+                  var cell5 = row.insertCell(5);
+                  var cell6 = row.insertCell(6);
+
+                  cell0.innerHTML = "Average Speed (knots)";
+                  cell1.innerHTML = (resu[iterator]["AvgSpd"]).toFixed(3);
+                  cell2.innerHTML = "Average Altitude (feets)";
+                  cell3.innerHTML = (resu[iterator]["AvgAlt"]).toFixed(3);
+                  cell4.innerHTML = "Miles";
+                  cell5.innerHTML = (resu[iterator]["Miles"]).toFixed(3);
+                  cell6.innerHTML = " ";
+
+                  var row = table.insertRow(2);
+                  var cell0 = row.insertCell(0);
+                  var cell1 = row.insertCell(1);
+                  var cell2 = row.insertCell(2);
+                  var cell3 = row.insertCell(3);
+                  var cell4 = row.insertCell(4);
+                  var cell5 = row.insertCell(5);
+                  var cell6 = row.insertCell(6);
+
+                  cell0.innerHTML = "Fuel";
+                  cell1.innerHTML = ((resu[iterator]["Miles"]*5)/250).toFixed(3);
+                  cell2.innerHTML = "Time of Flight (hr:min:sec)";
+                  cell3.innerHTML = new Date((resu[iterator]["Miles"]*1609.34)/(resu[iterator]['AvgSpd']*0.514444) * 1000).toISOString().substr(11, 8);
+                  cell4.innerHTML = "Countries in route";
+                  cell5.innerHTML = resu[iterator]["BwCountries"];
+                  cell6.innerHTML = " ";
+
+                  var row = table.insertRow(3);
+                  var cell0 = row.insertCell(0);
+                  var cell1 = row.insertCell(1);
+                  var cell2 = row.insertCell(2);
+                  var cell3 = row.insertCell(3);
+                  var cell4 = row.insertCell(4);
+                  var cell5 = row.insertCell(5);
+                  var cell6 = row.insertCell(6);
+
+                  var btn1 = document.createElement('input');
+                  btn1.setAttribute('type','button');
+                  btn1.setAttribute('id',resu[iterator]["Id"]);
+                  btn1.setAttribute('class','btn btn-success show');
+                  btn1.setAttribute('value','Inspect');
+
+                  btn1.onclick = function() 
+                  {  
+                    document.getElementById("graph").setAttribute("style","display: block");
+                    var iterator=-1;
+                    ID=btn.id;
+                    found=0;
+                    for(var i=0; i<a.length;i++)
+                    {
+                      iterator++;
+                      if (a[i]["Id"]==ID)
+                      {
+                        resu=a;
+                        found=1;
+                        break;
+                      }
+                    }
+                    if (found!=1)
+                    {
+                      iterator=-1;
+                      for(var i=0; i<b.length;i++)
+                      {
+                        iterator++;
+                        if (b[i]["Id"]==ID)
+                        {
+                          resu=b;
+                          found=1;
+                          break;
+                        }
+                      }
+                    }
+                    time_series_graph(resu[iterator]["Alt"],"Altitude (feets)");
+                  }
+
+                  var btn2 = document.createElement('input');
+                  btn2.setAttribute('type','button');
+                  btn2.setAttribute('id',resu[iterator]["Id"]);
+                  btn2.setAttribute('class','btn btn-success show');
+                  btn2.setAttribute('value','Inspect');
+
+                  cell0.innerHTML = "Inspect Altitude";
+                  cell1.appendChild(btn1);
+                  cell2.innerHTML = " ";
+                  cell3.innerHTML = " ";
+                  cell4.innerHTML = "Inspect Speed";
+                  cell5.appendChild(btn2);
+                  cell6.innerHTML = " ";
+
+                  btn2.onclick = function() 
+                  {  
+                    document.getElementById("graph").setAttribute("style","display: block");
+                    var iterator=-1;
+                    ID=btn.id;
+                    found=0;
+                    for(var i=0; i<a.length;i++)
+                    {
+                      iterator++;
+                      if (a[i]["Id"]==ID)
+                      {
+                        resu=a;
+                        found=1;
+                        break;
+                      }
+                    }
+                    if (found!=1)
+                    {
+                      iterator=-1;
+                      for(var i=0; i<b.length;i++)
+                      {
+                        iterator++;
+                        if (b[i]["Id"]==ID)
+                        {
+                          resu=b;
+                          found=1;
+                          break;
+                        }
+                      }
+                    }
+                    time_series_graph(resu[iterator]["Spd"],"Speed (knots)");
+                  }
+
+                }
+                cell3.appendChild(btn);
+                }
+                }
+                function get_dropdown_value(name)
+                {
+                var res = document.getElementById(name);
+                var result=res.options[res.selectedIndex].value;
+                return result
+                }
+                function find_two_chk_dropdown_value(data,chk1,value1,chk2,value2,find,first_value)
+                {
+                var res=[];
+                res.push(first_value);
+                for (var i=0; i<data.length;i++)
+                {
+                if(data[i][chk1]==value1 && data[i][chk2]==value2)
+                res.push(data[i][find]);
+                }
+                return res
+                }
+                function find_three_chk_dropdown_value(data,chk1,value1,chk2,value2,chk3,value3,find,first_value)
+                {
+                var res=[];
+                res.push(first_value);
+                for (var i=0; i<data.length;i++)
+                {
+                if(data[i][chk1]==value1 && data[i][chk2]==value2 && data[i][chk3]== value3)
+                res.push(data[i][find]);
+                }
+                return res
+                }
+                function find_one_chk_dropdown_value(data,chk1,value1,find,first_value)
+                {
+                var res=[]
+                res.push(first_value);
+                for (var i=0; i<data.length;i++)
+                {
+                if(data[i][chk1]==value1)
+                res.push(data[i][find]);
+                }
+                return res
+                }
+                function empty_dropdown(drp_dwn)
+                {
+                var select = document.getElementById(drp_dwn);
+                select.innerHTML="";
+                }
+
+//                  function plot_donut(res,loc)
+//   {
+
+//         //****************************** MAKING ARRAY FOR FUEL AND LEGEND ***************************// 
+//     var a=res["acList1"];
+//                var b=res["acList2"];
+//                var d=a.concat(b);
+//     var xvalue=[];
+//     var yvalue=[];
+//     var label=[]
+//     for (var i=0; i<d.length; i++)
+//     {
+//       yvalue.push(d[i]["Miles"]*5);
+//       xvalue.push(d[i]["Op"]);
+//       label.push("Id: "+d[i]["Id"]+" Model: "+d[i]["Mdl"]);
+//     } 
+
+
+//     var trace1 = {
+//   x: xvalue,
+//   y: yvalue,
+//   type: 'bar',
+//   text: label,
+//   marker: {
+//     color: 'rgb(142,124,195)'
+//   }
+// };
+
+// var data = [trace1];
+
+// var layout = {
+//   title: 'Fuel Consumed W.R.T Airline',
+//   font:{
+//     family: 'Raleway, sans-serif'
+//   },
+//   showlegend: false,
+//   xaxis: {
+//     title: "Icao Codes",
+//     tickangle: -45,
+//     tickvals: xvalue
+//   },
+//   yaxis: {
+//     title: "Fuel Consumed (Gallons)",
+//     zeroline: false,
+//     gridwidth: 2
+//   },
+//   bargap :0.05
+// };
+
+// Plotly.newPlot('fuel_details', data, layout);
+
+        //****************************** SETTING DATA VARIABLE'S PROPERTIES ***************************// 
+
+    // var data = 
+    // [{
+    //     values: value,
+    //     labels: label,
+    //     domain: {
+    //       x: [0, .48]
+    //     },
+    //     name: 'Fuel Consumption',
+    //     hoverinfo: 'label+percent+name',
+    //     hole: .4,
+    //     type: 'pie'
+    // }];
+
+        //****************************** SETTING LAYOUT PROPERTIES ***************************//  
+
+    // var layout = 
+    // {
+    //     title: 'Fuel Consumption Estimation Pie Chart',
+    //     annotations: [
+    //       {
+    //         font: {
+    //           size: 15
+    //         },
+    //         showarrow: false,
+    //         text: 'Fuel',
+    //         x: 0.18,
+    //         y: 0.5
+    //       }
+    //     ],
+    //     height: 400,
+    //     width: 500
+    // };
+
+        //****************************** PLOTTING GRAPH ***************************// 
+
+  // Plotly.newPlot('fuel_details', data, layout);
+
+  
+        //****************************** PLOTTING GRAPH ***************************// 
+
+  // Plotly.newPlot(loc, data, layout);
+
+  // }
+
+
+  function plot_donut(data,div)
+  {
+    var data = data
+    var layout = {yaxis: {title: 'Fuel (gallons)'},showlegend: false};
+
+    Plotly.newPlot(div, data, layout);
+  }
+                </script>
+                
+                <!-- <div id="outer" class="container-fluid">
+                  <center>
+                  <table>
+                    
+                    <div class="airlne" style="height: 50px; width: 50; length:10px;">
+                      <select id="sourcef" class="rio">
+                        <option  value="" selected disabled hidden>Select Airline</option>
+                      </select>
+                    </div>
+                    <br/><br/>
+                    <div class="Sourc" style="height: 50px; width: 50;">
+                      <select id="sourcef" class="rio">
+                        <option  value="" selected disabled hidden>Select Source</option>
+                      </select>
+                    </div>
+                    <br/><br/>
+                    
+                    <div class="Destinatio" style="height: 50px; width: 50;">
+                      <select id="sourcef" class="rio">
+                        <option  value="" selected disabled hidden>Select Destination</option>
+                      </select>
+                    </div>
+                    <br/><br/>
+                    
+                    <input class="nrio" type="text" id="date" value="From">
+                    
+                    <input class="nrio" type="text" id="date1" value="To">
+                    <br/><br/>
+                    <a>
+                      <button class="butto">Submit</button>
+                    </a>
+                    <br/><br/>
+                    </center>
+                  </table>
+                </div>
+              </div> -->
+              
+              <!-- <section class="content"> -->
+              <!-- /.row -->
+              <!-- Main row -->
+              <!-- <div class="row"> -->
+              <!-- Left col -->
+              <!-- <section class="col-md-7 col-sm-12 col-xs-12 col-lg-7 connectedSortable"> -->
+              <!-- Custom tabs (Charts with tabs)-->
+              <!-- <div class="card">
+                <div class="card-header d-flex p-0">
+                  <h3 class="card-title p-3">
+                  <i class="fa fa-pie-chart mr-1"></i>
+                  SCATTER PLOT
+                  </h3> -->
+                  <!-- </div> -->
+                  <!-- /.card-header -->
+                  <!-- <div class="card-body"> -->
+                  <!-- <div class="tab-content p-0"> -->
+                  <!-- Morris chart - Sales -->
+                  <!-- <div class="chart tab-pane active" id="revenue-chart" -->
+                  <!-- style="position: relative; height: 300px; width: 100%;"></div> -->
+                  <!-- <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div> -->
+                  <!-- </div> -->
+                  <!-- </div>/.card-body -->
+                  <!-- </div> -->
+                  
+                  <!-- </section> -->
+                  <!-- /.Left col -->
+                  <!-- right col (We are only adding the ID to make the widgets sortable)-->
+                  <!-- <section class="col-lg-5 connectedSortable"> -->
+                  <!-- Map card -->
+                  <!-- <div class="card bg-primary-gradient">
+                    <div class="card-header no-border">
+                      <h3 class="card-title">
+                      <i class="fa fa-map-marker mr-1"></i>
+                      MAP
+                      </h3> -->
+                      <!-- card tools -->
+                      <!-- <div class="card-tools">
+                        <button type="button"
+                        class="btn btn-primary btn-sm daterange"
+                        data-toggle="tooltip"
+                        title="Date range">
+                        <i class="fa fa-calendar"></i>
+                        </button>
+                        <button type="button"
+                        class="btn btn-primary btn-sm"
+                        data-widget="collapse"
+                        data-toggle="tooltip"
+                        title="Collapse">
+                        <i class="fa fa-minus"></i>
+                        </button>
+                      </div> -->
+                      <!-- /.card-tools -->
+                    <!--  </div>
+                    <div class="card-body">
+                      <div id="world-map" style="height: 310px; width: 100%;"></div>
+                    </div>
+                  </div> -->
+                  <!-- /.card -->
+                  <!-- </section> -->
+                  <!-- right col -->
+                  <!-- </div> -->
+                  <!-- /.row (main row) -->
+                  <!-- </div>/.container-fluid -->
+                  <!-- </section> -->
+                  <!-- /.content -->
+                  
+                </div>
+              </div>
+              <!-- /.content-wrapper -->
+              <!-- Control Sidebar -->
+              <aside class="control-sidebar control-sidebar-dark">
+                <!-- Control sidebar content goes here -->
+              </aside>
+              <!-- /.control-sidebar -->
+            </div>
+            <!-- ./wrapper -->
+            <!-- jQuery -->
+            <script src="../static/plugins/jquery/jquery.min.js"></script>
+            <!-- jQuery UI 1.11.4 -->
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+            <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+            <script>
+            $.widget.bridge('uibutton', $.ui.button)
+            </script>
+            <!-- Bootstrap 4 -->
+            <script src="../static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+            <script src="../static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+            <script src="../static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+            <!-- Morris.js charts -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+            <script src="../static/plugins/morris/morris.min.js"></script>
+            <!-- Sparkline -->
+            <script src="../static/plugins/sparkline/jquery.sparkline.min.js"></script>
+            <!-- jvectormap -->
+            <script src="../static/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+            <script src="../static/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+            <!-- jQuery Knob Chart -->
+            <script src="../static/plugins/knob/jquery.knob.js"></script>
+            <script src="../static/plugins/input-mask/jquery.inputmask.js"></script>
+            <script src="../static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+            <script src="../static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+            <script src="../static/plugins/iCheck/icheck.min.js"></script>
+            <script src="../static/plugins/select2/select2.full.min.js"></script>
+            <!-- daterangepicker -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+            <script src="../static/plugins/daterangepicker/daterangepicker.js"></script>
+            <!-- datepicker -->
+            <script src="../static/plugins/datepicker/bootstrap-datepicker.js"></script>
+            <!-- Bootstrap WYSIHTML5 -->
+            <script src="../static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+            <!-- Slimscroll -->
+            <script src="../static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+            <!-- FastClick -->
+            <script src="../static/plugins/fastclick/fastclick.js"></script>
+            <!-- AdminLTE App -->
+            <script src="../static/dist/js/adminlte.js"></script>
+            <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+            <script src="../static/dist/js/pages/dashboard.js"></script>
+            <!-- AdminLTE for demo purposes -->
+            <script src="../static/dist/js/demo.js"></script>
+            <script type="text/javascript" src="../static/jquery-ui/jquery-ui.min.js"></script>
+            <script type="text/javascript" src="../static/jquery-ui/external/jquery/jquery.js"></script>
+            <script type="text/javascript">
+            $("#date").datepicker();
+            </script>
+            <script type="text/javascript">
+            $("#date1").datepicker();
+            </script>
+            <script>
+            $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+            timePicker         : true,
+            timePickerIncrement: 30,
+            format             : 'MM/DD/YYYY h:mm A'
+            })
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+            {
+            ranges   : {
+            'Today'       : [moment(), moment()],
+            'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+            'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate  : moment()
+            },
+            function (start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+            )
+            //iCheck for checkbox and radio inputs
+            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass   : 'iradio_minimal-blue'
+            })
+            //Red color scheme for iCheck
+            $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+            checkboxClass: 'icheckbox_minimal-red',
+            radioClass   : 'iradio_minimal-red'
+            })
+            //Flat red color scheme for iCheck
+            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass   : 'iradio_flat-green'
+            })
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
+            //Timepicker
+            $('.timepicker').timepicker({
+            showInputs: false
+            })
+            })
+            </script>
+
+
+            <script>
+              function plot(res) {
+                
+
+
+              }
+            </script>
+
+
+          </body>
+        </html>

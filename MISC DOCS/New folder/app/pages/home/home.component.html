@@ -1,0 +1,134 @@
+<section class="content clearfix animated fadeIn info-hidden" id="homeComponent">
+    <div class="content-view">
+        <div class="activateScrollbar clearfix">
+            <div class="card-container clearfix">
+                <a class="card b-0 animated svhOnHover slideInUp delay-100"
+                    routerLink="/dashboard"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.dashboard.enabled">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#dashboard-colored"/>
+					</svg>
+                    <h5>Dashboard</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                </a>
+                <a class="card b-0 animated svhOnHover slideInUp delay-200"
+                    routerLink="/chats"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.chats.enabled && package && package.chats.allowed">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#chats-colored"/>
+					</svg>
+                    <h5>Chats</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                    <!-- <span class="notif-count b-0" *ngIf="messageReadCount && messageReadCount < 100">
+                        {{ messageReadCount }}</span>
+                    <span class="notif-count b-0" *ngIf="messageReadCount && messageReadCount >= 100"> 99+</span> -->
+                </a>
+                <a class="card b-0 animated svhOnHover slideInUp delay-300"
+                    routerLink="/chatbot"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.chatbot.enabled">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#chatbot-colored"/>
+					</svg>
+                    <h5>Chatbot</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                </a>
+                <a class="card b-0 animated svgOnHover slideInUp delay-400"
+                    routerLink="/agents"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.agents.enabled">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#agents-colored"/>
+					</svg>
+                    <h5>Agents</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                    <!-- <div class="notif-counters bg-transparent p-0 b-0" *ngIf="agentMessageReadCount">
+                        <span class="text-red"
+                            *ngIf="agentMessageReadCount && agentMessageReadCount < 100"><small>{{agentMessageReadCount}}</small>
+                            Messages</span>
+                        <span class="text-red" *ngIf="agentMessageReadCount && agentMessageReadCount >= 100"><small>99+</small>
+                            Messages</span>
+                    </div> -->
+                </a>
+                <a class="card b-0 animated svhOnHover slideInUp delay-500"
+                    routerLink="/tickets"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.tickets.enabled">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#tickets-colored"/>
+					</svg>
+                    <h5>Tickets</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                    <!-- <span>
+                        <span class="clearfix">
+                            <p class="text-red" *ngIf="(openTicketsCount) > 0">{{openTicketsCount}} Opened</p>
+                            <p class="text-orange" *ngIf="(pendingTicketsCount) > 0" >{{pendingTicketsCount}} Pending</p>
+                        </span>
+                    </span> -->
+                    <!-- <div *ngIf="(openTicketsCount && pendingTicketsCount) > 0" class="notif-count bg-transparent p-0 b-0">
+                        <span *ngIf="(openTicketsCount) > 0" class="bg-red">{{openTicketsCount}}</span>
+                        <span *ngIf="(pendingTicketsCount) > 0" class="bg-orange">{{pendingTicketsCount}}</span>
+                    </div> -->
+                    <!-- Add 99+ if ncreases to 3 digits -->
+                    <!-- <div class="notif-counters bg-transparent p-0 b-0" *ngIf="(openTicketsCount + pendingTicketsCount) > 0">
+                        <span *ngIf="(openTicketsCount) > 0" class="text-red"><small>{{openTicketsCount}}</small> Open</span>
+                        <span *ngIf="(pendingTicketsCount) > 0" class="text-orange"><small>{{pendingTicketsCount}}</small>
+                            Pending</span>
+                    </div> -->
+                </a>
+                <a class="card b-0 animated svhOnHover slideInUp delay-600"
+                    routerLink="/visitors"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.visitors.enabled">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#visitors-colored"/>
+					</svg>
+                    <h5>Visitors</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                </a>
+                <a class="card b-0 animated svhOnHover slideInUp delay-700"
+                    routerLink="/crm"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.crm.enabled">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#contacts-colored"/>
+					</svg>
+                    <h5>CRM</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                </a>
+                <a class="card b-0 animated svhOnHover slideInUp delay-800"
+                    routerLink="/analytics"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.analytics.enabled && package && package.analytics.allowed">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#analytics-colored"/>
+					</svg>
+                    <h5>Analytics</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                </a>
+                <a class="card b-0 animated svhOnHover slideInUp delay-900"
+                    routerLink="/settings"
+                    [routerLinkActive]="['active']"
+                    *ngIf="permissions && permissions.settings && permissions.settings.enabled">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#settings-colored"/>
+					</svg>
+                    <h5>Settings</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                </a>
+                <a class="card b-0 animated svhOnHover slideInUp delay-1000"
+                    routerLink="/installation"
+                    *ngIf="permissions && permissions.installation.enabled"
+                    [routerLinkActive]="['active']">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#installation-colored"/>
+					</svg>
+                    <h5>Installation</h5>
+                    <!-- <span>Richard McClintock, a Latin scholar from Hampden-Sydney College, filler text.</span> -->
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

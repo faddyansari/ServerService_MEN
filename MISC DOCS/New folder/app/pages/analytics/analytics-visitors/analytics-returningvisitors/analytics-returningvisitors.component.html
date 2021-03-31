@@ -1,0 +1,50 @@
+<app-analytics-datebox  [agentEnabled]="false" (onResult)="onFilterResult($event)"></app-analytics-datebox>
+<div class="statistics clearfix">
+	<!-- <app-preloader type="cube-grid" *ngIf="loading" class="floatToCenter"></app-preloader> -->
+	<div id="highchart" style="height:300px;"></div>
+	<br>
+	<br>
+	<button class="btn btn-xs bg-green" style="position: fixed;bottom: 40px;left: 100px;z-index: 99999;" (click)="Export()" *ngIf="options.series[0] && options.series[0].data">Export</button>
+	<div class="table-area clearfix">
+		<!-- <app-preloader type="cube-grid" *ngIf="loadingTableData" class="floatToCenter"></app-preloader> -->
+		<!-- <div class="export" *ngIf="table_uniquevisitors.length">
+			<button class="btn bg-green no-rad"
+				(click)="ExportToExcel(table_uniquevisitors,'uniquevisitors')">Export</button>
+		</div> -->
+
+		<div class="table-responsive">
+			<table class="table table-bordered" *ngIf="options.series[0] && options.series[0].data" id="returningVisitors">
+				<thead>
+					<tr>
+						<th [attr.colspan]="options.series.length + 2" class="text-center">Breakdown</th>
+					</tr>
+					<tr>
+						<th>Series</th>
+						<ng-template ngFor [ngForOf]="options.series" let-series>
+							<th>{{series.name}}</th>
+						</ng-template>
+					</tr>
+				</thead>
+				<tbody>
+					<ng-template ngFor [ngForOf]="options.xAxis.categories" let-category let-index="index">
+						<tr>
+							<td>{{category}}</td>
+							<ng-template ngFor [ngForOf]="options.series" let-series>
+								<td>{{series.data[index]}}</td>
+							</ng-template>
+						</tr>
+					</ng-template>
+					<tr>
+						<td><b>Total</b></td>
+						<ng-template ngFor [ngForOf]="options.series" let-series let-index="index">
+							<td><b>{{showSeriesCount(index)}}</b></td>
+						</ng-template>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- <div *ngIf="unreachable">
+	Server unreachable.
+</div> -->

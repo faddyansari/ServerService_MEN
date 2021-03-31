@@ -1,0 +1,172 @@
+<div class="box clearfix animated fadeIn delay-400">
+    <div class="box-body clearfix p-0" [ngClass]="state[pageState] ? pageState : ''">
+        <div class="activateScrollbar clearfix p-0" *ngIf="_visitor">
+            <div class="vhDetails notif clearfix" [ngClass]="state[pageState] ? pageState : ''">
+                <div class="avatar ava-xl" title="{{_visitor.username}}">
+                    <div class="nameInitials"
+                        [ngStyle]="(_visitor.viewColor) ? {'background-color' : _visitor.viewColor} : ''">
+                        <span>{{_visitor.username | slice:0:2 | uppercase}}</span>
+                    </div>
+                </div>
+                <div class="details">
+                    <div class="name" title="{{_visitor.username}}">
+                        <span class="ellipsis">{{_visitor.username}}</span>
+                    </div>
+                    <div class="email" title="{{_visitor.email}}">
+                        <span>{{((_visitor.email | lowercase) != "unregistered" && _visitor.email) ? _visitor.email : 'UNREGISTERED'}}</span>
+                    </div>
+                    <div class="country svgOnHover">
+						<i class="flag ff-sm flag-{{_visitor.country}}" title="{{_visitor.fullCountryName}}"></i>
+                        <span>{{_visitor.country}}</span>
+                    </div>
+                    <div class="ip svgOnHover">
+                        <svg class="svg w-15 h-15 svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#ip"/>
+						</svg>
+                        <span>{{_visitor.ip}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="vhActions notif clearfix" *ngIf="(pageState && pageState != 'left')">
+                <div class="want-to-actions">
+                    <div class="svgOnHover tooltip top"
+                        *ngIf="(_visitor.state == 1 || _visitor.state == 4) && !_visitor.inactive"
+                        [ngClass]="(_visitor.state == 4) ? 'disabled' : ''" (click)="performAction('initiateChat')">
+                        <svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#initiate-chat"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#initiate-chat-colored"/>
+						</svg>
+                        <span class="tooltip-inner">Initiate Chat</span>
+                    </div>
+                    <div class="svgOnHover tooltip top" *ngIf="(_visitor.state == 2) && !_visitor.inactive"
+                        (click)="performAction('inviteChat')">
+                        <svg class="svg">
+							<use href="/assets/img/icons/icons-sprite.svg#invite-to-chat"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#invite-to-chat-colored"/>
+						</svg>
+                        <span class="tooltip-inner">Invite To Chat</span>
+                    </div>
+                    <div class="svgOnHover tooltip top"
+                        *ngIf="agent && _visitor && (_visitor.state == 3) && (_visitor.agent.id == agent.csid) && !_visitor.inactive"
+                        (click)="performAction('transferChat')">
+                        <svg class="svg">
+							<use href="/assets/img/icons/icons-sprite.svg#transfer-chat"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#transfer-chat-colored"/>
+						</svg>
+                        <span class="tooltip-inner">Transfer Chat</span>
+                    </div>
+                    <div class="svgOnHover tooltip top"
+                        *ngIf="agent && _visitor && (_visitor.state == 3) && permissions.chatSuperVision && (_visitor.agent.id != agent.csid) && !SuperVisedChatList.includes(_visitor.conversationID)"
+                        (click)="SuperviseChat(_visitor)">
+                        <svg class="svg">
+							<use href="/assets/img/icons/icons-sprite.svg#invite-to-chat"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#invite-to-chat-colored"/>
+						</svg>
+                        <span class="tooltip-inner">Supervise Chat</span>
+                    </div>
+                    <div class="svgOnHover tooltip top"
+                        *ngIf="agent && _visitor && (_visitor.state == 3) && permissions.chatSuperVision && (_visitor.agent.id != agent.csid) && SuperVisedChatList.includes(_visitor.conversationID)"
+                        (click)="EndSuperVision(_visitor)">
+                        <svg class="svg">
+							<use href="/assets/img/icons/icons-sprite.svg#chat-end"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#chat-end-colored"/>
+						</svg>
+                        <span class="tooltip-inner">End SuperVision</span>
+                    </div>
+                    <div class="svgOnHover tooltip top" (click)="BanVisitor(_visitor)">
+                        <svg class="svg svg-red active">
+							<use href="/assets/img/icons/icons-sprite.svg#ban-visitor"/>
+						</svg>
+                        <span class="tooltip-inner">Ban Visitor</span>
+                    </div>
+                </div>
+            </div>
+            <div class="vhList notif clearfix">
+                <div class="nav-tabs-custom">
+                    <ul class="nav-tabs">
+                        <!-- VISITOR HISTORY -->
+                        <li>
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-left"
+                            [ngClass]="(tabs['visitorHistory']) ? 'active' : ''"
+                            (click)="vhListTabs('visitorHistory')">
+								<svg class="svg active">
+									<use [attr.href]="(tabs['visitorHistory']) ? '/assets/img/icons/icons-sprite.svg#visitor-history-colored' : '/assets/img/icons/icons-sprite.svg#visitor-history'" [ngClass]="(tabs['visitorHistory']) ? '' : 'text-theme-pro-gray'"/>
+								</svg>
+                                <span class="tooltip-inner">Visitor History</span>
+                            </h5>
+                        </li>
+                        <!-- BROWSING HISTORY -->
+                        <li *ngIf="_visitor">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top"
+                            [ngClass]="(tabs['browsingHistory']) ? 'active' : ''"
+                            (click)="vhListTabs('browsingHistory')">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#browsing-history" [ngClass]="(tabs['browsingHistory']) ? 'text-teal' : 'text-theme-pro-gray'"/>
+								</svg>
+                                <span class="tooltip-inner">Browsing History</span>
+                            </h5>
+                        </li>
+                        <!-- SESSION LOGS -->
+                        <li *ngIf="_visitor">
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top"
+                            [ngClass]="(tabs['sessionLogs']) ? 'active' : ''"
+                            (click)="vhListTabs('sessionLogs')">
+								<svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#session-logs" [ngClass]="(tabs['sessionLogs']) ? 'text-teal' : 'text-theme-pro-gray'"/>
+								</svg>
+                                <span class="tooltip-inner">Session Logs</span>
+                            </h5>
+                        </li>
+                        <!-- ADDITIONAL DATA -->
+                        <li>
+                            <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-right"
+								[ngClass]="(tabs['additionalData']) ? 'active' : ''"
+								(click)="vhListTabs('additionalData')">
+								<svg class="svg active">
+									<use [attr.href]="(tabs['additionalData']) ? '/assets/img/icons/icons-sprite.svg#additional-data-colored' : '/assets/img/icons/icons-sprite.svg#additional-data'" [ngClass]="(tabs['additionalData']) ? '' : 'text-theme-pro-gray'"/>
+								</svg>
+                                <span class="tooltip-inner">Additional Data</span>
+                            </h5>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- VISITOR HISTORY -->
+                        <div class="tab-pane" [ngClass]="(tabs['visitorHistory']) ? 'active' : ''">
+                            <app-visitor-history [visitor]="_visitor"></app-visitor-history>
+
+                        </div>
+                        <!-- BROWSING HISTORY -->
+                        <div class="tab-pane" [ngClass]="(tabs['browsingHistory']) ? 'active' : ''">
+                            <app-browsing-history [urls]="_visitor.url"></app-browsing-history>
+
+                        </div>
+                        <!-- SESSION LOGS -->
+                        <div class="tab-pane" [ngClass]="(tabs['sessionLogs']) ? 'active' : ''">
+                            <app-session-logs [Logs]="Logs"></app-session-logs>
+                        </div>
+                        <!-- ADDITIONAL DATA -->
+                        <div class="tab-pane" [ngClass]="(tabs['additionalData']) ? 'active' : ''">
+                            <app-additional-data [visitorCarRequestData]="_visitor.carRequestData"></app-additional-data>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notAvailable" *ngIf="!_visitor">
+            <svg class="svg w-100 h-100 active">
+				<use href="/assets/img/icons/icons-sprite.svg#no-visitors-colored" class="text-gray"/>
+			</svg>
+            <span>No Visitor Selected</span>
+        </div>
+    </div>
+</div>

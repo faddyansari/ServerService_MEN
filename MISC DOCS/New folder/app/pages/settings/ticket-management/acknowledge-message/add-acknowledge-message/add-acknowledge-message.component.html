@@ -1,0 +1,129 @@
+<div class="activateScrollbar clearfix p-0">
+  <form [formGroup]="ackMessageForm">
+    <!-- Name -->
+    <div class="input-block">
+      <label>Greeting Message Name</label>
+      <input type="text" class="form-control input-sm" autocomplete="off" formControlName="name"
+        placeholder="Enter greeting message name.. Keep meaningful name">
+    </div>
+
+    <hr class="clearfix bg-border">
+
+    <fieldset class="w100 clearfix m-b-20">
+      <div class="input-block">
+        <h5 class="m-0 p-0">Add Message</h5>
+      </div>
+      <!-- Message -->
+      <div class="input-block">
+        <textarea [ngxSummernote]="config" name="message" formControlName="message" rows="4" autocomplete="off"
+          class="form-control input-sm">
+        </textarea>
+      </div>
+      
+      <div>
+        <button class="btn btn-transparent svgOnHover tooltip top" [popper]="cannedResponsePopper"
+          [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true"
+          [popperHideOnScroll]="false" [popperPlacement]="'bottom'">
+          <svg class="svg svg-default">
+            <use href="/assets/img/icons/icons-sprite.svg#plus-circle" />
+          </svg>
+          <svg class="svg colored">
+            <use href="/assets/img/icons/icons-sprite.svg#plus-circle-colored" />
+          </svg>
+          <span class="tooltip-inner">Add Canned Responses</span>
+        </button>
+      </div>
+      <button class="btn btn-xs bg-blue" [popper]="insertPlaceholder"
+      [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true"
+      [popperHideOnScroll]="false" [popperPlacement]="'bottom'">
+        <span>Insert Placeholder</span>
+      </button>
+      <br>
+      <hr class="clearfix bg-border">
+
+      <div class="input-block">
+        <label>Disabled Emails : </label>
+        <app-chips-input class="form-control input-sm tag-input wAuto" [items]="ackMessageForm.get('disabledFor').value"
+          name="emails" [placeholder]="'Enter emails who should not get Greeting message'" [delimiters]="[',']"
+          formControlName="disabledFor" [errorMsg]="'Email is not valid'" [maxTag]="9"></app-chips-input>
+      </div>
+    </fieldset>
+
+ 
+    <hr class="clearfix bg-border">
+
+
+    <!-- Action Buttons -->
+    <div class="clearfix actions">
+			<button type="button" class="btn btn-xs bg-blue" *ngIf="!selectedMessage"
+				(click)="AddAckMessage()" [disabled]="!ackMessageForm.valid">
+				<span>Save</span>
+			</button>
+
+			<button type="button" class="btn btn-xs bg-blue" *ngIf="selectedMessage" 
+				(click)="UpdateAckMessage()">
+				<span>Update</span>
+      </button>
+      
+      <button type="button" class="btn btn-xs bg-charcoal-light" [disabled]="!ackMessageForm.get('message').value"
+				(click)="PreviewAckMessage()">
+				<span>Preview</span>
+			</button>
+
+			<button type="button" class="btn btn-xs bg-red" (click)="CancelAckMessage()">
+				<span>Cancel</span>
+			</button>
+		</div>
+  </form>
+</div>
+
+<popper-content #cannedResponsePopper>
+  <ul class="activateScrollbar clearfix" *ngIf="automatedResponses">
+    <li>
+      <a href="javascript:void(0);" (click)="GotoAR()">
+        <span>Add new Canned message</span>
+      </a>
+    </li>
+    <li *ngFor="let res of automatedResponses" (click)="InsertCannedMessage(res.hashTag)">
+      <a>
+        <span>{{res.hashTag}}</span>
+      </a>
+
+    </li>
+  </ul>
+</popper-content>
+
+<popper-content #insertPlaceholder>
+  <div class="tabination clearfix">
+    <ul class="nav-tabs">
+      <li [ngClass]="(pills['tickets']) ? 'active' : ''"><a (click)="setPillActive('tickets')">Tickets Fields</a></li>
+      <li [ngClass]="(pills['requestor']) ? 'active' : ''"><a (click)="setPillActive('requestor')">Visitor Fields</a></li>
+    </ul>
+    <ul class="tab-content">
+  
+      <li class="tab-pane" [ngClass]="(pills['tickets']) ? 'active' : ''">
+        <div class="clearfix actions" *ngFor="let field of ticketFields">
+          <button type="button" class="btn btn-sm btn-theme" (click)="AddTicketField(field.name)">
+            <span>{{field.name}}</span>
+          </button>
+        </div>
+      </li>
+      <li class="tab-pane" [ngClass]="(pills['requestor']) ? 'active' : ''">
+        <div class="clearfix actions" *ngFor="let field of requestorFields">
+          <button type="button" class="btn btn-sm btn-theme" (click)="AddRequestorField(field.name)">
+            <span>{{field.name}}</span>
+          </button>
+        </div>
+      </li>
+    </ul>
+    <button class="btn btn-transparent svgOnHover tooltip left m-0" (click)="ClosePopper()" style="position:absolute;right:0;top:0;">
+      <svg class="svg svg-default">
+  <use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+</svg>
+<svg class="svg colored">
+  <use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+</svg>
+      <span class="tooltip-inner">Close</span>
+  </button>
+  </div>
+</popper-content>

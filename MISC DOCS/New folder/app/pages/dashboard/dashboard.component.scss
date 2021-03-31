@@ -1,0 +1,16 @@
+@import "../../../assets/sass/partials/variables";
+@import "../../../assets/sass/partials/mixins";
+@import "../../../assets/sass/partials/extensions";
+
+#dashboardArea {
+	.content-view {
+		.activateScrollbar {
+			@include phone {
+				padding: 7px;
+			}
+			@include tabletL {
+				padding: 14px;
+			}
+		}
+	}
+}

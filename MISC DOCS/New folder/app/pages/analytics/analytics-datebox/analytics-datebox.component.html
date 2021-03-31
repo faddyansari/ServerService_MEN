@@ -1,0 +1,172 @@
+<div class="date-box">
+	<div class="btn-group m-b-10">
+		<button class="btn btn-xs btn-theme" [disabled]="loading" *ngIf="allEnabled"
+			[ngClass]="(fetchAllData) ? 'active bg-blue' : ''" (click)="fetchAll()">
+			<span>All</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" *ngIf="dayFiltersEnabled"
+			[ngClass]="(selectedDateType == 'today' && !fetchAllData) ? 'active bg-blue' : ''"
+			(click)="setDateType('today')">
+			<span>Today</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" *ngIf="dayFiltersEnabled"
+			[ngClass]="(selectedDateType == 'yesterday' && !fetchAllData) ? 'active bg-blue' : ''"
+			(click)="setDateType('yesterday')">
+			<span>Yesterday</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" *ngIf="dayFiltersEnabled"
+			[ngClass]="(selectedDateType == 'week' && !fetchAllData) ? 'active bg-blue' : ''"
+			(click)="setDateType('week')">
+			<span>Week</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" *ngIf="dayFiltersEnabled"
+			[ngClass]="(selectedDateType == 'month' && !fetchAllData) ? 'active bg-blue' : ''"
+			(click)="setDateType('month')">
+			<span>Month</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" *ngIf="dayFiltersEnabled"
+			[ngClass]="(customDate) ? 'active bg-blue' : ''" (click)="toggleCustomDate()">
+			<span>Custom</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" [ngClass]="(comparison) ? 'active bg-blue' : ''"
+			(click)="toggleComparison()" *ngIf="compareEnabled">
+			<span>Compare</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" [ngClass]="(countrySelection) ? 'active bg-blue' : ''"
+			(click)="ToggleCountrySelection()" *ngIf="countryEnabled">
+			<span>Country</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" [ngClass]="(agentSelection) ? 'active bg-blue' : ''"
+			(click)="ToggleAgentSelection()" *ngIf="agentEnabled">
+			<span>Agent</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading" [ngClass]="(groupSelection) ? 'active bg-blue' : ''"
+			(click)="ToggleGroupSelection()" *ngIf="groupEnabled">
+			<span>Groups</span>
+		</button>
+		<button class="btn btn-xs btn-theme" [disabled]="loading"
+			[ngClass]="(customFieldsToggle) ? 'active bg-blue' : ''" (click)="toggleCustomSelection()"
+			*ngIf="customFieldsEnabled && (dynamicFieldList_tickets.length || dynamicFieldList_chats.length)">
+			<span>Custom Fields</span>
+		</button>
+	</div>
+	<div class="date-box-internal clearfix" *ngIf="customDate">
+		<div class="input-group-sm w100">
+			<label class="fw-6">From:</label>
+			<input class="form-control" type="date" [(ngModel)]="date_from" [value]="date_from" [max]="today"
+				[ngClass]="(dateError) ? 'border-red' : ''" (change)="checkDate()">
+			<label class="fw-6">To:</label>
+			<input class="form-control" type="date" [(ngModel)]="date_to" [value]="date_to" [max]="today"
+				[ngClass]="(dateError) ? 'border-red' : ''" (change)="checkDate()">
+			<div class="input-group-btn">
+				<button class="btn btn-theme" [disabled]="(!date_from || !date_to) && loading"
+					[ngClass]="(loading) ? 'btnSpinner' : ''" (click)="setDateType('custom')">
+					<span>Go</span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="date-box-internal clearfix" *ngIf="comparison">
+		<div class="btn-group clearfix m-b-7">
+			<button class="btn btn-xxs btn-theme" [disabled]="loading"
+				[ngClass]="(selectedComparison == 'past_7_days') ? 'active bg-blue' : ''"
+				(click)="setComparisonType('past_7_days')">
+				<span>Past 7 days</span>
+			</button>
+			<button class="btn btn-xxs btn-theme" [disabled]="loading"
+				[ngClass]="(selectedComparison == 'past_10_days') ? 'active bg-blue' : ''"
+				(click)="setComparisonType('past_10_days')">
+				<span>Past 10 days</span>
+			</button>
+			<button class="btn btn-xxs btn-theme" [disabled]="loading"
+				[ngClass]="(selectedComparison == 'past_30_days') ? 'active bg-blue' : ''"
+				(click)="setComparisonType('past_30_days')">
+				<span>Past 30 days</span>
+			</button>
+			<button class="btn btn-xxs btn-theme" [disabled]="loading"
+				[ngClass]="(selectedComparison == 'past_6_months') ? 'active bg-blue' : ''"
+				(click)="setComparisonType('past_6_months')">
+				<span>Past 6 months</span>
+			</button>
+			<button class="btn btn-xxs btn-theme" [disabled]="loading"
+				[ngClass]="(selectedComparison == 'past_years') ? 'active bg-blue' : ''"
+				(click)="setComparisonType('past_years')">
+				<span>Past years</span>
+			</button>
+		</div>
+		<div class="input-group-sm w100" *ngIf="selectedComparison == 'past_years'">
+			<label class="fw-6">From:</label>
+			<input class="form-control" type="number" [(ngModel)]="year_from" [value]="year_from" [max]="max_year"
+				[min]="1990" [ngClass]="(yearError) ? 'border-red' : ''" (change)="checkYear()">
+			<label class="fw-6">To:</label>
+			<input class="form-control" type="number" [(ngModel)]="year_to" [value]="year_to" [max]="max_year"
+				[min]="1990" [ngClass]="(yearError) ? 'border-red' : ''" (change)="checkYear()">
+			<div class="input-group-btn">
+				<button class="btn bg-green" [disabled]="(!year_from || !year_to) || loading"
+					(click)="comparisonYearSearch()">Go</button>
+			</div>
+		</div>
+	</div>
+	<div class="date-box-internal clearfix" *ngIf="agentSelection">
+		<div class="input-group-sm w100">
+			<app-custom-select class="input-sm" [items]="agentList"
+				[selectLabel]="'Select agents'" [(ngModel)]="selectedAgents" [selectedItems]="selectedAgents"
+				[bindLabel]="'email'" [bindValue]="'email'" [multiple]="multipleAgentSelection" [lazyLoading]="true"
+				(onLoadMore)="loadMore($event)" (onSearch)="onSearch($event)" (onSelect)="onItemSelect($event)"
+				(onDeSelect)="onItemDeSelect($event)">
+			</app-custom-select>
+			<div class="input-group-btn">
+				<button type="submit" class="btn btn-theme" [disabled]="loading" (click)="getData()">Go</button>
+			</div>
+		</div>
+	</div>
+	<div class="date-box-internal clearfix" *ngIf="countrySelection">
+		<div class="input-group-sm w100">
+			<app-custom-select class="input-sm" [items]="countryNames"
+				[selectLabel]="'Select country'" [(ngModel)]="selectedCountry" [selectedItems]="selectedCountry"
+				[multiple]="multipleCountrySelection" [lazyLoading]="true"
+				(onSelect)="onCountrySelect($event)"
+				(onDeSelect)="onCountryDeSelect($event)">
+			</app-custom-select>
+			<div class="input-group-btn">
+				<button type="submit" class="btn btn-theme" [disabled]="loading" (click)="getData()">Go</button>
+			</div>
+		</div>
+	</div>
+	<div class="date-box-internal clearfix" *ngIf="groupSelection">
+		<div class="input-group-sm w100">
+			<app-custom-select class="input-sm" [items]="groupList"
+				[selectLabel]="'Select groups'" [(ngModel)]="selectedGroups" [selectedItems]="selectedGroups"
+				[multiple]="multipleGroupSelection" (onSelect)="onGroupSelect($event)"
+				(onDeSelect)="onGroupDeSelect($event)">
+			</app-custom-select>
+			<div class="input-group-btn">
+				<button type="submit" class="btn btn-theme" [disabled]="loading" (click)="getData()">Go</button>
+			</div>
+		</div>
+	</div>
+	<div class="date-box-internal clearfix" *ngIf="customFieldsToggle && customFieldsType == 'tickets'">
+		<div class="input-group-sm w100">
+			<app-custom-select class="input-sm" [items]="dynamicFieldList_tickets"
+				[selectLabel]="'Select fields'" [(ngModel)]="selectedDynamicFields"	[multiple]="false"
+				[selectedItems]="selectedDynamicFields" [multiple]="true" (onSelect)="onDynamicFieldSelect($event)"
+				(onDeSelect)="onDynamicFieldDeSelect($event)">
+			</app-custom-select>
+			<div class="input-group-btn">
+				<button type="submit" class="btn btn-theme" [disabled]="loading" (click)="getData()">Go</button>
+			</div>
+		</div>
+	</div>
+	<div class="date-box-internal clearfix" *ngIf="customFieldsToggle && customFieldsType == 'chats'">
+		<div class="input-group-sm w100">
+			<app-custom-select class="input-sm" [items]="dynamicFieldList_chats"
+				[selectLabel]="'Select fields'" [(ngModel)]="selectedDynamicFields"	[multiple]="false"
+				[selectedItems]="selectedDynamicFields" [multiple]="true" (onSelect)="onDynamicFieldSelect($event)"
+				(onDeSelect)="onDynamicFieldDeSelect($event)">
+			</app-custom-select>
+			<div class="input-group-btn">
+				<button type="submit" class="btn btn-theme" [disabled]="loading" (click)="getData()">Go</button>
+			</div>
+		</div>
+	</div>
+</div>

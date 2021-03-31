@@ -1,0 +1,63 @@
+<div class="box clearfix animated fadeIn delay-400" id="transcriptForwardingComponent">
+    <div class="box-body clearfix p-0">
+        <div class="box-subtitle clearfix">
+            <div>
+                <h5>Forward Chat Transcripts</h5>
+            </div>
+        </div>
+        <form [formGroup]="transcriptForwarindSettingsForm">
+            <div class="input-block">
+                <label>To this email address</label>
+                <input type="email" class="form-control input-sm" name="emails" formControlName="emails">
+                <p class="text-danger" *ngIf="transcriptForwarindSettingsForm.get('emails').hasError('pattern')">Please
+                    Enter Valid Email</p>
+            </div>
+            <button class="btn btn-sm bg-blue" [disabled]="transcriptForwarindSettingsForm.invalid"
+                [ngClass]="(loading) ? 'btnSpinner' : ''" (click)="Submit(transcriptForwarindSettingsForm.value)">
+
+                <span>Save</span>
+            </button>
+        </form>
+        <div *ngIf="package.chats.customizations.brand">
+            <form [formGroup]="transcriptLogoSettingsForm">
+                <div class="input-block">
+                    <label>Logo</label>
+                    <input type="file" name="logo" class="form-control input-sm" #fileInput
+                        [formControl]="transcriptLogoSettingsForm.controls['logo']"
+                        (change)="imgSelected($event.target.files)" accept="image/x-png,image/gif,image/jpeg">
+                    <p>For best result please upload file of resolution (56px x 56px)</p>
+                    <br>
+                    <p class="text-danger" *ngIf="fileInvalid">Invalid File</p>
+                </div>
+
+                <div class="blob-thumbnail" *ngIf="transcriptLogoSettings">
+                    <button class="btn btn-xs btn-transparent svgOnHover remove tooltip left" (click)="Clear()">
+                        <svg class="svg svg-default">
+                            <use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+                        </svg>
+                        <svg class="svg colored">
+                            <use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+                        </svg>
+                        <span class="tooltip-inner">Remove</span>
+                    </button>
+                    <img src="{{transcriptLogoSettings}}" alt="" width="100" height="56">
+                </div>
+
+                <button class="btn btn-sm bg-blue" [disabled]="transcriptLogoSettingsForm.invalid"
+                    [ngClass]="(loadingLogo) ? 'btnSpinner' : ''" (click)="SubmitLogo()">
+
+                    <span>Save</span>
+                </button>
+                <!-- <button class="btn btn-sm bg-blue" (click)="Clear()">
+
+                <span>Clear</span>
+            </button> -->
+
+
+            </form>
+        </div>
+        <div *ngIf="_chatSettings.getSettingsChangedStatus() | async">
+            <h5 class="fs-10 text-red p-t-10">NOTE: SETTINGS HAVE BEEN CHANGED PLEASE RELOAD SETTINGS PAGE.</h5>
+        </div>
+    </div>
+</div>

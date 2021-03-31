@@ -1,0 +1,85 @@
+
+
+<div class="notAvailable svgOnHover text-center" *ngIf="!enableAdd && (!Ticketnotes || Ticketnotes && !Ticketnotes.length)">
+	<svg class="svg w-100 h-100 active">
+		<use href="/assets/img/icons/icons-sprite.svg#add-note" class="text-gray"/>
+	</svg>
+	<br>
+	<button type="button" class="btn btn-sm bg-blue m-b-10" (click)="AddNote()">
+		<span>Add Note</span>
+	</button>
+</div>
+<div class="toggleList activityLog" *ngIf="enableAdd">
+	<textarea class="form-control" [ngxSummernote]="config" name="note" [(ngModel)]="ticketNote" rows="4"
+		autocomplete="off">
+    </textarea>
+	<br>
+	<button type="submit" class="btn btn-sm bg-blue" [disabled]="isNullOrWhiteSpace()" (click)="SaveNote()">
+		<span>Save</span>
+	</button>
+	<button type="submit" class="btn btn-sm bg-black" (click)="CancelNote()">
+		<span>Cancel</span>
+	</button>
+</div>
+<button type="button" class="btn btn-sm bg-blue m-b-10" *ngIf="!enableAdd && (Ticketnotes && Ticketnotes.length)"
+	(click)="AddNote()">
+	<span>Add Note</span>
+</button>
+<div class="toggleList activityLog" *ngIf="Ticketnotes && Ticketnotes.length">
+	<div class="clearfix" *ngFor="let notes of Ticketnotes;let index=index">
+		<div class="logGroup">
+			<div class="dateLog">
+				<span>{{notes.added_at | agoPipe}}</span>
+			</div>
+			<ul class="list-items clearfix style4">
+				<li class="item clearfix notif" >
+					<div>
+						<div class="info" [popper]="previewPopper" [popperShowOnStart]="false"
+						[popperTrigger]="'click'" [popperPlacement]="'bottom'" [popperHideOnClickOutside]="true"
+						[popperHideOnScroll]="true" (popperOnShown)="popperOnClick(notes.ticketNote,index)">
+							<b class="ellipsis" title="{{notes.added_by}}" *ngIf="notes.added_by">By: {{notes.added_by}}</b>
+							<p *ngIf="notes.ticketNote">Note: <span class="ellipsis" title="Click to see whole note" [innerHTML]="notes.ticketNote | safeUrl : 'html'"></span></p>
+						</div>
+						<div class="actions">
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top-right"
+								(click)="DeleteNote(notes)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+								<span class="tooltip-inner">Delete Note</span>
+							</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+
+<popper-content #previewPopper>
+	<div class="clearfix notif watcher-popper">
+		<h5>
+			<span>Note # {{index}}</span>
+		</h5>
+		<div *ngIf="previewNote">
+			<h4>Note</h4>
+			<div style="width:100%" [innerHTML]="previewNote"></div>
+		</div>
+		
+		<button class="btn btn-transparent svgOnHover tooltip left m-0" (click)="ClosePopper()"
+			style="position:absolute;right:0;top:0;">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+			</svg>
+			<span class="tooltip-inner">Close</span>
+		</button>
+	</div>
+</popper-content>

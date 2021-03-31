@@ -1,0 +1,104 @@
+	<!-- Pre Installation Data List Starts Here -->
+	<div class="tab-pane active preInstallation" *ngIf="!verified">
+		<div class="list-items clearfix style1">
+			<ul class="activateScrollbar clearfix">
+				<li class="item clearfix" *ngFor="let item of [1,2,3,4,5,6,7,8,9,9]">
+					<div class="clearfix">
+						<div>
+							<div class="avatar ava-xs">
+								<div class="nameInitials"></div>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- Pre Installation Data List Ends Here -->
+	<div class="tab-pane active" *ngIf="verified">
+		<div class="list-items clearfix style1">
+			<ul class="activateScrollbar clearfix">
+				<li class="item clearfix  notif clearfix p-0"
+					[ngClass]="{'active': (selectedThread && selectedThread._id == conversation._id), 'group': (conversation.type == 'group')}"
+					*ngFor="let conversation of conversationList"
+					(click)="setSelectedConversation(conversation._id)">
+					<div class="clearfix" *ngIf="conversation.type == 'single'">
+						<div>
+							<div class="avatar ava-xs">
+								<div class="nameInitials" [ngStyle]="(conversation.members[0].email == agent.email) ? {'background-color' : conversation.members[1].viewColor} : {'background-color' : conversation.members[0].viewColor}">
+									{{ ((conversation.members[0].email == agent.email) ? conversation.members[1].email : conversation.members[0].email) | slice:0:2 }}
+								</div>
+							</div>
+						</div>
+						<div
+							*ngIf="returnLastSeen(conversation.LastSeen).messageReadCount && (isSelfViewingAgentChat && isSelfViewingAgentChat.chatId != conversation._id)"
+							class="notif-count msg-count">
+							{{ returnLastSeen(conversation.LastSeen).messageReadCount }}
+						</div>
+						
+						<!-- <span
+							*ngIf="(conversation.from == agent.email && conversation.LastSeen[1].messageReadCount && selectedThread._id != conversation._id)"
+							class="notif-count msg-count">
+							{{ conversation.LastSeen[1].messageReadCount }}
+						</span> -->
+						<!-- <div class="avatar ava-xs" *ngIf="(conversation.to == agent.email)">
+							<div class="nameInitials">
+								{{(conversation.to | slice:0:2)}}</div>
+						</div> -->
+						<div class="info">
+							<b class="name ellipsis fw-6" [title]="(conversation.members[0] == agent.email) ? conversation.members[1].email : conversation.members[0].email">{{(conversation.members[0].email == agent.email) ? conversation.members[1].email : conversation.members[0].email}}
+							</b>
+							<!-- <div class="email ellipsis fw-6" [title]="conversation.to">{{conversation.to}}</div> -->
+							<div class="date">{{conversation.createdOn | date:'mediumDate'}}</div>
+						</div>
+						<!-- <div class="info" *ngIf="(conversation.to == agent.email)">
+							<b class="name ellipsis fw-6" [title]="conversation.from_name">
+								{{conversation.from_name}}</b>
+							<div class="email ellipsis fw-6" [title]="conversation.from">{{conversation.from}}</div>
+							<div class="date">{{conversation.createdOn | date:'mediumDate'}}</div>
+						</div> -->
+					</div>
+					<div class="clearfix" *ngIf="conversation.type == 'group'">
+						<div>
+							<div class="avatar ava-xs">
+								<div class="nameInitials">
+									{{ conversation.group_name | slice:0:2 }}
+								</div>
+							</div>
+						</div>
+						<ng-template [ngIf]="displayLastSeen(conversation)">
+							<div
+								*ngIf="returnLastSeen(conversation.LastSeen).messageReadCount && (isSelfViewingAgentChat && isSelfViewingAgentChat.chatId != conversation._id)"
+								class="notif-count msg-count">
+								{{ returnLastSeen(conversation.LastSeen).messageReadCount }}
+							</div>
+						</ng-template>
+						<!-- <div class="avatar ava-xs" *ngIf="(conversation.to == agent.email)">
+							<div class="nameInitials">
+								{{(conversation.to | slice:0:2)}}</div>
+						</div> -->
+						<div class="info">
+							<b class="name ellipsis fw-6" [title]="conversation.group_name">{{conversation.group_name}}</b>
+							<!-- <div class="email ellipsis fw-6">
+								<ng-template ngFor [ngForOf]="conversation.members" let-member>
+									<span *ngIf="member != agent.email">{{member}}</span>
+								</ng-template>
+							</div> -->
+							<div class="date">{{conversation.createdOn | date:'mediumDate'}}</div>
+							<div class="group-people">
+								<div class="avatar ava-xxs"
+									*ngFor="let member of conversation.members.slice(0,5)"
+									title="{{member.email}}">
+									<span class="nameInitials"
+										[ngStyle]="(member.viewColor)
+											? {'background-color' : member.viewColor}
+											: ''">{{(member.email | slice:0:2)}}</span>
+								</div>
+								<span *ngIf="conversation.members.length > 5">+{{conversation.members.length - 5}}</span>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>

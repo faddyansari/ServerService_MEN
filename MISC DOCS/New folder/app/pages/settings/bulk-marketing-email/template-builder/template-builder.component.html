@@ -1,0 +1,1069 @@
+<div class="formDesigner clearfix">
+
+	<!-- Draggable Area -->
+	<div class="clearfix form-element list-items style5">
+
+		<!-- SECTIONS -->
+		<div class="item notif clearfix dropdown" (click)="ToggleSectionDropdown()">
+			<div class="svgOnHover">
+				<svg class="svg w-40 h-40 svg-default" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#section-grid" draggable="false"/>
+				</svg>
+				<svg class="svg w-40 h-40 colored" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#section-grid-colored" draggable="false"/>
+				</svg>
+				<b class="label">SECTIONS</b>
+			</div>
+			<ul class="card-subnav dropdown_list" [ngClass]="showDropdown ? 'active' : ''" draggable="false">
+
+				<!-- 1 COLUMN CONTAINER -->
+				<li id="container1 svgOnHover" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-98 h-68 svg-default active" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#1col-grid" draggable="false"/>
+					</svg>
+					<b class="label" draggable="false">1 COLUMN</b>
+					<table class="hide" width="100%" cellpadding="0" cellspacing="0" border="0">
+						<tr>
+							<td width="100%"></td>
+						</tr>
+					</table>
+				</li>
+
+				<!-- 1/2 COLUMN CONTAINER -->
+				<li id="container1 svgOnHover" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-98 h-68 svg-default active" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#1-2col-grid" draggable="false"/>
+					</svg>
+					<b class="label" draggable="false">1/2 COLUMN</b>
+					<table class="hide" width="100%" cellpadding="0" cellspacing="0" border="0">
+						<tr>
+							<td width="100%"></td>
+						</tr>
+					</table>
+				</li>
+
+				<!-- 1/3 COLUMN CONTAINER -->
+				<li id="container2 svgOnHover" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-98 h-68 svg-default active" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#1-3col-grid" draggable="false"/>
+					</svg>
+					<b class="label" draggable="false">1/3 COLUMN</b>
+					<table class="hide" width="100%" cellpadding="0" cellspacing="0" border="0" id="col-2-section">
+						<tr>
+							<td width="30%">
+							</td>
+							<td width="70%">
+							</td>
+						</tr>
+					</table>
+				</li>
+
+				<!-- 3/1 COLUMN CONTAINER -->
+				<li id="container2 svgOnHover" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-98 h-68 svg-default active" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#3-1col-grid" draggable="false"/>
+					</svg>
+					<b class="label" draggable="false">3/1 COLUMN</b>
+					<table class="hide" width="100%" cellpadding="0" cellspacing="0" border="0" id="col-2-section">
+						<tr>
+							<td width="70%">
+							</td>
+							<td width="30%">
+							</td>
+						</tr>
+					</table>
+				</li>
+
+				<!-- 3 COLUMN CONTAINER -->
+				<li id="container3 svgOnHover" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-98 h-68 svg-default active" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#3col-grid" draggable="false"/>
+					</svg>
+					<b class="label" draggable="false">3 COLUMN</b>
+					<table class="hide" width="100%" cellpadding="0" cellspacing="0" border="0">
+						<tr>
+							<td>
+							</td>
+							<td>
+							</td>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</li>
+
+				<!-- 4 COLUMN CONTAINER -->
+				<li id="container4 svgOnHover" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-98 h-68 svg-default active" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#4col-grid" draggable="false"/>
+					</svg>
+					<b class="label" draggable="false">4 COLUMN</b>
+					<table class="hide" width="100%" cellpadding="0" cellspacing="0" border="0">
+						<tr>
+							<td>
+							</td>
+							<td>
+							</td>
+							<td>
+							</td>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</li>
+
+			</ul>
+		</div>
+
+		<!-- PARAGRAPH DRAG -->
+		<div class="item notif clearfix" id="paragraph" draggable="true" (dragstart)="drag($event)">
+			<div class="svgOnHover">
+				<svg class="svg w-40 h-40 svg-default" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#text-field" draggable="false"/>
+				</svg>
+				<svg class="svg w-40 h-40 colored" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#text-field-colored" draggable="false"/>
+				</svg>
+				<b class="label">TEXT</b>
+			</div>
+			<p class="hide">Sample Text ...</p>
+		</div>
+
+		<!-- BUTTON DRAG -->
+		<div class="item notif clearfix" id="button" draggable="true" (dragstart)="drag($event)">
+			<div class="svgOnHover">
+				<svg class="svg w-40 h-40 svg-default" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#button-field" draggable="false"/>
+				</svg>
+				<svg class="svg w-40 h-40 colored" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#button-field-colored" draggable="false"/>
+				</svg>
+				<b class="label">BUTTON</b>
+			</div>
+			<a href="" target="_blank" class="no-pointer" role="button" class="hide">Button</a>
+		</div>
+
+		<!-- IMAGE DRAG -->
+		<div class="item notif clearfix" id="image" draggable="true" (dragstart)="drag($event)">
+			<div class="svgOnHover">
+				<svg class="svg w-40 h-40 svg-default" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#picture-field" draggable="false"/>
+				</svg>
+				<svg class="svg w-40 h-40 colored" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#picture-field-colored" draggable="false"/>
+				</svg>
+				<b class="label">PICTURE</b>
+			</div>
+			<a class="hide">
+				<svg class="svg svg-default active">
+					<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+				</svg>
+			</a>
+		</div>
+
+		<!-- SOCIAL LINKS DRAG -->
+		<div class="item notif clearfix" id="SocialMediaLinks" draggable="true" (dragstart)="drag($event)">
+			<div class="svgOnHover">
+				<svg class="svg w-40 h-40 svg-default" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#social-field" draggable="false"/>
+				</svg>
+				<svg class="svg w-40 h-40 colored" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#social-field-colored" draggable="false"/>
+				</svg>
+				<b class="label">SOCIAL MEDIA LINKS</b>
+			</div>
+			<div class="hide" style="text-align:left">
+				<a class="" style="display:inline-block;">
+					<svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#facebook" class="text-facebook"/>
+					</svg>
+				</a>
+				<a class="" style="display:inline-block">
+					<svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#linkedin" class="text-linkedin"/>
+					</svg>
+				</a>
+				<a class="" style="display:inline-block">
+					<svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#twitter" class="text-twitter"/>
+					</svg>
+				</a>
+				<a class="" style="display:inline-block">
+					<svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#youtube" class="text-youtube"/>
+					</svg>
+				</a>
+				<a class="" style="display:inline-block">
+					<svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#instagram" class="text-instagram"/>
+					</svg>
+				</a>
+			</div>
+		</div>
+
+		<!-- SEPARATOR DRAG -->
+		<div class="item notif clearfix" id="separator" draggable="true" (dragstart)="drag($event)">
+			<div class="svgOnHover">
+				<svg class="svg w-40 h-40 svg-default" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#separator-field" draggable="false"/>
+				</svg>
+				<svg class="svg w-40 h-40 colored" draggable="false">
+					<use href="/assets/img/icons/icons-sprite.svg#separator-field-colored" draggable="false"/>
+				</svg>
+				<b class="label">SEPARATOR</b>
+			</div>
+			<hr class="hide bg-gray-dark"/>
+		</div>
+
+	</div>
+
+	<!-- Droppable Area -->
+	<div class="activateScrollbar clearfix form-items list-items style5 droppable-area">
+		<div class="input-block clearfix">
+			<div class="input-group-sm m-b-10">
+				<input type="text" class="form-control" name="template_name" id="template_name"
+					placeholder="Enter Template Name" [(ngModel)]="template_name" (ngModelChange)="Validation()">
+				<br>
+			</div>
+		</div>
+		<h5 #changeHeading>Template Box Width:
+			{{(mainObj && mainObj.containerWidth ? mainObj.containerWidth:mainContainerSettings.containerWidth)}} px
+		</h5>
+		<div class="tabination clearfix">
+			<ul class="nav-tabs">
+				<li [ngClass]="(pill1) ? 'active' : ''"><a (click)="setPillActive('pill1')">Template Builder</a></li>
+				<li [ngClass]="(pill2) ? 'active' : ''"><a (click)="setPillActive('pill2')">Template Preview</a></li>
+				<li [ngClass]="(pill3) ? 'active' : ''"><a (click)="setPillActive('pill3')">Code Preview</a>
+				</li>
+			</ul>
+			<ul class="tab-content">
+				<li class="tab-pane" [ngClass]="(pill1) ? 'active' : ''">
+
+					<div id="main_div" #mainDiv class="main_Edit w100" (drop)="drop($event)"
+						(dragover)="allowDrop($event)" (dragleave)="DragLeave($event)" [ngStyle]="{
+						'background-color':(mainObj && mainObj.backgroundColor_Container && !mainObj.backgroundImg_Container? mainObj.backgroundColor_Container : mainContainerSettings.backgroundColor_Container),
+						'background-image':(mainObj && mainObj.backgroundImg_Container && !mainObj.backgroundColor_Container? 'url(' + mainObj.backgroundImg_Container + ')' :''),
+						'padding-top':(mainObj && mainObj.paddingContainer_top  ? mainObj.paddingContainer_top + 'px':mainContainerSettings.paddingContainer_top + 'px'),
+						'padding-bottom':(mainObj && mainObj.paddingContainer_bottom  ? mainObj.paddingContainer_bottom + 'px':mainContainerSettings.paddingContainer_bottom + 'px'),
+						'padding-left':(mainObj && mainObj.paddingContainer_left ? mainObj.paddingContainer_left + 'px':mainContainerSettings.paddingContainer_left + 'px'),
+						'padding-right':(mainObj && mainObj.paddingContainer_right  ? mainObj.paddingContainer_right + 'px':mainContainerSettings.paddingContainer_right + 'px'),
+						'margin-top':(mainObj && mainObj.marginContainer_top  ? mainObj.marginContainer_top + 'px':mainContainerSettings.marginContainer_top + 'px'),
+						'margin-bottom':(mainObj && mainObj.marginContainer_bottom  ? mainObj.marginContainer_bottom + 'px':mainContainerSettings.marginContainer_bottom + 'px'),
+						'margin-left':(mainObj && mainObj.marginContainer_left  ? mainObj.marginContainer_left + 'px':mainContainerSettings.marginContainer_left + 'px'),
+						'margin-right':(mainObj && mainObj.marginContainer_right  ? mainObj.marginContainer_right + 'px':mainContainerSettings.marginContainer_right + 'px'),
+						'border-width':(mainObj && mainObj.borderWidthContainer  ? mainObj.borderWidthContainer + 'px':mainContainerSettings.borderWidthContainer + 'px'),
+						'border-style':(mainObj && mainObj.borderStyleContainer ? mainObj.borderStyleContainer :mainContainerSettings.borderStyleContainer),
+						'border-color':(mainObj && mainObj.borderColorContainer ?  mainObj.borderColorContainer :mainContainerSettings.borderColorContainer),
+						'containerimageOpacity':(mainObj && mainObj.containerimageOpacity ? mainObj.containerimageOpacity :mainContainerSettings.containerimageOpacity),
+						'background-repeat':(mainObj && mainObj.backgroundRepeat_Container  ? mainObj.backgroundRepeat_Container :mainContainerSettings.backgroundRepeat_Container),
+						'background-position': (mainObj && (mainObj.backgroundPositionX_Container || mainObj.backgroundPositionY_Container) ? mainObj.backgroundPositionX_Container +  mainObj.backgroundPositionY_Container :mainContainerSettings.backgroundPositionX_Container + mainContainerSettings.backgroundPositionY_Container),
+						'background-size':ReturnBackgroundsize(mainObj)}">
+						<!-- (mainObj && mainObj.backgroundSize_Container && mainObj.backgroundSize_Container!='%' ? mainObj.backgroundSize_Container:mainContainerSettings.backgroundSize_Container) -->
+						<table width="100%" cellpadding="0" cellspacing="0" border="0">
+							<tr>
+								<td>
+									<div id="droppableZone" class="elements-droppable no-elements no-pointer textClass">
+										<span>Drop Section / Item Here ...</span>
+									</div>
+									<app-layout class="w100 app-layout" [elementsList]="elementsList"
+										[isDragged]="isDragged" (draggedElement)="dragged($event)"
+										*ngIf="elementsList && elementsList.length"
+										(sendingChange)="editChangedHandler($event)" [editClosed]="enableEdit"
+										(cloneElement)="CloneHandler($event)" (deleteChange)="deleteHandler($event)">
+									</app-layout>
+									<div class="elements-droppable no-elements no-pointer textClass"
+										*ngIf="elementsList && elementsList.length >=2">
+										<span>Drop Item Here ...</span>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<div class="actions">
+							<button type="button" class="btn btn-transparent svgOnHover tooltip left"
+								(click)="EditElement($event,'main_div')">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+							</button>
+						</div>
+					</div>
+				</li>
+				<li class="tab-pane" [ngClass]="(pill2) ? 'active' : ''">
+					<div *ngIf="!(elementsList && elementsList.length)"><span class="text-red">No elements to
+							show!</span></div>
+					<div style="width:100%" *ngIf="previewTemplate && elementsList && elementsList.length"
+						[innerHTML]="previewTemplate"></div>
+				</li>
+				<li class="tab-pane" [ngClass]="(pill3) ? 'active' : ''">
+					<!-- <div class="input-block">
+					 <textarea class="form-control input-sm rawHtml h-200" name="previewCode">
+							{{previewCode}}</textarea>
+					</div>  -->
+					<ngx-codemirror #codemirror [options]="codeMirrorOptions" [(ngModel)]="previewCode"
+						(ngModelChange)="setEditorContent($event)">
+					</ngx-codemirror>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+
+	<!-- Edit Area  -->
+	<div class="activateScrollbar clearfix field-edit">
+		<form class="m-b-15 clearfix" *ngIf="enableEdit" [formGroup]="templateForm">
+
+			<div class="notif clearfix m-b-30" *ngIf="!divFlag">
+				<div (click)="ToggleElt()">
+					<h4 class="title-with-border border-border">Element Settings</h4>
+					<span class="notif-count right top btn btn-transparent svgOnHover">
+						<svg class="svg svg-default active">
+							<use [attr.href]="(!toggleElement) ? '/assets/img/icons/icons-sprite.svg#arrow-double-up' : '/assets/img/icons/icons-sprite.svg#arrow-double-down'"/>
+						</svg>
+					</span>
+				</div>
+				<div class="clearfix" *ngIf="!toggleElement">
+
+					<!-- For Image -->
+					<div class="clearfix" *ngIf="ImageFlag && !LinksFlag">
+						<h5 class="title-with-border border-border">Image</h5>
+						<div class="input-block has-feedback">
+							<label>Upload Image</label>
+							<div class="input-group-sm">
+								<input class="form-control" #fileInput type="file" (change)="FileSelected()"
+									accept="image/png, image/jpeg">
+								<div class="input-group-btn">
+									<button class="btn btn-theme" [ngClass]="(uploading) ? 'btnSpinner' : ''"
+										[disabled]="!file" (click)="UploadImage()">
+										<span>Upload</span>
+									</button>
+								</div>
+							</div>
+							<div class="form-control-feedback">
+								<span class="text-red">Max file size: 2MB</span>
+							</div>
+						</div>
+						<div class="clearfix" *ngIf="file && !uploading">
+							<div class="badge bg-olive ellipsis">
+								<span>{{file.name}}</span>
+							</div>
+							<span *ngIf="!fileValid">{{fileerror}}</span>
+							<button class="btn btn-xs btn-transparent svgOnHover"
+								[ngClass]="(deleting) ? 'btnSpinner' : ''" (click)="ClearFile()">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+							</button>
+						</div>
+						<div class="clearfix text-blue"><b>OR</b></div>
+						<div class="input-block">
+							<label>Image URL</label>
+							<input type="url" placeholder="Image URL" formControlName="imageSrc"
+								class="form-control input-sm">
+						</div>
+					</div>
+
+					<!-- For Button -->
+					<div class="pallet-list b-0 clearfix" *ngIf="ButtonFlag">
+						<div class="pallet-box w100">
+							<h5 class="title-with-border border-border">Button</h5>
+							<div class="input-group-sm">
+								<div class="input-block">
+									<label>Color</label>
+									<input class="form-control input-sm color-picker-handle"
+										formControlName="textColorChild"
+										(colorPickerChange)="ColorChange('textColorChild', $event)"
+										[(colorPicker)]="DefaultSettings.ChildSettings.textColorChild"
+										[cpPosition]="'right'" [cpWidth]="'200'" [cpHeight]="'270'"
+										[cpDialogDisplay]="'popup'"
+										[style.background]="DefaultSettings.ChildSettings.textColorChild">
+								</div>
+								<div class="input-block">
+									<label>Text</label>
+									<input type="text" class="form-control" placeholder="Button text"
+										formControlName="buttonText">
+								</div>
+								<div class="input-block">
+									<label>Font Size</label>
+									<input type="number" class="form-control" value="8" min="0" max="40" step="1"
+										formControlName="button_FontSizeChild"
+										[(ngModel)]="DefaultSettings.ChildSettings.button_FontSizeChild">
+								</div>
+								<div class="input-block">
+									<label>Font Style</label>
+									<div class="btn-group">
+										<button class="btn btn-xs btn-theme tooltip top" (click)="FontWeight()"
+											[ngClass]="bold ? 'bg-blue' : ''">
+											<span *ngIf="bold" class="fw-6">B</span>
+											<span *ngIf="!bold">B</span>
+											<span class="tooltip-inner">Bold</span>
+										</button>
+										<button class="btn btn-xs btn-theme tooltip top" (click)="FontStyle()"
+											[ngClass]="italic ? 'bg-blue' : ''">
+											<span *ngIf="italic"><em>I</em></span>
+											<span *ngIf="!italic">I</span>
+											<span class="tooltip-inner">Italic</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- For Button & Image -->
+					<div class="clearfix" *ngIf="ButtonFlag || ImageFlag">
+						<div class="input-block">
+							<label>Redirect To</label>
+							<input type="text" placeholder="Link To" formControlName="buttonLink"
+								class="form-control input-sm">
+						</div>
+					</div>
+
+					<!-- For Paragraph -->
+					<div class="clearfix" *ngIf="ParaFlag">
+						<h5 class="title-with-border border-border">Content</h5>
+						<div class="input-block">
+							<textarea [ngxSummernote]="config" name="paragraphText" formControlName="paragraphText"
+								rows="4" autocomplete="off" class="form-control input-xs"></textarea>
+						</div>
+					</div>
+
+					<!-- For Social Media  -->
+					<div class="clearfix" *ngIf="LinksFlag">
+						<h5>Add Social Media Link</h5>
+						<div class="conditions" formArrayName="SocialLinks">
+							<div class="condition clearfix notif" [formGroupName]="i"
+								*ngFor="let link of GetControls('SocialLinks'); let i = index;">
+								<div class="input-block" (change)="LinkChange(i)">
+									<label>Add Type & Link</label>
+									<div class="input-group-sm">
+										<div class="sel style1 sel-xs">
+											<select class="form-control" formControlName="linkType">
+												<option value='' selected disabled>Select</option>
+												<option value="{{link}}" *ngFor="let link of Object.keys(links)">
+													{{link}}
+												</option>
+											</select>
+										</div>
+										<input type="text" placeholder="Paste Url" class="form-control input-sm"
+											formControlName="path">
+										<div class="input-group-addon p-l-r-5">
+											<button class="btn btn-transparent svgOnHover tooltip left" (click)="removeLink(i)">
+												<svg class="svg svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+												</svg>
+												<svg class="svg colored">
+													<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+												</svg>
+												<span class="tooltip-inner">Delete</span>
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="input-block">
+									<label>Link To</label>
+									<input type="text" placeholder="Paste Url" class="form-control input-sm"
+										formControlName="path">
+								</div>
+								<div class="actions">
+									<button class="btn btn-transparent svgOnHover tooltip left" (click)="removeLink(i)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+									</button>
+								</div>
+							</div>
+						</div>
+						<button class="btn btn-xs btn-theme m-b-10" (click)="addLink()">
+							<span>Add Link</span>
+						</button>
+					</div>
+
+					<!-- For common options -->
+					<div class="clearfix">
+						<h5 class="title-with-border border-border">Background</h5>
+						<div class="pallet-list b-0">
+							<div class="pallet-box input-block w20">
+								<label>Color</label>
+								<input class="form-control input-sm color-picker-handle" formControlName="colorChild"
+									(colorPickerChange)="ColorChange('colorChild', $event)"
+									[(colorPicker)]="DefaultSettings.ChildSettings.colorChild" [cpPosition]="'right'"
+									[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+									[style.background]="DefaultSettings.ChildSettings.colorChild">
+							</div>
+						</div>
+						<h5 class="title-with-border border-border">Border</h5>
+						<div class="pallet-list b-0">
+							<div class="pallet-box input-block w20"
+								*ngIf="!separatorFlag || LinksFlag || !ImageFlag || ButtonFlag">
+								<label>Radius</label>
+								<input type="number" min="0" max="70" step="1" class="form-control input-sm"
+									formControlName="borderRadiusChild"
+									[(ngModel)]="DefaultSettings.ChildSettings.borderRadiusChild">
+							</div>
+							<div class="pallet-box input-block w20">
+								<label>Style</label>
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-sm" formControlName="borderChild_style"
+										[(ngModel)]="DefaultSettings.ChildSettings.borderChild_style">
+										<option [selected]="DefaultSettings.ChildSettings.borderChild_style == 'none'"
+											value="none">None
+										</option>
+										<option [selected]="DefaultSettings.ChildSettings.borderChild_style == 'solid'"
+											value="solid">
+											Solid
+										</option>
+										<option [selected]="DefaultSettings.ChildSettings.borderChild_style == 'dashed'"
+											value="dashed">
+											Dashed
+										</option>
+										<option [selected]="DefaultSettings.ChildSettings.borderChild_style == 'dotted'"
+											value="dotted">Dotted
+										</option>
+									</select>
+								</div>
+							</div>
+							<div class="pallet-box input-block w20"
+								*ngIf="!(templateForm.get('borderChild_style').value == 'none')">
+								<label>Width</label>
+								<input type="number" value="1" min="0" max="15" step="1" class="form-control input-sm"
+									formControlName="borderChild_width"
+									[(ngModel)]="DefaultSettings.ChildSettings.borderChild_width">
+							</div>
+							<div class="pallet-box input-block w20"
+								*ngIf="!(templateForm.get('borderChild_style').value == 'none')">
+								<label>Color</label>
+								<input class="form-control input-sm color-picker-handle"
+									formControlName="borderChild_color"
+									(colorPickerChange)="ColorChange('borderChild_color', $event)"
+									[(colorPicker)]="DefaultSettings.ChildSettings.borderChild_color"
+									[cpPosition]="'right'" [cpWidth]="'200'" [cpHeight]="'270'"
+									[cpDialogDisplay]="'popup'"
+									[style.background]="DefaultSettings.ChildSettings.borderChild_color">
+							</div>
+						</div>
+						<h5 class="title-with-border border-border">Width</h5>
+						<div class="pallet-list b-0">
+							<div class="pallet-box input-block w29">
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-sm" formControlName="scaleTypeChild">
+										<option value="" selected disabled>Select Scale</option>
+										<option value="%">%</option>
+										<option value="px">px</option>
+										<option value="auto">auto</option>
+									</select>
+								</div>
+							</div>
+							<div class="pallet-box input-block w29"
+								*ngIf="(templateForm.get('scaleTypeChild').value == '%') || (templateForm.get('scaleTypeChild').value == 'px')">
+								<input class="form-control input-sm" type="number" value="0" min="0" max="800" step="1"
+									formControlName="button_WidthChild"
+									[(ngModel)]="DefaultSettings.ChildSettings.button_WidthChild">
+							</div>
+						</div>
+						<h5 class="title-with-border border-border">Padding</h5>
+						<div class="input-group-sm">
+							<div class="input-block">
+								<label for="">Top</label>
+								<input type="number" min="0" max="100" step="1" class="form-control input-sm"
+									formControlName="paddingChild_top"
+									[(ngModel)]="DefaultSettings.ChildSettings.paddingChild_top">
+							</div>
+							<div class="input-block">
+								<label for="">Right</label>
+								<input type="number" min="0" max="1000" step="1" class="form-control input-sm"
+									formControlName="paddingChild_right"
+									[(ngModel)]="DefaultSettings.ChildSettings.paddingChild_right">
+							</div>
+							<div class="input-block">
+								<label for="">Bottom</label>
+								<input type="number" min="0" max="100" step="1" class="form-control input-sm"
+									formControlName="paddingChild_bottom"
+									[(ngModel)]="DefaultSettings.ChildSettings.paddingChild_bottom">
+							</div>
+							<div class="input-block">
+								<label for="">Left</label>
+								<input type="number" min="0" max="100" step="1" class="form-control input-sm"
+									formControlName="paddingChild_left"
+									[(ngModel)]="DefaultSettings.ChildSettings.paddingChild_left">
+							</div>
+						</div>
+					</div>
+
+					<!--
+					<div class="input-group-sm" *ngIf="ButtonFlag">
+						<label>Element Size</label>
+						<div class="sel style1 sel-xs">
+							<select class="form-control" formControlName="button_Width_Type_Child"
+								(change)="ChangeWidth($event)"
+								[(ngModel)]="DefaultSettings.ChildSettings.button_Width_Type_Child">
+								<option selected disabled value="">
+									Select
+								</option>
+								<option
+									[selected]="DefaultSettings.ChildSettings.button_Width_Type_Child == 'fullWidth'"
+									value="fullWidth">
+									Full Width
+								</option>
+								<option
+									[selected]="DefaultSettings.ChildSettings.button_Width_Type_Child == 'fixedSize'"
+									value="fixedSize">
+									Fixed Size
+								</option>
+							</select>
+						</div>
+					</div>
+					<div class="pallet-box" *ngIf="LinksFlag || ImageFlag || ButtonFlag">
+						<label>Placement</label>
+
+						<div class="sel style1 sel-xs">
+							<select class="form-control input-sm" formControlName="placement"
+								[(ngModel)]="DefaultSettings.ParentSettings.placement">
+								<option [selected]="DefaultSettings.ParentSettings.placement == 'flex-column'"
+									value="none">One after and other
+								</option>
+								<option [selected]="DefaultSettings.ParentSettings.placement == 'flex-row'" value="right">
+									Side by side
+							</select>
+						</div>
+					</div>
+					-->
+				</div>
+			</div>
+
+			<div class="notif clearfix m-b-30" *ngIf="!divFlag">
+				<div (click)="ToggleComp()">
+					<h4 class="title-with-border border-border">Component Settings</h4>
+					<span class="notif-count right top btn btn-transparent svgOnHover">
+						<svg class="svg svg-default active">
+							<use [attr.href]="(!toggleComp) ? '/assets/img/icons/icons-sprite.svg#arrow-double-up' : '/assets/img/icons/icons-sprite.svg#arrow-double-down'"/>
+						</svg>
+					</span>
+				</div>
+				<div class="clearfix" *ngIf="!toggleComp">
+					<h5 class="title-with-border border-border">Background</h5>
+					<div class="pallet-list b-0 clearfix">
+						<div class="pallet-box input-block w29">
+							<label>Color</label>
+							<input class="form-control input-sm color-picker-handle"
+								formControlName="backgroundColorParent"
+								(colorPickerChange)="ColorChange('backgroundColorParent', $event)"
+								[(colorPicker)]="DefaultSettings.ParentSettings.backgroundColorParent"
+								[cpPosition]="'right'" [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="DefaultSettings.ParentSettings.backgroundColorParent">
+						</div>
+					</div>
+					<h5 class="title-with-border border-border">Border</h5>
+					<div class="pallet-list b-0 clearfix">
+						<div class="pallet-box input-block w29"
+							*ngIf="!(templateForm.get('borderParent_style').value == 'none')">
+							<label>Color</label>
+							<input class="form-control input-sm color-picker-handle"
+								formControlName="borderParent_color"
+								(colorPickerChange)="ColorChange('borderParent_color', $event)"
+								[(colorPicker)]="DefaultSettings.ParentSettings.borderParent_color"
+								[cpPosition]="'right'" [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="DefaultSettings.ParentSettings.borderParent_color">
+						</div>
+						<div class="pallet-box input-block w29">
+							<label>Style</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-sm" formControlName="borderParent_style"
+									[(ngModel)]="DefaultSettings.ParentSettings.borderParent_style">
+									<option [selected]="DefaultSettings.ParentSettings.borderParent_style == 'none'"
+										value="none">
+										None
+									</option>
+									<option [selected]="DefaultSettings.ParentSettings.borderParent_style == 'solid'"
+										value="solid">
+										Solid
+									</option>
+									<option [selected]="DefaultSettings.ParentSettings.borderParent_style == 'dashed'"
+										value="dashed">
+										Dashed
+									</option>
+									<option [selected]="DefaultSettings.ParentSettings.borderParent_style == 'dotted'"
+										value="dotted">Dotted
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="pallet-box input-block w29"
+							*ngIf="!(templateForm.get('borderParent_style').value == 'none')">
+							<label for="">Width</label>
+							<input type="number" value="1" min="0" max="15" step="1" class="form-control input-sm"
+								formControlName="borderParent_width"
+								[(ngModel)]="DefaultSettings.ParentSettings.borderParent_width">
+						</div>
+					</div>
+					<h5 class="title-with-border border-border">Padding</h5>
+					<div class="input-group-sm">
+						<div class="input-block">
+							<label>Top</label>
+							<input type="number" min="0" max="500" step="1" value="0" class="form-control"
+								formControlName="paddingParent_top"
+								[(ngModel)]="DefaultSettings.ParentSettings.paddingParent_top">
+						</div>
+						<div class="input-block">
+							<label>Right</label>
+							<input type="number" min="0" max="500" step="1" value="0" class="form-control"
+								formControlName="paddingParent_right"
+								[(ngModel)]="DefaultSettings.ParentSettings.paddingParent_right">
+						</div>
+						<div class="input-block">
+							<label>Bottom</label>
+							<input type="number" min="0" max="500" step="1" value="0" class="form-control"
+								formControlName="paddingParent_bottom"
+								[(ngModel)]="DefaultSettings.ParentSettings.paddingParent_bottom">
+						</div>
+						<div class="input-block">
+							<label>Left</label>
+							<input type="number" min="0" max="500" step="1" value="0" class="form-control"
+								formControlName="paddingParent_left"
+								[(ngModel)]="DefaultSettings.ParentSettings.paddingParent_left">
+						</div>
+					</div>
+					<h5 class="title-with-border border-border">Margin</h5>
+					<div class="input-group-sm">
+						<div class="input-block">
+							<label>Top</label>
+							<input type="number" value="0" min="0" max="200" step="1" class="form-control"
+								formControlName="marginParent_top"
+								[(ngModel)]="DefaultSettings.ParentSettings.marginParent_top">
+						</div>
+						<div class="input-block">
+							<label>Right</label>
+							<input type="number" value="0" min="0" max="200" step="1" class="form-control"
+								formControlName="marginParent_right"
+								[(ngModel)]="DefaultSettings.ParentSettings.marginParent_right">
+						</div>
+						<div class="input-block">
+							<label>Bottom</label>
+							<input type="number" value="0" min="0" max="200" step="1" class="form-control"
+								formControlName="marginParent_bottom"
+								[(ngModel)]="DefaultSettings.ParentSettings.marginParent_bottom">
+						</div>
+						<div class="input-block">
+							<label>Left</label>
+							<input type="number" value="0" min="0" max="200" step="1" class="form-control"
+								formControlName="marginParent_left"
+								[(ngModel)]="DefaultSettings.ParentSettings.marginParent_left">
+						</div>
+					</div>
+					<h5 class="title-with-border border-border">Alignment</h5>
+					<div class="input-group-sm">
+						<div class="input-block w29">
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-sm" formControlName="textAlignParent"
+									[(ngModel)]="DefaultSettings.ParentSettings.textAlignParent">
+									<option [selected]="DefaultSettings.ParentSettings.textAlignParent == 'right'"
+										value="right">
+										Right
+									</option>
+									<option [selected]="DefaultSettings.ParentSettings.textAlignParent == 'left'"
+										value="left">
+										Left
+									</option>
+									<option [selected]="DefaultSettings.ParentSettings.textAlignParent == 'center'"
+										value="center">
+										Center
+									</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="notif clearfix" *ngIf="divFlag">
+				<div (click)="ToggleCont()">
+					<h4 class="title-with-border">Container Settings</h4>
+					<span class="notif-count right top btn btn-transparent svgOnHover">
+						<svg class="svg svg-default active">
+							<use [attr.href]="(!toggleCont) ? '/assets/img/icons/icons-sprite.svg#arrow-double-up' : '/assets/img/icons/icons-sprite.svg#arrow-double-down'"/>
+						</svg>
+					</span>
+				</div>
+				<div class="clearfix" *ngIf="!toggleCont">
+					<!-- <input type="radio" name="backOption" value="image" [checked]="backOption">
+					Background Image <br>
+					<input type="radio" name="backOption" value="color" [checked]="!backOption">Background Color -->
+
+					<!-- <div *ngIf="divFlag">
+						<label>Upload Image</label>
+						<label class="text-red">Max file size: 2MB</label>
+						<input #fileInput type="file" (change)="FileSelected()" accept="image/png, image/jpeg">
+						<button class="btn btn-xs bg-olive" [ngClass]="(uploading) ? 'btnSpinner' : ''"
+							[disabled]="!file" (click)="UploadImage()">
+							<span>Upload</span>
+						</button>
+
+						<div class="clearfix" *ngIf="file && !uploading">
+							<div class="badge bg-olive clearfix w80 ellipsis">
+								<span>{{file.name}}</span>
+							</div>
+							<span *ngIf="!fileValid">{{fileerror}}</span>
+							<button class="btn btn-xs btn-transparent svgOnHover"
+								[ngClass]="(deleting) ? 'btnSpinner' : ''" (click)="ClearFile()">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+							</button>
+						</div>
+						<br>
+						<div class="text-blue"><b>OR</b></div>
+						<br>
+					</div> -->
+					<div class="input-block">
+						<label>Container Width</label>
+						<input type="number" class="form-control input-sm" formControlName="containerWidth"
+							[(ngModel)]="DefaultSettings.ContainerSettings.containerWidth">
+					</div>
+					<h5 class="title-with-border border-border">Background</h5>
+					<div class="input-block">
+						<label>Image</label>
+						<input type="url" class="form-control input-sm" placeholder="insert URL"
+							formControlName="backgroundImg_Container">
+					</div>
+					<div class="pallet-list b-0">
+						<div class="pallet-box input-block w29">
+							<label>Color</label>
+							<input class="form-control input-sm color-picker-handle"
+								formControlName="backgroundColor_Container"
+								(colorPickerChange)="ColorChange('backgroundColor_Container', $event)"
+								[(colorPicker)]="DefaultSettings.ContainerSettings.backgroundColor_Container"
+								[cpPosition]="'right'" [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="DefaultSettings.ContainerSettings.backgroundColor_Container">
+						</div>
+						<!--
+						<div class="pallet-box input-block w29">
+							<label>Opacity</label>
+							<input type="number" value="" min="0" max="1" step="0.1" class="form-control input-sm"
+								formControlName="containerimageOpacity"
+								[(ngModel)]="DefaultSettings.ContainerSettings.containerimageOpacity">
+						</div>
+						-->
+						<div class="pallet-box input-block w29">
+							<label>Position-X</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-sm" formControlName="backgroundPositionX_Container"
+									[(ngModel)]="DefaultSettings.ContainerSettings.backgroundPositionX_Container">
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'left'"
+										value="left">Left</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'right'"
+										value="right">Right</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'center'"
+										value="center">Center</option>
+								</select>
+							</div>
+						</div>
+						<div class="pallet-box input-block w29">
+							<label>Position-Y</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-sm" formControlName="backgroundPositionY_Container"
+									[(ngModel)]="DefaultSettings.ContainerSettings.backgroundPositionY_Container">
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundPositionY_Container == 'top'"
+										value="top">Top</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundPositionY_Container == 'center'"
+										value="center">Center</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundPositionY_Container == 'bottom'"
+										value="bottom">Bottom</option>
+								</select>
+							</div>
+						</div>
+						<div class="pallet-box input-block w29">
+							<label>Repeat</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-sm" formControlName="backgroundRepeat_Container"
+									[(ngModel)]="DefaultSettings.ContainerSettings.backgroundRepeat_Container">
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'repeat'"
+										value="repeat">Repeat</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'repeat-x'"
+										value="repeat-x">Repeat-X</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'repeat-y'"
+										value="repeat-y">Repeat-Y</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'no-repeat'"
+										value="no-repeat">No-Repeat</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'space'"
+										value="space">Space</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundRepeat_Container == 'round'"
+										value="round">Round</option>
+								</select>
+							</div>
+						</div>
+						<div class="pallet-box input-block w29">
+							<label>Size</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-sm" formControlName="backgroundSize_Container"
+									[(ngModel)]="DefaultSettings.ContainerSettings.backgroundSize_Container">
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundSize_Container == 'cover'"
+										value="cover">Cover</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundSize_Container == 'contain'"
+										value="contain">Contain</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundSize_Container == 'auto'"
+										value="auto">Auto</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.backgroundSize_Container == 'percentage'"
+										value="%">Custom</option>
+								</select>
+							</div>
+						</div>
+						<div class="pallet-box input-block w29"
+							*ngIf="(templateForm.get('backgroundSize_Container').value == '%')">
+							<label for="">Custom</label>
+							<input type="number" value="0" min="0" max="100" step="1" class="form-control input-sm"
+								formControlName="backgroundSizePercent_Container"
+								[(ngModel)]="DefaultSettings.ContainerSettings.backgroundSizePercent_Container">
+						</div>
+					</div>
+					<h5 class="title-with-border border-border">Border</h5>
+					<div class="pallet-list b-0">
+						<div class="pallet-box input-block w29">
+							<label>Color</label>
+							<input class="form-control input-sm color-picker-handle"
+								formControlName="borderColorContainer"
+								(colorPickerChange)="ColorChange('borderColorContainer', $event)"
+								[(colorPicker)]="DefaultSettings.ContainerSettings.borderColorContainer"
+								[cpPosition]="'right'" [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="DefaultSettings.ContainerSettings.borderColorContainer">
+						</div>
+						<div class="pallet-box input-block w29">
+							<label>Style</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-sm" formControlName="borderStyleContainer"
+									[(ngModel)]="DefaultSettings.ContainerSettings.borderStyleContainer">
+									<option
+										[selected]="DefaultSettings.ContainerSettings.borderStyleContainer == 'none'"
+										value="none">None</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.borderStyleContainer == 'solid'"
+										value="solid">Solid</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.borderStyleContainer == 'dashed'"
+										value="dashed">Dashed</option>
+									<option
+										[selected]="DefaultSettings.ContainerSettings.borderStyleContainer == 'dotted'"
+										value="dotted">Dotted</option>
+								</select>
+							</div>
+						</div>
+						<div class="pallet-box input-block w29"
+							*ngIf="!(templateForm.get('borderStyleContainer').value == 'none')">
+							<label for="">Width</label>
+							<input type="number" value="1" min="0" max="15" step="1" class="form-control input-sm"
+								formControlName="borderWidthContainer"
+								[(ngModel)]="DefaultSettings.ContainerSettings.borderWidthContainer">
+						</div>
+					</div>
+					<h5 class="title-with-border border-border">Padding</h5>
+					<div class="input-group-sm m-b-20">
+						<div class="input-block">
+							<label>Top</label>
+							<input type="number" min="0" max="500" step="1" value="0" class="form-control"
+								formControlName="paddingContainer_top"
+								[(ngModel)]="DefaultSettings.ContainerSettings.paddingContainer_top">
+						</div>
+						<div class="input-block">
+							<label>Right</label>
+							<input type="number" min="0" max="500" step="1" value="0" class="form-control"
+								formControlName="paddingContainer_right"
+								[(ngModel)]="DefaultSettings.ContainerSettings.paddingContainer_right">
+						</div>
+						<div class="input-block">
+							<label>Bottom</label>
+							<input type="number" min="0" max="500" step="1" value="0" class="form-control"
+								formControlName="paddingContainer_bottom"
+								[(ngModel)]="DefaultSettings.ContainerSettings.paddingContainer_bottom">
+						</div>
+						<div class="input-block">
+							<label>Left</label>
+							<input type="number" min="0" max="500" step="1" value="0" class="form-control input-sm"
+								formControlName="paddingContainer_left"
+								[(ngModel)]="DefaultSettings.ContainerSettings.paddingContainer_left">
+						</div>
+					</div>
+					<h5 class="title-with-border border-border">Margin</h5>
+					<div class="input-group-sm m-b-20">
+						<div class="input-block">
+							<label>Top</label>
+							<input type="number" value="0" min="0" max="200" step="1" class="form-control"
+								formControlName="marginContainer_top"
+								[(ngModel)]="DefaultSettings.ContainerSettings.marginContainer_top">
+						</div>
+						<div class="input-block">
+							<label>Right</label>
+							<input type="number" value="0" min="0" max="200" step="1" class="form-control"
+								formControlName="marginContainer_right"
+								[(ngModel)]="DefaultSettings.ContainerSettings.marginContainer_right">
+						</div>
+						<div class="input-block">
+							<label>Bottom</label>
+							<input type="number" value="0" min="0" max="200" step="1" class="form-control"
+								formControlName="marginContainer_bottom"
+								[(ngModel)]="DefaultSettings.ContainerSettings.marginContainer_bottom">
+						</div>
+						<div class="input-block">
+							<label>Left</label>
+							<input type="number" value="0" min="0" max="200" step="1" class="form-control"
+								formControlName="marginContainer_left"
+								[(ngModel)]="DefaultSettings.ContainerSettings.marginContainer_left">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="actions">
+				<button type="button" class="btn btn-xs bg-blue" (click)="SaveEdit($event)">
+					<span>Save</span>
+				</button>
+				<button type="button" class="btn btn-xs bg-black" (click)="ResetToDefault()">
+					<span>Reset</span>
+				</button>
+				<button type="button" class="btn btn-xs bg-red" (click)="CancelEdit()">
+					<span>Cancel</span>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="actions">
+	<button type="button" class="btn btn-xs bg-blue" (click)="SaveTemplate()" *ngIf="!selectedTemplate"
+		[disabled]="!template_name || !(this.elementsList && this.elementsList.length)">
+		<span>Save Template</span>
+	</button>
+	<button class="btn btn-xs bg-blue" (click)="UpdateTemplate()" *ngIf="selectedTemplate">
+		<span>Update Template</span>
+	</button>
+	<button type="button" class="btn btn-xs bg-blue" (click)="SaveAsFile()">
+		<span>Save as File</span>
+	</button>
+	<button type="button" class="btn btn-xs bg-blue" (click)="SaveTemplate()" *ngIf="selectedTemplate">
+		<span>Save as new template</span>
+	</button>
+	<button class="btn btn-xs bg-red" (click)="Cancel()">
+		<span>Cancel</span>
+	</button>
+</div>

@@ -1,0 +1,23 @@
+<div mat-dialog-title>
+    <h3>{{data.summary[0]}}</h3>
+</div>
+
+<div mat-dialog-content>
+    <h2>Summary</h2>
+    <ul style="list-style-type:square;">
+        <li>When Ticket is created</li>
+        <li>
+            <span *ngFor="let datas of data.summary[1]">If {{datas.key }} {{datas.operatorOption}} {{datas.value}} <br></span>
+            <span>with {{data.summary[3]}} operator between them</span>
+        </li>
+        <li>Then assign it to {{data.summary[2]}}</li>
+    </ul>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+    <mat-dialog-actions>
+        <button type="button" (click)="Close()" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+            Close
+        </button>
+    </mat-dialog-actions>
+</div>

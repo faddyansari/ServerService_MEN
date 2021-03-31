@@ -1,0 +1,51 @@
+<ul class="card-container clearfix style2">
+    <a routerLink="/settings/chat-settings/engagement" [routerLinkActive]="['active']"
+        *ngIf="package && package.chats.chatEngagement.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/chat-engagement-filled.svg">
+        <h5>Chat<br>Engagement</h5>
+    </a>
+    <a routerLink="/settings/chat-settings/permissions" [routerLinkActive]="['active']"
+        (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/file-share-filled.svg">
+        <h5>Permissions &<br>Control</h5>
+    </a>
+    <a routerLink="/settings/chat-settings/greetingmessage" [routerLinkActive]="['active']"
+        (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/greeting-message-filled.svg">
+        <h5>Greeting<br>Message</h5>
+    </a>
+    <a routerLink="/settings/chat-settings/transcript" [routerLinkActive]="['active']"
+        *ngIf="package && package.chats.transcriptForwarding.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/transcript-filled.svg">
+        <h5>Transcript<br>Forwarding</h5>
+    </a>
+    <a routerLink="/settings/chat-settings/timeouts" [routerLinkActive]="['active']"
+        *ngIf="package && package.chats.chatTimeouts.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/chat-timeout-filled.svg">
+        <h5>Chat<br>Timeouts</h5>
+    </a>
+    <!-- <a routerLink="/settings/chat-settings/rules" [routerLinkActive]="['active']"
+        (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/rules-filled.svg">
+        <h5>Rules</h5>
+    </a> -->
+    <a routerLink="/settings/chat-settings/rulesets" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/rulesets-filled.svg">
+        <h5>Rulesets</h5>
+    </a>
+    <a routerLink="/settings/chat-settings/tags" [routerLinkActive]="['active']"
+        *ngIf="package && package.chats.tags.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/chat-tags-filled.svg">
+        <h5>Tags</h5>
+    </a>
+    <a routerLink="/settings/chat-settings/bannedVisitors" [routerLinkActive]="['active']"
+        *ngIf="package && package.chats.banning.allowed" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/banned-visitors-filled.svg">
+        <h5>Banned<br>Visitors</h5>
+    </a>
+    <a routerLink="/settings/chat-settings/customFields" [routerLinkActive]="['active']"
+        (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/custom-fields-filled.svg">
+        <h5>Custom<br>Fields</h5>
+    </a>
+</ul>

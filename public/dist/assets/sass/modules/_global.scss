@@ -1,0 +1,191 @@
+@charset "utf-8";
+
+@import './partials/mixins';
+@import './partials/variables';
+
+:root {
+    --black: #231f20;
+    --muli-regular: 'Muli-Regular', sans-serif;
+    --muli-bold: 'Muli-Bold', sans-serif;
+    --muli-extra-bold: 'Muli-ExtraBold', sans-serif;
+    --muli-black: 'Muli-Black', sans-serif;
+    --monospace: 'Inconsolata', monospace, SFMono-Regular, Menlo, Monaco, Consolas, Courier, "Liberation Mono", "Courier New";
+}
+
+body {
+    width: 100%;
+    color: var(--black-light);
+    @include phone {
+
+    }
+    @include tabletP {
+        height: 100vh;
+    }
+}
+
+.flag-wrapper {
+    width: 21px !important;
+    display: inline-block;
+    position: relative !important;
+    overflow: hidden;
+    border: 1px solid var(--black-alpha4);
+    border-radius: 3px;
+    &:after {
+        padding-top: 75%;
+        display: block;
+        content: '';
+    }
+    .flag {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 21px;
+        height: 100%;
+        background-size: cover;
+    }
+}
+
+
+
+/*=============================================
+= OVERWRITE UIKIT =
+=============================================*/
+
+.form-control {
+    border-color: var(--gray);
+}
+
+/*=====  End of OVERWRITE UIKIT  ======*/
+
+
+
+/*=============================================
+=            CHAT & TICKET WINDOW            =
+=============================================*/
+
+
+
+/*=====  End of CHAT & TICKET WINDOW  ======*/
+
+
+
+/*=====  SnackBar  ======*/
+
+.user-alert {
+    width: auto;
+    min-width: auto !important;
+    max-width: inherit !important;
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    font-size: 13px;
+    border-radius: 5px !important;
+    pointer-events: none;
+    text-align: left;
+    overflow: visible;
+    -webkit-box-shadow: 0 25px 10px -15px rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 25px 10px -15px rgba(0, 0, 0, 0.05) !important;
+    -webkit-animation-name: animScale;
+    animation-name: animScale;
+    -webkit-animation-duration: 0.25s;
+    animation-duration: 0.25s;
+    padding: 15px 15px 15px 60px !important;
+    color: var(--white);
+    z-index: 1000;
+    &.success {
+        background-color: var(--green);
+    }
+    &.error {
+        background-color: var(--red);
+    }
+    &.warning {
+        background-color: var(--yellow);
+    }
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.alertIcon {
+    position: absolute;
+    left: 0;
+    padding: 15px;
+    top: 0;
+    margin: 0;
+    background-color: var(--black-alpha2)
+}
+
+
+/*=====  End of Snackbar  ======*/
+
+
+/*=====  User Experience  ======*/
+
+.notAvailable {
+    display: flex;
+    width: 100%;
+    font-size: 15px;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    @include phone {
+        height: 265px;
+    }
+    @include tabletL {
+        height: calc(100vh - 95px);
+    }
+}
+
+.activateScrollbar {
+    position: relative;
+}
+
+.ng-scrollbar {
+    position: absolute;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: 0 !important;
+    border-radius: 0 !important;
+    &:hover {
+        background-color: var(--gray);
+    }
+}
+.ng-scrollbar-view {
+    padding: 0 6px 0 0;
+}
+
+
+/*=====  End of User Experience ======*/
+
+
+/* Material AutoComplete Css */
+.mat-option.mat-active {
+    background-color: var(--teal-alpha2) !important;
+    color: rgba(0, 0, 0, .87) !important;
+}
+.mat-option:hover {
+    background-color: var(--gray) !important;
+}
+/* End MAterial AutoComplete Css */
+
+
+.shortcuts {
+    li {
+        border-bottom: 1px solid var(--gray);
+        padding: 5px 0;
+        margin-bottom: 10px;
+        kbd {
+            display: inline-block;
+            margin: 0;
+            padding: 3px 6px;
+            width: auto;
+            border: 1px solid var(--gray-dark);
+            background-color: var(--gray);
+            color: var(--black);
+            border-radius: 3px;
+        }
+    }
+}

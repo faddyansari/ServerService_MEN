@@ -1,0 +1,17 @@
+@mixin grid-gen-12($size) {
+	@for $i-12 from $col-of-12 through 1 {
+		.col-#{$size}-#{$i-12} {
+			width: percentage($i-12 / $col-of-12);
+			float: left;
+		}
+		.col-#{$size}-pull-#{$i-12} {
+			right: percentage($i-12 / $col-of-12);
+		}
+		.col-#{$size}-push-#{$i-12} {
+			left: percentage($i-12 / $col-of-12);
+		}
+		.col-#{$size}-offset-#{$i-12} {
+			margin-left: percentage($i-12 / $col-of-12);
+		}
+	}
+}

@@ -1,0 +1,30 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix" *ngIf="!SelectedForm && !addForm">
+			<div>
+				<h5>Design Form</h5>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="AddForm()"
+					[ngClass]="(!SelectedForm && !addForm) ? 'border-blue' : 'border-red'">
+					<span>{{(!SelectedForm && !addForm) ? 'Create Form' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!SelectedForm && !addForm) ? 'bg-blue' : 'bg-red'">
+						<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!SelectedForm && !addForm"/>
+						<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="SelectedForm && addForm"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="activateScrollbar clearfix p-0">
+			<div class="document-list">
+				<app-form-addnew class="activateScrollbar clearfix p-0"
+					*ngIf="addForm || SelectedForm"
+					[ngClass]="(!SelectedForm && !addForm) ? 'hide' : '' "
+					[FormObject]="(addForm) ? newObject : SelectedForm">
+				</app-form-addnew>
+
+				<app-forms-list class="activateScrollbar clearfix" *ngIf="!addForm && !SelectedForm"></app-forms-list>
+			</div>
+		</div>
+	</div>
+</div>

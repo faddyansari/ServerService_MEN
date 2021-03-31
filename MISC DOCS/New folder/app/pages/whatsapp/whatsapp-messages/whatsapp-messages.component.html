@@ -1,0 +1,190 @@
+<div class="chat-messages" #scrollContainer (scroll)="ScrollChanged($event)">
+    <!--
+        key_from_me: 0 means customer ne bhjta hai
+        1 = agent ne
+    -->
+    <div *ngFor="let message of ResolveMessages()">
+        <div class="chat-msg msg_recieved text-white" *ngIf="message.key_from_me && message.key_from_me == '0'">
+            <!-- <div class="day-separator clearfix">
+                <span>message comes here<br><span class="date">11-11-2020 | 23:00:00</span></span>
+			</div> -->
+
+            <div *ngIf="!message.attachment" class="chat-text">
+                <p>
+                    <span>{{message.textMessage}}</span>
+                </p>
+                <!--
+				<button class="btn btn-transparent moreItems svgOnHover">
+                    <svg class="svg svg-default active">
+						<use href="/assets/img/icons/icons-sprite.svg#more"/>
+					</svg>
+				</button>
+				-->
+                <span class="arrow"></span>
+            </div>
+            <div *ngIf="message.attachment" class="chat-text attachment multiple">
+                <div [ngSwitch]="message.mediamimetype">
+
+                    <a *ngSwitchCase="'4'" href="{{message.mediaURL}}" class="document" target="_blank">
+                        <div class="thumbnail"></div>
+                        <div class="file-name tooltip top">
+                            <span class="ellipsis">{{message.filename}}</span>
+                            <span class="tooltip-inner">{{message.filename}}</span>
+                        </div>
+                    </a>
+
+                    <a *ngSwitchCase="'1'" href="{{message.mediaURL}}" class="image" target="_blank">
+                        <div class="thumbnail">
+							<img class="svg" src='{{message.mediaURL}}' width="30">
+                            <!--
+							<img class="svg" src='{{attach.path}}' *ngIf="(attach.filename | attachmentType) == 'image'">
+							<svg class="svg active" *ngIf="!((fileAttributes.name| attachmentType) == 'image')">
+								<use href="/assets/img/icons/icons-sprite.svg#file" class="text-black"/>
+							</svg>
+							-->
+                        </div>
+                        <div class="file-name tooltip top">
+                            <span class="ellipsis">{{message.filename}}</span>
+                            <span class="tooltip-inner">{{message.filename}}</span>
+                        </div>
+                    </a>
+
+                    <a *ngSwitchCase="'2'" [href]="(message.mediaURL | safeUrl : 'url')" class="audio" target="_blank">
+                        <div class="thumbnail">
+                            <audio [src]='(message.mediaURL | safeUrl : "url")' controls></audio>
+                        </div>
+                        <!-- <div class="file-name tooltip top">
+                            <span class="ellipsis">{{message.filename}}</span>
+                            <span class="tooltip-inner">{{message.filename}}</span>
+                        </div> -->
+                    </a>
+
+                    <a *ngSwitchCase="'3'" [href]="(message.mediaURL | safeUrl : 'url')" class="video" target="_blank">
+                        <div class="thumbnail">
+                            <video controls width="250">
+                                <source [src]='(message.mediaURL | safeUrl : "url")' type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="file-name tooltip top">
+                            <span class="ellipsis">{{message.filename}}</span>
+                            <span class="tooltip-inner">{{message.filename}}</span>
+                        </div>
+                    </a>
+
+                </div>
+                <span class="arrow"></span>
+            </div>
+            <div class="chat-info text-black">
+                <!--
+                <span *ngIf="message.body != ''">{{ message.date | date :'mediumDate'}}
+                                {{ message.date | date :'shortTime' }}</span>
+                 -->
+                <span>{{customerName}}</span>
+                <span>{{message.timestamp | date : 'mediumDate'}} {{message.timestamp | date :'shortTime'}}  </span>
+            </div>
+        </div>
+
+        <div class="chat-msg msg_sent" *ngIf="message.key_from_me && message.key_from_me == '1'">
+            <!-- <div class=" day-separator clearfix ">
+                <span>message comes here<br><span class="date ">11-11-2020 | 23:00:01</span></span>
+            </div> -->
+            <div *ngIf="!message.attachment" class="chat-text ">
+                <p>
+                    <span>{{message.textMessage}}</span>
+                    <!-- <app-progress-loader></app-progress-loader> -->
+                </p>
+                <span class="arrow"></span>
+            </div>
+            <div *ngIf="message.attachment && !message._id" class="chat-text attachment multiple">
+                <app-progress-loader [errored]="message.errored" [status]="message.status" [progress]="message.progress" (Resend)="_Resent(message.errorType,message)" (CancelUpload)="CancelUpload(message.sentTime)" *ngIf="message.attachment && !message._id"></app-progress-loader>
+                <!-- <app-progress-loader></app-progress-loader> -->
+                <span class="arrow"></span>
+            </div>
+            <div *ngIf="message.attachment && message._id" class="chat-text attachment multiple">
+                <div [ngSwitch]="message.mediamimetype">
+                    <a *ngSwitchCase="'4'" href="{{message.mediaURL}}" class="document" target="_blank">
+                        <div class="thumbnail"></div>
+                        <div class="file-name tooltip top">
+                            <span class="ellipsis">{{message.filename}}</span>
+                            <span class="tooltip-inner">{{message.filename}}</span>
+                        </div>
+                    </a>
+                    <a *ngSwitchCase="'1'" href="{{message.mediaURL}}" class="image" target="_blank">
+                        <div class="thumbnail">
+							<img class="svg" src='{{message.mediaURL}}' width="30">
+							<!--
+							<img class="svg" src='{{attach.path}}' *ngIf="(attach.filename | attachmentType) == 'image'">
+							<svg class="svg active" *ngIf="!((fileAttributes.name| attachmentType) == 'image')">
+								<use href="/assets/img/icons/icons-sprite.svg#file" class="text-black"/>
+							</svg>
+							-->
+                        </div>
+                        <div class="file-name tooltip top">
+                            <span class="ellipsis">{{message.filename}}</span>
+                            <span class="tooltip-inner">{{message.filename}}</span>
+                        </div>
+                    </a>
+
+                    <a *ngSwitchCase="'2'" [href]="(message.mediaURL | safeUrl : 'url')" class="audio" target="_blank">
+                        <div class="thumbnail">
+                            <audio [src]='(message.mediaURL | safeUrl : "url")' controls></audio>
+                        </div>
+                        <!-- <div class="file-name tooltip top">
+                            <span class="ellipsis">{{message.filename}}</span>
+                            <span class="tooltip-inner">{{message.filename}}</span>
+                        </div> -->
+                    </a>
+
+                    <a *ngSwitchCase="'3'" [href]="(message.mediaURL | safeUrl : 'url')" class="video" target="_blank">
+                        <div class="thumbnail">
+                            <video controls width="250">
+                                <source [src]='(message.mediaURL | safeUrl : "url")' type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="file-name tooltip top">
+                            <span class="ellipsis">{{message.filename}}</span>
+                            <span class="tooltip-inner">{{message.filename}}</span>
+                        </div>
+                    </a>
+
+                </div>
+                <span class="arrow"></span>
+            </div>
+            <div *ngIf="!message.attachment" class="chat-info">
+                <span>{{(message.agentName) ? message.agentName : 'Me'}}</span>
+                <span>{{message.timestamp | date : 'mediumDate'}} {{message.timestamp | date :'shortTime'}}</span>
+                <span *ngIf="message.status && message.status == 'sending'" class="msg-status svgOnHover">
+					<img class="svg w-15 h-15 active" src="/assets/img/loaders/spin-loader-gray.svg"/>
+					<span class="text-theme-pro-gray">Sending</span>
+                </span>
+                <span *ngIf="message.status && message.status == 'failed'" class="msg-status svgOnHover">
+					<svg class="svg w-15 h-15 active">
+						<use href="/assets/img/icons/icons-sprite.svg#info-circle" class="text-mustard"/>
+					</svg>
+					<span class="text-mustard">Failed</span>
+                </span>
+                <span *ngIf="message.status && message.status == 'delivered'" class="msg-status svgOnHover">
+					<svg class="svg w-15 h-15 active">
+						<use href="/assets/img/icons/icons-sprite.svg#ok-done" class="text-blue"/>
+					</svg>
+					<span class="text-blue">Delivered</span>
+                </span>
+                <span *ngIf="message.status && message.status == 'sent'" class="msg-status svgOnHover">
+					<svg class="svg w-15 h-15 active">
+						<use href="/assets/img/icons/icons-sprite.svg#ok-done" class="text-theme-pro-gray"/>
+					</svg>
+					<span class="text-theme-pro-gray">Sent</span>
+                </span>
+                <span *ngIf="message.status && message.status == 'failed'" class="msg-status svgOnHover" (click)="Resend(message)">
+					<svg class="svg w-15 h-15 active">
+						<use href="/assets/img/icons/icons-sprite.svg#redo" class="text-red"/>
+					</svg>
+					<span class="text-red">Resend</span>
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

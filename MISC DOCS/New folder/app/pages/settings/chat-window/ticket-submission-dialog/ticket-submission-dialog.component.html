@@ -1,0 +1,71 @@
+<div class="box clearfix animated fadeIn delay-400 displaySettings" id="chatCustomizationComponent">
+    <div class="box-body clearfix p-0">
+        <div class="row clearfix">
+            <div class="col-sm-6 col-xs-12">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Edit Form Content</h5>
+                    </div>
+                </div>
+                <div class="flex f-row f-wrap f-gap5 m-b-10">
+                    <div>
+                        <button class="btn btn-sm" [ngClass]="(enableEdit) ? 'bg-red' : 'bg-blue'"
+                            (click)="EnableEdit(!enableEdit)">
+                            <span>{{(enableEdit) ? 'Cancel' : 'Edit'}}</span>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm bg-blue"
+                            (click)="SubmitForm()"
+                            [disabled]="form.invalid"
+                            [ngClass]="(loading) ? 'btnSpinner' : ''">
+
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Preview Content</h5>
+                    </div>
+                </div>
+                <div class="activateScrollbar clearfix">
+                    <div class="from-dialogs clearfix"
+                        [ngStyle]="{'background-color': themeSettings.dialogBgColor}">
+                        <form [formGroup]="form">
+                            <div class="text-center clearfix">
+								<div class="svgOnHover">
+									<svg class="svg w-80 h-80 active" #logo id="logo" name="logo">
+										<use href="/assets/img/icons/icons-sprite.svg#ok-done" class="text-green"/>
+									</svg>
+								</div>
+                                <div class="input-block" *ngIf="enableEdit">
+                                    <textarea type="text" class="form-control input-sm text-center"  formControlName="heading"></textarea>
+                                </div>
+                                <h5 *ngIf="!enableEdit" class="title-with-border border-gray" [ngStyle]="{'color' : themeSettings.dialogTextColor}">
+                                    {{displaySettings.heading}}</h5>
+                                <div class="input-block" *ngIf="enableEdit">
+                                    <textarea type="text" class="form-control input-sm text-center" formControlName="content"></textarea>
+                                </div>
+                                <h6 *ngIf="!enableEdit" [ngStyle]="{'color' : themeSettings.dialogTextColor}">{{displaySettings.content}}</h6>
+                                <br>
+                                <div class="flex_btns">
+                                    <div>
+                                        <button type="button" class="btn btn-sm"
+                                            [ngStyle]="{'background-color': themeSettings.dialogBtnColor, color : displaySettings.dialogBtnTextColor}">{{displaySettings.btn1Text}}</button>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-sm"
+                                            [ngStyle]="{'background-color': themeSettings.dialogSecondaryBtnColor, color : displaySettings.dialogSecondaryBtnTextColor}">{{displaySettings.btn2Text}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

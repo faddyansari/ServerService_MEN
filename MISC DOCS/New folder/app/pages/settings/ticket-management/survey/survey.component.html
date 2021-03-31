@@ -1,0 +1,33 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5 *ngIf="!selectedSurvey && !addSurvey">Customer Satisfaction Survey</h5>
+				<h5 *ngIf="addSurvey && !selectedSurvey">Add New Survey</h5>
+				<h5 *ngIf="addSurvey && selectedSurvey">Edit Survey</h5>
+			</div>
+			<div *ngIf="!selectedSurvey && !addSurvey">
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="AddSurvey()"
+					[ngClass]="(!selectedSurvey && !addSurvey) ? 'border-blue' : 'border-red'">
+					<span>{{(!selectedSurvey && !addSurvey) ? 'New Survey' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!selectedSurvey && !addSurvey) ? 'bg-blue' : 'bg-red'">
+						<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!selectedSurvey && !addSurvey"/>
+						<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="selectedSurvey && addSurvey"/>
+					</svg>
+				</button>
+
+			</div>
+		</div>
+		<div class="activateScrollbar clearfix p-0">
+
+			<app-add-survey *ngIf="addSurvey || selectedSurvey"
+				[ngClass]="(!selectedSurvey && !addSurvey) ? 'hide' : '' "
+				[SurveyObject]="(addSurvey) ? surveyObject : selectedSurvey">
+			</app-add-survey>
+
+			<app-survey-list class="document-list" *ngIf="!addSurvey && !selectedSurvey"></app-survey-list>
+
+		</div>
+	</div>
+</div>
+

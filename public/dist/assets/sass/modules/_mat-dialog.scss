@@ -1,0 +1,114 @@
+.mat-dialog-container {
+    padding: 0 !important;
+    position: relative;
+    border-radius: 5px !important;
+    overflow: inherit !important;
+    background: var(--black) !important;
+    color: var(--white) !important;
+    height: auto !important;
+    .dialog-close {
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        .btn {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            font-size: 13px;
+            padding: 0;
+        }
+    }
+    .mat-dialog-title {
+        margin: 0 !important;
+        font-family: var(--muli-bold);
+        padding: 20px;
+        border-bottom: 1px solid var(--black-light);
+        color: var(--off-white);
+    }
+    .mat-dialog-content {
+        padding: 20px !important;
+        margin: 0 !important;
+        @include phone {
+            max-height: 70vh !important
+        }
+        @include tabletP {
+            max-height: 80vh !important
+        }
+        form {
+            position: relative;
+            label {
+                color: var(--off-white);
+            }
+        }
+        .statusPicture {
+                > img {
+                width: 40px;
+                height: 40px;
+                position: relative;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                border-radius: 50%;
+                overflow: hidden;
+                margin: auto;
+                border: solid 2px var(--olive);
+            }
+        }
+        .info {
+            pointer-events: none;
+            user-select: none;
+            .notif-count {
+                right: 24px;
+                top: 25px;
+                i {
+                    line-height: 21px;
+                    margin: 0 2px;
+                    font-size: 15px;
+                    display: block;
+                }
+            }
+        }
+        .ng-pristine.ng-invalid:not(form):not(fieldset),
+        .ng-invalid.ng-untouched:not(form):not(fieldset),
+        .ng-invalid.ng-touched:not(form):not(fieldset),
+        .ng-valid.ng-untouched:not(form):not(fieldset),
+        .ng-valid.ng-touched:not(form):not(fieldset) {
+            border-width: 1px 1px 1px 3px !important;
+            border-style: solid !important;
+        }
+        .ng-pristine.ng-invalid:not(form):not(fieldset),
+        .ng-invalid.ng-untouched:not(form):not(fieldset) {
+            border-color: var(--black-light) !important;
+            background-color: transparent !important;
+        }
+        .ng-invalid.ng-touched:not(form):not(fieldset) {
+            border-color: var(--danger) !important;
+            background-color: var(--danger-alpha1) !important;
+        }
+        .ng-valid.ng-untouched:not(form):not(fieldset),
+        .ng-valid.ng-touched:not(form):not(fieldset) {
+            border-color: var(--success) !important;
+            background-color: var(--success-alpha1) !important;
+        }
+    }
+    .mat-dialog-footer {
+        padding: 15px;
+        border-top: 1px solid var(--black-light);
+    }
+}
+
+.cdk-overlay-dark-backdrop {
+    background-color: var(--black);
+}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+    opacity: 0.6;
+}
+
+.mat-dialog-actions {
+    padding: 0 !important;
+    display: block !important;
+    flex-wrap: nowrap !important;
+    margin-bottom: 0 !important;
+}

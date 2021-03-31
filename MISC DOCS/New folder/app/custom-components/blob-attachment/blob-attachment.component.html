@@ -1,0 +1,54 @@
+<div class="attachment-area animated active" [ngClass]="uploading ? 'disabled' : ''" *ngIf="fileArray && fileArray.length">
+	<a *ngIf="actionForm" class="attachment-form">
+		<div class="thumb">
+			<img src="/assets/img/icons/settings/form-designer-outline.svg">
+		</div>
+		<h5 class="file-name tooltip top">
+			<span class="ellipsis">{{actionForm[0].formName}}</span>
+			<span class="tooltip-inner">{{actionForm[0].formName}}</span>
+		</h5>
+		<button class="btn btn-xs btn-transparent svgOnHover tooltip left remove" (click)="RemoveForm(actionForm)">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+			</svg>
+			<span class="tooltip-inner">Remove</span>
+		</button>
+	</a>
+	<a *ngFor="let fileAttributes of fileArray"
+		[ngClass]="((fileAttributes.name| attachmentType) == 'image') ? 'attachment-image' : 'attachment-doc'">
+		<div class="thumbnail svgOnHover">
+			<img class="svg active" src="{{fileAttributes.url}}" *ngIf="((fileAttributes.name| attachmentType) == 'image')">
+			<svg class="svg active" *ngIf="!((fileAttributes.name| attachmentType) == 'image')">
+				<use href="/assets/img/icons/icons-sprite.svg#file" class="text-black"/>
+			</svg>
+		</div>
+		<h5 class="file-name tooltip top">
+			<span class="ellipsis">{{fileAttributes.name}}</span>
+			<span class="tooltip-inner">{{fileAttributes.name}}</span>
+		</h5>
+		<span class="badge blob-error" *ngIf="fileAttributes.error">{{fileAttributes.error}}</span>
+		<span class="badge blob-uploading" *ngIf="fileAttributes.uploading">uploading...</span>
+		<!-- <span class="file-size"
+			*ngIf="!(fileAttributes.file.type.split('/')[0] === 'image')">{{((fileAttributes.file.size / 1024 ) > 1024) ? ((fileAttributes.file.size / 1024 / 1024 |  number:'1.0-0') + ' MB') : ((fileAttributes.file.size / 1024 | number:'1.0-0') + ' KB')}}</span> -->
+		<button class="btn btn-xs btn-transparent svgOnHover tooltip left remove" (click)="RemoveFile(fileAttributes)"
+			*ngIf="!fileAttributes.uploading">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+			</svg>
+			<span class="tooltip-inner">Remove</span>
+		</button>
+	</a>
+
+	<div class="status" *ngIf="fileerror" [ngClass]="fileerror ? 'animated slideInUp' : ''">
+		<span>{{fileerror}}</span>
+	</div>
+	<div class="status" *ngIf="uploading" [ngClass]="uploading ? 'animated slideInUp' : ''">
+		<app-preloader type='stat-loader'></app-preloader>
+	</div>
+</div>

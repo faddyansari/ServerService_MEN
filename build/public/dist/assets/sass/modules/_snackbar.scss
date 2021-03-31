@@ -1,0 +1,48 @@
+.user-alert {
+	width: auto;
+	max-width: calc(100% - 80px) !important;
+	min-height: 30px;
+	position: fixed;
+	bottom: 16px;
+	right: 100px;
+	@extend %fs13;
+	border-radius: 5px !important;
+	pointer-events: none;
+	@extend %textLeft;
+	overflow: hidden;
+	animation-name: animScale;
+	animation-duration: 300ms;
+	padding: 21px 15px 20px 57px !important;
+	color: var(--white);
+	z-index: 1000;
+	background-color: var(--charcoal);
+	p {
+		margin-bottom: 0;
+	}
+	.alertIcon {
+		@extend %floatToYCenter;
+		left: 15px;
+		width: 20px;
+		height: 20px;
+		display: flex;
+		align-items: center;
+		padding: 7px;
+		@extend %m0;
+		border-radius: 50%;
+	}
+	&.success {
+		.alertIcon {
+			background-color: var(--green);
+		}
+	}
+	&.error {
+		.alertIcon {
+			background-color: var(--red);
+		}
+	}
+	&.warning {
+		.alertIcon {
+			background-color: var(--yellow);
+		}
+	}
+}

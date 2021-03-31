@@ -1,0 +1,83 @@
+<section class="content animated fadeIn" id="installationComponent"  [ngClass]="!viewContentInfo ? 'info-hidden' : ''">
+    <section class="content-nav clearfix">
+        <h3>
+            <span>Install Beelinks</span>
+        </h3>
+        <ul class="breadcrumbs clearfix">
+            <li>
+                <a>Home</a>
+            </li>
+        </ul>
+        <div class="content-tools">
+            <div class="btn-group">
+                <a class="btn btn-xs btn-theme" (click)="toggleInfoArea()">
+                    <span>INFO</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <div class="content-view">
+        <div class="activateScrollbar clearfix">
+            <div class="box clearfix animated fadeIn delay-400">
+                <div class="box-body clearfix p-0">
+                    <div class="row clearfix m-b-10">
+                        <div class="col-sm-6 col-xs-12 m-b-30">
+                            <div class="box-subtitle clearfix m-b-10">
+                                <div>
+                                    <h5>Install the code yourself</h5>
+                                </div>
+                            </div>
+                            <p>Install the BeeLinks Chat on your website in just a few minutes. Copy and Paste the following code on your website before the &lt;/body&gt; tag:</p>
+                            <br>
+                            <div class="input-block w100">
+                                <label class="text-red">You can find the &lt;/body&gt; tag just before the &lt;/html&gt; tag.</label>
+                                <!-- <textarea class="form-control input-sm rawHTML" rows="18" readonly>
+                                    &lt;!-- Start of Beelinks (beelinks.solutions) code --&gt;
+                                    {{script}}
+                                    &lt;!-- End of Beelinks code --&gt;
+                                </textarea> -->
+                                <ngx-codemirror #codemirror [options]="codeMirrorOptions" [ngModel]="script">
+                                </ngx-codemirror>
+                            </div>
+                            <p>In case of any questions please feel free to contact us at <a href="mailto:support@beelinks.solutions">support@beelinks.solutions</a></p>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="box-subtitle clearfix">
+                                <div>
+                                    <h5>Email Instructions to Web Developer</h5>
+                                </div>
+                            </div>
+                            <p>If it is a hassle for you to handle the technical settings send this to your website manager or developer:</p>
+                            <br>
+                            <div class="input-block">
+                                <label>Enter Email Address</label>
+                                <input [ngClass]="!(invalidEmail) ? '' : 'border-red'" [(ngModel)]="email" type="email" class="form-control input-sm" placeholder="enter email address here ...">
+                                <p *ngIf="invalidEmail" class="text-danger">* The email you entered is invalid</p>
+                            </div>
+                            <button class="btn btn-sm bg-blue"
+                                [ngClass]="!(loading) ? '' : 'btnSpinner'"
+                                (click)="RequestCode()">
+                                <span>Send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-info" *ngIf="viewContentInfo">
+    <div class="content-nav clearfix">
+        <h3>
+            <span>Info</span>
+        </h3>
+        <div class="content-tools">
+            <div class="btn-group">
+                <a class="btn btn-xs bg-red" (click)="toggleInfoArea()">
+                    <span>Close Info</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

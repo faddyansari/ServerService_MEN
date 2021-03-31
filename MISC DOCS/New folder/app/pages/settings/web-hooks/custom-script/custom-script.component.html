@@ -1,0 +1,27 @@
+<div class="box clearfix animated fadeIn delay-400" id="customScriptComponent">
+	<div class="box-body clearfix p-0">
+		<div class="activateScrollbar clearfix p-0">
+			<div class="box-subtitle clearfix">
+				<div>
+					<h5 class="text-red">
+						<span>Note: The following script will run on your website for each incoming visitor and will help fetch user credentials only.</span>
+					</h5>
+				</div>
+			</div>
+			<form [formGroup]="customScriptForm">
+				<div class="input-block">
+					<textarea class="form-control no-resize rawHTML" rows="16"
+						[formControl]="customScriptForm.controls['script']"></textarea>
+				</div>
+				<button type="submit" class="btn btn-sm bg-blue"
+					(click)="AddScript()"
+					[ngClass]="(loading) ? 'btnSpinner' : '' "
+					[disabled]="customScriptForm.invalid">
+					<span>Add Script</span>
+				</button>
+				<h6 *ngIf="error" class="text-orange">* {{error}}</h6>
+				<br>
+			</form>
+		</div>
+	</div>
+</div>

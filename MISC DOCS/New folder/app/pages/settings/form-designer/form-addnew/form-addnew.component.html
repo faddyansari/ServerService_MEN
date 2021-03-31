@@ -1,0 +1,414 @@
+<form [formGroup]="createForm">
+
+	<div class="customFieldDesigner clearfix">
+
+		<!-- Draggable Area -->
+		<ul class="activateScrollbar clearfix form-element list-items clearfix style5">
+			<li class="item notif clearfix">
+				<div class="item card ra svgOnHover" id="radio" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-40 h-40 svg-default" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#radio-field" draggable="false" />
+					</svg>
+					<svg class="svg w-40 h-40 colored" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#radio-field-colored" draggable="false" />
+					</svg>
+					<b draggable="false">RADIO FIELD</b>
+				</div>
+			</li>
+			<li class="item notif clearfix">
+				<div class="item card ch svgOnHover" id="checkbox" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-40 h-40 svg-default" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#checkbox-field" draggable="false" />
+					</svg>
+					<svg class="svg w-40 h-40 colored" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#checkbox-field-colored" draggable="false" />
+					</svg>
+					<b draggable="false">CHECKBOX</b>
+				</div>
+			</li>
+			<li class="item notif clearfix">
+				<div class="item card in svgOnHover" id="input" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-40 h-40 svg-default" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#input-field" draggable="false" />
+					</svg>
+					<svg class="svg w-40 h-40 colored" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#input-field-colored" draggable="false" />
+					</svg>
+					<b draggable="false">INPUT FIELD</b>
+				</div>
+			</li>
+			<li class="item notif clearfix">
+				<div class="item card dd svgOnHover" id="dropdown" draggable="true" (dragstart)="drag($event)">
+					<svg class="svg w-40 h-40 svg-default" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#select-field" draggable="false" />
+					</svg>
+					<svg class="svg w-40 h-40 colored" draggable="false">
+						<use href="/assets/img/icons/icons-sprite.svg#select-field-colored" draggable="false" />
+					</svg>
+					<b draggable="false">SELECT FIELD</b>
+				</div>
+			</li>
+		</ul>
+
+		<!-- Droppable Area -->
+		<ul class="activateScrollbar clearfix form-items list-items clearfix style5 droppable-area">
+
+			<div class="input-group-sm">
+				<div class="input-block">
+					<label>Form Name</label>
+					<input type="text" class="form-control input-sm text-black" autocomplete="off"
+						placeholder="Form Name" formControlName="formName">
+				</div>
+				<div class="input-block">
+					<label>Action Type</label>
+					<div class="sel style1 sel-sm">
+						<select class="form-control input-sm" formControlName="actionType">
+							<option value="" [selected]="!createForm.get('actionType').value">
+								Please Select Any
+								Action</option>
+							<option *ngFor="let action of formActions" [value]="action.actionType">{{action.actionName}}
+							</option>
+							<option value='CustomUrl'>Custom URL</option>
+						</select>
+					</div>
+
+				</div>
+				<div class="input-block" *ngIf="createForm.get('actionType').value == 'CustomUrl'">
+					<label>Add custom URL</label>
+					<input type="text" autocomplete="off" class="form-control input-sm" formControlName="actionUrl"
+						placeholder="Type Action URL">
+				</div>
+			</div>
+			<div class="input-block">
+				<label>Welcome Message</label>
+				<input type="text" autocomplete="off" class="form-control input-sm" formControlName="formHeader"
+					placeholder="Type Header for your form ...">
+			</div>
+
+			<!-- Drop Area -->
+			<div class="elements-droppable f-column" (drop)="drop($event)" (dragover)="allowDrop($event)"
+				(dragleave)="DragLeave($event)" [ngClass]="(!inputFields.length || !SelectedForm) ? 'no-elements' : ''">
+				<ng-template ngFor let-result [ngForOf]="inputFields" let-i="index">
+					<div class="item card" [id]="result.id" *ngIf="result.type == 'checkbox'">
+						<div class="input-group-sm">
+							<label class="text-right">
+								<span id="label">{{(result && result.label) ? result.label : 'Checkbox Field'}}</span>
+							</label>
+						</div>
+
+						<div class="actions">
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+								(click)="EditAreaForm($event,result)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit" />
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+							</button>
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+								(click)="DeleteField(result.id)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete" />
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveUp(i)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+								</svg>
+								<span class="tooltip-inner">Swap Up</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveDown(i)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+								</svg>
+								<span class="tooltip-inner">Swap Up</span>
+							</button>
+						</div>
+					</div>
+
+					<div class="item card" [id]="result.id" *ngIf="result.type == 'dropdown'">
+						<div class="input-group-sm">
+							<label class="text-right">
+								<span>{{(result && result.label) ? result.label : 'Dropdown Field'}}</span>
+							</label>
+						</div>
+
+						<div class="actions">
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+								(click)="EditAreaForm($event,result)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit" />
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+							</button>
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+								(click)="DeleteField(result.id)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete" />
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveUp(i)">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+								</svg>
+								<span class="tooltip-inner">Swap Up</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveDown(i)">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+								</svg>
+								<span class="tooltip-inner">Swap Down</span>
+							</button>
+						</div>
+					</div>
+
+					<div class="item card" [id]="result.id" *ngIf="result.type == 'radio'">
+						<div class="input-group-sm">
+							<label class="text-right">
+								<span>{{(result && result.label) ? result.label : 'Radio Field'}}</span>
+							</label>
+						</div>
+
+						<div class="actions">
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+								(click)="EditAreaForm($event,result)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit" />
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+							</button>
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+								(click)="DeleteField(result.id)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete" />
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top"
+								(click)="moveUp(i)">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+								</svg>
+								<span class="tooltip-inner">Swap Up</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveDown(i)">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+								</svg>
+								<span class="tooltip-inner">Swap Down</span>
+							</button>
+						</div>
+					</div>
+
+					<div class="item card" [id]="result.id"
+						*ngIf="result.type == 'input' || result.type == 'text' || result.type == 'email' || result.type == 'password'">
+						<div class="input-group-sm">
+							<label class="text-right">
+								<span>{{(result && result.label) ? result.label : 'Input Field'}}</span>
+							</label>
+						</div>
+
+						<div class="actions">
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+								(click)="EditAreaForm($event,result)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit" />
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+							</button>
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+								(click)="DeleteField(result.id)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete" />
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveUp(i)">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+								</svg>
+								<span class="tooltip-inner">Swap Up</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveDown(i)">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+								</svg>
+								<span class="tooltip-inner">Swap Down</span>
+							</button>
+						</div>
+					</div>
+				</ng-template>
+				<div id="droppableZone" class="elements-droppable no-elements no-pointer textClass">
+					<span>Drop Items Here ...</span>
+				</div>
+			</div>
+
+			<div class="input-block">
+				<label>Thank you Message</label>
+				<input type="text" autocomplete="off" class="form-control input-sm" formControlName="formFooter"
+					placeholder="Type Footer for your form ...">
+			</div>
+		</ul>
+
+		<!-- Edit Area -->
+		<div class="field-edit" *ngIf="enableEdit">
+			<!-- NOTE: Separate divs because in one loop present and in another no loop present. -->
+
+			<!-- For checkbox and input fields -->
+			<div class="item card" *ngIf="input || checkbox">
+				<div formArrayName="conditions">
+					<div [formGroupName]="i">
+						<div class="input-block">
+							<label>Field Name</label>
+							<input type="text" class="form-control input-sm" placeholder="Name" name="name"
+								formControlName="fieldName">
+						</div>
+
+
+						<div class="input-block">
+							<label>Label</label>
+							<input type="text" class="form-control input-sm" placeholder="Label" name="label"
+								formControlName="label">
+						</div>
+						<div class="input-block" *ngIf="input">
+							<label>Input Type</label>
+							<div class="sel style1 sel-sm">
+								<select class="form-control input-sm" formControlName="type">
+									<option value='text' [selected]="type">Text</option>
+									<option value='email' [selected]="type">Email</option>
+									<option value='password' [selected]="type">Password</option>
+								</select>
+							</div>
+						</div>
+						<div class="input-block" *ngIf="input">
+							<label>PlaceHolder</label>
+							<input type="text" class="form-control input-sm" placeholder="PlaceHolder"
+								name="placeholder" formControlName="placeholder">
+						</div>
+						<div class="input-block">
+							<label>Validation</label>
+							<div class="pretty p-svg p-fill p-smooth">
+								<input type="checkbox" name="validation" value="required" formControlName="validation">
+								<div class="state svgOnHover">
+									<svg class="svg svg-icon active">
+										<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+									</svg>
+									<label>Required</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="m-t-10 p-t-10 b-t-1 border-gray">
+
+					<button type="button" class="btn btn-xs bg-blue" (click)="EditCaseSave()"
+						[disabled]="createForm.get('conditions').invalid">
+						<span>Save</span>
+					</button>
+
+					<button type="button" class="btn btn-xs bg-red" (click)="CancelEditAreaForm()">
+						<span>Cancel</span>
+					</button>
+				</div>
+			</div>
+
+			<!-- For radio and dropdown fields -->
+			<div class="item card" *ngIf="dropdown || radio">
+				<div formArrayName="conditions" *ngFor="let condition of GetControls('conditions'); let index = index;">
+					<div [formGroupName]="index">
+						<div class="input-block">
+							<label>Field Name</label>
+							<input type="text" class="form-control input-sm" placeholder="Name" name="name"
+								formControlName="fieldName">
+						</div>
+						<div class="input-block">
+							<label>Label</label>
+							<input type="text" class="form-control input-sm" placeholder="Label" name="label"
+								formControlName="label">
+						</div>
+						<div class="input-block">
+							<label>Validation</label>
+							<div class="pretty p-svg p-fill p-smooth">
+								<input type="checkbox" name="validation" value="required" formControlName="validation">
+								<div class="state svgOnHover">
+									<svg class="svg svg-icon active">
+										<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+									</svg>
+									<label>Required</label>
+								</div>
+							</div>
+						</div>
+						<div formArrayName="options">
+							<div *ngFor="let phone of condition.controls.options.controls; let j = index"
+								[formGroupName]="j">
+								<div class="input-group-sm">
+									<input class="form-control" formControlName="key" placeholder="Key">
+									<input class="form-control" formControlName="value" placeholder="Value">
+									<div class="input-group-btn">
+										<button class="btn btn-transparent svgOnHover" (click)="deletekeyValue(j)"
+											*ngIf="condition.controls.options.controls.length > 2">
+											<svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#delete" />
+											</svg>
+											<svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+											</svg>
+											<span class="tooltip-inner">Delete</span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div>
+								<button class="btn btn-xs bg-blue" (click)="addkeyValue()" *ngIf="dropdown || radio">
+									<span>Add Key Value</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="m-t-10 p-t-10 b-t-1 border-gray">
+
+					<button type="button" class="btn btn-xs bg-blue" (click)="EditCaseSave()"
+						[disabled]="createForm.get('conditions').invalid">
+						<span>Save</span>
+					</button>
+					<button type="button" class="btn btn-xs bg-red" (click)="CancelEditAreaForm()">
+						<span>Cancel</span>
+					</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</form>
+
+
+<!-- Actions buttons -->
+<button class="btn btn-sm bg-blue" (click)="SaveForm()" [disabled]="createForm.invalid" *ngIf="!editCase">
+	<span>Save</span>
+</button>
+
+<button class="btn btn-sm bg-blue m-r-10" *ngIf="editCase" (click)="UpdateForm()">
+	<span>Update</span>
+</button>
+
+<button class="btn btn-sm bg-blue m-r-10" (click)="Preview()" [disabled]="!(inputFields && inputFields.length)">
+	<span>Preview</span>
+</button>
+
+<button class="btn btn-sm bg-red" (click)="CancelForm()">
+	<span>Cancel</span>
+</button>

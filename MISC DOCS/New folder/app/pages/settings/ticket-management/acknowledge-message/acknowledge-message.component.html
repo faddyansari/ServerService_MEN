@@ -1,0 +1,33 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5 *ngIf="!selectedMessage && !addMessage">Greeting Message</h5>
+				<h5 *ngIf="addMessage && !selectedMessage">Add New Greeting Message</h5>
+				<h5 *ngIf="addMessage && selectedMessage">Edit Greeting Message</h5>
+			</div>
+			<div *ngIf="!selectedMessage && !addMessage">
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="AddAckMessage()"
+					[ngClass]="(!selectedMessage && !addMessage) ? 'border-blue' : 'border-red'">
+					<span>{{(!selectedMessage && !addMessage) ? 'Add New' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!selectedMessage && !addMessage) ? 'bg-blue' : 'bg-red'">
+						<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!selectedMessage && !addMessage"/>
+						<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="selectedMessage && addMessage"/>
+					</svg>
+				</button>
+
+			</div>
+		</div>
+		<div class="activateScrollbar clearfix p-0">
+
+			<app-add-acknowledge-message *ngIf="addMessage || selectedMessage"
+				[ngClass]="(!selectedMessage && !addMessage) ? 'hide' : '' ">
+			</app-add-acknowledge-message>
+
+      <app-acknowledge-message-list class="document-list" 
+      *ngIf="!addMessage && !selectedMessage">
+      </app-acknowledge-message-list>
+		</div>
+	</div>
+</div>
+

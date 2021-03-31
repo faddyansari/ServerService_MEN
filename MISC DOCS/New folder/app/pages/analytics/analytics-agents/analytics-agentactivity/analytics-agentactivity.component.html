@@ -1,0 +1,184 @@
+<div class="row clearfix">
+	<div class="col-md-2">
+		<div class="text-center">
+			<div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+				<input type="checkbox" [(ngModel)]="hourlyToggle" />
+				<div class="state p-on">
+					<label>Detailed</label>
+				</div>
+				<div class="state p-off">
+					<label>Brief</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-5">
+		<div class="text-center" *ngIf="!hourlyToggle">
+			<label class="fw-6">From:</label>
+			<input class="form-control" type="datetime-local" [(ngModel)]="selectedDate.from"
+				[value]="selectedDate.from" [max]="today">
+			<label class="fw-6">To:</label>
+			<input class="form-control" type="datetime-local" [(ngModel)]="selectedDate.to" [value]="selectedDate.to"
+				[max]="today">
+		</div>
+		<div class="text-center" *ngIf="hourlyToggle">
+			<label class="fw-6">Date:</label>
+			<input class="form-control" type="datetime-local" [(ngModel)]="selectedDate.from"
+				[value]="selectedDate.from" [max]="today">
+		</div>
+	</div>
+	<div class="col-md-3" *ngIf="permissions && permissions.canView == 'all'">
+		<div class="input-group" *ngIf="permissions && permissions.canView == 'all'">
+			<button type="button" class="btn btn-xs btn-theme" (click)="toggle()"
+				*ngIf="filterType == 'agent'">Agent</button>
+			<button type="button" class="btn btn-xs btn-theme" (click)="toggle()"
+				*ngIf="filterType == 'group'">Group</button>
+			<app-custom-select class="form-control w100 p-0 b-0 m-b-0" [items]="agentsList"
+				[selectLabel]="'Select agents'" [(ngModel)]="selectedAgents" [selectedItems]="selectedAgents"
+				[bindLabel]="'email'" [bindValue]="'email'" [multiple]="true" [lazyLoading]="true"
+				(onLoadMore)="loadMore($event)" (onSearch)="onSearch($event)" (onSelect)="onItemSelect($event)"
+				(onDeSelect)="onItemDeSelect($event)" *ngIf="filterType == 'agent'">
+			</app-custom-select>
+			<app-custom-select class="form-control w100 p-0 b-0 m-b-0" [items]="groupList"
+				[selectLabel]="'Select groups'" [(ngModel)]="selectedGroups" [selectedItems]="selectedGroups"
+				[multiple]="false" (onSelect)="onGroupSelect($event)" (onDeSelect)="onGroupDeSelect($event)"
+				*ngIf="filterType == 'group'">
+			</app-custom-select>
+		</div>
+	</div>
+	<div [ngClass]="(permissions && permissions.canView == 'all') ? 'col-md-2' : 'col-md-6'">
+		<button type="button" class="btn btn-xs btn-theme" (click)="onFilterResult()">Go</button>
+		<!-- <div>
+      <h6>Hourly Toggle</h6>
+    </div> -->
+
+	</div>
+</div>
+<div class="statistics clearfix agents-stats" *ngIf="loading">
+	<div class="table-responsive" style="width: 80% !important;">
+		<p class="w100 text-center">Loading...</p>
+	</div>
+</div>
+<div class="statistics clearfix agents-stats" *ngIf="!loading">
+	<div *ngIf="hourlyData.length" style="display: list-item !important;width: 80%;">
+		<div class="css-11nmnbk" style="width:100%;padding-bottom: 3px;" >
+			<div class="row clearfix" style="border: solid 1px lightgrey; background: white;">
+				<div class="col-md-4"></div>
+				<div class="col-md-8">
+					<div class="css-g3hns8" style="width: 100%; top: 0px !important;"><div class="css-1qz765s">12 AM</div><div class="css-1qz765s">4 AM</div><div class="css-1qz765s">8 AM</div><div class="css-1qz765s">12 PM</div><div class="css-1qz765s">4 PM</div><div class="css-1qz765s">8 PM</div><div class="css-1qz765s">12 AM</div></div>
+				</div>
+			</div>
+		</div>
+		<ng-template ngFor [ngForOf]="hourlyData" let-data>
+			<div style="width: 100%;">
+				<div class="row clearfix" style="border: solid 1px lightgrey; padding: 18px;">
+					<div class="col-md-4">
+						<div class="agent-info">
+							<div class="avatar ava-xs" style="margin-right: 15px;" title="{{data.email}}">
+								<div class="nameInitials">
+									{{(data.email | slice:0:1)}}{{(data.email | slice:1:2)}}
+								</div>
+							</div>
+							<span>{{data.email}}</span>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div class="css-mi4jq5" style="width: 100%; top: 0px !important;"><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div></div>
+						<div class="hourly clearfix" style="width: 100%; top: 0px !important;">
+							<ng-template ngFor [ngForOf]="data.data" let-hdata>
+								<div [ngStyle]="{'left': hdata.left + '%','width': hdata.width + '%'}"
+									class="hinner tooltip top" [ngClass]="(hdata.type == 'active') ? 'bg-custom-green' : 'bg-custom-red'">
+									<span class="tooltip-inner text-left">
+										<p>{{hdata.type | uppercase}}</p>
+										<p>{{hdata.span}}</p>
+										<p>{{time_convert(hdata.duration)}}</p>
+									</span>
+								</div>
+							</ng-template>
+							<div class="hourly-details">
+								<span class="haccept">accepting chats:
+									<strong>{{GetTotalHours(data.email, 'active')}}</strong></span>
+								<span class="hnaccept">not accepting chats:
+									<strong>{{GetTotalHours(data.email, 'idle')}}</strong></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="avatar ava-xs" title="{{data.email}}">
+					<div class="nameInitials">
+						{{(data.email | slice:0:1)}}{{(data.email | slice:1:2)}}
+					</div>
+				</div>
+				<div class="css-mi4jq5" style="width: 100%; margin: 0px 40px; top: 14px !important;"><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-ieq2sz"></div><div class="css-eraoxo"></div></div>
+				<div class="hourly clearfix" style="width: 100%; margin: 0px 40px; top: 14px !important;">
+					<ng-template ngFor [ngForOf]="data.data" let-hdata>
+						<div [ngStyle]="{'left': hdata.left + '%','width': hdata.width + '%'}"
+							class="hinner tooltip top" [ngClass]="(hdata.type == 'active') ? 'bg-green' : 'bg-red'">
+							<span class="tooltip-inner text-left">
+								<p>{{hdata.type | uppercase}}</p>
+								<p>{{hdata.span}}</p>
+								<p>{{time_convert(hdata.duration)}}</p>
+							</span>
+						</div>
+					</ng-template>
+					<div class="hourly-details">
+						<span class="haccept">accepting chats:
+							<strong>{{GetTotalHours(data.email, 'active')}}</strong></span>
+						<span class="hnaccept">not accepting chats:
+							<strong>{{GetTotalHours(data.email, 'idle')}}</strong></span>
+					</div>
+				</div> -->
+			</div>
+			<br />
+		</ng-template>
+	</div>
+	<br>
+	<br>
+	<button class="btn btn-xs bg-green" style="position: fixed;bottom: 40px;left: 100px;z-index: 99999;"
+		(click)="Export('agentActivityDetailed')" *ngIf="hourlyData.length">Export</button>
+	<div class="table-responsive" style="width: 80% !important;" *ngIf="hourlyData.length">
+		<table class="table table-bordered" id="agentActivityDetailed">
+			<thead>
+				<tr>
+					<th>Email</th>
+					<th>Active</th>
+					<th>Idle</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let data of hourlyData">
+					<td>{{data.email}}</td>
+					<td>{{GetTotalHours(data.email, 'active')}}</td>
+					<td>{{GetTotalHours(data.email, 'idle')}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<button class="btn btn-xs bg-green" style="position: fixed;bottom: 40px;left: 100px;z-index: 99999;"
+		(click)="Export('agentActivityBrief')" *ngIf="availabilityHoursData.length">Export</button>
+
+	<div class="table-responsive" style="width: 80% !important;" *ngIf="availabilityHoursData.length">
+		<table class="table table-bordered" id="agentActivityBrief">
+			<thead>
+				<tr>
+					<th>Email</th>
+					<th>Active</th>
+					<th>Idle</th>
+					<th>Session Time</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let availability of availabilityHoursData">
+					<td>{{availability._id}}</td>
+					<td>{{time_convert(availability.activeTime)}}</td>
+					<td>{{time_convert(availability.idleTime)}}</td>
+					<td>{{time_convert(availability.sessionTime)}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="table-responsive" style="width: 80% !important;"
+		*ngIf="!availabilityHoursData.length && !hourlyData.length">
+		<p class="w100 text-center">No Data</p>
+	</div>
+</div>

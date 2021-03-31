@@ -1,0 +1,87 @@
+<div class="mat-grid">
+	<div mat-dialog-title>
+		<h3>Export Ticket in EXCEL format </h3>
+		<p>Select attributes to export in EXCEL file.</p>
+	</div>
+	<div mat-dialog-content>
+		<!-- <dd class="p-0" *ngIf="!data.length" >
+			<div class="input-group-sm">
+				<div class="sel style1 sel-sm w100">
+					<select [(ngModel)]="exportDays" class="form-control">
+						<option value='' selected disabled>Select</option>
+						<option value='past_30_days'>Last 30 Days</option>
+						<option value='past_20_days'>Last 20 Days</option>
+						<option value='past_10_days'>Last 10 days</option>
+						<option value='past_7_days'>Last 7 Days</option>
+					</select>
+				</div>
+			</div>
+		</dd> -->
+		<div class="flex f-row f-responsive export-data-list" [ngClass]="data.length ? 'ticket-selected' : ''">
+			<div class="checkbox-list clearfix">
+				<form class="flex f-column" [formGroup]="exportForm" (ngSubmit)="submit()">
+					<div class="pretty p-svg p-fill p-smooth m-b-14">
+						<input type="checkbox" formControlName="selectAll"
+							(change)="onChanges('selectAll')">
+						<div class="state svgOnHover">
+							<svg class="svg svg-icon active">
+								<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+							</svg>
+							<label class="fw-6">Select All</label>
+						</div>
+					</div>
+					<div class="pretty p-svg p-fill p-smooth" formArrayName="orders"
+						*ngFor="let genre of exportForm.get('orders')['controls'];let i = index">
+						<input type="checkbox" [formControlName]="i" (change)="onChanges('custom')">
+						<div class="state svgOnHover">
+							<svg class="svg svg-icon active">
+								<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+							</svg>
+							<label>{{orders[i].genre}}</label>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="date-selector" *ngIf="!data.length">
+				<app-date-range-picker class="date-range-picker" (onDateChanged)="dateChanged($event)"
+					[showButton]="false"></app-date-range-picker>
+				<div class="input-block">
+					<app-chips-input class="form-control input-sm tag-input wAuto" [items]="emails"
+						[regex]="emailPattern" name="emails" [placeholder]="'Emails'" [delimiters]="[',']"
+						[(ngModel)]="emails" [errorMsg]="'Email is not valid'"></app-chips-input>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="clearfix m-b-30"> -->
+		<!-- <h5 class="m-b-10 clearfix">Select Format:</h5> -->
+		<!-- <div class="pretty p-default p-round p-smooth">
+				<input type="radio" checked name="format" value="EXCEL"
+					[formControl]="exportForm.controls['format']">
+				<div class="state">
+					<label>EXCEL</label>
+				</div>
+			</div> -->
+		<!-- <div class="pretty p-default p-round p-smooth">
+				<input type="radio" name="format" value="CSV"
+					[formControl]="exportForm.controls['format']">
+				<div class="state">
+					<label>CSV</label>
+				</div>
+			</div> -->
+		<!-- </div> -->
+		<!-- *ngIf="!data.length" -->
+	</div>
+	<div class="mat-dialog-footer clearfix">
+		<mat-dialog-actions>
+			<!-- (exportForm.invalid) -->
+			<!-- [disabled]="(exportForm.invalid) || !ExportDays" -->
+			<button type="button" class="btn btn-xs bg-blue" [ngClass]="(loading) ? 'btnSpinner' : ''"
+				(click)="submit()" [disabled]="(!exportForm.valid) || (!data.length && !dates)">
+				<span>Export</span>
+			</button>
+			<button type="button" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+				<span>Cancel</span>
+			</button>
+		</mat-dialog-actions>
+	</div>
+</div>

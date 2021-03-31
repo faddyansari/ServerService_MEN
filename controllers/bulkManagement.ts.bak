@@ -1,0 +1,159 @@
+import { AddressBookModel } from './../models/addressBookModel';
+import * as express from "express";
+import { __BIZZ_REST_REDIS_PUB } from "../globals/__biZZCMiddleWare";
+import { EmailOwnerModel } from '../models/emailOwnerModel';
+
+let router = express.Router();
+
+// router.post('/addAddressList', async (req, res) => {
+//     try {
+//         let data = req.body;
+//         let result = await AddressBookModel.addAddressList(data.formValues);
+//         if (result) {
+//             res.send({ status: "ok", list: result.ops[0] })
+//         } else {
+//             res.send({ status: 'error' });
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         console.log('Error in getting agents against role');
+//         res.status(401).send("Invalid Request!");
+//     }
+// });
+
+// router.post('/updateAddressList', async (req, res) => {
+//     try {
+//         let data = req.body;
+//         let result = await AddressBookModel.updateAddressList(data.formValues, data.id, data.nsp);
+//         if (result && result.value) {
+//             res.send({ status: "ok", list: result.value })
+//         } else {
+//             res.send({ status: 'error' });
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         console.log('Error in getting agents against role');
+//         res.status(401).send("Invalid Request!");
+//     }
+// });
+
+// router.post('/toggleActivation', async (req, res) => {
+//     try {
+//         let data = req.body;
+//         let result = await AddressBookModel.toggleActivation(data.flag, data.id, data.nsp);
+//         if (result && result.value) {
+//             res.send({ status: "ok", list: result.value })
+//         } else {
+//             res.send({ status: 'error' });
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         console.log('Error in getting agents against role');
+//         res.status(401).send("Invalid Request!");
+//     }
+// });
+
+
+// router.post('/getAddressList', async (req, res) => {
+//     try {
+//         let data = req.body;
+//         let result = await AddressBookModel.getAddressList(data.nsp);
+//         if (result && result.length) {
+//             res.send({ status: "ok", allAdresses: result })
+//         } else {
+//             res.send({ status: 'error' });
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         console.log('Error in getting agents against role');
+//         res.status(401).send("Invalid Request!");
+//     }
+// });
+
+
+
+
+/** EMAIL OWNER CRUD AND ACTIVATION */
+router.post('/addEmailOwner', async (req, res) => {
+  try {
+    let data = req.body;
+    data.formValues['createdDate'] = new Date().toISOString();
+    let result = await EmailOwnerModel.insertEmailOwner(data.formValues);
+    if (result) {
+      res.send({ status: "ok", result: result.ops[0] })
+    } else {
+      res.send({ status: 'error' });
+    }
+  } catch (error) {
+    console.log(error);
+    console.log('Error in adding email owner');
+    res.status(401).send("Invalid Request!");
+  }
+});
+
+router.post('/UpdateEmailOwner', async (req, res) => {
+  try {
+    let data = req.body;
+    data.formValues['lastModifiedDate'] = new Date().toISOString();
+    let result = await EmailOwnerModel.updateEmailOwner(data.id, data.nsp, data.formValues);
+    if (result) {
+      res.send({ status: "ok", result: result.value })
+    } else {
+      res.send({ status: 'error' });
+    }
+  } catch (error) {
+    console.log(error);
+    console.log('Error in adding email owner');
+    res.status(401).send("Invalid Request!");
+  }
+});
+
+router.post('/getOwnersList', async (req, res) => {
+  try {
+    let data = req.body;
+    let result = await EmailOwnerModel.getOwnersList(data.nsp);
+    if (result && result.length) {
+      res.send({ status: "ok", allOwners: result })
+    } else {
+      res.send({ status: 'error' });
+    }
+  } catch (error) {
+    console.log(error);
+    console.log('Error in getting owner list');
+    res.status(401).send("Invalid Request!");
+  }
+});
+
+router.post('/deleteEmailOwner', async (req, res) => {
+  try {
+    let data = req.body;
+    let result = await EmailOwnerModel.deleteEmailOwner(data.id, data.nsp);
+    if (result) {
+      res.send({ status: "ok" })
+    } else {
+      res.send({ status: 'error' });
+    }
+  } catch (error) {
+    console.log(error);
+    console.log('Error in deleting email owner');
+    res.status(401).send("Invalid Request!");
+  }
+});
+
+router.post('/toggleActivation', async (req, res) => {
+  try {
+    let data = req.body;
+    let result = await EmailOwnerModel.toggleActivation(data.flag, data.id, data.nsp, data.email);
+    if (result && result.value) {
+      res.send({ status: "ok", result: result.value })
+    } else {
+      res.send({ status: 'error' });
+    }
+  } catch (error) {
+    console.log(error);
+    console.log('Error in getting agents against role');
+    res.status(401).send("Invalid Request!");
+  }
+});
+
+export const bulkManagementRoutes: express.Router = router;

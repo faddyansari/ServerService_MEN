@@ -1,0 +1,42 @@
+<div mat-dialog-title>
+    <h3>Add Action</h3>
+</div>
+
+<div mat-dialog-content>
+    <form class="require-validation" [formGroup]="addActionForm">
+        <div class="row clearfix m-0">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <fieldset formGroupName="action_name">
+                    <div class="row clearfix">
+                        <div class="col-sm-12 col-xs-12">
+                            <div class="input-block">
+                                <label>Action Name</label>
+                                <input type="text" autocomplete="off" class="form-control input-sm" placeholder="Action Name" name="action_name" [formControl]="addActionForm.controls['action_name']">
+                            </div>
+                            <div class="input-block">
+                                <label>Endpoint URL</label>
+                                <input type="text" autocomplete="off" class="form-control input-sm" placeholder="Endpoint URL" name="endpoint_url" [formControl]="addActionForm.controls['endpoint_url']">
+                            </div>
+                            <div class="input-block">
+                                <label>Template Sentence</label>
+                                <input type="text" autocomplete="off" class="form-control input-sm" placeholder="Enter Template Sentence...." name="template" [formControl]="addActionForm.controls['template']">
+                            </div>
+                        </div>
+                    </div>                    
+                </fieldset>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+     <mat-dialog-actions>
+        <button class="btn btn-xs bg-blue"
+            [disabled]="(addActionForm.invalid)"
+            (click)="submitForm(addActionForm.value)">
+            <span>Add</span>
+        </button>
+        <button class="btn btn-xs bg-charcoal-light" mat-dialog-close>Cancel</button>
+        <div class="clear"></div>
+    </mat-dialog-actions>
+</div>

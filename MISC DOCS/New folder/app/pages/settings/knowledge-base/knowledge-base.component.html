@@ -1,0 +1,14 @@
+<ul class="card-container clearfix style2">
+    <a routerLink="/settings/knowledge-base/kpi" *ngIf="package.allowed" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/kpi-filled.svg">
+        <h5>KPI</h5>
+    </a>
+    <a routerLink="/settings/knowledge-base/documents" *ngIf="package.allowed" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/documents-filled.svg">
+        <h5>Documents</h5>
+    </a>
+    <a routerLink="/settings/knowledge-base/faqs" *ngIf="package.allowed" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/faq-filled.svg">
+        <h5>FAQs</h5>
+    </a>
+</ul>

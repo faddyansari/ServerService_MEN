@@ -1,0 +1,90 @@
+<div class="activateScrollbar clearfix p-0">
+    <h4>Search Icon Customer:</h4>
+    <form class="require-validation" [formGroup]="searchCustomerForm">
+        <div class="input-block">
+            <label>Customer ID</label>
+            <input type="text" class="form-control input-sm" autocomplete="off" formControlName="customerId" placeholder="Numbers only with no whitespace">
+        </div>
+
+        <div class="input-block">
+            <label>Customer Email Address</label>
+            <input type="text" class="form-control input-sm" autocomplete="off" formControlName="emailAddress" placeholder="Enter valid email address">
+        </div>
+
+        <div class="input-block">
+            <label>Customer Phone Number</label>
+            <input type="text" class="form-control input-sm" autocomplete="off" formControlName="phoneNumber" placeholder="Maximum 15 characters">
+        </div>
+
+        <div class="clearfix actions">
+            <button type="button" class="btn btn-xs bg-blue" [ngClass]="(loadingIconSearch) ? 'btnSpinner' : ''" [disabled]="!searchCustomerForm.valid || CheckValue()" (click)="SubmitForm()">
+                <span>Search</span>
+            </button>
+            <p *ngIf="loadingIconSearch"><span class="text-blue">Please wait, it might take some time</span></p>
+
+            <button type="button" class="btn btn-xs bg-black" (click)="ResetForm()" *ngIf="!loadingIconSearch" [disabled]="!searchCustomerForm.get('emailAddress').value && !searchCustomerForm.get('phoneNumber').value && !searchCustomerForm.get('customerId').value"> 
+                <span>Reset</span>
+            </button>
+        </div>
+        <p *ngIf="_searchedData && _searchedData.length"><span class="text-blue">Swipe down to see results</span></p>
+    </form>
+
+
+    <hr class="clearfix bg-border" *ngIf="_searchedData && _searchedData.length">
+
+    <h4 *ngIf="_searchedData && _searchedData.length && typeof(_searchedData[0]) == 'object'">Search Results ( {{_searchedData && _searchedData.length && typeof(_searchedData[0]) == 'object' ? _searchedData.length : ''}} )
+    </h4>
+
+    <h4 *ngIf="_searchedData && _searchedData.length && typeof(_searchedData[0]) == 'string'">Search Results ( {{_searchedData && _searchedData.length && typeof(_searchedData[0]) == 'string'? 0 : ''}} )</h4>
+
+    <div class="document-list clearfix">
+        <ul class="clearfix" *ngIf="_searchedData && _searchedData.length && typeof(_searchedData[0]) == 'object'">
+
+            <li class="notif clearfix" *ngFor="let data of _searchedData">
+                <div class="info">
+                    <div class="desc">
+                        <h5>Customer Information</h5>
+                        <p *ngIf="data.customerId"><strong>Customer Id:</strong> <span class="text-green">
+                                {{data.customerId}}</span></p>
+                        <p *ngIf="data.customerName"><strong>Customer Name:</strong> <span class="text-green">{{data.customerName}}</span></p>
+                        <p *ngIf="data.customerRank"><strong>Customer Rank:</strong> <span class="text-green">{{data.customerRank}}</span></p>
+                        <p *ngIf="data.customerType"><strong>Customer Type:</strong> <span class="text-green">{{data.customerType}}</span></p>
+                        <p *ngIf="data.CustomerMainStatus"><strong>Customer Main Status:</strong> <span class="text-green">{{data.CustomerMainStatus}}</span></p>
+                        <p *ngIf="data.CustomerSubStatus"><strong>Customer Sub Status:</strong> <span class="text-green">{{data.CustomerSubStatus}}</span></p>
+                        <p *ngIf="data.customerEmail && data.customerEmail.length"><strong>Customer Default
+                                Email:</strong> <span class="text-green">{{data.customerEmail[0]}}</span></p>
+                        <p *ngIf="data.customerPhone && data.customerPhone.length"><strong>Customer Default
+                                Phone:</strong> <span class="text-green">{{data.customerPhone[0]}}</span></p>
+
+                        <br>
+                        <h5>Sales Person Information</h5>
+                        <p *ngIf="data.salesPersonName"><strong>Sales Person Name:</strong> <span class="text-green">
+                                {{data.salesPersonName}}</span></p>
+                        <p *ngIf="data.salesPersonCode"><strong>Sales Person Code:</strong> <span class="text-green">
+                                {{data.salesPersonCode}}</span></p>
+                        <p *ngIf="data.salesPersonOffice"><strong>Sales Person Office:</strong> <span class="text-green">
+                                {{data.salesPersonOffice}}</span></p>
+
+                        <br>
+                        <h5 *ngIf="data.customerEmail && data.customerEmail.length > 1">Email List</h5>
+                        <p *ngFor="let email of data.customerEmail;let index=index">
+                            <span class="text-green" *ngIf="index!=0">
+                                {{email}}</span>
+                        </p>
+
+                        <br>
+                        <h5 *ngIf="data.customerPhone && data.customerPhone.length > 1">Phone List</h5>
+                        <p *ngFor="let phone of data.customerPhone;let index=index">
+                            <span class="text-green" *ngIf="index!=0">
+                                {{phone}}</span>
+                        </p>
+                    </div>
+
+                </div>
+            </li>
+        </ul>
+        <div *ngIf="_searchedData && _searchedData.length && typeof(_searchedData[0]) == 'string'">
+            No record found!
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="mat-grid">
+	<div mat-dialog-title>
+		<h3>Export SLA Report</h3>
+	</div>
+	<div mat-dialog-content *ngIf="!data.length">
+		<div class="input-block">
+			<label>Export by</label>
+			<div class="input-group">
+				<div class="pretty p-default p-round p-smooth m-r-20">
+					<input type="radio" value="group" [(ngModel)]="wiseName" (click)="setradio('group')" [checked]="wiseName">
+					<div class="state">
+						<label>Group Wise</label>
+					</div>
+				</div>
+				<div class="pretty p-default p-round p-smooth">
+					<input type="radio" value="priority" [(ngModel)]="wiseName" (click)="setradio('priority')">
+					<div class="state">
+						<label>Priority Wise</label>
+					</div>
+				</div>
+				<div class="pretty p-default p-round p-smooth">
+					<input type="radio" value="source" [(ngModel)]="wiseName" (click)="setradio('source')">
+					<div class="state">
+						<label>Source Wise</label>
+					</div>
+				</div>
+				<div class="pretty p-default p-round p-smooth">
+					<input type="radio" value="state" [(ngModel)]="wiseName" (click)="setradio('state')">
+					<div class="state">
+						<label>State Wise</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="input-block" *ngIf="isSelected('state')">
+			<app-custom-select class="input-xs" [items]="states" [selectLabel]="'Select State'" [(ngModel)]="wiseValue"
+				[selectedItems]="wiseValue" [multiple]="true" [search]="false">
+			</app-custom-select>
+		</div>
+		<div class="input-block" *ngIf="isSelected('priority')">
+			<app-custom-select class="input-xs" [items]="prioritys" [selectLabel]="'Select Priority'" [(ngModel)]="wiseValue"
+				[selectedItems]="wiseValue" [multiple]="true" [search]="false">
+			</app-custom-select>
+		</div>
+		<div class="input-block" *ngIf="isSelected('source')">
+			<app-custom-select class="input-xs" [items]="sources" [selectLabel]="'Select Sources'" [(ngModel)]="wiseValue"
+				[selectedItems]="wiseValue" [multiple]="true" [search]="false">
+			</app-custom-select>
+		</div>
+		<div class="input-block" *ngIf="isSelected('group')">
+			<app-custom-select class="input-xs" [items]="groups" [selectLabel]="'Select Group'" [(ngModel)]="wiseValue"
+				[bindLabel]="'group_name'" [bindValue]="'group_name'" [selectedItems]="wiseValue" [multiple]="true"
+				[search]="false">
+			</app-custom-select>
+		</div>
+		<div class="date-selector">
+			<app-date-range-picker class="date-range-picker" (onDateChanged)="dateChanged($event)" [showButton]="false">
+			</app-date-range-picker>
+		</div>
+		<div class="input-block">
+			<app-chips-input class="form-control input-xs tag-input wAuto" [items]="emails" [regex]="emailPattern" name="emails"
+				[placeholder]="'Emails'" [delimiters]="[',']" [(ngModel)]="emails" [errorMsg]="'Email is not valid'" [maxTag]="5">
+			</app-chips-input>
+		</div>
+	</div>
+	<div class="mat-dialog-footer clearfix">
+		<mat-dialog-actions>
+			<button type="submit" class="btn btn-xs bg-blue" (click)="Export()" [disabled]="!emails.length || !wiseValue">
+				<span> Export</span>
+			</button>
+			<button type="button" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+				<span>Cancel</span>
+			</button>
+		</mat-dialog-actions>
+	</div>
+</div>

@@ -1,0 +1,2352 @@
+<div class="row clearfix">
+    <div class="col-md-4 col-sm-5 col-xs-12">
+        <div class="box animated fadeIn delay-400 clearfix">
+            <div class="box-body clearfix p-0">
+                <div class="box-subtitle clearfix" *ngIf="userPermissions.rolesAndPermissions.canAddRole">
+                    <div>
+                        <h5>Roles List</h5>
+                    </div>
+                    <div>
+                        <button class="btn btn-xs btn-icon bg-white right" (click)="ShowForm()" [ngClass]="(!showForm) ? 'border-blue' : 'border-red'" *ngIf="package && package.rolesPermissions.addRoles">
+							<span>{{(!showForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'"
+									class="text-white" />
+							</svg>
+						</button>
+                    </div>
+                </div>
+                <div class="popover-form" *ngIf="showForm && userPermissions.rolesAndPermissions.canAddRole && package && package.rolesPermissions.addRoles">
+                    <form class="clearfix" [formGroup]="addRoleForm">
+                        <div class="input-block">
+                            <label>Role Name</label>
+                            <input type="text" class="form-control input-sm" name="role_name" id="role_name" placeholder="Enter role name" formControlName="role_name">
+                            <p>A new role will be added with default permissions, once added you can change it permissions later.
+                            </p>
+                        </div>
+                        <button type="submit" class="btn btn-sm bg-blue m-b-0" [disabled]="(addRoleForm.invalid)" (click)="insertRole()">
+							<span>Add Roles</span>
+						</button>
+                    </form>
+                </div>
+                <div class="document-list clearfix f-column">
+                    <ul class="activateScrollbar clearfix">
+                        <li class="notif clearfix">
+                            <input type="search" class="form-control input-sm" placeholder="Search..." [(ngModel)]="searchValue">
+                        </li>
+                        <li *ngFor="let role of roles | filter: searchValue : [] : false" (click)="roleSelected(role)" [ngClass]="(role == selectedRole) ? 'active' : ''">
+                            <div class="info">
+                                <div>
+                                    <b>{{role | uppercase}}</b>
+                                    <br>
+                                    <small *ngIf="permissions[role].updatedOn" class="text-black-alpha6">Updated:
+										{{ permissions[role].updatedOn | dayDifferencePipe}} at
+										{{ permissions[role].updatedOn | date :'shortTime' }}</small>
+                                </div>
+                                <div class="actions">
+                                    <button class="btn btn-transparent svgOnHover tooltip top-right" (click)="deleteRole($event, role)" *ngIf="(deleteEnabled(role) && userPermissions.rolesAndPermissions.canDeleteRole && userPermissions.rolesAndPermissions.canView.length > 1)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete" />
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+                                    <button class="btn btn-transparent svgOnHover tooltip top" *ngIf="role == this.selectedRole" (click)="toggleAgentList()">
+										<svg class="svg svg-default">
+											<use
+												[attr.href]="!(showAgentList) ? '/assets/img/icons/icons-sprite.svg#plus-circle' : '/assets/img/icons/icons-sprite.svg#cancel-circle'" />
+										</svg>
+										<svg class="svg colored">
+											<use [attr.href]="!showAgentList ? '/assets/img/icons/icons-sprite.svg#plus-circle-colored' : '/assets/img/icons/icons-sprite.svg#cancel-circle-colored'"
+												[ngClass]="!showAgentList ? 'text-green' : 'text-red'" />
+										</svg>
+										<span
+											class="tooltip-inner">{{showAgentList ? 'Close Agents List' : 'Open Agents List'}}</span>
+									</button>
+                                    <button class="btn btn-xs btn-theme svgOnHover no-pointer" *ngIf="agentList.length && role == this.selectedRole">
+										<svg class="svg active">
+											<use href="/assets/img/icons/icons-sprite.svg#agents-colored" />
+										</svg>
+										<span>{{agentList.length}}</span>
+									</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-sm-7 col-xs-12" *ngIf="selectedRole">
+        <div class="box animated fadeIn delay-400 clearfix">
+            <div class="box-body clearfix p-0">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>{{selectedRole | uppercase}} Permissions</h5>
+                    </div>
+                    <div *ngIf="showAgentList">
+                        <button class="btn btn-xs btn-icon bg-white right m-r-10" (click)="ShowAssignAgentForm()" [ngClass]="(!showAssignAgentForm) ? 'border-blue' : 'border-red'" *ngIf="selectedRole && selectedRole != 'superadmin'">
+							<span>{{(!showAssignAgentForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg" [ngClass]="(!showAssignAgentForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showAssignAgentForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'"
+									class="text-white" />
+							</svg>
+						</button>
+                    </div>
+                    <div *ngIf="changes">
+                        <button class="btn btn-xs bg-blue" (click)="savePermissions()" [ngClass]="(loading) ? 'btnSpinner' : ''">
+							<span>Save</span>
+						</button>
+                        <button class="btn btn-xs bg-red" (click)="cancel()" [ngClass]="(loading) ? 'btnSpinner' : ''">
+							<span>Cancel</span>
+						</button>
+                    </div>
+                </div>
+                <div class="toolbox clearfix" *ngIf="!loadingAgents && showAgentList && agentList.length">
+                    <div class="searchForm clearfix">
+                        <div class="search-bar">
+                            <form [formGroup]="searchForm">
+                                <div class="input-block m-0">
+                                    <input type="text" class="form-control input-sm" placeholder="search agents ...." autocomplete="off" formControlName="searchValue">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="search-icon svgOnHover">
+                            <svg class="svg active">
+								<use href="/assets/img/icons/icons-sprite.svg#spy-glass"  class="text-theme-gray"/>
+							</svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="popover-form" *ngIf="showAssignAgentForm && showAgentList">
+                    <div class="input-block clearfix">
+                        <label class="">Agents</label>
+                        <div class="input-group-sm multi-select" [ngClass]="selectedAgents.length ? 'selected' : ''">
+                            <div class="sel style1 sel-sm" [popper]="agentPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'">
+                                <div class="form-control" [ngClass]="selectedAgents.length ? 'selected-items' : ''">
+                                    <div class="badge" *ngFor="let agent of selectedAgents; let index=index" title="{{agent}}">
+                                        <span>{{agent}}</span>
+                                        <svg class="svg w-15 h-15 active dismiss" (click)="clearAgent($event,agent)">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-black" />
+										</svg>
+                                    </div>
+                                    <input type="text" placeholder="Search agent..." autocomplete="off" [(ngModel)]="dropDown_typeahead" (input)="searchInput.next()">
+                                    <button class="btn btn-transparent svgOnHover tooltip top clearFIeld" *ngIf="selectedAgents.length > 1" (click)="clearAllAgents($event)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+										</svg>
+										<span class="tooltip-inner">Clear Search</span>
+									</button>
+                                </div>
+                            </div>
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn bg-green" (click)="AddAgent()">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tabination clearfix" *ngIf="!showAgentList">
+                    <ul class="nav-tabs" style="overflow-x: auto;">
+                        <li [ngClass]="(pills['dashboard']) ? 'active' : ''">
+                            <a (click)="setPillActive('dashboard')">Dashboard</a>
+                        </li>
+                        <li [ngClass]="(pills['visitors']) ? 'active' : ''">
+                            <a (click)="setPillActive('visitors')">Visitors</a>
+                        </li>
+                        <li [ngClass]="(pills['analytics']) ? 'active' : ''">
+                            <a (click)="setPillActive('analytics')">Analytics</a>
+                        </li>
+                        <li [ngClass]="(pills['tickets']) ? 'active' : ''">
+                            <a (click)="setPillActive('tickets')">Tickets</a>
+                        </li>
+                        <li [ngClass]="(pills['crm']) ? 'active' : ''">
+                            <a (click)="setPillActive('crm')">CRM</a>
+                        </li>
+                        <li [ngClass]="(pills['chatbot']) ? 'active' : ''">
+                            <a (click)="setPillActive('chatbot')">Chatbot</a>
+                        </li>
+                        <li [ngClass]="(pills['chats']) ? 'active' : ''">
+                            <a (click)="setPillActive('chats')">Chats</a>
+                        </li>
+                        <li [ngClass]="(pills['agents']) ? 'active' : ''">
+                            <a (click)="setPillActive('agents')">Agents</a>
+                        </li>
+                        <li [ngClass]="(pills['installation']) ? 'active' : ''">
+                            <a (click)="setPillActive('installation')">Installation</a>
+                        </li>
+                        <li [ngClass]="(pills['settings']) ? 'active' : ''">
+                            <a (click)="setPillActive('settings')">Settings</a>
+                        </li>
+                    </ul>
+                    <ul class="tab-content">
+                        <li class="tab-pane" [ngClass]="(pills['dashboard']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="dashboardPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Dashboard Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['visitors']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="visitorsPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Visitors Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['analytics']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="analyticsPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Analytics Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+                                    <ul class="activateScrollbar clearfix p-0" [ngClass]="this.analyticsPermissionsForm.get('enabled').value ? '' : 'disabled'">
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Can View</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-default p-round p-smooth">
+                                                        <input type="radio" value="all" formControlName="canView">
+                                                        <div class="state">
+                                                            <label>All</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pretty p-default p-round p-smooth">
+                                                        <input type="radio" value="self" formControlName="canView">
+                                                        <div class="state">
+                                                            <label>Self</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Visitors tab</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="visitors" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Chats tab</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="chats" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Agents tab</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="agents" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Tickets tab</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="tickets" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['crm']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="crmPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>CRM Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['installation']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="installationPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Installation Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['chatbot']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="chatbotPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Chatbot Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['tickets']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="ticketPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Ticket Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+                                    <ul class="activateScrollbar clearfix p-0" [ngClass]="this.ticketPermissionsForm.get('enabled').value ? '' : 'disabled'">
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Creation of tickets</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canCreate" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Activity log</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canViewLog" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can add group admins</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canAddGroupAdmins" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can merge</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canMerge" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>CC</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowCC" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>BCC</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowBCC" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can view tickets</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-default p-round p-smooth">
+                                                        <input type="radio" value="all" formControlName="canView">
+                                                        <div class="state">
+                                                            <label>All tickets</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pretty p-default p-round p-smooth">
+                                                        <input type="radio" value="team" formControlName="canView">
+                                                        <div class="state">
+                                                            <label>Team</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pretty p-default p-round p-smooth">
+                                                        <input type="radio" value="group" formControlName="canView">
+                                                        <div class="state">
+                                                            <label>Group</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pretty p-default p-round p-smooth">
+                                                        <input type="radio" value="assignedOnly" formControlName="canView">
+                                                        <div class="state">
+                                                            <label>Assigned Only</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can assign an agent</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canAssignAgent" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can assign a group</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canAssignGroup" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can add notes</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canAddNote" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can add tags</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canAddTag" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can add tasks</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canAddTask" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can change state</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canChangeState" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can export</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canExport" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can set priority</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canSetPriority" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can snooze</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canSnooze" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can Register Icon Customer</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canRegisterIconCustomer" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can See Registered Icon Customer Data</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canSeeRegisteredIconCustomer" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can See Related Icon Customer Data</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canSeeRelatedCustomerInfo" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can Search Icon Customer</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canSearchIconCustomer" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['chats']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="chatPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Chat Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+                                    <ul class="activateScrollbar clearfix p-0" [ngClass]="this.chatPermissionsForm.get('enabled').value ? '' : 'disabled'">
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Can view</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-default p-round p-smooth">
+                                                        <input type="radio" value="all" formControlName="canView">
+                                                        <div class="state">
+                                                            <label>All chats</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pretty p-default p-round p-smooth">
+                                                        <input type="radio" value="self" formControlName="canView">
+                                                        <div class="state">
+                                                            <label>Self</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Allow chat</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canChat" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Chat transfer</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowChatTransfer" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Emojis /Emoticons</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowEmoji" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Attachments</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowAttachments" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Voicenotes</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowVoicenotes" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Calling</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowCalling" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Adding messages as FAQs</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowAddAsFaq" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Show typing status</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowTypingStatus" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can Register Icon Customer</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canRegisterIconCustomer" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can See Registered Icon Customer Data</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canSeeRegisteredIconCustomer" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can See Related Icon Customer Data</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canSeeRelatedCustomerInfo" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['agents']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="agentPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Agents Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+                                    <ul class="activateScrollbar clearfix p-0" [ngClass]="this.agentPermissionsForm.get('enabled').value ? '' : 'disabled'">
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Creation of agents</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canCreate" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Editing self</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canEdit" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Editing other agents</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canEditOthers" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Chatting</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canChat" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Calling</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canCall" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>View stats</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canViewStats" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can change own password</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canChangeOwnPassword" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can change Simultaneous Chats</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="allowedChangeConcurrentChat" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can add conversation tags</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canAddConversationTag" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Allow SuperVision Of Chats</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="chatSuperVision" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Allow intrusion between Chat SuperVision</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="chatSuperVisionIntrusion" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Can change other's password</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="canChangeOthersPassword" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Auto Logout When There is no activity for </b><br>
+                                                    <span class="text-red">To Disable Aotmatic Logout Please Enter Value
+														-1</span>
+                                                </div>
+                                                <div class="actions">
+                                                    <div>
+                                                        <input class="form-control input-sm m-t-10" type="number" formControlName="autoLogout" min="-1" max="60" /> mins.
+                                                        <br>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="tab-pane" [ngClass]="(pills['settings']) ? 'active' : ''">
+                            <form class="w100" [formGroup]="settingsPermissionsForm" (change)="checkEquivalent()" [ngClass]="(!this.modificationEnabled) ? 'disabled' : ''">
+                                <div class="box-subtitle clearfix">
+                                    <div>
+                                        <h5>Settings Tab</h5>
+                                    </div>
+                                    <div>
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+                                            <input type="checkbox" formControlName="enabled" />
+                                            <div class="state p-on">
+                                                <label>Enabled</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="document-list clearfix">
+                                    <ul class="activateScrollbar clearfix p-0" [ngClass]="this.settingsPermissionsForm.get('enabled').value ? '' : 'disabled'">
+                                        <li class="notif clearfix">
+                                            <div class="info">
+                                                <div class="name">
+                                                    <b>Automated responses</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="automatedResponses_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Roles &amp; permissions</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="rolesAndPermissions_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <div class="p-l-25" [ngClass]="(!this.settingsPermissionsForm.get('rolesAndPermissions_enabled').value) ? 'disabled' : ''">
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Can view</b>
+                                                    </div>
+                                                    <div class="name wAuto m-r-0 f-29">
+                                                        <div class="input-block">
+                                                            <app-custom-select [items]="roles" class="input-xs" [selectLabel]="'Select roles'" [(ngModel)]="selectedRoles" [ngModelOptions]="{standalone: true}" [selectedItems]="selectedRoles" [multiple]="true" [search]="false" (onDeSelect)="onItemSelect($event)"
+                                                                (onSelect)="onItemSelect($event)">
+                                                            </app-custom-select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Can add roles</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="rolesAndPermissions_canAddRole" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Can modify own role</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="rolesAndPermissions_canModifyOwn" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Can modify other role</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="rolesAndPermissions_canModifyOther" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Can delete role</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="rolesAndPermissions_canDeleteRole" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </div>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Ticket management</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="ticketManagement_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <div class="p-l-25" [ngClass]="(!this.settingsPermissionsForm.get('ticketManagement_enabled').value) ? 'disabled' : ''">
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Group Management</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_groupManagement_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <div class="p-l-25" [ngClass]="(!this.settingsPermissionsForm.get('ticketManagement_groupManagement_enabled').value) ? 'disabled' : ''">
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Create</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_groupManagement_canCreate" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Delete</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_groupManagement_canDelete" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Add Agents</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_groupManagement_canAddAgents" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Remove Agents</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_groupManagement_canRemoveAgents" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can View</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-default p-round p-smooth">
+                                                                <input type="radio" value="all" formControlName="ticketManagement_groupManagement_canView">
+                                                                <div class="state">
+                                                                    <label>All</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="pretty p-default p-round p-smooth">
+                                                                <input type="radio" value="admins" formControlName="ticketManagement_groupManagement_canView">
+                                                                <div class="state">
+                                                                    <label>Admin Level</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="pretty p-default p-round p-smooth">
+                                                                <input type="radio" value="custom" formControlName="ticketManagement_groupManagement_canView">
+                                                                <div class="state">
+                                                                    <label>Custom</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card" [ngClass]="(this.settingsPermissionsForm.get('ticketManagement_groupManagement_canView').value == 'all') ? 'disabled' : ''">
+                                                        <div class="name">
+                                                            <b>Custom List</b>
+                                                        </div>
+                                                        <div class="name wAuto m-r-0 f-29">
+                                                            <div class="input-block">
+                                                                <ng-multiselect-dropdown [placeholder]="'Select groups'" [data]="groupList" [settings]="DropdownSettings" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedGroups" (onSelect)="onItemSelect($event)" (onDeSelect)="onItemSelect($event)">
+                                                                </ng-multiselect-dropdown>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </div>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Teams Management</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_teamManagement_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <div class="p-l-25" [ngClass]="(!this.settingsPermissionsForm.get('ticketManagement_teamManagement_enabled').value) ? 'disabled' : ''">
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Create</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_teamManagement_canCreate" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Delete</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_teamManagement_canDelete" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Add Agents</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_teamManagement_canAddAgents" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Remove Agents</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_teamManagement_canRemoveAgents" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can View</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-default p-round p-smooth">
+                                                                <input type="radio" value="all" formControlName="ticketManagement_teamManagement_canView">
+                                                                <div class="state">
+                                                                    <label>All</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="pretty p-default p-round p-smooth">
+                                                                <input type="radio" value="members" formControlName="ticketManagement_teamManagement_canView">
+                                                                <div class="state">
+                                                                    <label>Member Level</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="pretty p-default p-round p-smooth">
+                                                                <input type="radio" value="custom" formControlName="ticketManagement_teamManagement_canView">
+                                                                <div class="state">
+                                                                    <label>Custom</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card" [ngClass]="(this.settingsPermissionsForm.get('ticketManagement_teamManagement_canView').value == 'all') ? 'disabled' : ''">
+                                                        <div class="name">
+                                                            <b>Custom List</b>
+                                                        </div>
+                                                        <div class="name wAuto m-r-0 f-29">
+                                                            <div class="input-block">
+                                                                <ng-multiselect-dropdown [placeholder]="'Select teams'" [data]="teamList" [settings]="DropdownSettings" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedTeams" (onSelect)="onItemSelect($event)" (onDeSelect)="onItemSelect($event)">
+                                                                </ng-multiselect-dropdown>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </div>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Ruleset Settings</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_rulesetSettings_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <div class="p-l-25" [ngClass]="(!this.settingsPermissionsForm.get('ticketManagement_rulesetSettings_enabled').value) ? 'disabled' : ''">
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Create</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_rulesetSettings_canCreate" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Modify</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_rulesetSettings_canModify" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Toggle Activation</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_rulesetSettings_canToggle" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Delete</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_rulesetSettings_canDelete" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </div>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Ruleset Scheduler</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_rulesetScheduler_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>General Notifications</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_generalNotifications_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Ticket Template Designer</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_ticketTemplateDesigner_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Permissions Settings</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_permissionSettings_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Form Designer</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_formDesigner_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Email Template Designer</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_emailTemplateDesigner_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Incoming Emails</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_incomingEmails_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>SLA Policies</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_SLAPolicies_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Ticket Scenario Automation</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_ticketScenarioAutomation_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Custom Fields</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_customFields_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <div class="p-l-25" [ngClass]="(!this.settingsPermissionsForm.get('ticketManagement_customFields_enabled').value) ? 'disabled' : ''">
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Create</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_customFields_canCreate" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Modify</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_customFields_canModify" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="notif clearfix">
+                                                    <div class="info card">
+                                                        <div class="name">
+                                                            <b>Can Delete</b>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                <input type="checkbox" formControlName="ticketManagement_customFields_canDelete" />
+                                                                <div class="state p-on">
+                                                                    <label></label>
+                                                                </div>
+                                                                <div class="state p-off">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </div>
+                                            <li class="notif clearfix">
+                                                <div class="info card">
+                                                    <div class="name">
+                                                        <b>Customer Satisfaction Survey</b>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                            <input type="checkbox" formControlName="ticketManagement_customSatisfactionSurvey_enabled" />
+                                                            <div class="state p-on">
+                                                                <label></label>
+                                                            </div>
+                                                            <div class="state p-off">
+                                                                <label></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </div>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Chat timeout &amp; settings</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="chatTimeouts_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Call settings</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="callSettings_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Contact settings</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="contactSettings_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Chat window settings</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="chatWindowSettings_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Chat assistant</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="chatAssistant_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Webhooks</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="webhooks_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Form designer</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="formDesigner_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Integerations</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="integerations_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Knowledgebase</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="knowledgeBase_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="notif clearfix">
+                                            <div class="info card">
+                                                <div class="name">
+                                                    <b>Widget marketing</b>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                        <input type="checkbox" formControlName="widgetMarketing_enabled" />
+                                                        <div class="state p-on">
+                                                            <label></label>
+                                                        </div>
+                                                        <div class="state p-off">
+                                                            <label></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <div class="document-list clearfix" *ngIf="showAgentList">
+                    <div class="activateScrollbar clearfix" *ngIf="!loadingAgents && agentList.length" [ngClass]="(modificationEnabled) ? '' : 'disabled'">
+                        <div class="input-block clearfix" *ngIf="!loadingAgents && agentList.length && actionEnabled && showAgentList">
+                            <label>Change to</label>
+                            <div class="input-group-sm">
+                                <div class="sel style1 sel-sm">
+                                    <select class="form-control m-0" [(ngModel)]="newRoleForUser">
+										<option value="" selected>Select role</option>
+										<ng-template ngFor [ngForOf]="roles" let-role>
+											<option *ngIf="role != selectedRole && role != 'superadmin'"
+												value="{{role}}">
+												{{role}}
+											</option>
+										</ng-template>
+									</select>
+                                </div>
+                                <div class="input-group-btn">
+                                    <button class="btn btn-xs bg-blue" (click)="changeRole()" [disabled]="!newRoleForUser">
+										<span>Save</span>
+									</button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50">
+                                        <input type="checkbox" [checked]="allAgentsSelected" (change)="selectAllAgent($event)">
+                                    </th>
+                                    <th>
+                                        Email
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let agent of agentList | filter: searchForm.get('searchValue').value: ['email'] : false">
+                                    <td class="text-center w-50">
+                                        <input type="checkbox" [checked]="agent.checked" (change)="checkAgent($event, agent.email)">
+                                    </td>
+                                    <td style="cursor: pointer; user-select: none;" (click)="checkAgentFromTable(agent.checked,agent.email)">
+                                        {{agent.email}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="notAvailable floatToCenter" *ngIf="loadingAgents">
+                        <app-preloader type="spin-loader-page"></app-preloader>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<popper-content #agentPopper>
+    <ul class="activateScrollbar clearfix" #scrollContainer (scroll)="onScroll($event)">
+        <li *ngFor="let agent of allAgents" (click)="onItemSelect_dropdown(agent.email)" [ngClass]="(agent.selected) ? 'hide' : ''">
+            <a>
+                <div class="svgOnHover" (click)="clearAgent($event,agent.email)" *ngIf="agent.selected">
+                    <svg class="svg w-15 h-15 svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+					</svg>
+                    <svg class="svg w-15 h-15 colored">
+						<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+					</svg>
+                </div>
+                <span>{{agent.email}}</span>
+            </a>
+        </li>
+        <li *ngIf="!allAgents.length || showNoAgents">
+            <span>
+				No Agents!
+			</span>
+        </li>
+    </ul>
+</popper-content>

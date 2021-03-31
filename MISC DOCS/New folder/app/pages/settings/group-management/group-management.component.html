@@ -1,0 +1,130 @@
+<div class="box clearfix animated fadeIn delay-400" id="groupManagementComponent">
+	<div class="box-body clearfix p-0">
+		<form class="w100">
+			<div class="row clearfix">
+				<div class="col-md-4 col-sm-5 col-xs-12">
+					<div class="box-subtitle clearfix">
+						<div>
+							<h5>Group Code</h5>
+						</div>
+						<div>
+							<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="showAddGroupForm = !showAddGroupForm"
+								[ngClass]="(!showAddGroupForm) ? 'border-blue' : 'border-red'">
+								<span>{{(!showAddGroupForm) ? 'Add' : 'Cancel'}}</span>
+								<svg class="svg active" [ngClass]="(!showAddGroupForm) ? 'bg-blue' : 'bg-red'">
+									<use [attr.href]="(!showAddGroupForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+								</svg>
+							</button>
+						</div>
+					</div>
+					<div class="popover-form" *ngIf="showAddGroupForm">
+						<form class="clearfix" [formGroup]="addGroupForm">
+							<div class="input-block">
+								<input type="text" class="form-control input-sm" placeholder="Enter Group Code" [matAutocomplete]="autoGroups"
+								[formControl]="addGroupForm.controls['groupName']" minlength="2" maxlength="2">
+								<mat-autocomplete class="smAutoComplete" #autoGroups="matAutocomplete" autoActiveFirstOption>
+									<mat-option *ngFor="let group of fileterCountryWithCodes | keys" [value]="group.name">
+										<i class="flag ff-sm flag-{{group.name}}" title="{{group.name}}"></i>
+										<span class="ellipsis lh-18 m-l-6 pull-left w80">({{ group.name }}) {{group.details}}</span>
+									</mat-option>
+								</mat-autocomplete>
+								<p>Group / Country name should be 2 letter Country Code.</p>
+								<br>
+								<p class="text-red m-b-5" *ngIf="addGroupForm.get('groupName').hasError('dfGroupError')">
+									<strong>Can't Add Or Remove Default Group.</strong>
+								</p>
+								<p class="text-red" *ngIf="addGroupForm.get('groupName').hasError('alreadyExists')">Group Already
+									Exists.</p>
+								<p class="text-red m-b-5" *ngIf="addGroupForm.get('groupName').hasError('matched')">
+									<strong>Group / Country Name has been used already.</strong>
+								</p>
+							</div>
+							<button class="btn bg-green" [ngClass]="(loading) ? 'btnSpinner' : '' " [disabled]="addGroupForm.invalid"
+							(click)="AddGroup()">
+								<span>Add Group</span>
+							</button>
+						</form>
+					</div>
+					<div class="document-list clearfix" *ngIf="!fetching">
+						<ul class="activateScrollbar" *ngIf="groupList">
+							<li [ngClass]="(selectedGroup && selectedGroupName == group.name) ? 'active' : ''" class="clearfix" *ngFor="let group of (groupList | keys)"
+								(click)="SelectGroup(group.name)">
+								<div class="info">
+									<div class="name">
+										<b class="ellipsis">{{group.name}} - {{countryWithCodes[group.name]}}</b>
+										<span *ngIf="group.agentCount" class="text-blue">({{group.agentCount}})</span>
+									</div>
+									<div class="actions svgOnHover">
+										<i class="flag ff-sm flag-{{group.name}}"></i>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<app-preloader *ngIf="fetching" type="cube-grid"></app-preloader>
+				</div>
+				<div *ngIf="selectedGroup" class="col-md-8 col-sm-7 col-xs-12">
+					<div class="box-subtitle clearfix">
+						<div>
+							<h5>Agent Name</h5>
+						</div>
+						<div>
+							<button (click)="showAgentForm = !showAgentForm" class="b-0 bg-transparent svgOnHover">
+								<svg class="svg active">
+									<use [attr.href]="(!showAgentForm) ? '/assets/img/icons/icons-sprite.svg#plus-circle' : '/assets/img/icons/icons-sprite.svg#minus-circle'" [ngClass]="(!showAgentForm) ? 'text-green' : 'text-red'"/>
+								</svg>
+							</button>
+							<button (click)="ToggleGroup()" class="btn btn-xs" [ngClass]="[loading ? 'btnSpinner' : '',selectedGroup.isActive ? 'bg-red' : 'bg-green']" *ngIf="selectedGroup  && (selectedGroupName | uppercase) != 'DF'">
+								<span>{{((selectedGroup.isActive) ? 'Deactivate' : 'Activate')}}</span>
+							</button>
+						</div>
+					</div>
+					<div class="input-block clearfix" *ngIf="showAgentForm">
+						<form  class="m-b-15 clearfix" [formGroup]="addAgentForm">
+							<div class="input-group-sm">
+								<input #agentEmail type="text" class="form-control w100" placeholder="Agent Name or Email" [matAutocomplete]="autoAgents" formControlName="agentEmail">
+								<mat-autocomplete class="smAutoComplete" #autoAgents="matAutocomplete" autoActiveFirstOption>
+									<mat-option *ngFor="let agent of GetAgentList()" [value]="agent.email" class="form-control">
+										<span class="ellipsis lh-18 m-l-6 pull-left w80 text-red">{{ agent.nickname }} <span class="text-black">({{agent.email}})</span></span>
+									</mat-option>
+								</mat-autocomplete>
+								<div class="input-group-btn">
+									<button class="btn bg-green w-100" [ngClass]="(loading) ? 'btnSpinner' : '' " [disabled]="addAgentForm.invalid" (click)="AddAgent()">
+										<span>Add Agent</span>
+									</button>
+								</div>
+							</div>
+							<br>
+							<small *ngIf="addAgentForm.get('agentEmail').hasError('matched')" class="text-red m-b-5"><strong>Agent already assigned to this group</strong></small>
+							<small *ngIf="addAgentForm.get('agentEmail').hasError('exists')" class="text-red m-b-5"><strong>Agent already assigned to this group</strong></small>
+						</form>
+						<br>
+					</div>
+					<div *ngIf="selectedGroup" class="agents-list clearfix">
+						<div class="row clearfix">
+							<ul class=" activateScrollbar p-0">
+								<li class="col-lg 3 col-md-4 col-sm-6 col-xs-12 clearfix animated slideInTop" *ngFor="let agent of GetAgentsFromGroup()">
+									<div class="clearfix">
+										<div class="avatar">
+											<div class="nameInitials">{{(agent.first_name | slice:0:1 ) | uppercase}}{{(agent.last_name) ?
+												(agent.last_name | slice:0:1): ''}}</div>
+										</div>
+										<div class="info">
+											<b class="ellipsis name fw-6 w70">{{agent.nickname}}</b>
+											<span class="ellipsis groups">
+												<i class="flag ff-sm flag-{{group}}" title="{{group.name}}" *ngFor="let group of agent.group"></i>
+											</span>
+										</div>
+										<div class="notif-count" (click)="RemoveAgent(agent.email)">
+											<i class="icon-trash text-red"></i>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

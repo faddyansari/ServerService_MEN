@@ -1,0 +1,80 @@
+<section class="content animated fadeIn" id="chatBotComponent"  [ngClass]="!viewContentInfo ? 'info-hidden' : ''">
+    <div class="content-nav clearfix">
+        <h3>
+            
+            <span>ChatBot</span>
+        </h3>
+        <ul class="breadcrumbs clearfix">
+            <li>
+                <a>Home</a>
+            </li>
+            <li>
+                <a>Chatbot</a>
+            </li>
+        </ul>
+        <div class="content-tools">
+            <div class="btn-group">
+                <a class="btn btn-xs btn-theme" (click)="toggleInfoArea()">
+                    <span>INFO</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="content-view">
+        <ul class="activateScrollbar clearfix">
+            <div class="tabination clearfix">
+                <ul class="nav-tabs clearfix">
+                    <li [routerLinkActive]="['active']" >
+                        <a routerLink="/chatbot/nlu/data-prep">NLU</a>
+                    </li>
+                    <li [routerLinkActive]="['active']" >
+                        <a routerLink="/chatbot/core/data-prep">Core</a>
+                        <!--
+						<li routerLink="/chatbot/core/data-prep"
+							(click)="STOPPROPAGATION($event)" [routerLinkActive]="['active']">
+							<a>Data Preparation</a>
+						</li>
+                        -->
+                    </li>
+                    <li class="mAuto m-r-0">
+                        <div>
+                            <button class="btn btn-xs bg-blue"
+                                (click)=Execute()>
+                                <span>Train Your Bot</span>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+                <div class="tab-content p-7">
+                    <div class="tab-pane active">
+                        <div class="activateScrollbar clearfix p-0">
+                            <div class="card p-0 w100 clearfix">
+                                <app-preloader type="cube-grid" class="floatToCenter" *ngIf="loadingNestedRouteConfig">
+                                </app-preloader>
+                                <router-outlet *ngIf="!loadingNestedRouteConfig"></router-outlet>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ul>
+    </div>
+</section>
+
+<section class="content-info" *ngIf="viewContentInfo">
+    <div class="content-nav clearfix">
+        <h3>
+            <span>Info</span>
+        </h3>
+        <div class="content-tools">
+            <div class="btn-group">
+                <a class="btn btn-xs bg-red" (click)="toggleInfoArea()">
+                    <span>Close Info</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<app-preloader type="training-overlay" *ngIf="loader"></app-preloader>

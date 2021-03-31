@@ -1,0 +1,364 @@
+<section class="content clearfix animated fadeIn info-hidden" id="crmComponent">
+	<div class="content-view">
+		<app-crm-list class="contact-list-sidebar"></app-crm-list>
+		<div class="activateScrollbar clearfix" *ngIf="(selectedCustomer | json) != ({} | json)">
+			<div class="box clearfix animated fadeIn delay-400">
+				<div class="box-body clearfix p-0">
+					<div class="tabination clearfix">
+						<ul class="nav-tabs">
+							<li [ngClass]="(pills['profile']) ? 'active' : ''"><a
+									(click)="setPillActive('profile')">Profile</a></li>
+							<li [ngClass]="(pills['stats']) ? 'active' : ''"><a
+									(click)="setPillActive('stats')">Stats</a></li>
+							<li [ngClass]="(pills['conversations']) ? 'active' : ''"><a
+									(click)="setPillActive('conversations')">Conversations</a></li>
+							<li [ngClass]="(pills['activity']) ? 'active' : ''"><a
+									(click)="setPillActive('activity')">Activity</a></li>
+						</ul>
+						<ul class="tab-content p-7">
+							<li class="tab-pane" [ngClass]="(pills['profile']) ? 'active' : ''">
+								<div class="activateScrollbar clearfix p-0">
+									<div class="contacts-detail card">
+										<ul class="notif clearfix">
+											<li>
+												<div class="box-title">
+													<div class="avatar ava-xxl b-4 m-r-0"
+														[ngClass]="!(selectedCustomer.liveSession) ? 'border-border' : (selectedCustomer.liveSession.state == 'ACTIVE') ? 'border-green' : 'border-yellow-alpha6' ">
+														<div class="nameInitials">
+															<span
+																*ngIf="!(selectedCustomer.image)">{{(selectedCustomer.username | slice:0:1) | uppercase}}</span>
+															<img class="svg" *ngIf="(selectedCustomer.image)"
+																src="{{selectedCustomer.image}}" alt="User Image">
+														</div>
+													</div>
+													<!--
+													<div class="actions" *ngIf="agent._id == selectedAgent._id">
+														<div *ngIf="!(file)">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover" title="Upload Image" (click)="ClearFile()">
+																<label class="svgOnHover">
+																	<input #fileInput type="file" class="hide" alt="Upload Picture" (change)="UploadImage($event)">
+																</label>
+															</button>
+														</div>
+														<div *ngIf="(file)">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover" (click)="ClearFile()">
+																<svg class="svg svg-default">
+																	<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+																</svg>
+																<svg class="svg colored">
+																	<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+																</svg>
+															</button>
+														</div>
+														<div *ngIf="(file)">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover" (click)="SendFile()" [ngClass]="(uploading) ? 'btnSpinner' : ''">
+																<svg class="svg svg-default">
+																	<use href="/assets/img/icons/icons-sprite.svg#upload-circle"/>
+																</svg>
+																<svg class="svg colored">
+																	<use href="/assets/img/icons/icons-sprite.svg#upload-circle-colored"/>
+																</svg>
+																<svg class="svg svg-default">
+																	<use href="/assets/img/icons/icons-sprite.svg#tickets" class="text-olive"/>
+																</svg>
+															</button>
+														</div>
+													</div>
+													<div *ngIf="agent._id == selectedAgent._id" title="{{(file) ? file.name : ''}}">
+														<p *ngIf="(file)" class="ellipsis text-center">{{(file) ? file.name : ''}}</p>
+													</div>
+													-->
+												</div>
+												<div class="personal-details">
+													<h5 class="ellipsis">{{ selectedCustomer.username }}</h5>
+													<span>{{selectedCustomer.email}}</span>
+													<span>{{selectedCustomer.location}}</span>
+													<p *ngIf="selectedCustomer.phone">
+														<span>{{selectedCustomer.phone}}</span>
+													</p>
+													<p>
+														<b>Device Token</b>
+														<br>
+														<span title="{{selectedCustomer.deviceID}}"
+															class="ellipsis">{{selectedCustomer.deviceID}}</span>
+													</p>
+													<p
+														*ngIf="selectedCustomer.session && selectedCustomer.session.length > 0">
+														<b>Sessions</b>
+														<br>
+														<span>{{selectedCustomer.sessions[0]}}</span>
+													</p>
+													<p>
+														<b>Company</b>
+														<br>
+														<span>{{selectedCustomer.nsp.split('/')[1]}}</span>
+													</p>
+													<!--
+													<div class="input-block" *ngIf="edit">
+														<label for="first_name" >First Name</label>
+														<input type="text" class="form-control input-sm" [formControl]="first_name_control" [(ngModel)]="first_name" placeholder="First Name">
+													</div>
+													<div class="input-block" *ngIf="edit">
+														<label for="last_name" >Last Name</label>
+														<input type="text" class="form-control input-sm" [formControl]="last_name_control" [(ngModel)]="last_name" placeholder="Last Name">
+													</div>
+													<div class="input-block" *ngIf="edit">
+														<label for="last_name">Phone Number</label>
+														<input type="text" class="form-control input-sm" [formControl]="phone_no_control" [(ngModel)]="phone_no" (keypress)="NumbersOnly($event)" placeholder="eg. XXXX-XXXXXXX">
+													</div>
+													<div class="input-block" *ngIf="editRole">
+														<label>Assign Role:</label>
+														<div class="sel style1 sel-sm">
+															<select id="inputState" name="role" class="form-control input-sm" [(ngModel)]="agentRole">
+																<option [value]="'agent'">Agent</option>
+																<option [value]="'supervisor'">Supervisor</option>
+																<option [value]="'admin'">Admin</option>
+															</select>
+														</div>
+													</div>
+													<div class="actions" *ngIf="agent._id == selectedAgent._id">
+														<div *ngIf="!edit">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover" (click)="Edit()">
+																<svg class="svg svg-blue active">
+																	<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+																</svg>
+															</button>
+														</div>
+														<div *ngIf="edit">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover tooltip top" (click)="Cancel()">
+																<svg class="svg svg-default">
+																	<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+																</svg>
+																<svg class="svg colored">
+																	<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+																</svg>
+																<span class="tooltip-inner">Cancel</span>
+															</button>
+														</div>
+														<div *ngIf="edit">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover tooltip left" (click)="Save()" [ngClass]="!(loading) ? '' : 'btnSpinner'" [disabled]="first_name_control.invalid || last_name_control.invalid || nickname_control.invalid || phone_no_control.invalid">
+																<svg class="svg svg-green active">
+																	<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+																</svg>
+																<span class="tooltip-inner">Save</span>
+															</button>
+														</div>
+													</div>
+													<div class="actions" *ngIf="editRoleEnabled && permissions.agents.canEdit">
+														<div *ngIf="!editRole">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover" (click)="toggleEditRole()">
+																<svg class="svg svg-blue active">
+																	<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+																</svg>
+															</button>
+														</div>
+														<div *ngIf="editRole">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover tooltip left" (click)="cancelEdit()">
+																<svg class="svg svg-default">
+																	<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+																</svg>
+																<svg class="svg colored">
+																	<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+																</svg>
+																<span class="tooltip-inner">Cancel</span>
+															</button>
+														</div>
+														<div *ngIf="editRole">
+															<button class="btn btn-sm btn-round btn-transparent svgOnHover tooltip left" (click)="saveRoleForAgent()">
+																<svg class="svg svg-green active">
+																	<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+																</svg>
+																<span class="tooltip-inner">Save</span>
+															</button>
+														</div>
+													</div>
+													<p class="badge">
+														<span>{{ selectedAgent.gender}}</span>
+													</p>
+													<p class="badge" *ngIf="!editRole">
+														<span>{{ selectedAgent.role }}</span>
+													</p>
+													-->
+													<!-- <div class="m-t-10">
+														<button class="btn btn-xs btn-theme" (click)="toggleCustomerAccessInfo(1)">
+															<span>Chats</span>
+
+														</button>
+													</div> -->
+												</div>
+												<!--
+												<div>
+													<div class="input-block">
+														<label>Joining Date:</label>
+														<p>{{selectedAgent.created_date | date}}</p>
+													</div>
+													<div class="input-block">
+														<label>Login Since:</label>
+														<p *ngIf="selectedAgent.liveSession">{{ selectedAgent.liveSession.createdDate | date }}</p>
+													</div>
+													<div class="input-block">
+														<label>Active Since:</label>
+														<p *ngIf="selectedAgent.liveSession">{{ selectedAgent.liveSession.createdDate | timeDifferencePipe }}</p>
+													</div>
+													<div class="input-block">
+														<label>Company:</label>
+														<p class="ellipsis">{{ this.company }}</p>
+													</div>
+													<div class="input-block">
+														<label>Position:</label>
+														<span class="ellipsis" >{{ this.position }}</span>
+													</div>
+													<div class="input-block">
+														<label>Company:</label>
+														<p class="ellipsis">{{ this.company }}</p>
+													</div>
+												</div>
+												<div>
+													<div class="input-block">
+														<label>Available To:</label>
+														<p>
+															<span>Chat</span>
+															<span *ngIf="selectedAgent.communicationAccess.voicecall">&nbsp;/&nbsp;Voice Call</span>
+															<span *ngIf="selectedAgent.communicationAccess.videocall">&nbsp;/&nbsp;Video Call</span>
+														</p>
+													</div>
+													<div class="input-block">
+														<label>Group:</label>
+														<p>
+															<span>{{selectedAgent.group}}</span>
+														</p>
+													</div>
+													<div class="input-block">
+														<label>Simultaneous Chats:</label>
+														<p>
+															<span>{{selectedAgent.settings.simchats}}</span>
+														</p>
+													</div>
+													<div class="input-block">
+														<label>Accepting Chat:</label>
+														<p>
+															<span>{{ (selectedAgent.liveSession && selectedAgent.liveSession.acceptingChats ) ? 'Yes' : 'No' }}</span>
+														</p>
+													</div>
+												</div>
+												-->
+											</li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li class="tab-pane" [ngClass]="(pills['stats']) ? 'active' : ''">
+								<div class="activateScrollbar clearfix p-0">
+									<div class="contacts-stats">
+										<app-crm-stats></app-crm-stats>
+									</div>
+								</div>
+							</li>
+							<li class="tab-pane" [ngClass]="(pills['conversations']) ? 'active' : ''">
+								<div class="activateScrollbar clearfix p-0">
+									<div class="viewChat">
+										<div class="preInstallation" *ngIf="!verified && !sbt">
+											<div class="chatScreen">
+												<img class="svg"
+													src="/assets/img/illustrations/pre-installation-chat-screens.svg"
+													alt="" width="50%">
+												<h3>Looking for chats?</h3>
+												<p>Install Beelinks on your website and start closing leads!</p>
+												<button class="btn btn-sm bg-blue m-t-b-10">Install Now</button>
+												<p>Or <a href="">send instructions to developer</a></p>
+											</div>
+										</div>
+										<!--
+										<div class="preInstallation" *ngIf="verified && !selectedCustomer.conversations">
+											<div class="chatScreen">
+												<img class="svg" src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="100%">
+											</div>
+										</div>
+										-->
+										<div class="contacts-chats" *ngIf="!selectedCustomer.conversations">
+											<div class="card p-0">
+												<div class="notAvailable">
+													<svg class="svg w-100 h-100 active">
+														<use href="/assets/img/icons/icons-sprite.svg#contacts" class="text-gray"/>
+													</svg>
+													<span>No Contact Selected</span>
+												</div>
+											</div>
+										</div>
+										<div class="contacts-chats"
+											*ngIf="!viewingConversation && (selectedCustomer.conversations && selectedCustomer.conversations.length)">
+											<div class="card p-0">
+												<app-conversation-list></app-conversation-list>
+											</div>
+										</div>
+										<div class="contacts-chats"
+											*ngIf="(selectedCustomer.conversations && !selectedCustomer.conversations.length)">
+											<div class="card p-0">
+												<div class="notAvailable">
+													<svg class="svg w-100 h-100 active">
+														<use href="/assets/img/icons/icons-sprite.svg#chats" class="text-gray"/>
+													</svg>
+													<span>No Recent Chats</span>
+												</div>
+											</div>
+										</div>
+										<!-- Section For Conversation Detail -->
+										<app-conversation-details class="chatWindow card p-0"
+											*ngIf="viewingConversation && (selectedCustomer.conversations && selectedCustomer.conversations.length)">
+										</app-conversation-details>
+									</div>
+								</div>
+							</li>
+							<li class="tab-pane" [ngClass]="(pills['activity']) ? 'active' : ''">
+								<!-- Section Activity Logs -->
+								<div class="contacts-logs">
+									<div class="vhList card notif clearfix p-0"
+										*ngIf="selectedCustomer.sessionInfo && selectedCustomer.sessionInfo.length">
+										<div class="activateScrollbar clearfix">
+											<div class="activityLog">
+												<div class="clearfix" *ngFor="let log of selectedCustomer.sessionInfo"
+													(click)="GetSessionDetais(log)">
+													<div class="logGroup">
+														<div class="dateLog">
+															<span>{{ log.createdOn | dayDifferencePipe }}</span>
+														</div>
+														<ul class="list-items clearfix style4">
+															<li class="item clearfix notif">
+																<div>
+																	<div class="info">
+																		<span>Chat Initiated By:</span>
+																		<span class="ellipsis">{{log.agentemail}}</span>
+																		<span>with {{log.visitorName}}</span>
+																	</div>
+																	<span
+																		class="notif-count right bg-transparent p-0 text-blue">{{log.createdOn | date:'shortTime'}}</span>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="vhList card notif clearfix p-0"
+										*ngIf="!selectedCustomer.sessionInfo || (selectedCustomer.sessionInfo && !selectedCustomer.sessionInfo.length)">
+										<div class="notAvailable">
+											<svg class="svg w-100 h-100 active">
+												<use href="/assets/img/icons/icons-sprite.svg#no-visitors-colored" class="text-gray"/>
+											</svg>
+											<span>No Activity Logs</span>
+										</div>
+									</div>
+								</div>
+								<!-- Section Session Logs -->
+								<div class="contacts-logs">
+									<app-crm-session-details></app-crm-session-details>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

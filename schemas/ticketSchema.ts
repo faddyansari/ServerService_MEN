@@ -1,0 +1,50 @@
+import { TicketLogSchema, Snoozes } from "./ticketLogSchema";
+import { TaskList } from "./taskListSchema";
+import { ObjectID } from "bson";
+
+
+export interface TicketSchema {
+    type: string;
+    subject: string;
+    nsp: string;
+    state: string;
+    priority?: string;
+    datetime: string;
+    visitor: any;
+    lasttouchedTime: string;
+    IconnIntroducerEmail?:string;
+    viewState: string;
+    createdBy?: string;
+    agentName?: string;
+    ticketlog: Array<TicketLogSchema>;
+    mergedTicketIds: Array<string>;
+    ticketNotes?: Array<any>;
+    ICONNData?:any;
+    tags?: Array<any>;
+    assigned_to: string;
+    cannedForm?: any;
+    merged?: boolean;
+    primaryReference?: string;
+    viewColor: string;
+    taskList?: Array<TaskList>;
+    source?: string;
+    group: string;
+    snoozes?: Array<Snoozes>;
+    from: string;
+    preservedState?: string;
+    isPrimary?: boolean;
+    references?: Array<string>;
+    dynamicFields?: any;
+    sbtVisitor?: any;
+    SubmittedSurveyData?: Array<any>;
+    slaPolicy?: any;
+    watchers?: Array<string>;
+    lastScenarioExecuted?: string;
+    InternalSlaPolicy?:any;
+    closed_time?:string;
+    solved_time?:string;
+    assigned_time?:string;
+    survey?:boolean;
+    first_assigned_time?:string;
+    assignmentList : Array<any>;
+}

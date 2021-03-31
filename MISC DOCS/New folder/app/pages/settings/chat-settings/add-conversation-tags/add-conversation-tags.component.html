@@ -1,0 +1,83 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12" *ngIf="Agent && agentPermissions.canAddConversationTag">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix" >
+					<div>
+						<h5>Add New Tags</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="ShowForm()"
+							[ngClass]="(!showForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showForm">
+					<form class="clearfix" [formGroup]="tagForm"
+						*ngIf="Agent && agentPermissions.canAddConversationTag">
+						<div class="input-block">
+							<div class="input-group-sm">
+								<input type="text" class="form-control w100" placeholder="#tag"
+									[formControl]="tagForm.controls['hashTag']">
+								<!--
+								<div class="input-group-btn">
+									<button type="submit" class="btn btn-theme min-w-80" (click)="addTags()" [disabled]="tagForm.invalid">
+										<span>Add Tag</span>
+									</button>
+								</div>
+								-->
+							</div>
+							<!-- <p class="text-red" >This HashTag has been used already</p> -->
+							<p>To tag a chat, type # followed by the word.</p>
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue" [disabled]="(tagForm.invalid)"
+							(click)="addTags()">
+							<span>Add A Tag</span>
+						</button>
+					</form>
+				</div>
+				<div class="document-list clearfix">
+					<ul class="activateScrollbar clearfix">
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Tags List</h5>
+					</div>
+				</div>
+				<div class="document-list clearfix">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix" (click)="setSelectedTag(i)"
+							*ngFor="let tag of tagList;let i = index ">
+							<div class="info card" [ngClass]="(selectedTag && selectedTag == tag) ? 'active' : ''">
+								<div class="desc">
+									<b>{{tag}}</b>
+								</div>
+								<div class="actions">
+									<button class="btn btn-transparent svgOnHover" (click)="DeleteTag(i)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+									</button>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

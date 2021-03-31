@@ -1,0 +1,128 @@
+<div *ngIf="message.message" class="chat-text" [attr.id]="message._id">
+	<!--
+  <iframe src="" frameborder="0">
+    <span *ngIf="message.message != ''" [innerHTML]="message.message | safeUrl : 'html'"></span>
+  </iframe>
+  -->
+	<span class="email-inner-attachment" *ngIf="message.message != ''" [innerHTML]="message.message | safeUrl : 'html'"></span>
+	<br>
+	<div class="attachment clearfix" *ngIf="message.attachment && message.attachment.length">
+		<a href="{{attach.path}}" *ngFor="let attach of message.attachment; let index = index"
+			[ngClass]="((attach.filename | attachmentType) == 'data') ? 'file' : ((attach.filename | attachmentType) == 'image') ? 'image' : ((attach.filename | attachmentType) == 'audio') ? 'audio' : ((attach.filename | attachmentType) == 'document') ? 'document' : ''"
+			[target]="((attach.filename | attachmentType) == 'document' ? '_parent' : '_blank')">
+			<div class="thumbnail svgOnHover">
+				<img class="svg" src='{{attach.path}}' *ngIf="(attach.filename | attachmentType) == 'image'">
+				<svg class="svg active"
+					*ngIf="message.attachment && ((attach.filename | attachmentType) == 'data') || ((attach.filename | attachmentType) == 'document')">
+					<use href="/assets/img/icons/icons-sprite.svg#file" class="text-black" />
+				</svg>
+				<audio *ngIf="(attach.filename | attachmentType) == 'audio'" src='{{attach.path}}' controls></audio>
+				<video controls width="250" *ngIf="(attach.filename | attachmentType) == 'video'">
+					<source src='{{attach.path}}' type="video/mp4">
+				</video>
+			</div>
+			<div class="file-name tooltip top">
+				<span class="ellipsis">{{attach.filename}}</span>
+				<span class="tooltip-inner">{{attach.filename}}</span>
+			</div>
+		</a>
+	</div>
+	<!-- [ngStyle]="(message.senderType == 'Visitor') ? {'border-top-color' : message.viewColor + '40'} : ''" -->
+	<span class="arrow"></span>
+</div>
+
+<div class="chat-text clearfix" *ngIf="message.submittedForm && message.submittedForm.length">
+	<div class="row clearfix">
+		<div class="col-xs-12 clearfix">
+			<fieldset>
+				<h1>{{(message.submittedForm[0].formHeader) ? message.submittedForm[0].formHeader : 'Form'}}
+				</h1>
+				<div class="row clearfix">
+					<div class="col-sm-4 col-xs-12 clearfix">
+						<form>
+							<div id="formInputs">
+								<div *ngFor="let input of message.submittedForm[0].formFields" class="input-block">
+									<div
+										*ngIf="(input.type == 'text')|| (input.type == 'email')|| (input.type == 'password')">
+										<label>{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<input class="form-control input-md" disabled name="{{input.id}}"
+											placeholder='{{input.placeholder}}' type="{{input.type}}"
+											value="{{input.submittedData}}" />
+									</div>
+									<!--
+									<div *ngIf="input.type == 'radio'">
+										<label>{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										 <div class="pretty p-default p-round"
+										 	*ngFor="let opt of input.options">
+											<input disabled type="{{input.type}}"
+												[checked]="input.submittedData"
+												value="{{input.submittedData}}"/>
+										 </div>
+									-->
+									<div *ngIf="input.type == 'radio'">
+										<label>{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<div class="pretty p-default p-round" *ngFor="let opt of input.options">
+											<input disabled id="{{input.id}}" [checked]="input.submittedData"
+												type="{{input.type}}"
+												value="{{opt.key}}" name="{{input.id}}" />
+											<div class="state">
+												<label>{{opt.value}}</label>
+											</div>
+										</div>
+									</div>
+									<div *ngIf="input.type == 'checkbox'">
+										<label>{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<div class="pretty p-default p-round">
+											<input class="form-control input-sm no-rad" disabled id="{{input.id}}"
+												[checked]="input.submittedData" type="{{input.type}}"
+												value="{{input.value[0]}}" />
+											<div class="state">
+												<label>{{input.value[0]}}</label>
+											</div>
+										</div>
+									</div>
+									<!--
+									<div *ngIf="input.type == 'dropdown'" class="sel style2 sel-md">
+										<label>{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<select class="form-control input-md" name="{{input.id}}" id="{{input.id}}">
+									-->
+									<div *ngIf="input.type == 'dropdown'" class="sel style2 sel-md">
+										<label>{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<select class="form-control input-md" name="{{input.id}}" id="{{input.id}}">
+											<option *ngIf="input.submittedData" value="{{input.submittedData}}"
+												disabled="true"
+												[selected]="input.submittedData">
+												{{input.submittedData}}
+											</option>
+											<option disabled="true" *ngFor="let item of input.options"
+												value="{{item.key}}">
+												{{item.value}}
+											</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<h3 *ngIf="message.submittedForm[0].formFooter">{{message.submittedForm[0].formFooter}}</h3>
+			</fieldset>
+		</div>
+	</div>
+</div>
+
+<div class="chat-text clearfix" *ngIf="message.submittedSurvey && message.submittedSurvey.length">
+	<h5>Sent Survey Result: </h5>
+	<div *ngFor="let survey of message.submittedSurvey; let index = index">
+		<div *ngIf="!survey.question.includes('Additional Feedback')">
+			Question # {{index + 1}} : {{survey.question}}
+		</div>
+		<div *ngIf="!survey.question.includes('Additional Feedback')">
+			Answer : {{survey.answer}}
+		</div>
+		<br>
+		<div *ngIf="survey.question.includes('Additional Feedback')">
+			Additional Feedback : {{survey.answer}}
+		</div>
+	</div>
+</div>

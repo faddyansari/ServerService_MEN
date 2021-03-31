@@ -1,0 +1,143 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Add New Ruleset</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="toggleRulesetForm()"
+							[ngClass]="(!showRulesetForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showRulesetForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showRulesetForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showRulesetForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showRulesetForm">
+					<form [formGroup]="assignmentRuleSetForm">
+						<div class="input-block">
+							<label class="text-black">Rule Set Name</label>
+							<input #ruleSetName type="text" class="form-control input-sm" placeholder="Enter RuleSet Name" [formControl]="assignmentRuleSetForm.controls['ruleSetName']" maxlength="51">
+							<p class="text-red" [hidden]="!assignmentRuleSetForm.get('ruleSetName').hasError('matched')">
+								<strong>Rule Set Name has been used already</strong><br></p>
+							<p class="error text-red" [hidden]="!assignmentRuleSetForm.get('ruleSetName').hasError('maxlength')">Rule
+								Set Name should be
+								less than 50 cahracters.<br></p>
+						</div>
+						<div class="input-block">
+							<label>All Match</label>
+							<div class="pretty p-default p-round p-smooth p-toggle">
+								<input type="radio" name="allMatch" (click)="SetAssignmentCriteria('allMatch')" [checked]="(RuleSet && RuleSet.allMatch) ? true : true">
+								<div class="state p-on">
+									<label>ON</label>
+								</div>
+								<div class="state p-off">
+									<label>OFF</label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block" *ngIf="RuleSet && RuleSet.criteria">
+							<label>First Match</label>
+							<div class="pretty p-default p-round p-smooth p-toggle">
+								<input type="radio" name="allMatch" (click)="SetAssignmentCriteria('allMatch')">
+								<div class="state p-on">
+									<label>ON</label>
+								</div>
+								<div class="state p-off">
+									<label>OFF</label>
+								</div>
+							</div>
+						</div>
+						<!--
+						<div class="pretty p-default p-round">
+							<input type="radio" name="radio1" >
+							<div class="state">
+								<label>First Match</label>
+							</div>
+						</div>
+						<div class="pretty p-default p-round">
+							<input type="radio" name="radio1" >
+							<div class="state">
+								<label>All Match</label>
+							</div>
+						</div>
+						-->
+						<p>Add Rules</p>
+						<div #ADDRULES class="ruleDropDiv" style='width:150px ; height: 150px'>
+							<h3>DROP HERE</h3>
+						</div>
+						<div class="row clearfix" *ngIf="RuleSet && RuleSet['rules'].length">
+							<div class="col-sm-12 col-xs-12">
+								<div class="badge bg-blue-alpha6 text-black">
+									<span>Rules Added</span>
+								</div>
+								<br>
+								<ul id="">
+									<li *ngFor="let rule of RuleSet['rules'];let i = index" [value]="key">
+										<p>{{rule}}</p>
+										<div>
+											<button class="btn btn-transparent svgOnHover tooltip top"
+												(click)="DeleteRuleInRuleSet(rule)">
+												<svg class="svg svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+												</svg>
+												<svg class="svg colored">
+													<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+												</svg>
+												<span class="tooltip-inner">Delete</span>
+											</button>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue"
+							[ngClass]="(loading) ? 'btnSpinner' : ''"
+							[disabled]="assignmentRuleSetForm.invalid"
+							(click)="AddAssignmentRuleSet()">
+							<span>Add Rule</span>
+						</button>
+					</form>
+				</div>
+				<div class="document-list clearfix">
+					<div class="activateScrollbar clearfix">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Ruleset List</h5>
+					</div>
+				</div>
+				<div class="document-list clearfix" #ruleList *ngIf="!fetching">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix" *ngFor="let rule of RulesList">
+							<div class="info ruleSetStyle" id="assignRule{{rule.ruleName}}" (mousedown)="divMove($event)">
+								<div class="desc">
+									<p><strong>Rule Name:</strong> <span class="text-green">{{rule.ruleName}}</span></p>
+									<br>
+									<p><strong>Key:</strong> <span class="text-green">{{rule.key}}</span></p>
+									<p><strong>Value:</strong> <span class="text-green">{{rule.value}}</span></p>
+									<p><strong>Type:</strong> <span class="text-green">{{rule.type}}</span></p>
+									<p *ngIf="rule.operator"><strong>Operator:</strong> <span class="text-green">{{rule.operator}}</span></p>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div class="notAvailable floatToCenter" *ngIf="fetching">
+						<app-preloader type="spin-loader-page"></app-preloader>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

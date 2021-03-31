@@ -1,0 +1,5 @@
+<svg class="svg alertIcon" *ngIf="img">
+	<use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + img" class="text-white"/>
+</svg>
+<p [innerHTML]="msg"></p>
+<div class="clear"></div>

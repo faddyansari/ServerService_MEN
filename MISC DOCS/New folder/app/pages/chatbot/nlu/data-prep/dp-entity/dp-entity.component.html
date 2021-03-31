@@ -1,0 +1,110 @@
+<div class="row intent-list clearfix">
+	<div class="col-xs-12">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Entities</h5>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+					(click)="toggleEntityForm()"
+					[ngClass]="(!showEntityForm) ? 'border-blue' : 'border-red'">
+					<span>{{(!showEntityForm) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!showEntityForm) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!showEntityForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="popover-form" *ngIf="showEntityForm">
+			<form [formGroup]="EntityForm">
+				<div class="input-block">
+					<input type="text" autocomplete="off" class="form-control input-sm"
+						placeholder="Enter Entity name"
+						[formControl]="EntityForm.controls['entity_name']">
+				</div>
+				<button class="btn btn-sm bg-blue"
+					(click)="AddEntity(EntityForm.get('entity_name').value)"
+					[disabled]="EntityForm.invalid">
+					<span>Add</span>
+				</button>
+			</form>
+		</div>
+		<div class="document-list">
+			<div class="activateScrollbar clearfix">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="w30">Entity</th>
+							<th>Slot Type</th>
+							<th class="w-80 text-center">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let i of entity_list;let index = index;">
+							<td class="w30">
+								<p id="i.name" *ngIf = "!i.editable"> {{i.entity_name}} </p>
+								<div class="input-block">
+									<input type="text" class="form-control input-sm" *ngIf="i.editable" [(ngModel)]="updatedEntity">
+								</div>
+							</td>
+							<td>
+								<div class="input-block">
+									<div class="sel style1 sel-sm">
+										<select class="form-control input-sm"
+											(change)="selectSlotType(i, $event)">
+											<option value="" selected>Select</option>
+											<option *ngFor="let e of slot_list"
+												[value]="e.value"
+												[selected]="e.value == i.slot_type">{{e.value}}</option>
+										</select>
+									</div>
+								</div>
+							</td>
+							<td class="w-80 text-center">
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									*ngIf="i.editable"
+									(click)="cancelEdit(i)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+									</svg>
+									<span class="tooltip-inner">Cancel</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									*ngIf="!i.editable"
+									(click)="editEntity(i)">
+									<svg class="svg svg-blue active">
+										<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+									</svg>
+									<span class="tooltip-inner">Edit</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									*ngIf="!i.editable"
+									(click)="deleteEntity(i, index)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									*ngIf="i.editable"
+									(click)="updateEntity(i)"
+									[disabled]="!i.entity_name">
+									<svg class="svg svg-green active">
+										<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+									</svg>
+									<span class="tooltip-inner">Save</span>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

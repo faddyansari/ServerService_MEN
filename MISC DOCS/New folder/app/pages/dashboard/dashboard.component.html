@@ -1,0 +1,442 @@
+<section class="content clearfix animated fadeIn info-hidden" id="dashboardArea">
+	<div class="content-view">
+		<div class="activateScrollbar clearfix">
+			<div class="viewChat" *ngIf="!verified" [ngClass]="!verified ? 'not-verified' : ''">
+				<div class="preInstallation">
+					<div class="chatScreen">
+						<img class="svg m-b-10" src="/assets/img/illustrations/pre-installation-analytics-screen.svg"
+							alt="" width="50%">
+						<h3>Let's get you all set up</h3>
+						<p>Install Beelinks on your website and start chatting with your customers right away</p>
+						<a routerLink="/installation" class="btn btn-sm bg-blue m-t-b-10">Install Now</a>
+						<p>Or <a routerLink="/installation">send instructions to developer</a></p>
+					</div>
+				</div>
+			</div>
+			<div class="liveStat" *ngIf="verified">
+				<!-- <div class="small-box sb1 card mapStats">
+					<div class="flag-names f-gap7">
+						<div (click)="applyCountryFilter('all')">
+							<i class="flag ff-sm flag-DF" title="Total"></i>
+							<span>&nbsp;Total&nbsp;</span>
+							<span>{{totalVisitors_original}}</span>
+						</div>
+						<ng-template ngFor [ngForOf]="countryData_fullname.slice(0,5)" let-data let-i="index">
+							<div (click)="applyCountryFilter(data.country)">
+								<i class="flag ff-sm flag-{{data.shortname}}" title="{{data.country}}"></i>
+								<span>&nbsp; {{data.shortname}} &nbsp;</span>
+								<span>{{data.value}}</span>
+							</div>
+						</ng-template>
+					</div>
+					<div class="f-column">
+						<div id="highchart"></div>
+						<p class="text-center">
+							<span>{{(visitors_description) ? visitors_description : 'Loading....'}}</span>
+						</p>
+					</div>
+				</div> -->
+				<app-dashboard-map [visitorList]="visitorList" class="small-box sb1 card mapStats"></app-dashboard-map>
+				<div class="small-box sb2 card headerStats">
+					<div>
+						<div class="svgOnHover">
+							<svg class="svg w-40 h-40 colored active">
+								<use href="/assets/img/icons/icons-sprite.svg#visitors-colored" />
+							</svg>
+						</div>
+						<div class="counter">
+							<h5 class="title">{{newVisitors}}</h5>
+						</div>
+						<div>
+							<div id="newvisitors"></div>
+						</div>
+						<span>New Visitors</span>
+					</div>
+				</div>
+				<div class="small-box sb3 card headerStats">
+					<div>
+						<div class="svgOnHover">
+							<svg class="svg w-40 h-40 colored active">
+								<use href="/assets/img/icons/icons-sprite.svg#visitors-colored" />
+							</svg>
+						</div>
+						<div class="counter">
+							<h5 class="title">{{returningVisitors}}</h5>
+						</div>
+						<div>
+							<div id="returningvisitors"></div>
+						</div>
+						<span>Returning Visitors</span>
+					</div>
+				</div>
+				<div class="small-box sb4 card" *ngIf="agent.role != 'agent'">
+					<div class="graph-bars clearfix">
+						<div id="agent_details" [ngClass]="(totalAgents) ? '' : 'hide'"></div>
+						<div class="graph-icon svgOnHover">
+							<svg class="svg w-40 h-40 colored active">
+								<use href="/assets/img/icons/icons-sprite.svg#agents-colored"/>
+							</svg>
+						</div>
+					</div>
+					<ul class="box-stat-list clearfix" *ngIf="totalAgents">
+						<li>
+							<a routerLink="/agents">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingAgents"></app-preloader>
+									<div class="box" style="background-color:#E97218"></div>
+									<span>Agents</span>
+									<h5 class="count" style="color:#E97218" *ngIf="!loadingAgents">
+										{{totalAgents}}</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/agents">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingAgents"></app-preloader>
+									<div class="box" style="background-color:#F38D1C"></div>
+									<span>Offline</span>
+									<h5 class="count" style="color:#F38D1C" *ngIf="!loadingAgents">
+										{{offlineAgents}}</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/agents">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingAgents"></app-preloader>
+									<div class="box" style="background-color:#F2A920"></div>
+									<span>Online</span>
+									<h5 class="count" style="color:#F2A920" *ngIf="!loadingAgents">
+										{{onlineAgents}}</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/agents">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingAgents"></app-preloader>
+									<div class="box" style="background-color:#ECC71B"></div>
+									<span>Idle</span>
+									<h5 class="count" style="color:#ECC71B" *ngIf="!loadingAgents">
+										{{idleAgents}}</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/agents">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingAgents"></app-preloader>
+									<div class="box" style="background-color:#E8DC15"></div>
+									<span>Active</span>
+									<h5 class="count" style="color:#E8DC15" *ngIf="!loadingAgents">
+										{{activeAgents}}</h5>
+								</div>
+							</a>
+						</li>
+					</ul>
+					<div class="notAvailable" *ngIf="!totalAgents && !loadingAgents">
+						<svg class="svg w-50 h-50 active">
+							<use href="/assets/img/icons/icons-sprite.svg#pie-chart" class="text-gray" />
+						</svg>
+						<span>No Agents!</span>
+					</div>
+				</div>
+				<div class="small-box sb5 card">
+					<div class="graph-bars clearfix">
+						<div id="ticket_details" [ngClass]="(totalTicketsCount) ? '' : 'hide'"></div>
+						<div class="graph-icon svgOnHover">
+							<svg class="svg w-40 h-40 colored active">
+								<use href="/assets/img/icons/icons-sprite.svg#tickets-colored"/>
+							</svg>
+						</div>
+					</div>
+					<ul class="box-stat-list clearfix" *ngIf="totalTicketsCount">
+						<li>
+							<a routerLink="/tickets">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingTickets">
+									</app-preloader>
+									<div class="box" style="background-color:#084488"></div>
+									<span>Tickets</span>
+									<h5 class="count" style="color:#084488" *ngIf="!loadingTickets">
+										{{totalTicketsCount}}</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/tickets">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingTickets">
+									</app-preloader>
+									<div class="box" style="background-color: #006EAD"></div>
+									<span>Open</span>
+									<h5 class="count" style="color:#006EAD" *ngIf="!loadingTickets">
+										{{openTicketsCount}}</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/tickets">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingTickets">
+									</app-preloader>
+									<div class="box" style="background-color:#2491cc"></div>
+									<span>Pending</span>
+									<h5 class="count" style="color:#2491cc" *ngIf="!loadingTickets">
+										{{pendingTicketsCount}}</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/tickets">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingTickets">
+									</app-preloader>
+									<div class="box" style="background-color:#00bfac"></div>
+									<span>Solved</span>
+									<h5 class="count" style="color:#00bfac" *ngIf="!loadingTickets">
+										{{solvedTicketsCount}}</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/tickets">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingTickets">
+									</app-preloader>
+									<div class="box" style="background-color:#51d691"></div>
+									<span>Closed</span>
+									<h5 class="count" style="color:#51d691" *ngIf="!loadingTickets">
+										{{closedTicketsCount}}</h5>
+								</div>
+							</a>
+						</li>
+					</ul>
+					<div class="notAvailable" *ngIf="!totalTicketsCount && !loadingTickets">
+						<svg class="svg w-50 h-50 active">
+							<use href="/assets/img/icons/icons-sprite.svg#pie-chart" class="text-gray" />
+						</svg>
+						<span>No Tickets!</span>
+					</div>
+				</div>
+				<div class="small-box sb6 card browserStats">
+					<ul class="tabs clearfix">
+						<li (click)="BrowserDevicesToggle('browser')"
+							[ngClass]="(browserDevicesTogle == 'browser') ? 'active' : ''">Browsers</li>
+						<li (click)="BrowserDevicesToggle('devices')"
+							[ngClass]="(browserDevicesTogle == 'devices') ? 'active' : ''">Devices</li>
+					</ul>
+					<div class="browsers" *ngIf="browserDevicesTogle == 'browser'">
+						<ng-template ngFor [ngForOf]="browser_data" let-browser let-i="index">
+							<div class="svgOnHover tooltip top">
+								<svg class="svg w-30 h-30 svg-default active">
+									<use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + browser.key" />
+								</svg>
+								<span>{{browser.count}}</span>
+								<span class="tooltip-inner">{{browser.name}}</span>
+							</div>
+						</ng-template>
+						<div class="notAvailable" *ngIf="!browser_data.length && !loadingVisitors">
+							<svg class="svg w-50 h-50 active">
+								<use href="/assets/img/icons/icons-sprite.svg#pie-chart" class="text-gray" />
+							</svg>
+							<span>No data!</span>
+						</div>
+					</div>
+					<div class="devices" *ngIf="browserDevicesTogle == 'devices'">
+						<ng-template ngFor [ngForOf]="device_data" let-device let-i="index">
+							<div class="svgOnHover tooltip top">
+								<svg class="svg w-30 h-30 svg-default active">
+									<use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + device.key" />
+								</svg>
+								<span>{{device.count}}</span>
+								<span class="tooltip-inner">{{device.name}}</span>
+							</div>
+						</ng-template>
+						<div class="notAvailable" *ngIf="!device_data.length && !loadingVisitors">
+							<svg class="svg w-50 h-50 active">
+								<use href="/assets/img/icons/icons-sprite.svg#pie-chart" class="text-gray" />
+							</svg>
+							<span>No data!</span>
+						</div>
+					</div>
+				</div>
+				<div class="small-box sb7 card">
+					<div class="graph-bars clearfix">
+						<div id="visitor_details" [ngClass]="(totalVisitors) ? '' : 'hide'"></div>
+						<div class="graph-icon svgOnHover">
+							<svg class="svg w-40 h-40 colored active">
+								<use href="/assets/img/icons/icons-sprite.svg#visitors-colored"/>
+							</svg>
+						</div>
+					</div>
+					<ul class="box-stat-list clearfix" *ngIf="totalVisitors">
+						<li>
+							<a routerLink="/visitors">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingVisitors">
+									</app-preloader>
+									<div class="box" style="background-color:#87124b"></div>
+									<span>Visitors</span>
+									<h5 class="count" *ngIf="!loadingVisitors">
+										<span style="color:#87124b">{{totalVisitors}}</span>
+									</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/visitors">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingVisitors">
+									</app-preloader>
+									<div class="box" style="background-color:#AD296B"></div>
+									<span>Browsing</span>
+									<h5 class="count" *ngIf="!loadingVisitors">
+										<span style="color:#AD296B">{{browsingVisitors}}</span>
+
+									</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/visitors">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingVisitors">
+									</app-preloader>
+									<div class="box" style="background-color:#DB2A6A"></div>
+									<span>Queued</span>
+									<h5 class="count" *ngIf="!loadingVisitors">
+										<span style="color:#DB2A6A">{{queuedVisitors}}</span>
+
+									</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/visitors">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingVisitors">
+									</app-preloader>
+									<div class="box" style="background-color:#EB4F73"></div>
+									<span>Chatting</span>
+									<h5 class="count" *ngIf="!loadingVisitors">
+										<span style="color:#EB4F73">{{chattingVisitors}}</span>
+
+									</h5>
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/visitors">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingVisitors">
+									</app-preloader>
+									<div class="box" style="background-color:#EF8563"></div>
+									<span>Invited</span>
+									<h5 class="count" *ngIf="!loadingVisitors">
+										<span style="color:#EF8563">{{invitedVisitors}}</span>
+
+									</h5>
+
+								</div>
+							</a>
+						</li>
+						<li>
+							<a routerLink="/visitors">
+								<div class="data">
+									<app-preloader type="stat-loader" *ngIf="loadingVisitors">
+									</app-preloader>
+									<div class="box" style="background-color:#EF8600"></div>
+									<span>Inactive</span>
+									<h5 class="count" *ngIf="!loadingVisitors">
+										<span style="color:#EF8600">{{inactiveVisitors}}</span>
+
+
+									</h5>
+
+								</div>
+							</a>
+						</li>
+					</ul>
+					<div class="notAvailable" *ngIf="!totalVisitors && !loadingVisitors">
+						<svg class="svg w-50 h-50 active">
+							<use href="/assets/img/icons/icons-sprite.svg#pie-chart" class="text-gray" />
+						</svg>
+						<span>No Visitors!</span>
+					</div>
+				</div>
+				<div class="small-box sb8 card links-stat-list">
+					<div class="title">
+						<h5>Top 10 referers</h5>
+					</div>
+					<ul class="clearfix" *ngIf="graph_Referers.length">
+						<ng-template ngFor [ngForOf]="graph_Referers" let-url let-i="index">
+							<li>
+								<a class="notif" [attr.href]="sanitizedURL(url.name)" target="_blank"
+									[title]="url.name">
+									<div class="icon">
+										<img [src]="sanitizedURL('https://www.google.com/s2/favicons?domain='+ FormatURL(url.name))"
+											onerror="this.onerror=null;this.src='/assets/img/icons/logo-icon-black-light.svg';"
+											alt="" *ngIf="!url.name.includes('android-app')">
+									</div>
+									<div class="details">
+										<div class="name fw-6" [title]="url.name">
+											<span>{{extractHostname(url.name)}}</span>
+										</div>
+										<div class="link" [title]="url.name">
+											<span class="ellipsis">{{ url.name }}</span>
+										</div>
+									</div>
+									<div class="notif-count" [title]="url.name">
+										<span>({{url.value}})</span>
+									</div>
+								</a>
+							</li>
+						</ng-template>
+					</ul>
+					<div class="notAvailable p-t-60" *ngIf="!graph_Referers.length && !loadingVisitors">
+						<svg class="svg w-50 h-50 active">
+							<use href="/assets/img/icons/icons-sprite.svg#pie-chart" class="text-gray" />
+						</svg>
+						<span>No data!</span>
+					</div>
+				</div>
+				<div class="small-box sb9 card links-stat-list">
+					<div class="title">
+						<h5>Top 10 visited links</h5>
+					</div>
+					<ul class="clearfix" *ngIf="totalVisitorLinks_data.length">
+						<ng-template ngFor [ngForOf]="totalVisitorLinks_data" let-url let-i="index">
+							<li>
+								<a class="notif" target="_blank" [attr.href]="sanitizedURL(url.name)"
+									[title]="url.name">
+									<div class="icon">
+										<img [src]="sanitizedURL('https://www.google.com/s2/favicons?domain='+ FormatURL(url.name))"
+											onerror="this.onerror=null;this.src='/assets/img/icons/logo-icon-black-light.svg';"
+											alt="" *ngIf="!url.name.includes('android-app')">
+									</div>
+									<div class="details">
+										<div class="name fw-6" [title]="url.name">{{extractHostname(url.name)}}
+										</div>
+										<div class="link" [title]="url.name">
+											<span class="ellipsis">{{ url.name }}</span>
+										</div>
+									</div>
+									<div class="notif-count" [title]="url.name">
+										({{url.value}})</div>
+								</a>
+							</li>
+						</ng-template>
+					</ul>
+					<div class="notAvailable p-t-60" *ngIf="!totalVisitorLinks_data.length && !loadingVisitors">
+						<svg class="svg w-50 h-50 active">
+							<use href="/assets/img/icons/icons-sprite.svg#pie-chart" class="text-gray" />
+						</svg>
+						<span>No data!</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

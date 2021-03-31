@@ -1,0 +1,19 @@
+<div class="toggleList activityLog" *ngIf="Logs">
+	<div class="clearfix" *ngFor="let log of Logs">
+		<div class="logGroup">
+			<div class="dateLog">
+				<span>{{ log.date | dayDifferencePipe }}</span>
+			</div>
+			<ul class="list-items clearfix style4">
+				<li class="item clearfix notif" *ngFor="let logEvent of log.groupedvisitorlogList">
+					<div>
+						<div class="info">
+							<b>{{logEvent.event}}</b>
+						</div>
+						<span class="text-blue">{{logEvent.time_stamp | date:'shortTime'}}</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

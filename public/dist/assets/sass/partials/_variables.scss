@@ -1,0 +1,72 @@
+$colors: (
+	"purple"    : #6d4072,
+	"blue"      : #3974e2,
+	"madison"   : #313e4d,
+	"brown"     : #4f331b,
+	"green"     : #008000,
+	"olive"     : #368763,
+	"teal"      : #15b49c,
+	"red"       : #c9302c,
+	"valencia"  : #D64646,
+	"orange"    : #FF681F,
+	"mustard"   : #f0a13c,
+	"yellow"    : #f6bb15,
+	"white"     : #ffffff,
+	"off-white" : #f5f5f5,
+	"gray"      : #d2d6de,
+	"muted"     : #777777,
+	"charcoal"  : #1f282e,
+	"black"     : #231f20,
+);
+
+$skinColors: (
+	"black"    : #231f20
+);
+
+
+/*=============================================
+= DEVICE WIDTH =
+=============================================*/
+
+$phone-width: 300px;
+$phone-landscape-width: 568px;
+$tablet-portrait-width: 768px;
+$tablet-landscape-width: 1024px;
+$desktop-width: 1280px;
+$desktop-wide-width: 1440px;
+$container-padding: 10px;
+
+/*=====  End of DEVICE WIDTH  ======*/
+
+
+
+/*=============================================
+= ROWS & COLUMNS =
+=============================================*/
+
+$number-of-columns: 12;
+$gutter-width: 10;
+$column-width: (($gutter-width * $number-of-columns) - 100) / $number-of-columns;
+$i: $number-of-columns;
+
+/*=====  End of ROWS & COLUMNS  ======*/
+
+
+
+/*=============================================
+= PRETTY CHECKBOX & RADIO =
+=============================================*/
+
+// box
+$pretty--box-size: calc(1em + 2px) !default;
+
+// scale
+$pretty--2x: 1.2em !default;
+
+// position
+$pretty-top: 8;
+$pretty-top-switch: ($pretty-top * 2) * 1%;
+$pretty-top-offset: calc((0% - (100% - 1em)) - #{$pretty-top * 1%});
+$pretty-top-offset-switch: calc((0% - (100% - 1em)) - #{$pretty-top-switch});
+
+/*=====  End of PRETTY CHECKBOX & RADIO  ======*/

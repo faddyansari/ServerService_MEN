@@ -1,0 +1,176 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-header">
+		<h5 class="box-title ellipsis">
+			<svg class="svg active">
+				<use href="/assets/img/icons/icons-sprite.svg#chatting" class="text-theme-gray" />
+			</svg>
+			<span>{{(selectedThread.to == agent.email) ? selectedThread.from_name : selectedThread.to_name}}</span>
+		</h5>
+		<!-- <span class="box-tools" *ngIf="selectedThread.from == agent.email">
+			<p class="text-black p-r-20">Last seen: {{ selectedThread.LastSeen[0].DateTime | dayDifferencePipe}} at
+				{{ selectedThread.LastSeen[0].DateTime | date :'shortTime' }}</p>
+		</span> -->
+		<div class="box-tools">
+			<button class="btn btn-xs" (click)="ToggleInfo()" [ngClass]="(!showContactInfo) ? 'bg-black' : 'bg-red'">
+				<span>{{(!showContactInfo) ? 'SHOW INFO' : 'HIDE INFO'}}</span>
+			</button>
+		</div>
+	</div>
+	<div class="box-body clearfix p-0">
+		<div class="chatWindow card p-0">
+			<div class="chatBody">
+				<div class="chat-messages" #scrollContainer (scroll)="ScrollChanged($event)">
+					<div *ngIf="!loadingConversation">
+						<div [ngClass]="message.from == agent.email ? 'chat-msg msg_sent' : 'chat-msg msg_recieved' "
+							*ngFor="let message of selectedThread.messages">
+							<div class="chat-text" *ngIf="message.body != '' && message.attachment">
+								<div class="attachment" *ngIf="message.body != '' && message.attachment"
+									[ngClass]="((message.body | attachmentType) == 'data') ? 'file' : ((message.body | attachmentType) == 'image') ? 'image' : ((message.body | attachmentType) == 'audio') ? 'audio' : ((message.body | attachmentType) == 'document') ? 'document' :''">
+									<a href="{{message.body}}"
+										[target]="((message.body | attachmentType) == 'document' ? '_parent' : '_blank')">
+										<svg class="svg active" *ngIf="(message.body | attachmentType) == 'document'">
+											<use href="/assets/img/icons/icons-sprite.svg#file" class="text-black" />
+										</svg>
+										<img class="svg active" src='{{message.body}}' width="auto" height="100"
+											*ngIf="(message.body | attachmentType) == 'image'">
+										<span class="clearfix"
+											*ngIf="(message.body | attachmentType) == 'data' || (message.body | attachmentType) == 'document'">{{message.filename}}</span>
+										<audio controls [src]="message.body"
+											*ngIf="(message.body | attachmentType) == 'audio'" controls
+											controlsList="nodownload"> Your browser does not support the
+											<code>audio</code>
+											element. </audio>
+									</a>
+									<span class="arrow"
+										[ngStyle]="(message.type == 'Visitors' && currentConversation.viewColor) ? {'border-top-color' : currentConversation.viewColor + '40'} : ''"></span>
+								</div>
+							</div>
+							<div *ngIf="message.body != '' && !message.attachment" class="chat-text">
+								<p [ngClass]="(message.body | emojicheck) ? 'onlyEmoji' : ''">
+									<span>{{message.body}}</span>
+								</p>
+								<span class="arrow"
+									[ngStyle]="(message.type == 'Visitors' && currentConversation.viewColor) ? {'border-top-color' : currentConversation.viewColor + '40'} : ''"></span>
+							</div>
+							<div *ngIf="message.body != ''" class="chat-info">
+								<span *ngIf="message.body != ''">{{ message.date | date :'mediumDate'}} {{ message.date | date
+									:'shortTime' }}</span>
+								<span *ngFor="let seenInfo of selectedThread.LastSeen" class="status">
+									<span class="svgOnHover"
+										*ngIf="seenInfo.id != agent.email && message.from == agent.email">
+										<svg class="svg w-15 h-15 svg-default active"
+											*ngIf="seenInfo.DateTime.split('.')[0] >= message.date.split('.')[0]">
+											<use href="/assets/img/icons/icons-sprite.svg#show" />
+										</svg>
+										<svg class="svg w-15 h-15 svg-default active"
+											*ngIf="seenInfo.DateTime.split('.')[0] < message.date.split('.')[0]">
+											<use href="/assets/img/icons/icons-sprite.svg#ok-done" />
+										</svg>
+									</span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<app-preloader *ngIf="loadingConversation" type="cube-grid" class="floatToCenter">
+					</app-preloader>
+				</div>
+				<div class="new-chat-loader dot-loader from svgOnHover" *ngIf="(selectedThread.typingState)">
+					<svg class="svg w-40 h-20 active">
+						<use href="/assets/img/loaders/msg-loader.svg" class="text-white" />
+					</svg>
+					<em>{{ (selectedThread.from == agent.email) ? selectedThread.to : selectedThread.from}} is typing
+						&nbsp;&nbsp;</em>
+					<br>
+				</div>
+				<ul class="attachment-area">
+					<li *ngIf="file">
+						<div class="badge bg-olive">
+							<span>{{file.name}}</span>
+						</div>
+						<button class="btn btn-xs bg-red svgOnHover pull-right" (click)="ClearFile()">
+							<svg class="svg svg-default">
+								<use href="/assets/img/icons/icons-sprite.svg#delete-colored" class="text-white" />
+							</svg>
+						</button>
+						<app-preloader *ngIf="uploading" type='stat-loader'></app-preloader>
+					</li>
+					<li *ngIf="!fileValid">
+						<div class="badge bg-danger">
+							<span>Please Enter a valid file type! Max size 5 MB</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="chatFooter">
+				<div class="msgArea">
+					<textarea class="form-control" name="message" [ngModelOptions]="{standalone: true}"
+						[(ngModel)]="msgBody" (keydown)="keydown($event)" (keyup)="keyup($event)"
+						(keypress)="keyPress($event)" [matAutocomplete]="auto" (input)="onMessageInput.next()"
+						placeholder="Enter message here ..."></textarea>
+					<div class="tools">
+						<label class="btn btn-transparent svgOnHover tooltip top-left"
+							[ngClass]="(!fileSharePermission) ? 'disabled' : ''">
+							<svg class="svg w-25 h-25 svg-default active">
+								<use href="/assets/img/icons/icons-sprite.svg#attachment" />
+							</svg>
+							<span class="tooltip-inner">Attach File</span>
+							<input #fileInput [disabled]="!fileSharePermission" type="file" class="hide"
+								(change)="FileSelected($event)" multiple>
+						</label>
+						<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="(seconds)"
+							(click)="cancelRecording()">
+							<svg class="svg w-25 h-25 svg-default">
+								<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+							</svg>
+							<svg class="svg w-25 h-25 colored">
+								<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+							</svg>
+							<span class="tooltip-inner">Cancel Recording</span>
+						</button>
+						<button class="btn btn-transparent svgOnHover tooltip top" (click)="startRecording()"
+							[disabled]="(recordingStarted)">
+							<svg class="svg w-25 h-25 svg-default active" *ngIf="(!seconds && !loading)">
+								<use href="/assets/img/icons/icons-sprite.svg#mic-on" />
+							</svg>
+							<span class="tooltip-inner">Voice Note</span>
+							<span *ngIf="(seconds)">{{mins|numberpad:1}}:{{seconds|numberpad:2}}</span>
+						</button>
+						<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="(loading)"
+							style="cursor:default">
+							<img class="svg w-25 h-25" src="/assets/img/loaders/spin-loader-gray.svg">
+							<span class="tooltip-inner">Loading ...</span>
+						</button>
+						<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="(seconds)"
+							(click)="stopRecording()">
+							<svg class="svg svg-default">
+								<use href="/assets/img/icons/icons-sprite.svg#ok-circle" />
+							</svg>
+							<svg class="svg colored">
+								<use href="/assets/img/icons/icons-sprite.svg#ok-circle-colored" />
+							</svg>
+							<span class="tooltip-inner">Submit Recording</span>
+						</button>
+						<button class="btn btn-transparent svgOnHover tooltip top"
+							(click)="EmojiWrapper = !EmojiWrapper;"
+							[ngClass]="EmojiWrapper ? 'active': ''">
+							<svg class="svg w-25 h-25 svg-default">
+								<use href="/assets/img/icons/icons-sprite.svg#smiley" />
+							</svg>
+							<svg class="svg w-25 h-25 colored">
+								<use href="/assets/img/icons/icons-sprite.svg#smiley-colored"
+									class="text-mustard-light" />
+							</svg>
+							<span class="tooltip-inner">Emojis</span>
+						</button>
+					</div>
+					<mat-autocomplete class="ccAutoComplete" #auto="matAutocomplete" autoActiveFirstOption>
+						<mat-option *ngFor="let automatedMessage of filteredAutomatedMessages"
+							[value]="(msgBody | slice:0:hashIndex) + automatedMessage.responseText"
+							(click)="setShift()">{{ automatedMessage.hashTag }}</mat-option>
+					</mat-autocomplete>
+					<app-emoji *ngIf="EmojiWrapper" (emojiClicked)="Emoji($event)"></app-emoji>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

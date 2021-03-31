@@ -1,0 +1,48 @@
+<div class="sub-nav-tabs clearfix">
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			[ngClass]="(response) ? 'active' : ''"
+			(click)="setPillActive('response')">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Responses</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			[ngClass]="(stories) ? 'active' : ''"
+			(click)="setPillActive('stories')">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Stories</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			[ngClass]="(actions) ? 'active' : ''"
+			(click)="setPillActive('actions')">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Actions</span>
+		</a>
+	</div>
+</div>
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-t-0">
+		<app-resp-function *ngIf="response"></app-resp-function>
+		<app-dp-stories *ngIf="stories"></app-dp-stories>
+		<app-dp-actions *ngIf="actions"></app-dp-actions>
+	</div>
+</div>

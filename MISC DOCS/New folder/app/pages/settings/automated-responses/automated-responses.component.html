@@ -1,0 +1,125 @@
+<div class="row clearfix">
+    <div class="col-md-4 col-sm-5 col-xs-12">
+        <div class="box clearfix animated fadeIn delay-400">
+            <div class="box-body clearfix p-0">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Add New Response</h5>
+                    </div>
+                    <div>
+                        <button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="toggleResponseForm()"
+                            [ngClass]="(!showResponseForm) ? 'border-blue' : 'border-red'">
+                            <span>{{(!showResponseForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showResponseForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showResponseForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="popover-form" *ngIf="showResponseForm">
+                    <form [formGroup]="automatedResForm">
+                        <div class="input-block">
+                            <label>Response Text</label>
+                            <textarea class="form-control input-sm no-resize" rows="5"
+                                [formControl]="automatedResForm.controls['responseText']" (input)="TypingEvent($event)">
+                            </textarea>
+                            <p class="text-red" [hidden]="!emptyResponse">Empty responses are not allowed</p>
+                            <p class="text-red" [hidden]="!duplicateHash">Response already Added</p>
+                            <p class="text-red" [hidden]="!limitReached">'Maximum limit reached for Canned Messages</p>
+                        </div>
+                        <div class="input-block">
+                            <label>Shortcut</label>
+                            <input type="text"
+                                [ngClass]="automatedResForm.get('hashTag').hasError('pattern') ? 'error' : 'no-error' "
+                                class="form-control input-sm" placeholder="#name"
+                                [formControl]="automatedResForm.controls['hashTag']">
+                            <p class="text-red" [hidden]="!automatedResForm.get('hashTag').hasError('matched')">This
+                                HashTag has been used already</p>
+                            <p>To use an automated response while chatting, type # followed by the shortcut.</p>
+                        </div>
+                        <button type="submit" class="btn btn-sm bg-blue" [ngClass]="(loading) ? 'btnSpinner' : ''"
+                            [disabled]="automatedResForm.invalid" (click)="AddAutomatedResponse()">
+                            <span>Add Response</span>
+                        </button>
+                    </form>
+                </div>
+                <div class="document-list clearfix">
+                    <div class="activateScrollbar clearfix">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-sm-7 col-xs-12">
+        <div class="box clearfix animated fadeIn delay-400">
+            <div class="box-body clearfix p-0">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Responses List</h5>
+                    </div>
+                </div>
+                <div class="document-list clearfix">
+                    <ul class="activateScrollbar clearfix">
+                        <li class="notif clearfix" *ngFor="let message of automatedMessagesList">
+                            <div class="info">
+                                <div>
+                                    <b class="text-blue ellipsis">{{ message.hashTag }}</b>
+                                    <p *ngIf="!editingMessagesMap[message.hashTag].selected">{{ message.responseText }}
+                                    </p>
+                                    <div class="input-block m-0" *ngIf="editingMessagesMap[message.hashTag].selected">
+										<input type="text" class="form-control input-sm" [(ngModel)]="editedHash">
+										<textarea class="form-control input-sm"
+											[ngClass]="(editingMessagesMap[message.hashTag].error) ? 'border-red' : ''"
+											[(ngModel)]="editingMessagesMap[message.hashTag].responseText"> </textarea>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <button class="btn btn-transparent svgOnHover tooltip left"
+                                        *ngIf="!editingMessagesMap[message.hashTag].selected"
+                                        attr.hashTag="{{message.hashTag}}" (click)="OpenEdit($event,message.hashTag)">
+                                        <svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+                                    </button>
+                                    <button class="btn btn-transparent svgOnHover tooltip left"
+                                        *ngIf="!editingMessagesMap[message.hashTag].selected"
+                                        attr.hashTag="{{message.hashTag}}"
+                                        (click)="DeleteAutomatedMessage($event,message.hashTag)">
+                                        <svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+                                    </button>
+                                    <button class="btn btn-transparent svgOnHover tooltip left" title="Cancel"
+                                        *ngIf="editingMessagesMap[message.hashTag].selected"
+                                        attr.hashTag="{{message.hashTag}}"
+                                        (click)="CancelEdit($event,message.hashTag,message.responseText)">
+                                        <svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Cancel</span>
+                                    </button>
+                                    <button class="btn btn-transparent svgOnHover tooltip left" title="Save"
+                                        *ngIf="editingMessagesMap[message.hashTag].selected"
+                                        attr.hashTag="{{message.hashTag}}" (click)="Edit($event,message.hashTag)">
+										<svg class="svg svg-green active">
+											<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+										</svg>
+										<span class="tooltip-inner">Save</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

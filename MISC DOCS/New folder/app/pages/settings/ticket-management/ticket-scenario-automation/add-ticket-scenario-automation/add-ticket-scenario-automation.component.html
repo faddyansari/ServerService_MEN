@@ -1,0 +1,237 @@
+<div class="activateScrollbar clearfix p-0">
+	<form [formGroup]="scenarioForm">
+		<!-- scenario Name -->
+		<div class="input-block">
+			<label>Scenario Name</label>
+			<input type="text" class="form-control input-sm" autocomplete="off" formControlName="scenarioTitle"
+				placeholder="Enter scenario name.. Keep meaningful name">
+		</div>
+
+		<!-- Description of scenario -->
+		<div class="input-block clearfix">
+			<label>Scenario Description</label>
+			<textarea autocomplete="off" class="form-control input-sm no-resize" rows="5"
+				placeholder="Description for scenario" name="scenarioDesc" formControlName="scenarioDesc"></textarea>
+		</div>
+
+		<hr class="clearfix bg-border">
+
+		<fieldset class="w100 clearfix m-b-20">
+			<div class="input-block">
+				<h5 class="m-0 p-0">Add Actions</h5>
+				<p>Perform these actions sequentially</p>
+			</div>
+			<div class="list-items clearfix style4 p-0">
+				<li class="item clearfix m-l-r-0 notif f-column" formArrayName="actions">
+					<div class="input-block f-align-start">
+						<p class="text-red">Select at least one action</p>
+					</div>
+					<ng-template ngFor let-action [ngForOf]="GetControls('actions')" let-index="index">
+						<div class="clearfix m-b-10">
+							<div class="info" [formGroupName]="index">
+								<div class="row clearfix">
+									<div class="col-sm-2 col-xs-12">
+										<div class="sel style1 sel-sm">
+											<select class="form-control input-sm m-b-0" formControlName="scenarioName">
+												<option value="" selected disabled>Select Action</option>
+												<option value="{{avAction.name}}"
+													[disabled]="avAction.name.includes('null')"
+													*ngFor="let avAction of GetAvailableActions(index) | keys">
+													{{avAction.details}}</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-8 col-xs-12"
+										*ngIf="action.get('scenarioName').value == 'tagAssign'">
+										<div class="input-block m-b-0">
+											<app-chips-input class="form-control input-sm tag-input w100" name="tags"
+												[regex]="tagPattern" [(ngModel)]="selectedTags"
+												[placeholder]="'Add Tags start with #'" [delimiters]="[',']"
+												[items]="selectedTags" formControlName="scenarioValue"
+												[errorMsg]="'Incorrect tag'">
+											</app-chips-input>
+										</div>
+									</div>
+									<div class="col-sm-8 col-xs-12"
+										*ngIf="action.get('scenarioName').value == 'noteAssign'">
+										<div class="input-block m-b-0">
+											<textarea class="form-control input-sm" [ngxSummernote]="config" name="note"
+												formControlName="scenarioValue" rows="4" autocomplete="off">
+											</textarea>
+										</div>
+									</div>
+									<div class="col-sm-2 col-xs-12">
+
+										<div class="input-block m-b-0"
+											*ngIf="action.get('scenarioName').value == 'priorityAssign'">
+											<div class="sel style1 sel-sm">
+												<select formControlName="scenarioValue"
+													class="form-control input-sm m-b-0">
+													<option value="" selected disabled>Select Priority</option>
+													<option value="{{priority}}" *ngFor="let priority of priorityList">
+														{{priority}} </option>
+												</select>
+											</div>
+										</div>
+										<div class="input-block m-b-0"
+											*ngIf="action.get('scenarioName').value == 'agentAssign'">
+												<app-custom-select class="input-sm"
+													[items]="all_agents" (onSearch)="SearchAgent($event)" (onLoadMore)="LoadMoreAgent()"
+													[selectLabel]="'Select Agents'" [bindLabel]="'email'"
+													[bindValue]="'email'" [multiple]="false" [lazyLoading]="true"
+													[selectedItems]="((scenarioForm.controls['actions']).controls[index]).controls['scenarioValue'].value"
+													formControlName="scenarioValue">
+												</app-custom-select>
+										</div>
+										<div class="input-block m-b-0"
+											*ngIf="action.get('scenarioName').value == 'snoozeAssign'">
+											<input class="form-control input-sm" mode="daytime" name="date"
+												placeholder="Select Date and Time" theme="dp-material"
+												[dpDayPicker]="datePickerConfig" formControlName="scenarioValue">
+										</div>
+										<div class="input-block m-b-0"
+											*ngIf="action.get('scenarioName').value == 'viewStateAssign'">
+											<div class="sel style1 sel-sm">
+												<select class="form-control input-sm" formControlName="scenarioValue">
+													<option value='' selected disabled>Select ViewState</option>
+													<option value="READ">READ</option>
+													<option value="UNREAD">UNREAD</option>
+												</select>
+											</div>
+										</div>
+										<div class="input-block m-b-0"
+											*ngIf="action.get('scenarioName').value == 'groupAssign'">
+											<div class="sel style1 sel-sm">
+												<select class="form-control input-sm" formControlName="scenarioValue"
+													(change)="GetAvailableAgents($event)">
+													<option value='' selected disabled>Select Group</option>
+													<option value={{group.group_name}} *ngFor="let group of groups">
+														{{group.group_name}}</option>
+												</select>
+
+											</div>
+										</div>
+										<div class="input-block m-b-0"
+											*ngIf="action.get('scenarioName').value == 'stateAssign'">
+											<div class="sel style1 sel-sm">
+												<select formControlName="scenarioValue"
+													class="form-control input-sm m-b-0">
+													<option value="" selected disabled>Select State</option>
+													<option value="{{state}}" *ngFor="let state of stateList">
+														{{state}} </option>
+												</select>
+											</div>
+										</div>
+										<div class="input-block m-b-0"
+											*ngIf="action.get('scenarioName').value == 'watcherAssign'">
+											<app-custom-select class="input-sm"
+												[items]="all_agents" [selectedItems]="selectedWatchers"
+												[selectLabel]="'Select Watchers'" [bindLabel]="'email'"
+												[bindValue]="'email'" [multiple]="true" [lazyLoading]="true"
+												[(ngModel)]="selectedWatchers" [ngModelOptions]="{standalone: true}">
+											</app-custom-select>
+										</div>
+										<div class="input-block m-b-0"
+											*ngIf="action.get('scenarioName').value == 'taskAssign'">
+											<input type="text" formControlName="scenarioValue"
+												class="form-control input-sm b-0 b-b-2 no-shadow border-gray-dark no-rad"
+												placeholder="Enter task..">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="actions" *ngIf="scenarioForm.get('actions').controls.length > 1">
+								<button class="btn btn-transparent svgOnHover tooltip top-right" (click)="moveUp(index)" title="Swap Up">
+									<svg class="svg svg-blue active">
+										<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+									</svg>
+									<span class="tooltip-inner">Swap Up</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip top-right" (click)="moveDown(index)"
+									title="Swap Down">
+									<svg class="svg svg-blue active">
+										<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+									</svg>
+									<span class="tooltip-inner">Swap Down</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip top-right"
+									(click)="DeleteAction(index,((scenarioForm.controls['actions']).controls[index]).controls['scenarioName'].value)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+							</div>
+						</div>
+					</ng-template>
+					<div class="clearfix">
+						<button class="btn btn-sm btn-theme" (click)="AddAction()"
+							*ngIf="scenarioForm.get('actions')['controls'].length < 9">
+							<span>Add New</span>
+						</button>
+					</div>
+				</li>
+			</div>
+		</fieldset>
+		<hr class="clearfix bg-border">
+
+		<div class="input-block">
+			<label>Available for:</label>
+			<div class="input-group">
+				<div class="pretty p-default p-round">
+					<input type="radio" formControlName="availableFor" value="me">
+					<div class="state">
+						<label>Me personally</label>
+					</div>
+				</div>
+				<div class="pretty p-default p-round">
+					<input type="radio" formControlName="availableFor" value="allagents">
+					<div class="state">
+						<label>All Agents</label>
+					</div>
+				</div>
+				<div class="pretty p-default p-round">
+					<input type="radio" formControlName="availableFor" value="groupagents">
+					<div class="state">
+						<label>Agents in group</label>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="scenarioForm.get('availableFor').value == 'groupagents'">
+				<app-custom-select class="input-sm" [items]="groups" [selectLabel]="'Select Group'" formControlName="groupName"
+					[bindLabel]="'group_name'" [bindValue]="'group_name'"
+					[selectedItems]="scenarioForm.get('groupName').value" [multiple]="true" [search]="false">
+				</app-custom-select>
+				<p class="text-red m-b-5" class="text-red">
+					Please Select Group</p>
+			</div>
+		</div>
+
+		<hr class="clearfix bg-border">
+
+		<!-- Action Buttons -->
+		<div class="clearfix actions">
+			<button type="button" class="btn btn-xs bg-blue" *ngIf="!selectedscenario && !cloneScenario"
+				(click)="AddTicketScenario()" [disabled]="!scenarioForm.valid">
+				<span>Save</span>
+			</button>
+
+			<button type="button" class="btn btn-xs bg-blue" *ngIf="selectedscenario && cloneScenario"
+				(click)="AddTicketScenario()" [disabled]="!scenarioForm.valid">
+				<span>Done</span>
+			</button>
+
+			<button type="button" class="btn btn-xs bg-blue" *ngIf="selectedscenario && !cloneScenario"
+				(click)="UpdateTicketScenario()">
+				<span>Update</span>
+			</button>
+
+			<button type="button" class="btn btn-xs bg-red" (click)="Cancel()">
+				<span>Cancel</span>
+			</button>
+		</div>
+	</form>
+</div>

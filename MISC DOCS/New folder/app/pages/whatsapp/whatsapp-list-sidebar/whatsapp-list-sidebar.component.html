@@ -1,0 +1,143 @@
+<div class="nav-tabs-custom clearfix">
+    <div class="toolbox clearfix">
+        <!-- <button class="btn btn-transparent svgOnHover p-9">
+            <svg class="svg svg-default active">
+				<use href="/assets/img/icons/icons-sprite.svg#filter"/>
+			</svg>
+        </button> -->
+        <div class="searchForm clearfix" [ngClass]="searchForm && searchForm.get('searchValue').value ? 'active' : ''">
+            <!-- <div class="close-search svgOnHover">
+				<svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+				</svg>
+				<svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+				</svg>
+			</div> -->
+            <div class="search-bar">
+                <form [formGroup]="searchForm">
+                    <div class="input-block m-0">
+                        <input type="text" class="form-control input-sm" placeholder="search ...." autocomplete="off" formControlName="searchValue">
+                    </div>
+                </form>
+            </div>
+            <div class="search-icon svgOnHover">
+                <svg class="svg active">
+					<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+				</svg>
+            </div>
+        </div>
+    </div>
+    <div class="nav nav-tabs filters clearfix">
+        <ul class="clearfix">
+            <li class="active">
+                <a>
+                    <span>CONTACTS</span>
+                </a>
+            </li>
+            <li class="w-40 p-l-r-10" (click)="AddContact()">
+                <a class="svgOnHover w-20 p-t-b-5">
+                    <svg class="svg svg-orange active">
+						<use href="/assets/img/icons/icons-sprite.svg#plus"/>
+					</svg>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content clearfix">
+        <div class="tab-pane active">
+            <div class="list-items clearfix style1">
+                <ul class="activateScrollbar clearfix" #scrollContainer (scroll)="ScrollChanged($event)">
+                    <ng-template [ngIf]="!Loading && contactsList.length && !Searching">
+                        <li class="item clearfix animated flipInX-delay notif clearfix p-0" *ngFor="let contact of contactsList" (click)="SetSelectedContact(contact._id,$event)" [ngClass]="(selectedContact && selectedContact._id == contact._id) ? 'active' : ''">
+                            <div class="clearfix p-t-10">
+                                <div>
+                                    <div class="avatar ava-xs">
+                                        <span class="nameInitials text-white" style="background-color:rgba(84, 84, 240, 0.836)">{{ (contact.customerName) ? (contact.customerName | slice:0:1 ) : 'NN' }}</span>
+                                    </div>
+                                </div>
+                                <!--
+								<div class="availability">
+									<svg class="svg w-11 h-11 p-2 svg-default active">
+										<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-gray"/>
+										<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-green"/>
+										<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-orange"/>
+										<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-black"/>
+									</svg>
+								</div>
+								-->
+                                <div class="info">
+                                    <span class="name ellipsis fw-6">
+										<div class="input-block m-0">
+											<b *ngIf="editing != contact._id">{{(contact.customerName) ? contact.customerName : 'No Name'}}</b>
+											<input (click)="PreventBubbling($event)" [(ngModel)]="contact.customerName" *ngIf="editing == contact._id" type="text" class="form-control no-rad">
+										</div>
+									</span>
+                                    <span class="ellipsis msg">{{contact.customerNo}}</span>
+                                    <!-- <span class="ellipsis msg svgOnHover">
+										<svg class="svg svg-default active">
+											<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+										</svg>
+										<span>Image / Document</span>
+									</span> -->
+                                </div>
+                                <div class="notif-count right bg-transparent">
+                                    <button class="btn btn-transparent svgOnHover tooltip left" (click)="EnableEdit(contact._id,contact,$event)" *ngIf="editing != contact._id">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+                                    <button class="btn btn-transparent svgOnHover tooltip left" (click)="EditContact(contact._id,contact,$event)" *ngIf="editing == contact._id">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#ok-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#ok-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Save</span>
+									</button>
+                                    <button class="btn btn-transparent svgOnHover tooltip left" [disabled]='editingStatus[contact._id]' (click)="ClearEdit($event)" *ngIf="editing == contact._id">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Cancel</span>
+									</button>
+                                    <button class="btn btn-transparent svgOnHover" *ngIf="editingStatus[contact._id] && editingStatus[contact._id].status != 'editing'">
+										<img class="svg active" src="/assets/img/loaders/spin-loader-gray.svg">
+									</button>
+                                </div>
+                                <div class="notif-count msg-count" style="top: cal(50% + 5px);" *ngIf="contact.unreadCount && contact.unreadCount > 0">{{contact.unreadCount}}</div>
+                                <!--
+								<div class="notif-count loader-count">
+									<img class="svg w-30 h-20" src="/assets/img/loaders/msg-loader.svg">
+								</div>
+								<div class="notif-count right bg-transparent">
+									<span class="text-blue">20 minutes ago</span>
+								</div>
+								-->
+                            </div>
+                        </li>
+                    </ng-template>
+                    <li class="notAvailable" *ngIf="!Loading && Initialized && !contactsList.length && !Searching">
+						<svg class="svg w-100 h-100 active">
+							<use href="/assets/img/icons/icons-sprite.svg#contacts" class="text-gray"/>
+						</svg>
+                        <span>No Contacts Found</span>
+                        <br>
+                        <div *ngIf="!searchForm.get('searchValue').value">
+                            <button (click)="AddContact()" class="btn btn-sm bg-blue">Add Contact</button>
+                        </div>
+                    </li>
+                    <li class="notAvailable" *ngIf="Loading || Searching">
+                        <img class="svg w-50 h-50 active" src="/assets/img/loaders/spin-loader-gray.svg" />
+                        <span>{{(Searching) ? 'Searching ...' : 'Loading Chats'}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

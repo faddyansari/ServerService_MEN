@@ -1,0 +1,137 @@
+@import '../../../../../../assets/sass/partials/variables';
+@import '../../../../../../assets/sass/partials/mixins';
+@import '../../../../../../assets/sass/partials/extensions';
+
+.point-scale-selection,
+.point-scale-question {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	> div {
+		padding: 15px;
+		text-align: center;
+		flex: 1;
+	}
+}
+
+.point-scale-selection {
+	background-color: var(--theme-bg);
+	justify-content: flex-start;
+	> div {
+		flex: none;
+		display: flex;
+		> div {
+			border-left-width: 1px;
+			border-left-style: solid;
+			border-left-color: var(--border);
+			padding-left: 20px;
+		}
+	}
+}
+
+.point-scale-question {
+	> div {
+		border-style: dotted;
+		border-width: 2px;
+		border-color: var(--border);
+		padding: 0px;
+		border-left-width: 0px;
+		&:first-child {
+			border-left-width: 2px;
+		}
+		&.satisfaction-lvl {
+			margin: 0;
+			min-height: 104px;
+			.lvl-color {
+				height: 10px;
+				width: 100%;
+				display: block;
+			}
+			&.active {
+				&:nth-child(1) {
+					.lvl-color {
+						background-color: var(--valencia);
+					}
+				}
+				&:nth-child(2) {
+					.lvl-color {
+						background-color: var(--danger);
+					}
+				}
+				&:nth-child(3) {
+					.lvl-color {
+						background-color: var(--orange);
+					}
+				}
+				&:nth-child(4) {
+					.lvl-color {
+						background-color: var(--warning);
+					}
+				}
+				&:nth-child(5) {
+					.lvl-color {
+						background-color: var(--success);
+					}
+				}
+				&:nth-child(6) {
+					.lvl-color {
+						background-color: var(--olive);
+					}
+				}
+				&:nth-child(7) {
+					.lvl-color {
+						background-color: var(--green);
+					}
+				}
+			}
+			textarea {
+				font-size: 12px;
+				padding: 15px;
+				font-weight: 600;
+				resize: none;
+				line-height: 14px;
+			}
+		}
+	}
+	&.good-to-bad {
+		>.satisfaction-lvl {
+			&.active {
+				&:nth-child(1) {
+					.lvl-color {
+						background-color: var(--green);
+					}
+				}
+				&:nth-child(2) {
+					.lvl-color {
+						background-color: var(--olive);
+					}
+				}
+				&:nth-child(3) {
+					.lvl-color {
+						background-color: var(--success);
+					}
+				}
+				&:nth-child(4) {
+					.lvl-color {
+						background-color: var(--warning);
+					}
+				}
+				&:nth-child(5) {
+					.lvl-color {
+						background-color: var(--orange);
+					}
+				}
+				&:nth-child(6) {
+					.lvl-color {
+						background-color: var(--danger);
+					}
+				}
+				&:nth-child(7) {
+					.lvl-color {
+						background-color: var(--valencia);
+					}
+				}
+			}
+		}
+	}
+}

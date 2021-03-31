@@ -1,0 +1,57 @@
+<div class="box clearfix animated fadeIn delay-400">
+    <div class="box-body clearfix p-0">
+        <div class="box-subtitle clearfix">
+            <div>
+                <h5
+                    *ngIf="!(currentRoute.includes('htmlEditor') || currentRoute.includes('importTemplate') || IfBuilder() || currentRoute.includes('template-options'))">
+                    Template List</h5>
+                <h5 *ngIf="currentRoute.endsWith('template-options')">Template Options</h5>
+                <h5 *ngIf="currentRoute.endsWith('htmlEditor')">HTML Editor</h5>
+                <h5 *ngIf="currentRoute.endsWith('importTemplate')">Import Template</h5>
+                <h5 *ngIf="currentRoute.endsWith('basic')">Basic Layout</h5>
+                <h5 *ngIf="currentRoute.endsWith('news')">News Layout</h5>
+                <h5 *ngIf="currentRoute.endsWith('commerce')">Commerce Layout</h5>
+                <h5 *ngIf="currentRoute.endsWith('three-col')">Three Column Layout</h5>
+                <h5 *ngIf="currentRoute.endsWith('text')">Text Layout</h5>
+            </div>
+            <div *ngIf="!(currentRoute.includes('htmlEditor') || currentRoute.includes('importTemplate') || IfBuilder() ||
+                currentRoute.includes('template-options'))">
+                <a class="btn btn-xs btn-icon bg-white right border-blue" routerLink="template-options">
+                    <span>Add a Template</span>
+					<svg class="svg bg-blue">
+						<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white"/>
+					</svg>
+                </a>
+            </div>
+            <div>
+                <!-- <button type="button" class="btn btn-xs bg-blue" (click)="buttonPressed($event,'saveAsFile')"
+                    *ngIf="IfBuilder()">
+                    <span>Save as File</span>
+                </button>
+                <button type="button" class="btn btn-xs bg-blue" (click)="buttonPressed($event,'saveAsNew')"
+                    *ngIf="((currentRoute.includes('basic') || currentRoute.includes('htmlEditor')) && selectedTemplate)">
+                    <span>Save as new template</span>
+                </button>
+                <button type="button" class="btn btn-xs bg-blue" (click)="buttonPressed($event,'save')"
+                    *ngIf="((currentRoute.includes('htmlEditor') || currentRoute.includes('importTemplate') || IfBuilder()) && !selectedTemplate)"
+                    [disabled]="validation && validation.disabled">
+                    <span>Save Template</span>
+                </button>
+                <button class="btn btn-xs bg-blue" (click)="buttonPressed($event,'update')"
+                    *ngIf="((currentRoute.includes('htmlEditor') || currentRoute.includes('importTemplate') || IfBuilder()) && selectedTemplate)">
+                    <span>Update Template</span>
+                </button>
+                <button class="btn btn-xs bg-red" (click)="buttonPressed($event,'cancel')"
+                    *ngIf="(currentRoute.includes('htmlEditor') || currentRoute.includes('importTemplate') || IfBuilder())">
+                    <span>Cancel</span>
+                </button> -->
+            </div>
+        </div>
+
+        <app-email-template-list class="document-list clearfix"
+            *ngIf="!(currentRoute.includes('htmlEditor') || currentRoute.includes('importTemplate') || IfBuilder() || currentRoute.includes('template-options'))">
+        </app-email-template-list>
+
+        <router-outlet></router-outlet>
+    </div>
+</div>

@@ -1,0 +1,172 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="row clearfix">
+			<div class="col-xs-12">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Incoming Emails List</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="toggleEmailForm()"
+							[ngClass]="(!showEmailForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showEmailForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showEmailForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showEmailForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showEmailForm">
+					<!-- <p class="m-b-10">It allows you to add your signature that will be appended with email sending to visitors</p> -->
+					<div class="input-block">
+						<label>Enter Name</label>
+						<input type="text" class="form-control input-sm" [(ngModel)]="name" placeholder="Enter Name" required>
+					</div>
+					<!-- <p class="m-b-10">It allows you to add your signature that will be appended with email sending to visitors</p> -->
+					<div class="input-block">
+						<label>Add External Email Address</label>
+						<input type="email" class="form-control input-sm" [(ngModel)]="incomingEmail" [disabled]="(enableEdit)"
+							placeholder="Enter Email" required>
+					</div>
+					<div class="input-block">
+						<label>Assign to Group</label>
+						<div class="sel style1 sel-sm">
+							<select name="group" class="form-control input-sm" [(ngModel)]="groupName">
+								<option [value]="" selected disabled>Select</option>
+								<option [value]="''">None</option>
+								<option [value]="group.group_name" *ngFor="let group of Group">{{group.group_name}}
+								</option>
+
+							</select>
+						</div>
+					</div>
+					<div class="input-block" *ngIf="!enableEdit">
+						<label>Forward your emails to</label>
+						<input type="email" class="form-control input-sm text-black disabled"
+							[(ngModel)]="TransformIncomingEmail(incomingEmail) + domainEmail" required>
+					</div>
+					<div class="input-block" *ngIf="enableEdit">
+						<input type="email" class="form-control input-sm text-black disabled" [(ngModel)]="domainEmail"
+							required>
+					</div>
+					<button class="btn btn-sm bg-blue" *ngIf="!enableEdit"
+						(click)="insertEmail(domainEmail, incomingEmail, groupName,name)"
+						[ngClass]="(loading) ? 'btnSpinner' : ''" [disabled]="!incomingEmail && !name">
+
+						<span>Save</span>
+					</button>
+					<button class="btn btn-sm bg-blue" *ngIf="enableEdit"
+						(click)="Edit(domainEmail, incomingEmail, groupName, name)" [ngClass]="(loading) ? 'btnSpinner' : ''">
+						<span>Done</span>
+					</button>
+					<button class="btn btn-sm bg-black" *ngIf="enableEdit" (click)="Cancel()">
+						<span>Cancel</span>
+					</button>
+				</div>
+				<div class="document-list clearfix" *ngIf="agentEmails.length">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix" *ngFor="let data of agentEmails">
+							<div class="info m-b-0">
+								<div class="avatar ava-sm bg-transparent">
+									<button class="btn btn-transparent svgOnHover" (click)="PrimaryEmail(data._id,data.primaryEmail)"
+										title="{{(data.primaryEmail) ? 'Primary' : 'Not Primary'}}">
+										<svg class="svg w-30 h-30 svg-blue active">
+											<use [attr.href]="(data.primaryEmail) ? '/assets/img/icons/icons-sprite.svg#star-colored' : '/assets/img/icons/icons-sprite.svg#star'"/>
+										</svg>
+									</button>
+								</div>
+								<div class="desc">
+									<b [innerHTML]="data.name"></b>
+									<br>
+									<span [innerHTML]="data.email" [ngClass]="!data.activated ? 'line-through' : ''"></span>
+								</div>
+								<div class="desc">
+									<span
+										[ngClass]="data.activated ? 'text-olive' : 'text-red'">{{data.activated ? 'Verified' : 'Not Verified'}}</span>
+									<br>
+									<a class="btn btn-xxs bg-olive" *ngIf="!data.activated"
+										[ngClass]="(activationLoading && activationID == data.email) ? 'btnSpinner' : ''"
+										(click)="sendActivation(data.email)">
+										<span>Send Activation Email</span>
+									</a>
+									<a class="btn btn-xxs bg-olive" *ngIf="!data.canUseOriginalEmail && data.activated"
+										[ngClass]="(activationLoading && activationID == data.email) ? 'btnSpinner' : ''"
+										(click)="sendIdentityVerificationEmail(data.email)">
+										<span>Use Original Email</span>
+									</a>
+								</div>
+								<div class="desc">
+									<b>Forwarded To</b>
+									<br>
+									<span [innerHTML]="data.domainEmail"></span>
+								</div>
+								<div class="desc">
+									<b>Group</b>
+									<br>
+									<span *ngIf="data.group" [innerHTML]="data.group"></span>
+									<span *ngIf="!data.group">Unassigned</span>
+								</div>
+								<div class="actions">
+									
+									<button class="btn btn-xs btn-transparent svgOnHover tooltip top" (click)="editdata(data._id)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button class="btn btn-xs btn-transparent svgOnHover tooltip top" (click)="Delete(data.email, data._id)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+								</div>
+							</div>
+							<div class="info b-t-0 p-b-0 f-justify-start">
+								<div class="pretty p-switch p-smooth p-fill p-toggle">
+									<input type="checkbox" [(ngModel)]="data.applyExternalRulesets" (change)="toggleExternalRuleset(data._id, $event.target.checked)"/>
+									<div class="state p-on">
+										<label>External Rulesets Applied!</label>
+									</div>
+									<div class="state p-off">
+										<label>External Rulesets Not Applied!</label>
+									</div>
+								</div>
+								<div class="pretty p-switch p-smooth p-fill p-toggle" *ngIf="nsp && nsp == '/sbtjapaninquiries.com'">
+									<input type="checkbox" [(ngModel)]="data.iconnDispatcher" (change)="toggleIconnDispatcher(data._id, $event.target.checked)"/>
+									<div class="state p-on">
+										<label>Iconn Dispatcher Enabled!</label>
+									</div>
+									<div class="state p-off">
+										<label>Iconn Dispatcher Disabled!</label>
+									</div>
+								</div>
+								<div class="pretty p-switch p-smooth p-fill p-toggle">
+									<input type="checkbox" [(ngModel)]="data.acknowledgementEmail" (change)="toggleAckEmail(data._id, $event.target.checked)"/>
+									<div class="state p-on">
+										<label>Acknowledgement Email Enabled!</label>
+									</div>
+									<div class="state p-off">
+										<label>Acknowledgement Email Disabled!</label>
+									</div>
+								</div>
+								<div class="pretty p-switch p-smooth p-fill p-toggle" *ngIf="data.canUseOriginalEmail">
+									<input type="checkbox" [(ngModel)]="data.useOriginalEmail" (change)="toggleUseOriginalEmail(data._id, $event.target.checked)"/>
+									<div class="state p-on">
+										<label>Use original Email Enabled!</label>
+									</div>
+									<div class="state p-off">
+										<label>Use original Email Disabled!</label>
+									</div>
+								</div>				
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

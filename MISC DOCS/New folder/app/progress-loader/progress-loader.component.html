@@ -1,0 +1,30 @@
+<div class="clearfix">
+    <!-- <div class="c100" [ngClass]="['p' + progress, color]"> -->
+    <div class="c100" [ngClass]="['p' + progress]">
+        <span>
+			<!-- {{value}}% -->
+			<button *ngIf="!errored && progress < 99" (click)="Cancel()" class="btn btn-transparent svgOnHover tooltip top">
+				<svg class="svg w-40 h-40 active">
+					<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+				</svg>
+				<span class="tooltip-inner">Cancel</span>
+        </button>
+        <button *ngIf="errored" (click)="Retry()" class="btn btn-transparent svgOnHover tooltip top">
+				<svg class="svg w-40 h-40 active">
+					<use href="/assets/img/icons/icons-sprite.svg#redo-circle-colored"/>
+				</svg>
+				<span class="tooltip-inner">Retry</span>
+	</button>
+        <button *ngIf="!errored && status && status == 'sending' && progress > 99" class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-40 h-40 active">
+				<use href="/assets/img/icons/icons-sprite.svg#refresh-circle-colored"/>
+			</svg>
+			<span class="tooltip-inner">Sending</span>
+		</button>
+        </span>
+        <div class="slice">
+            <div class="bar"></div>
+            <div class="fill"></div>
+        </div>
+    </div>
+</div>

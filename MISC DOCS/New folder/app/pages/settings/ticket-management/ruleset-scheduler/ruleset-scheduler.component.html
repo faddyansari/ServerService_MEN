@@ -1,0 +1,56 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="row clearfix">
+			<div class="col-md-4">
+				<form class="m-b-15 clearfix" [formGroup]="schedulerForm" (change)="valueChanges()">
+					<div class="clearfix">
+						<div class="input-block">
+							<label>Enabled</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox"
+									formControlName="enabled"/>
+								<div class="state p-on">
+									<label></label>
+								</div>
+								<div class="state p-off">
+									<label></label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Schedule</label>
+							<div class="sel style1 sel-sm">
+								<select class="form-control input-sm" formControlName="type">
+									<option value="everyday">Everyday</option>
+									<option value="after">After</option>
+								</select>
+							</div>
+							<div *ngIf="schedulerForm.get('type').value == 'after'">
+								<input type="number" class="form-control input-sm" autocomplete="off" placeholder="Days" min="1"
+								formControlName="days"> (day/days)
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Time</label>
+							<input type="time" class="form-control input-sm" autocomplete="off" placeholder="Time" formControlName="time">
+						</div>
+						<div class="input-block">
+							<label>Scheduled at</label>
+							<input type="datetime" class="form-control input-sm" autocomplete="off" placeholder="Scheduled at" formControlName="scheduled_at" disabled>
+						</div>
+					</div>
+				</form>
+				<button class="btn btn-sm bg-blue m-r-10"
+					[disabled]="!schedulerForm.valid"
+					(click)="save()">
+					<span>Save</span>
+				</button>
+				<button class="btn btn-sm bg-red m-r-10"
+					*ngIf="changes"
+					(click)="reset()">
+					<span>Cancel</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

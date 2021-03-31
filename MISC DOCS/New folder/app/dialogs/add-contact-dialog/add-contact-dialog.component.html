@@ -1,0 +1,55 @@
+<div mat-dialog-content>
+    <mat-dialog-actions>
+		<a class="mat-dialog-close svgOnHover tooltip left" (click)="Close($event)">
+			<svg class="svg w-30 h-30 active">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel"/>
+			</svg>
+			<span class="tooltip-inner">Close Dialog</span>
+		</a>
+	</mat-dialog-actions>
+    <div class="activateScrollbar clearfix p-0">
+        <div class="detail-holder">
+            <img class="m-b-40" src="/assets/img/illustrations/add-contact.jpg" alt="">
+            <button type="button" class="btn bg-charcoal btn-lg">Import / Export Contact</button>
+            <!-- <div class="bg-service"></div> -->
+        </div>
+        <div class="form-holder">
+            <div class="activateScrollbar clearfix">
+                <form class="require-validation" [formGroup]="contactRegForm">
+                    <div mat-dialog-title class="m-b-30">
+                        <h2>Add Contact</h2>
+                        <!-- <h5 class="fw-4 text-gray-dark">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</h5> -->
+                    </div>
+                    <fieldset>
+                        <div class="input-block">
+                            <label>Name</label>
+                            <input type="text" autocomplete="off" class="form-control input-lg" placeholder="Name" name="name" [formControl]="contactRegForm.controls['name']">
+                            <p class="help-block">Appears on reports and chat transcripts.</p>
+                        </div>
+                        <div class="input-block">
+                            <label>Phone</label>
+                            <input type="tel" autocomplete="off" class="form-control input-lg" placeholder="Phone No" name="phone_no" [formControl]="contactRegForm.controls['phone_no']" (keypress)="NumbersOnly($event)">
+                            <p class="help-block">Phone Number for Admin reference</p>
+                        </div>
+                        <div class="input-block has-feedback">
+                            <label>Email</label>
+                            <input type="email" autocomplete="off" class="form-control input-lg" placeholder="Email" name="email" [formControl]="contactRegForm.controls['email']">
+                            <div class="form-control-feedback">
+                                <p class="text-red" *ngIf="contactRegForm.get('email').value && !(contactRegForm.get('email').status === 'VALID') && contactRegForm.get('email').dirty">Please Provide Valid Email</p>
+                                <p class="text-red" *ngIf="!isEmailUnique && !contactRegForm.get('email').dirty">This email has been registered already</p>
+                                <!-- <p class="text-red" *ngIf="contactRegForm.get('email').hasError('required') || contactRegForm.get('email').hasError('email')">Please Provide Valid Email</p>
+								<p class="text-red" *ngIf="contactRegForm.get('email').hasError('isEmailUnique')">This email has been registered already</p> -->
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="mat-dialog-footer clearfix b-0 p-l-r-0">
+                        <mat-dialog-actions>
+                            <!-- <button type="button" [disabled]="(contactRegForm.invalid)" class="btn btn-sm bg-blue pull-left" [ngClass]="(loading) ? 'btnSpinner' : ''" (click)="submitForm(contactRegForm.value)">Submit</button> -->
+                            <button type="button" [disabled]="(contactRegForm.invalid || (!isEmailUnique && !contactRegForm.get('email').dirty))" class="btn bg-blue btn-lg" (click)="submitForm(contactRegForm.value)">Submit</button>
+                        </mat-dialog-actions>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

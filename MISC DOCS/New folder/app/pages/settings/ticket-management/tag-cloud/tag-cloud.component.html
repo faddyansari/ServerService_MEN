@@ -1,0 +1,104 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Add New Tags</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon bg-white right" (click)="AddTag()"
+							[ngClass]="(!showForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showForm">
+					<form class="clearfix" [formGroup]="tagForm">
+						<div class="input-block">
+							<div class="input-group-sm">
+								<input type="text" class="form-control w100" placeholder="#tag"
+									[formControl]="tagForm.controls['hashTag']">
+
+							</div>
+							<p>To add a tag, type # followed by the word, OR comma separated for multiple.</p>
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue" [disabled]="!tagForm.valid" *ngIf="!editCase"
+							(click)="insertTag()">
+							<span>Add Tag</span>
+						</button>
+						<button type="submit" class="btn btn-sm bg-blue" [disabled]="!tagForm.dirty" *ngIf="editCase"
+							(click)="EditTag()">
+							<span>Update Tag</span>
+						</button>
+					</form>
+				</div>
+				<div class="document-list clearfix">
+					<ul class="activateScrollbar clearfix">
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Tags List</h5>
+					</div>
+					<input type="search" class="form-control input-sm" placeholder="Search..."
+						[(ngModel)]="searchValue" *ngIf="tagList && tagList.length">
+					<button class="btn btn-xs btn-theme" *ngIf="tagList && tagList.length"
+						[popper]="sortPopper" [popperShowOnStart]="false" [popperTrigger]="'click'"
+						[popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'">
+						Sort By
+					</button>
+				</div>
+				<div class="document-list clearfix">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix"
+							*ngFor="let tag of tagList | filter: searchValue : [] : false;let i = index ">
+							<div class="info card">
+
+								<div class="desc">
+									<b>{{tag}}</b>
+								</div>
+								<div class="actions">
+									<button type="button" class="btn btn-transparent svgOnHover tooltip left"
+										(click)="updateTag(tag,i)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit" />
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left" (click)="DeleteTag(i)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete" />
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<popper-content #sortPopper>
+	<ul class="activateScrollbar clearfix">
+		<li *ngFor="let sort of SortBy" (click)="Sortby(sort)">
+			<a><span>{{sort}}</span></a>
+		</li>
+	</ul>
+</popper-content>

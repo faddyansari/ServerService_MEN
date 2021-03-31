@@ -1,0 +1,42 @@
+<dl class="dl-horizontal">
+  <dt>
+      <span>Returning</span>
+  </dt>
+  <dd class="text-red" *ngIf="!visitor.returningVisitor">NO</dd>
+  <dd class="text-green" *ngIf="visitor.returningVisitor">YES</dd>
+</dl>
+<dl class="dl-horizontal" *ngIf="visitor.state == 3">
+  <dt>
+      <span>Agent Name</span>
+  </dt>
+  <dd>{{visitor.agent.name}}</dd>
+</dl>
+<dl class="dl-horizontal" *ngIf="visitor.deviceInfo">
+  <dt class="svg" *ngIf="(visitor.deviceInfo.name | lowercase) == 'android'">Device
+  </dt>
+  <dd *ngIf="(visitor.deviceInfo.name | lowercase) == 'android'">
+      <span>Android</span>
+  </dd>
+  <dt class="svg" *ngIf="(visitor.deviceInfo.name | lowercase) == 'apple'">Device</dt>
+  <dd *ngIf="(visitor.deviceInfo.name | lowercase) == 'apple'">
+      <span>Apple</span>
+  </dd>
+  <dt class="svg" *ngIf="(visitor.deviceInfo.name | lowercase) == 'windows'">Device</dt>
+  <dd *ngIf="(visitor.deviceInfo.name | lowercase) == 'windows'">
+      <span>Windows</span>
+  </dd>
+</dl>
+<dl class="dl-horizontal" *ngIf="visitor.deviceInfo">
+  <dt class="svg" *ngIf="(visitor.deviceInfo.os | lowercase) == 'chrome'">Browser</dt>
+  <dd *ngIf="(visitor.deviceInfo.os | lowercase) == 'chrome'">
+      <span>{{visitor.deviceInfo.version}}</span>
+  </dd>
+  <dt class="svg" *ngIf="(visitor.deviceInfo.os | lowercase) == 'safari'">Browser</dt>
+  <dd *ngIf="(visitor.deviceInfo.os | lowercase) == 'safari'">
+      <span>{{visitor.deviceInfo.version}}</span>
+  </dd>
+  <dt class="svg" *ngIf="(visitor.deviceInfo.os | lowercase) == 'firefox'"> Browser</dt>
+  <dd *ngIf="(visitor.deviceInfo.os | lowercase) == 'firefox'">
+      <span>{{visitor.deviceInfo.version}}</span>
+  </dd>
+</dl>

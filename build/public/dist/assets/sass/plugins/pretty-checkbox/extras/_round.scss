@@ -1,0 +1,8 @@
+.pretty.p-round {
+  .state label {
+    &:before,
+    &:after {
+      border-radius: 100%;
+    }
+  }
+}

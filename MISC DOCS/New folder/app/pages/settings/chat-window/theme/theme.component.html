@@ -1,0 +1,358 @@
+<div class="box clearfix animated fadeIn delay-400 displaySettings" id="chatCustomizationComponent"
+    *ngIf="displaySettings">
+    <div class="box-body clearfix p-0">
+        <div class="row clearfix">
+            <div class="col-sm-6 col-xs-12">
+                <form [formGroup]="form">
+                    <div class="box-subtitle clearfix">
+                        <div>
+                            <h5>Header Palette</h5>
+                        </div>
+                    </div>
+                    <div class="pallet-list">
+                        <div class="pallet-box">
+                            <label>Background Start Color</label>
+                            <input class="btn btn-xs btn-block color-picker-handle"
+                                formControlName="headerSecondryColor"
+                                (colorPickerChange)="ColorChange('headerSecondryColor', $event)"
+                                [(colorPicker)]="displaySettings.headerSecondryColor" [cpPosition]="'right'"
+                                [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.headerSecondryColor">
+
+                        </div>
+                        <div class="pallet-box">
+                            <label>Background End Color</label>
+                            <input class="btn btn-xs btn-block color-picker-handle" formControlName="headerColor"
+                                (colorPickerChange)="ColorChange('headerColor', $event)"
+                                [(colorPicker)]="displaySettings.headerColor" [cpPosition]="'right'" [cpWidth]="'200'"
+                                [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.headerColor">
+
+                        </div>
+                        <div class="pallet-box">
+                            <label>Text Color</label>
+                            <input class="btn btn-xs btn-block color-picker-handle" formControlName="headerTextColor"
+                                (colorPickerChange)="ColorChange('headerTextColor', $event)"
+                                [(colorPicker)]="displaySettings.headerTextColor" [cpPosition]="'right'"
+                                [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.headerTextColor">
+                        </div>
+                    </div>
+                    <div class="box-subtitle clearfix">
+                        <div>
+                            <h5>Content Palette</h5>
+                        </div>
+                    </div>
+                    <div class="pallet-list">
+                        <div class="pallet-box">
+                            <label>Background Color</label>
+                            <input class="btn btn-xs btn-block color-picker-handle" formControlName="bgColor"
+                                (colorPickerChange)="ColorChange('bgColor', $event)"
+                                [(colorPicker)]="displaySettings.bgColor" [cpPosition]="'right'" [cpWidth]="'200'"
+                                [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.bgColor">
+                        </div>
+                        <div class="pallet-box">
+                            <label>Text Color</label>
+                            <input class="btn btn-xs btn-block color-picker-handle" formControlName="contentColor"
+                                (colorPickerChange)="ColorChange('contentColor', $event)"
+                                [(colorPicker)]="displaySettings.contentColor" [cpPosition]="'right'" [cpWidth]="'200'"
+                                [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.contentColor">
+                        </div>
+                        <div>
+                            <div class="pallet-box">
+                                <label>Background Image</label>
+                                <div class="input-group">
+                                    <input #fileInput class="form-control input-sm w-150" type="file"
+                                        (change)="FileSelected($event)">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm bg-olive" [ngClass]="(uploading) ? 'btnSpinner' : ''"
+                                            [disabled]="!fileToUpload" (click)="UploadImage()">
+                                            <span>Upload</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="clearfix w-200" *ngIf="file && ((file | json) != ({} | json))">
+                                    <div class="badge bg-olive clearfix w80">
+                                        <span class="ellipsis">{{file.name}}</span>
+                                    </div>
+                                    <button class="btn btn-xs bg-red svgOnHover pull-right" [ngClass]="(deleting) ? 'btnSpinner' : ''" (click)="ClearFile()">
+                                        <svg class="svg w-12 h-12">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored" class="text-white"/>
+										</svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-subtitle clearfix">
+                        <div>
+                            <h5>Form Palette</h5>
+                        </div>
+                    </div>
+                    <div class="pallet-list">
+                        <div class="pallet-box">
+                            <label>Primary Button Color</label>
+                            <input class="btn btn-xs btn-block color-picker-handle" formControlName="btnColor"
+                                (colorPickerChange)="ColorChange('btnColor', $event)"
+                                [(colorPicker)]="displaySettings.btnColor" [cpPosition]="'right'" [cpWidth]="'200'"
+                                [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.btnColor">
+                        </div>
+                        <div class="pallet-box">
+                            <label>Primary Button Text</label>
+                            <input class="btn btn-xs btn-block color-picker-handle" formControlName="btnTextcolor"
+                                (colorPickerChange)="ColorChange('btnTextcolor', $event)"
+                                [(colorPicker)]="displaySettings.btnTextcolor" [cpPosition]="'right'" [cpWidth]="'200'"
+                                [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.btnTextcolor">
+                        </div>
+                        <div class="pallet-box">
+                            <label>Secondary Button Color</label>
+                            <input class="btn btn-xs btn-block color-picker-handle" formControlName="secondryBtnColor"
+                                (colorPickerChange)="ColorChange('secondryBtnColor', $event)"
+                                [(colorPicker)]="displaySettings.secondryBtnColor" [cpPosition]="'right'"
+                                [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.secondryBtnColor">
+                        </div>
+                        <div class="pallet-box">
+                            <label>Secondary Button Text</label>
+                            <input class="btn btn-xs btn-block color-picker-handle"
+                                formControlName="secondryBtnTextColor"
+                                (colorPickerChange)="ColorChange('secondryBtnTextColor', $event)"
+                                [(colorPicker)]="displaySettings.secondryBtnTextColor" [cpPosition]="'right'"
+                                [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.secondryBtnTextColor">
+                        </div>
+                        <div class="pallet-box">
+                            <label>Input Border</label>
+                            <input class="btn btn-xs btn-block color-picker-handle" formControlName="borderColor"
+                                (colorPickerChange)="ColorChange('borderColor', $event)"
+                                [(colorPicker)]="displaySettings.borderColor" [cpPosition]="'right'" [cpWidth]="'200'"
+                                [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                [style.background]="displaySettings.borderColor">
+                        </div>
+                    </div>
+                    <div class="box-subtitle clearfix">
+                        <div>
+                            <h5>Window Height</h5>
+                        </div>
+                    </div>
+                    <div class="input-block" *ngIf="displaySettings">
+                        <div class="row input-group-sm">
+                            <div class="col-sm-3 col-xs-12">
+                                <app-range-slider [dbValue]="displaySettings.windowSizeForDesktop" [minVal]="550"
+                                    *ngIf="displaySettings.windowSizeForDesktop" [maxVal]="700"
+                                    [displayVal]="'For Desktop'" [controlValue]="'windowSizeForDesktop'"
+                                    (controlVal)="SetControl($event)" [settingType]="''" [setting]="''">
+                                </app-range-slider>
+                            </div>
+                            <div class="col-sm-3 col-xs-12">
+                                <app-range-slider [dbValue]="displaySettings.windowSizeForMobile" [minVal]="550"
+                                    *ngIf="displaySettings.windowSizeForMobile" [maxVal]="700"
+                                    [displayVal]="'For Mobile'" [controlValue]="'windowSizeForMobile'"
+                                    (controlVal)="SetControl($event)" [settingType]="''" [setting]="''">
+                                </app-range-slider>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-subtitle clearfix">
+                        <div>
+                            <h5>Sticky window (For Mobile)</h5>
+                        </div>
+                    </div>
+                    <div class="input-block">
+                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                            <input type="checkbox" [checked]="displaySettings.stickyWindow" name="stickyWindow"
+                                (click)="SetStickyWindow()"/>
+                            <div class="state p-on">
+                                <label>Enabled</label>
+                            </div>
+                            <div class="state p-off">
+                                <label>Disabled</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex f-row f-wrap f-gap5 m-b-10">
+                        <div>
+                            <button class="btn btn-sm bg-blue" (click)="SubmitForm()"
+                                [ngClass]="(loading) ? 'btnSpinner' : ''">
+                                <span>SAVE</span>
+                            </button>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm bg-blue"
+                                (click)="Reset()">
+                                <span>RESTORE</span>
+                            </button>
+                        </div>
+                        <div>
+                            <button (click)="ResetToDefaults()" type="button" class="btn btn-sm bg-black">
+                                <span>RESET TO DEFAULT</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Preview Content</h5>
+                    </div>
+                </div>
+                <div id="bz-cw" class="right">
+                    <div id="homeWindow" class="homeWindow cd-form active"
+                        [ngStyle]="(displaySettings && (displaySettings.bgImage | json) != ({} | json)) ? {'background-image': 'url(' + displaySettings.bgImage.links + ')', 'background-repeat': 'no-repeat','background-size' : '100%' } : {'background-color': displaySettings.bgColor } ">
+                        <div id="chatHeaderArea" class="chatHeaderArea has-news has-agents"
+                            [ngStyle]="(displaySettings) ?  ApplyHeaderColorWithGradient(displaySettings.headerColor) : ''">
+                            <div id="headerTools" class="headerTools">
+                                <h1 class="ellipsis"
+                                    [ngStyle]="(displaySettings) ? {'color': displaySettings.headerTextColor } : ''">
+                                    Heading Comes Here ...</h1>
+                                <button id="cd-notification" class="cd-btn svgOnHover notif">
+									<svg class="svg active">
+										<use href="/assets/img/icons/icons-sprite.svg#bell-on" class="text-white"/>
+									</svg>
+                                    <span class="notif-count right">22</span>
+                                </button>
+                                <button id="cd-volume" class="cd-btn svgOnHover">
+									<svg class="svg active">
+										<use href="/assets/img/icons/icons-sprite.svg#volume-on" class="text-white"/>
+									</svg>
+                                </button>
+                                <button id="cd-minimize" class="cd-btn svgOnHover">
+									<svg class="svg active">
+										<use href="/assets/img/icons/icons-sprite.svg#minimize" class="text-white"/>
+									</svg>
+                                </button>
+                                <button id="cd-close" class="cd-btn svgOnHover">
+									<svg class="svg active">
+										<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white"/>
+									</svg>
+                                </button>
+                            </div>
+
+                            <div id="agentsList" class="agentsList clearfix">
+                                <ul class="clearfix">
+                                    <li>
+                                        <span>FA</span>
+                                    </li>
+                                    <li>
+                                        <span>AN</span>
+                                    </li>
+                                    <li>
+                                        <span>SA</span>
+                                    </li>
+                                    <li>+2</li>
+                                </ul>
+                            </div>
+                            <div id="newsList" class="newsList clearfix">
+                                <ul class="list-items clearfix">
+                                    <li class="item imgContent animated">
+                                        <div>
+                                            <div class="avatar ava-xl m-0">
+
+                                            </div>
+                                        </div>
+                                        <div class="info">
+                                            <h4>News Title Comes Here ...</h4>
+                                            <p>News description comes here ...</p>
+                                            <a>news-link-comes-here</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="arrows">
+                                    <div class="left svgOnHover">
+                                        <svg class="svg svg-white active">
+											<use href="/assets/img/icons/icons-sprite.svg#arrow-prev"/>
+										</svg>
+                                    </div>
+                                    <div class="right svgOnHover">
+                                        <svg class="svg svg-white active">
+											<use href="/assets/img/icons/icons-sprite.svg#arrow-next"/>
+										</svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="chatContentArea" class="chatContentArea">
+                            <div id="userInformation" class="userInformation clearfix">
+                                <form>
+                                    <h6 class="title-with-border border-gray"
+                                        [ngStyle]="(displaySettings) ? {'color': displaySettings.contentColor } : ''">
+                                        Please fill in the form below or click on CHAT NOW</h6>
+                                    <div class="input-block">
+                                        <input type="text" name="userName" class="form-control input-sm"
+                                            [ngStyle]="(displaySettings) ? { 'border-color' : displaySettings.borderColor } : ''"
+                                            autocomplete="off" placeholder="Enter Name">
+                                    </div>
+                                    <div class="input-block has-feedback">
+                                        <input type="email" name="userEmail" class="form-control input-sm"
+                                            [ngStyle]="(displaySettings) ? { 'border-color' : displaySettings.borderColor } : ''"
+                                            autocomplete="off" placeholder="Enter Email Address">
+                                    </div>
+                                    <div class="btn-group m-b-15">
+                                        <button type="button" class="btn btn-sm w50"
+                                            [ngStyle]="(displaySettings) ? {'background-color': displaySettings.btnColor, 'color': displaySettings.btnTextcolor } : ''">
+                                            <span>START CHAT</span>
+                                        </button>
+                                        <button type="button" class="btn btn-sm w50"
+                                            [ngStyle]="(displaySettings) ? {'background-color': displaySettings.secondryBtnColor, 'color': displaySettings.secondryBtnTextColor } : ''">
+                                            <span>RECENT CHATS</span>
+                                        </button>
+                                    </div>
+                                    <div class="text-center clearfix m-b-10">
+                                        <h5
+                                            [ngStyle]="(displaySettings) ? { 'color' : displaySettings.contentColor} : ''">
+                                            OR</h5>
+                                    </div>
+                                    <div class="m-b-15">
+                                        <button type="button" id="btnSubmitTicket" class="btn btn-sm btn-block"
+                                            [ngStyle]="(displaySettings) ? {'background-color': displaySettings.btnColor, 'color': displaySettings.btnTextcolor } : ''">
+                                            <span>Submit Ticket</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!--
+                            <app-go-to-chat id="goToChat" class="goToChat clearfix" *ngIf="session && (session.state == 3  || session.state == 2 || session.state == 4 || session.state == 7) && newsList && !newsList.length"></app-go-to-chat>
+                            <app-actions id="actionBtns" class="actionBtns clearfix" *ngIf="newsList && newsList.length && session.state!=6"></app-actions>
+                            <app-info id="faqList" class="faqList clearfix"></app-info>
+                            <app-promotions id="promotionList" class="promotionList clearfix" *ngIf="promotions && promotions.length"></app-promotions> -->
+
+                            <!-- IF MESSAGE WINDOW -->
+                            <!-- <app-message-list id="msgList" class="msgList" *ngIf="!ViewingChatHistory"></app-message-list>
+                            <app-conversation-info id="msgList" class="msgList" *ngIf="ViewingChatHistory"></app-conversation-info>
+                            <app-message-form id="chatContentFooterArea" class="chatContentFooterArea" *ngIf="!ViewingChatHistory"></app-message-form> -->
+
+                            <!-- IF RECENT CHATS WINDOW -->
+                            <!-- <div id="recentChatList" class="recentChatList clearfix">
+                                <ul class="list-items clearfix" #scrollbarRef *ngIf="Session && Conversations.length>0">
+                                    <li class="item clearfix"
+                                        (click)="SelectConversation(i)"
+                                        *ngFor="let convo of Conversations ; let i = index">
+                                        <div class="initials" *ngIf="(convo.visitorName)">{{convo.visitorName | slice:0:1 | uppercase}}</div>
+                                        <div class="chat-text" *ngIf="convo.agentEmail">
+                                            <span class="ellipsis"
+                                                [ngStyle]="(themeSettings) ? {'color': themeSettings.contentColor } : ''">{{convo.agentEmail}}</span>
+                                            <span class="last-message ellipsis w65">{{convo.lastMessage.body}}</span>
+                                            <small class="date-time" *ngIf="convo.body != ''">{{ convo.createdOn | agoPipe}}</small>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div> -->
+                            <!-- <button [ngClass]="LoadingMessage ? 'btnSpinner' : ''" class="btn btn-sm btn-block bg-charcoal" type="button" (click)="LoadMore()">
+                                <span *ngIf="LoadingMessage">Loading</span>
+                                <span *ngIf="ifMoreRecentChats && !ErrorRecentChats && !LoadingMessage">Load More</span>
+                                <span *ngIf="!ifMoreRecentChats && !ErrorRecentChats && !LoadingMessage">No More Recent Chats Found</span>
+                                <span *ngIf="ErrorRecentChats && !LoadingMessage">Error in Loading Recent Chats. Please Try Again</span>
+                            </button> -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

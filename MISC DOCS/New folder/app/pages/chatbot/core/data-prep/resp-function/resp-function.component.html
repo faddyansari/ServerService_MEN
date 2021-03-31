@@ -1,0 +1,184 @@
+<div class="row clearfix intent-list">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Response Functions</h5>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+					(click)="toggleRespFunctionForm()"
+					[ngClass]="(!showRespFunctionForm) ? 'border-blue' : 'border-red'">
+					<span>{{(!showRespFunctionForm) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!showRespFunctionForm) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!showRespFunctionForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="popover-form" *ngIf="showRespFunctionForm">
+			<form [formGroup]="RespFunctionForm">
+				<div class="input-block">
+					<input type="text" autocomplete="off" class="form-control input-sm"
+						placeholder="Response Function name"
+						[formControl]="RespFunctionForm.controls['func_name']">
+				</div>
+				<button class="btn btn-sm bg-blue"
+					(click)="AddRespFunc(RespFunctionForm.get('func_name').value)"
+					[disabled]="RespFunctionForm.invalid">
+					<span>Add</span>
+				</button>
+			</form>
+		</div>
+		<div class="document-list">
+			<ul class="activateScrollbar clearfix">
+				<li class="notif clearfix" *ngFor="let i of resp_func_list;let index = index;">
+					<div class="info"
+						*ngIf="!i.del && !i.editable"
+						(click)="showResponses(i)">
+						<div class="desc m-r-14">
+							<b title="{{i.func_name}}" id="i.name">{{i.func_name}}</b>
+						</div>
+						<div class="actions">
+							<button class="btn btn-transparent svgOnHover tooltip left"
+								(click)="editRespFunc(i)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip left"
+								(click)="deleteRespFunc(i, index)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+						</div>
+					</div>
+					<div class="info card"
+						*ngIf="!i.del && i.editable">
+						<div class="desc m-r-14">
+							<div class="input-block m-0">
+								<input type="text" class="form-control input-sm" [(ngModel)]="updatedRespFunc">
+							</div>
+						</div>
+						<div class="actions">
+							<button class="btn btn-transparent svgOnHover tooltip left"
+								(click)="cancelEdit(i)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+								</svg>
+								<span class="tooltip-inner">Cancel</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip left"
+								(click)="updateRespFunc(i)"
+								[disabled]="!i.func_name">
+								<svg class="svg svg-green active">
+									<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+								</svg>
+								<span class="tooltip-inner">Save</span>
+							</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Responses</h5>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+					(click)="togglesResponseForm()"
+					[ngClass]="(!showResponseForm) ? 'border-blue' : 'border-red'"
+					*ngIf="responseSelected">
+					<span>{{(!showResponseForm) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!showResponseForm) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!showResponseForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="popover-form" *ngIf="showResponseForm">
+			<ng-template ngFor [ngForOf]="resp_func_list" let-i let-index="index">
+				<form [formGroup]="ResponseForm" class="m-b-10" *ngIf="i.responses">
+					<div class="input-block">
+						<input type="text" autocomplete="off" class="form-control input-sm"
+							placeholder="Enter response"
+							[formControl]="ResponseForm.controls['response']">
+					</div>
+					<button class="btn btn-sm bg-blue"
+						(click)="AddResponse(ResponseForm.get('response').value,i._id)"
+						[disabled]="ResponseForm.invalid">
+						<span>Add</span>
+					</button>
+				</form>
+			</ng-template>
+		</div>
+		<div class="document-list">
+			<ul class="activateScrollbar clearfix">
+				<ng-template ngFor  [ngForOf]="resp_func_list" let-i let-index="index">
+					<li class="notif clearfix" *ngIf="i.responses">
+						<div class="info" *ngFor="let j of response_list; let index = index;">
+							<div class="desc m-r-14">
+								<div class="input-block m-0" *ngIf="j.editable">
+									<input type="text" class="form-control input-sm" [(ngModel)]="updatedResponse">
+								</div>
+								<p [innerHTML]="j.text" *ngIf = "!j.editable"></p>
+							</div>
+							<div class="actions">
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									*ngIf="!j.editable"
+									(click)="editResponse(j)">
+									<svg class="svg svg-blue active">
+										<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+									</svg>
+									<span class="tooltip-inner">Edit</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									*ngIf="!j.editable"
+									(click)="deleteResponse(j, index)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									*ngIf="j.editable"
+									(click)="cancelEditResp(j)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+									</svg>
+									<span class="tooltip-inner">Cancel</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									*ngIf="j.editable"
+									(click)="updateResponse(j)"
+									[disabled]="!j.text">
+									<svg class="svg svg-green active">
+										<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+									</svg>
+									<span class="tooltip-inner">Save</span>
+								</button>
+							</div>
+						</div>
+					</li>
+				</ng-template>
+			</ul>
+		</div>
+	</div>
+</div>

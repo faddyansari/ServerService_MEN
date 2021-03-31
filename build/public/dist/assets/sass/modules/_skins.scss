@@ -1,0 +1,428 @@
+.scalable-wrapper {
+  /* CHAT MESSAGE */
+  .chat-msg {
+    > .chat-text {
+      color: var(--black);
+
+      .last-message {
+        color: var(--gray-dark);
+      }
+      .date-time {
+        color: var(--blue-light);
+        @extend %bgTransparent;
+      }
+      .attachment {
+        color: var(--black);
+        a {
+          color: var(--black);
+        }
+      }
+      .arrow {
+        border-color: transparent;
+      }
+    }
+    > .chat-info {
+      color: var(--theme-pro-gray);
+    }
+    /* msg_sent */
+    &.msg_sent {
+      > .chat-text {
+        background-color: var(--gray-alpha7);
+        a {
+          color: var(--blue);
+        }
+        &:before {
+          border-color: var(--white);
+        }
+        > .arrow {
+          border-top-color: var(--gray-alpha7);
+        }
+      }
+      > .chat-info {
+        > span {
+          border-left-color: var(--gray);
+        }
+      }
+    }
+    &.msg_recieved,
+    &.msg_transfer {
+      > .chat-info {
+        > span {
+          border-left-color: var(--gray);
+        }
+      }
+    }
+    /* msg_recieved */
+    &.msg_recieved {
+      > .chat-text {
+        background-color: var(--blue);
+        color: var(--white);
+        a,
+        p,
+        h5 {
+          color: var(--white);
+        }
+        > .arrow {
+          border-top-color: var(--blue);
+        }
+      }
+    }
+    /* msg_transfer */
+    &.msg_transfer {
+      > .chat-text {
+        background-color: var(--red-alpha2);
+        border-color: var(--red-alpha3);
+        a {
+          color: var(--red);
+        }
+        > .arrow {
+          border-top-color: var(--red-alpha2);
+        }
+      }
+      > .chat-info {
+        color: var(--red-dark);
+      }
+    }
+  }
+  .attachment {
+    a {
+      .file-name {
+        background-color: var(--theme-bg);
+        color: var(--theme-pro-gray);
+      }
+      &:hover {
+        .file-name {
+          color: var(--blue);
+        }
+      }
+    }
+  }
+  /* VIEW CHAT ON MULTIPLE COMPONENTS */
+  .viewChat {
+    .chatWindow {
+      .box {
+        .box-body {
+          .chatBody {
+            .chat-messages {
+              > .new-chat-loader {
+                &.msg_sent {
+                  background-color: #d2d6de;
+                  > div {
+                    background-color: var(--off-white);
+                  }
+                }
+                &.msg_recieved {
+                  background-color: var(--blue-light);
+                  > div {
+                    background-color: var(--off-white);
+                  }
+                }
+                &.msg_transfer {
+                  background-color: #d2d6de;
+                  > div {
+                    background-color: var(--off-white);
+                  }
+                }
+              }
+            }
+            .ticket-messages {
+              .chat-msg {
+                background-color: var(--theme-bg);
+                > .chat-header {
+                  border-bottom-color: var(--border);
+                  > div {
+                    > .chat-info {
+                      color: var(--black);
+                    }
+                  }
+                }
+                > .chat-text {
+                  color: var(--black);
+                  .attachment {
+                    a {
+                      color: var(--black);
+                    }
+                  }
+                }
+              }
+            }
+            .ticket-attachment-area {
+              li {
+                border-color: var(--border);
+                background-color: var(--white);
+              }
+            }
+            .attachment-area {
+              background-color: var(--card);
+              border-color: var(--border);
+              box-shadow: 0px -30px 50px var(--black-alpha3);
+              .remove {
+                background-color: var(--card);
+              }
+              .status {
+                background-color: var(--white-alpha7);
+                box-shadow: 0px 0px 30px var(--black-alpha4);
+                color: var(--red) !important;
+              }
+            }
+          }
+          .chatFooter {
+            .msgArea {
+              border-color: var(--border);
+              background-color: var(--theme-bg);
+              textarea {
+                @extend %noBg;
+              }
+              .tools {
+                label,
+                button {
+                  @extend %noBg;
+                }
+              }
+            }
+            .sneakpeak-area {
+              box-shadow: 0px -10px 17px -8px var(--shadow);
+              border-color: var(--red);
+              background-color: var(--theme-bg);
+              color: var(--red);
+              border-bottom-color: var(--red-alpha2);
+            }
+          }
+          &.is-dragover {
+            border-color: var(--gray-dark);
+          }
+        }
+      }
+    }
+  }
+  .viewHistory {
+    .box {
+      .box-body {
+        background-color: transparent;
+      }
+    }
+  }
+  .content-list {
+    .nav-tabs-custom {
+      .nav-tabs {
+        > li {
+          background-color: var(--white);
+          border: 1px solid var(--border);
+          > a {
+            > span {
+              color: var(--theme-pro-gray);
+            }
+          }
+          &:hover,
+          &.active {
+            > a {
+              > h6,
+              > span {
+                color: var(--charcoal-light);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* NAV TABS CUSTOM */
+  .nav-tabs-custom {
+    background-color: transparent;
+    > .nav-tabs {
+      @extend %bgTransparent;
+      @include tabletL {
+        border-bottom-color: var(--gray);
+      }
+      > .activateScrollbar {
+        > li {
+          > a {
+            background-color: transparent;
+            > .badge {
+              background-color: var(--gray);
+            }
+          }
+          &:hover,
+          &.active {
+            > a {
+              > .badge {
+                color: var(--white);
+              }
+            }
+          }
+        }
+      }
+    }
+    &.vertical {
+      > .nav-tabs {
+        // background-color: var(--gray-alpha6);
+        border-right-color: var(--border);
+        > .activateScrollbar {
+          > li {
+            > a {
+              background-color: var(--gray-alpha6);
+            }
+            &:hover,
+            &:focus,
+            &.active {
+              > a {
+                color: var(--white) !important;
+              }
+            }
+            &:hover,
+            &.active {
+              > .dropdown-arrow {
+                color: var(--white);
+              }
+              > ul {
+                > li {
+                  > a {
+                    background-color: var(--gray-light);
+                  }
+                  &:hover,
+                  &.active {
+                    > a {
+                      color: var(--blue);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@each $color, $value in $skinColors {
+  $dashColor: '--' + $color;
+
+  .uik_#{$color} {
+    /* MAIN WRAPPER */
+    &.scalable-wrapper {
+      .bl-app {
+        .wrapper {
+          /* MAIN HEADER */
+          .main-header {
+            background-color: var(#{$dashColor}-light);
+          }
+        }
+      }
+
+      /* VIEW CHAT */
+      .viewChat {
+        .preInstallation {
+          a {
+            color: var(#{$dashColor}-dark);
+          }
+        }
+      }
+
+      /* BOX */
+      .box {
+        .box-header {
+          .box-title {
+            color: var(#{$dashColor}-light) !important;
+          }
+        }
+      }
+
+      /* TOOLBOX */
+      .toolbox {
+        > form {
+          color: var(#{$dashColor});
+        }
+      }
+
+      /* LIST ITEMS */
+      .list-items {
+        .item {
+          > div {
+            .info {
+              .msg {
+                color: var(#{$dashColor}-alpha5);
+              }
+            }
+          }
+        }
+      }
+
+      /* NAV TABS CUSTOM */
+      .nav-tabs-custom {
+        > .nav-tabs {
+          > .activateScrollbar {
+            > li {
+              > a {
+                > span {
+                  color: var(#{$dashColor}-light);
+                }
+                > .badge {
+                  color: var(#{$dashColor}-light);
+                }
+              }
+              &:hover,
+              &.active {
+                > a {
+                  > span {
+                    color: var(#{$dashColor});
+                  }
+                  > .badge {
+                    color: var(--white);
+                    background-color: var(#{$dashColor});
+                  }
+                }
+              }
+            }
+          }
+        }
+        &.vertical {
+          > .nav-tabs {
+            > .activateScrollbar {
+              > li {
+                > a {
+                  color: var(#{$dashColor});
+                }
+                &:hover,
+                &:focus,
+                &.active {
+                  > a {
+                    background-color: var(#{$dashColor});
+                  }
+                }
+                > .dropdown-arrow {
+                  color: var(#{$dashColor});
+                }
+                > ul {
+                  > li {
+                    > a {
+                      color: var(#{$dashColor});
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      /* CONTACT LIST SIDEBAR */
+      .contact-list-sidebar {
+        > .nav-tabs-custom {
+          > .nav-tabs {
+            > ul {
+              > li {
+                > a {
+                  > span {
+                    color: var(#{$dashColor}-light);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

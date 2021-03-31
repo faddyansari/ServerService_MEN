@@ -1,0 +1,23 @@
+<div mat-dialog-title>
+	<h3>IMAGE DETAILS & PREVIEW</h3>
+</div>
+
+<div mat-dialog-content>
+	<div class="vhList notif clearfix">
+		<b>File Name:</b>
+		<span> {{details.name}}</span> <br><br>
+		<b>File Size:</b>
+		<span> {{details.size}}</span><br><br>
+	</div>
+	<div class="vhList notif clearfix">
+		<img [src]=image class="bigImg" height="300">
+	</div>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+	 <mat-dialog-actions>
+		<button type="submit" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Back</span>
+		</button>
+	</mat-dialog-actions>
+</div>

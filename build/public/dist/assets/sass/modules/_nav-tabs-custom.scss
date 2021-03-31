@@ -1,0 +1,233 @@
+.nav-tabs-custom {
+	@extend %posRelative;
+	@extend %m0;
+	@extend %width100;
+	@extend %noShadow;
+	@extend %noRad;
+	@extend %pullLeft;
+	> .nav-tabs {
+		@extend %noRad;
+		@extend %pullLeft;
+		@include phone {
+			width: 100%;
+		}
+		@include tabletL {
+			width: 150px;
+			border-right: 1px inset transparent;
+		}
+		> .activateScrollbar {
+			padding: 14px;
+			@include phone {
+				height: 200px;
+			}
+			@include tabletL {
+				height: calc(100vh - #{$headerSpace});
+			}
+			> li {
+				@extend %width100;
+				@extend %pullLeft;
+				@extend %p0;
+				@extend %b0;
+				@extend %m0;
+				a {
+					@extend %p0;
+					@extend %b0;
+					display: block;
+					&:after {
+						content: '';
+						@extend %width100;
+						height: 1px;
+						@extend %posAbsolute;
+						left: 0;
+						bottom: 0;
+						@include transition(border-bottom 0.5s ease-in-out);
+					}
+					> .badge {
+						@extend %pullRight;
+					}
+					img {
+						vertical-align: top;
+					}
+				}
+				&:hover,
+				&.active {
+					opacity: 1;
+				}
+				&.header {
+					line-height: 35px;
+					padding: 0 10px;
+					color: #444;
+				}
+			}
+		}
+		&.filters {
+			@include phone_and_tablet {
+				.activateScrollbar {
+					min-height: 55px;
+					height: inherit;
+					li {
+						width: fit-content;
+						margin-right: 10px;
+						border-radius: 3px;
+						overflow: hidden;
+						a {
+							padding: 5px 10px;
+							background-color: var(--gray) !important;
+							span {
+								color: var(--black-alpha5) !important;
+								&.badge {
+									padding: 0 0 0 10px;
+									background: transparent !important;
+								}
+							}
+						}
+						&:hover,
+						&.active {
+							a {
+								background-color: var(--orange) !important;
+								span {
+									color: var(--white) !important;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	> .tab-content {
+		@extend %width100;
+		@extend %p0;
+		@extend %noRad;
+		@extend %posRelative;
+		@extend %pullLeft;
+		@extend %b0;
+		@extend %transitionAll300;
+		@extend %bgTransparent;
+		.tab-pane {
+			display: none;
+			&.active {
+				display: flex;
+			}
+			> router-outlet:first-child ~ * {
+				@extend %width100;
+				display: flex;
+			}
+		}
+	}
+	&.vertical {
+		@extend %m0;
+		> .nav-tabs {
+			@include tabletL {
+				width: 300px;
+			}
+			> .activateScrollbar {
+				> li {
+					@extend %width100;
+					@extend %posRelative;
+					margin-bottom: 5px;
+					overflow: hidden;
+					@extend %transitionAll300;
+					> a {
+						@extend %displayFlex;
+						@extend %width100;
+						@extend %themeRadius;
+						text-align: left;
+						padding: 10px 36px 10px 15px;
+						@extend %transitionAll300;
+					}
+					> .dropdown-arrow {
+						width: 36px;
+						height: 36px;
+						@extend %p13;
+						line-height: 14px;
+						@extend %textCenter;
+						@extend %posAbsolute;
+						right: 0;
+						top: 0;
+						font-size: 15px;
+						@extend %cursorPointer;
+						@include transform(rotate(-90deg));
+						@include transition(transform 300ms ease);
+						> img {
+							width: 100%;
+							display: block;
+							&.onHover {
+								display: none;
+							}
+						}
+					}
+					&:hover,
+					&:focus,
+					&.active {
+						> a {
+							&:after {
+								@include transition(border-bottom 300ms ease);
+							}
+						}
+						> .dropdown-arrow {
+							> img {
+								display: none;
+								&.onHover {
+									display: block;
+								}
+							}
+						}
+					}
+					> ul {
+						@extend %noDisplay;
+						@include transition(display 300ms ease);
+						> li {
+							height: 0;
+							@extend %posRelative;
+							margin-top: 2px;
+							@extend %transitionAll300;
+							> a {
+								display: block;
+								padding: 10px;
+								@extend %transitionAll300;
+								@extend %themeRadius;
+								&:before {
+									content: '';
+									@extend %posAbsolute;
+									left: 0px;
+									top: 15px;
+									width: 3px;
+									height: 1px;
+									@include transition(width 300ms ease);
+								}
+							}
+						}
+					}
+					&.active {
+						> .dropdown-arrow {
+							@include transform(rotate(0deg));
+						}
+						> ul {
+							display: block;
+							@include transition(display 300ms ease);
+							> li {
+								height: inherit;
+								&:hover,
+								&.active {
+									> a {
+										@extend %transitionAll300;
+										&:before {
+											width: 10px;
+											@include transition(width 300ms ease);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		> .tab-content {
+			@include tabletL {
+				width: calc(100% - 300px);
+			}
+		}
+	}
+}

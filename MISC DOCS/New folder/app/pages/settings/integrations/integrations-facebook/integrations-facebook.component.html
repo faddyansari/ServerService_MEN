@@ -1,0 +1,151 @@
+<div class="box clearfix animated fadeIn delay-400" *ngIf="!sbt" id="integrationsFacebookComponent">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Facebook</h5>
+			</div>
+		</div>
+		<div class="document-list clearfix">
+			<div class="activateScrollbar clearfix">
+				<div class="clearfix" *ngIf="fb_appid && !editCase">
+					<b>APP ID: <span class="text-blue">{{fb_appid}}</span></b>
+					<div class="actions" *ngIf="!editAppId && !views['FBChoosePagesView'] && !views['FBChosenPageView']">
+						<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="changeAppId()">
+							<svg class="svg svg-blue active">
+								<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+							</svg>
+							<span class="tooltip-inner">Edit</span>
+						</button>
+					</div>
+				</div>
+
+				<div class="clearfix" *ngIf="views['loading']">
+					<app-preloader type='cube-grid'></app-preloader>
+				</div>
+
+				<!-- Edit App id -->
+				<div class="clearfix" *ngIf="views['AppIdView'] || editAppId">
+					<form [formGroup]="appIdForm">
+						<div class="input-block">
+							<input type="text" class="form-control input-sm" placeholder="App ID" autocomplete="off"
+								formControlName="fb_appid">
+						</div>
+
+						<button type="button" class="btn btn-xs bg-blue" (click)="setFBAppId()" *ngIf="editAppId"
+							[disabled]="!appIdForm.valid">
+							<span>Save</span>
+						</button>
+						<button type="button" class="btn btn-xs bg-red" (click)="cancel()">
+							<span>Cancel</span>
+						</button>
+					</form>
+				</div>
+
+				<!-- Login Fb OAuth -->
+				<fieldset class="m-b-20" *ngIf="views['FBLoginView']">
+					<h5>Add your Facebook pages</h5>
+					<div class="card clearfix m-0">
+						<button id="fblogin" class="btn btn-sm bg-blue" [ngClass]="(loading) ? 'btnSpinner' : ''"
+							(click)="connectFB()">
+							<span>Facebook Login</span>
+						</button>
+					</div>
+				</fieldset>
+				<!-- Choose from FB pages view -->
+				<div class="clearfix" *ngIf="views['FBChoosePagesView']">
+					<!-- Show when pages are available to show -->
+					<div class="clearfix" *ngIf="views['FBChoosePagesView'] && FBPagesView && FBPagesView.array && FBPagesView.array.length">
+						<p>You must either be an administrator, moderator or editor on your page to connect it to the
+							BeeLinks
+							platform</p>
+						<form (ngSubmit)="subscribeFBPage()">
+							<ul class="form-control">
+								<li *ngFor="let page of FBPagesView.array; index as i">
+									<img [src]="page.url" alt="profile_pic">
+
+									<div class="pretty p-default p-round">
+										<input type="radio" [value]="i" [(ngModel)]="FBPagesView.selected" name="page">
+										<div class="state">
+											<label>{{page.name}}</label>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<br>
+							<button type="submit" class="btn btn-xs bg-blue" [ngClass]="(loading) ? 'btnSpinner' : ''"
+								[disabled]="FBPagesView.selected">
+								<span>Link</span>
+							</button>
+							<button class="btn btn-xs bg-red" (click)="backToLoginView()" [disabled]="loading">
+								<span>Back To Login</span>
+							</button>
+						</form>
+					</div>
+					<!-- Show when no pages available to show -->
+					<fieldset class="w100 clearfix m-b-20"
+						*ngIf="views['FBChoosePagesView'] && !FBPagesView.array.length">
+						<div class="input-block">
+							<h5 class="m-b-0 p-0">No pages available </h5>
+							<p>Reasons may be: </p>
+						</div>
+						<div class="p-14 bg-theme-bg">
+							<div class="table-responsive">
+								<ul class="list-style counter ">
+									<li>You do not have the required permissions to import a page</li>
+									<li>Your account is not associated to any pages</li>
+								</ul>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<!-- Connected FB page view  -->
+				<li class="clearfix" *ngIf="views['FBChosenPageView'] && !editCase">
+					<div class="info card">
+						<div class="name">
+							<span><img [src]="connectedPage.url" alt="profile_pic"></span>
+						</div>
+						<div class="name">
+							<b>Connected Page:</b>
+							<span class="text-blue">{{connectedPage.name}}</span>
+
+						</div>
+						<div class="name">
+							<b>Page Link:</b>
+							<span class="text-blue">{{connectedPage.link }}</span>
+						</div>
+						<div class="actions">
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="editPage()">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+								</svg>
+								<span class="tooltip-inner">Apply Rules</span>
+							</button>
+							<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="disconnectFB()">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+								<span class="tooltip-inner">Unlink Page</span>
+							</button>
+						</div>
+					</div>
+				</li>
+				<!-- Edit Ruleset -->
+				<div class="clearfix" *ngIf="!sbt && editCase">
+					<div class="clearfix">
+						<div class="name">
+							<span><img [src]="connectedPage.url" alt="profile_pic"></span>
+						</div>
+						<div class="name">
+							<h4 class="text-blue">{{connectedPage.name}}</h4>
+						</div>
+					</div>
+					<app-facebook-rules (editCase)="changeState($event)"></app-facebook-rules>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <button (click)="Sendreq()">Click me!</button> -->
+</div>

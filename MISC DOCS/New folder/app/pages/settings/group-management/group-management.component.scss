@@ -1,0 +1,60 @@
+@import '../../../../assets/sass/partials/variables';
+@import '../../../../assets/sass/partials/mixins';
+@import '../../../../assets/sass/partials/extensions';
+
+#groupManagementComponent {
+    .agents-list {
+        li {
+            > div {
+                margin: 0 5px 10px 5px;
+                min-height: 52px;
+                display: block;
+                @extend %p0;
+                border-width: 1px;
+                border-style: solid;
+                overflow: visible;
+                border-radius: 5px;
+                background-color: var(--gray-alpha4);
+                border: 1px solid var(--gray-dark);
+                @include box-shadow (0 3px 10px 0px var(--black-alpha2));
+                @extend %cursorPointer;
+                .avatar {
+                    width: 50px;
+                    padding: 18px 0;
+                    @extend %pullLeft;
+                    @extend %b0;
+                    border-radius: 3px;
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                    @extend %m0;
+                    background-color: var(--gray);
+                }
+                .info {
+                    color: var(--black-light);
+                    padding: 6px 0 6px 60px;
+                    @extend %textLeft;
+                    line-height: 15px;
+                    @extend %height100;
+                    .name {
+                        @extend %fw-6;
+                        margin-bottom: 5px;
+                    }
+                }
+                .notif-count {
+                    font-size: 15px;
+                    @extend %posAbsolute;
+                    top: 5px;
+                    right: 20px;
+                }
+                a {
+                    display: block;
+                    font-weight: 600;
+                    @extend %textCenter;
+                    padding: 15px 0;
+                    border: 3px dashed var(--gray-dark);
+                    color: var(--gray-dark);
+                }
+            }
+        }
+    }
+}

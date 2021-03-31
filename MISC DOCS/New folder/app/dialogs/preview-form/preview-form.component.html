@@ -1,0 +1,79 @@
+<!-- For previewing Form -->
+<div class="container clearfix" *ngIf="inputFields">
+	<div class="row clearfix">
+		<div class="col-xs-12 clearfix">
+			<h2 *ngIf="inputFields.formName">Form Name: {{(inputFields.formName) ? inputFields.formName : 'Form Name'}}
+			</h2>
+			<fieldset>
+				<h3 *ngIf="inputFields.formHeader">Form Header:
+					{{(inputFields.formHeader) ? inputFields.formHeader : 'Form Header'}}</h3>
+				<div class="row clearfix">
+					<div class="col-sm-4 col-xs-12 clearfix">
+						<form>
+							<div id="formInputs">
+								<div *ngFor="let input of inputFields" class="input-block">
+
+									<div
+										*ngIf="input.type == 'text' || input.type == 'email' || input.type == 'password' || input.type == 'input'">
+										<label>
+											{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<input class="form-control input-md" disabled id="{{input.id}}"
+											name="{{input.id}}" placeholder='{{input.placeholder}}'
+											type="{{input.type}}" value="{{input.submittedData}}"/>
+									</div>
+
+									<div *ngIf="input.type == 'radio'">
+										<label>
+											{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<div class="pretty p-default p-round" *ngFor="let opt of input.options">
+											<input disabled id="{{input.id}}" [checked]="input.submittedData"
+												type="{{input.type}}" value="{{opt.key}}" name="{{input.id}}"/>
+											<div class="state">
+												<label>{{opt.value}}</label>
+											</div>
+										</div>
+									</div>
+									<div *ngIf="input.type == 'checkbox'">
+										<label>
+											{{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<div class="pretty p-default p-round">
+											<input class="form-control input-sm no-rad" disabled id="{{input.id}}"
+												[checked]="input.submittedData" type="{{input.type}}"
+												value="{{input.value[0]}}"/>
+											<div class="state">
+												<label>{{input.value[0]}}</label>
+											</div>
+										</div>
+									</div>
+
+									<div *ngIf="input.type == 'dropdown'" class="sel style2 sel-md">
+										<label> {{input.label}}{{(input.validation) ? '*' :''}}</label>
+										<select class="form-control input-md" name="{{input.id}}" id="{{input.id}}">
+											<option disabled="true" *ngFor="let item of input.options"
+												value="{{item.key}}">
+												{{item.value}}
+											</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<h3 *ngIf="inputFields.formFooter">Form Footer:
+					{{(inputFields.formFooter) ? inputFields.formFooter : 'Form formFooter'}}</h3>
+
+			</fieldset>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="mat-dialog-footer clearfix">
+   	<mat-dialog-actions>
+		<button type="submit" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Back</span>
+		</button>
+  	</mat-dialog-actions>
+</div>

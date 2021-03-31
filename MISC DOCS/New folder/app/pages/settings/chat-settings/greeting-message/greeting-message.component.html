@@ -1,0 +1,45 @@
+<div class="box clearfix animated fadeIn delay-400" *ngIf="settings" id="greetingMessagesComponent">
+    <div class="box-body clearfix p-0" *ngIf="package && package.chats.greetingMessage.visitors">
+        <div class="box-subtitle clearfix">
+            <div>
+                <h5>Greeting Message</h5>
+            </div>
+        </div>
+        <form [formGroup]="greetingMessageForm">
+            <!-- <p>Enter You Greeting Message Here</p> -->
+            <div class="input-block clearfix">
+                <textarea class="form-control input-sm" placeholder="Type Greeting Message Here ..."
+                    class="form-control" name="greetingMessage" formControlName="greetingMessage"></textarea>
+            </div>
+            <p class="text-red m-b-10">Agents may override this message if needed by changing their settings.</p>
+            <button class="btn btn-sm bg-blue" [disabled]="greetingMessageForm.invalid"
+                [ngClass]="(loading) ? 'btnSpinner' : ''" (click)="Submit()">
+
+                <span>Save</span>
+            </button>
+        </form>
+    </div>
+    <div class="box-body clearfix p-0" *ngIf="package && package.chats.greetingMessage.bot">
+        <div class="box-subtitle clearfix">
+            <div>
+                <h5>Bot Greetings Message</h5>
+            </div>
+        </div>
+        <form [formGroup]="botGreetingMessageForm">
+            <!-- <p>Enter You Greeting Message Here</p> -->
+            <div class="input-block clearfix">
+                <textarea class="form-control input-sm" placeholder="Type Bot Greeting Message Here ..."
+                    class="form-control" name="botGreetingMessage"
+                    formControlName="botGreetingMessage">asdasda</textarea>
+            </div>
+            <button class="btn btn-sm bg-blue" [disabled]="botGreetingMessageForm.invalid"
+                [ngClass]="(loadingBot) ? 'btnSpinner' : ''" (click)="SubmitBot()">
+
+                <span>Save</span>
+            </button>
+        </form>
+        <div *ngIf="_chatSettings.getSettingsChangedStatus() | async">
+            <h5 class="fs-10 text-red p-t-10">NOTE: SETTINGS HAVE BEEN CHANGED PLEASE RELOAD SETTINGS PAGE.</h5>
+        </div>
+    </div>
+</div>

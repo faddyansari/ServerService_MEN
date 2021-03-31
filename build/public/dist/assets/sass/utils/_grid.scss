@@ -1,0 +1,173 @@
+[class="col-"],
+[class^="col-"],
+[class=" col-"],
+[class*=" col-"] {
+    @include box-sizing(border-box);
+    @extend %posRelative;
+    min-height: 1px;
+    padding-right: #{$gutter-width};
+    padding-left: #{$gutter-width};
+}
+
+.row {
+		width: calc(100% + #{$gutter-width * 2});
+    margin-right: #{'-' + $gutter-width};
+    margin-left: #{'-' + $gutter-width};
+    &.equal-height {
+        display: table;
+        [class^="col-"],
+        [class*=" col-"] {
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+}
+
+.row-inline {
+    text-align: center;
+    [class^="col-"],
+    [class*=" col-"] {
+        float: none;
+        display: inline-block;
+    }
+}
+
+@include phone {
+    @include grid-gen-12 (xs);
+}
+
+@include tabletP {
+    @include grid-gen-12 (sm);
+}
+
+@include tabletL {
+    @include grid-gen-12 (md);
+}
+
+@include desktop {
+    @include grid-gen-12 (lg);
+}
+
+
+// Flex Containers
+.flex { display: flex !important; }
+.flex-inline { display: inline-flex !important; }
+
+//Make All Fill In Container
+.f-fill {
+    > div,
+    > a,
+    > ul,
+    > li,
+    > p,
+    > span,
+    > input {
+        flex: 1
+    }
+}
+
+//Make All Adjust according to content
+.f-auto {
+    > div,
+    > a,
+    > ul,
+    > p,
+    > span,
+    > input {
+        flex: auto
+    }
+}
+
+// Add gaps in Flex Children
+@for $value from 1 through 100 {
+
+    .f-gap#{$value} {
+        margin-left: #{'-' + $value + 'px'};
+        margin-right: #{'-' + $value + 'px'};
+        > div {
+            padding-left: #{$value + 'px'};
+            padding-right: #{$value + 'px'};
+        }
+    }
+
+}
+
+// Wrap
+.f-wrap { flex-wrap: wrap !important; }
+.f-wrap-reverse { flex-wrap: wrap-reverse !important; }
+.f-nowrap { flex-wrap: nowrap !important; }
+
+// Direction
+.f-row { flex-direction: row !important; }
+.f-row-reverse { flex-direction: row-reverse !important; }
+.f-column { flex-direction: column !important; }
+.f-column-reverse { flex-direction: column-reverse !important; }
+
+// Responsive Directions
+.f-responsive {
+    &.f-row,
+    &.f-row-reverse {
+        @include phone {
+            flex-direction: column !important;
+        }
+    }
+    &.f-row {
+        @include tabletL {
+            flex-direction: row !important;
+        }
+    }
+    &.f-row-reverse {
+        @include tabletL {
+            flex-direction: row-reverse !important;
+        }
+    }
+    &.f-justify-start,
+    &.f-justify-center,
+    &.f-justify-end,
+    &.f-justify-between,
+    &.f-justify-around {
+        @include phone_and_tablet {
+            justify-content: flex-start !important;
+        }
+    }
+    &.f-align-start,
+    &.f-align-center,
+    &.f-align-end,
+    &.f-align-baseline {
+        @include phone_and_tablet {
+            align-items: stretch !important;
+        }
+    }
+}
+
+.f-justify-start { justify-content: flex-start !important; }
+.f-justify-center { justify-content: center !important; }
+.f-justify-end { justify-content: flex-end !important; }
+.f-justify-between { justify-content: space-between !important; }
+.f-justify-around { justify-content: space-around !important; }
+
+// Align Content Verticaly
+.f-align-start { align-items: flex-start !important; }
+.f-align-center { align-items: center !important; }
+.f-align-end { align-items: flex-end !important; }
+.f-align-baseline { align-items: baseline !important; }
+.f-align-stretch { align-items: stretch !important; }
+
+// Align Individual Content Verticaly
+.f-self-start { align-self: flex-start !important; }
+.f-self-center { align-self: center !important; }
+.f-self-end { align-self: flex-end !important; }
+.f-self-baseline { align-self: baseline !important; }
+.f-self-stretch { align-self: stretch !important; }
+
+// Grow or Shrink with the value of 0 or 1 to any individual item
+.f-grow-1 { flex-grow: 1; }
+.f-shrink-1 { flex-shrink: 1; }
+
+@for $value from 1 through 100 {
+    .f-#{$value} { flex-basis: percentage($value/100) !important; }
+}
+
+@for $value from 1 through 20 {
+    .order-#{$value} { order: $value !important; }
+}

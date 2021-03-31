@@ -1,0 +1,139 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Custom Signatures List</h5>
+				<!-- <p class="m-b-10">It allows you to add your signature that will be appended with email sending to visitors</p> -->
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="toggleSignatureForm()"
+					[ngClass]="(!showSignatureForm) ? 'border-blue' : 'border-red'">
+					<span>{{(!showSignatureForm) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!showSignatureForm) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!showSignatureForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="document-list" *ngIf="showSignatureForm">
+			<div class="activateScrollbar clearfix">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Signature Header</h5>
+					</div>
+				</div>
+				<div class="input-block">
+					<textarea [ngxSummernote]="configHeader" name="note" [(ngModel)]="signatureHeader" rows="4"
+						autocomplete="off" class="form-control input-sm">
+					</textarea>
+				</div>
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Signature Footer</h5>
+					</div>
+				</div>
+				<div class="input-block">
+					<textarea [ngxSummernote]="configFooter" name="note" [(ngModel)]="signatureFooter" rows="4"
+						autocomplete="off" class="form-control input-sm">
+					</textarea>
+				</div>
+				<br>
+				<!-- [disabled]="!change" -->
+				<button class="btn btn-sm bg-blue"
+					(click)="UpdateSignature()"
+					[ngClass]="(loading) ? 'btnSpinner' : ''"
+					*ngIf="update">
+					<span>Update</span>
+				</button>
+				<button class="btn btn-sm bg-blue"
+					(click)="SaveSignature()"
+					[ngClass]="(loading) ? 'btnSpinner' : ''"
+					[disabled]="!signatureHeader && !signatureFooter" *ngIf="!update">
+					<span>Save</span>
+				</button>
+			</div>
+		</div>
+		<div class="document-list clearfix" *ngIf="!showSignatureForm">
+			<div class="activateScrollbar clearfix">
+				<li class="notif clearfix" *ngFor="let data of signList">
+					<div class="info">
+						<div class="name">
+							<h6>Agent Reply Signature</h6>
+							<span class="ellipsis"><b>Signature Id: </b>{{data._id}}</span>
+						</div>
+						<div class="name">
+							<b>Created at:</b>
+							<span class="ellipsis">{{data.createdOn | agoPipe}}</span>
+						</div>
+						<div class="name" *ngIf="data.lastModified">
+							<b>Last updated at:</b>
+							<span class="ellipsis">{{data.lastModified | agoPipe}}</span>
+						</div>
+						<div class="status">
+							<button class="btn btn-xs btn-theme" [popper]="previewPopper" [popperShowOnStart]="false"
+								[popperTrigger]="'click'" [popperPlacement]="'bottom'" [popperHideOnClickOutside]="true"
+								[popperHideOnScroll]="true" (popperOnShown)="popperOnClick(data)">
+								<span>Preview</span>
+							</button>
+						</div>
+
+						<div class="actions">
+							<div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+								<input type="checkbox" [(ngModel)]="data.active"
+									(change)="Toggle(data._id, data.active)"/>
+								<div class="state p-on">
+									<label></label>
+								</div>
+								<div class="state p-off">
+									<label></label>
+								</div>
+							</div>
+							<a class="btn btn-transparent svgOnHover tooltip top" (click)="Edit(data._id)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+							</a>
+							<a class="btn btn-transparent svgOnHover tooltip top" (click)="Delete(data._id)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</a>
+						</div>
+					</div>
+				</li>
+			</div>
+		</div>
+	</div>
+</div>
+
+<popper-content #previewPopper>
+	<div class="clearfix notif watcher-popper">
+		<h5>
+			<span>Preview</span>
+		</h5>
+		<div *ngIf="previewTemplateHeader">
+			<h4>Header</h4>
+			<div style="width:100%" [innerHTML]="previewTemplateHeader"></div>
+		</div>
+		<div *ngIf="previewTemplateFooter">
+			<h4>Footer</h4>
+			<div style="width:100%" [innerHTML]="previewTemplateFooter"></div>
+		</div>
+
+		<button class="btn btn-transparent svgOnHover tooltip left m-0" (click)="ClosePopper()"
+			style="position:absolute;right:0;top:0;">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+			</svg>
+			<span class="tooltip-inner">Close</span>
+		</button>
+	</div>
+</popper-content>

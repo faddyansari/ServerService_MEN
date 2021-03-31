@@ -1,0 +1,252 @@
+.main-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 230px;
+    z-index: 1030;
+    /*
+    -webkit-box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.55);
+    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.55);
+    */
+    @include transform (translate(0, 0));
+    width: 60px;
+    z-index: 810;
+    .logo {
+        display: block;
+        line-height: 50px;
+        text-align: center;
+        color: #ffffff;
+        @include transition (all 0.2s ease);
+        :hover {
+            background-color: var(--black-alpha2);
+        }
+        > .logo-mini {
+            width: 60px;
+            height: 50px;
+            display: block;
+            font-size: 18px;
+            @include transition (all 0.2s ease);
+        }
+        > .logo-lg {
+            width: 230px;
+            height: 50px;
+            display: none;
+            @include transition (all 0.2s ease);
+        }
+    }
+    .sidebar-toggle {
+        position: absolute;
+        width: 37px;
+        height: 40px;
+        right: -37px;
+        top: 5px;
+        padding: 10px 5px;
+        font-size: 14px;
+    }
+    // &:hover {
+    //     width: 200px;
+    //     @include transition(width 400ms ease-in-out);
+    //     .sidebar {
+    //         width: 100%;
+    //     }
+    // }
+    .sidebar {
+        padding-bottom: 10px;
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            height: calc(100vh - 300px);
+            > li {
+                position: relative;
+                text-align: center;
+                margin-bottom: 1em;
+                @include user-select(none);
+                .header {
+                    display: none;
+                    @include transition (all 0.8s ease);
+                }
+                > a {
+                    position: relative;
+                    height: 34px;
+                    display: inline-block;
+                    width: 34px;
+                    margin: 0 0 -2px 0;
+                    border-radius: 50%;
+                    user-select: none;
+                    @include text-shadow (0, -1px, 0, var(--black-alpha5));
+                    > img {
+                        width: 20px;
+                        padding: 7px 0px;
+                        @include opacity (0.4);
+                        text-align: center;
+                        &.arrow {
+                            width: auto;
+                            left: inherit;
+                            right: 10px;
+                            display: none;
+                            @include transition (all 0.8s ease);
+                        }
+                    }
+                    > span {
+                        width: auto;
+                        position: absolute;
+                        left: 50px;
+                        top: 7px;
+                        padding: 5px 10px;
+                        border-radius: 5px;
+                        opacity: 0;
+                        visibility: hidden;
+                        min-width: 100px;
+                        text-align: left;
+                    }
+                    > .notif-count {
+                        right: -12px;
+                        top: 0px;
+                        border-radius: 0;
+                    }
+                }
+                &:hover {
+                    > a {
+                        > span {
+                            visibility: visible;
+                            opacity: 1;
+                            @include transform (translate3d(8px, 0, 0));
+                            @include transition (transform .1s ease);
+                        }
+                    }
+                }
+                &:hover,
+                &.active,
+                &.menu-open {
+                    > a {
+                        @include transition (all 0.5s ease);
+                        > img {
+                            @include opacity (1);
+                        }
+                    }
+                }
+                &.menu-open {
+                    li {
+                        > a {
+                            > i {
+                                &.arrow {
+                                    @include transform(rotate(-90deg));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            &.bottom {
+                height: 60px;
+                padding: 10px 0;
+                bottom: 0px;
+                position: absolute;
+                left: 0;
+                width: calc(100%);
+                background: var(--black);
+                > li {
+                    margin: 0;
+                    height: 40px;
+                    > a {
+                        width: 40px;
+                        height: 40px;
+                        .statusPicture {
+                            width: 40px;
+                            height: 40px;
+                            position: absolute;
+                            left: 0;
+                            right: 0;
+                            top: 0;
+                            bottom: 0;
+                            border-radius: 50%;
+                            overflow: hidden;
+                            margin: auto;
+                            border: solid 2px transparent;
+                            > span {
+                                /*
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                visibility: hidden;
+                                width: 40px;
+                                height: 40px;
+                                text-align: center;
+                                opacity: 0;
+                                font-size: 12px;
+                                pointer-events: none;
+                                white-space: nowrap;
+                                -webkit-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+                                box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+                                border-radius: 5px;
+                                max-width: 200px;
+                                @include transform (translate3d(0, 0, 0));
+                                @include transition (all .3s ease);
+                                z-index: 9999;
+                                */
+                                color: var(--off-white);
+                                line-height: 36px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.user-panel {
+    > .info {
+        display: none;
+        -webkit-transition: all 1s ease;
+        -moz-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        transition: all 1s ease;
+    }
+}
+
+.contact-list {
+    > li {
+        .info {
+            position: absolute;
+            top: 8px;
+            left: 50px;
+            -webkit-transform: translate3d(0, 0, 0);
+            -moz-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            -webkit-transition: .3s ease;
+            -moz-transition: .3s ease;
+            transition: .3s ease;
+            color: var(--off-white);
+            padding: 8px 10px;
+            font-size: 12px;
+            line-height: 12px;
+            text-align: left;
+            white-space: nowrap;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, .3);
+            border-radius: 5px;
+            max-width: 200px;
+            z-index: 9999;
+        }
+        &:hover {
+            .info {
+                -webkit-transform: translate3d(8px, 0, 0);
+                -moz-transform: translate3d(8px, 0, 0);
+                transform: translate3d(8px, 0, 0);
+                visibility: visible;
+                opacity: 1;
+                -webkit-transition: .1s ease;
+                -moz-transition: .1s ease;
+                transition: .1s ease;
+            }
+        }
+    }
+}
+
+/*----------  NAME SEARCH BAR FROM LIST  ----------*/
+

@@ -1,0 +1,46 @@
+<app-analytics-datebox agentEnabled="true" [compareEnabled]="false" (onResult)="onFilterResult($event)">
+</app-analytics-datebox>
+<div class="statistics clearfix">
+	<!-- <app-preloader type="cube-grid" *ngIf="loading" class="floatToCenter"></app-preloader> -->
+	<div id="highchart" style="height:300px;"></div>
+	<br>
+	<br>
+	<button class="btn btn-xs bg-green" style="position: fixed;bottom: 40px;left: 100px;z-index: 99999;"
+		(click)="Export()">Export</button>
+	<div class="table-area clearfix">
+		<!-- <app-preloader type="cube-grid" *ngIf="loadingTableData" class="floatToCenter"></app-preloader>
+		<div class="export" *ngIf="table_totalchats.length && !loadingTableData">
+			<button class="btn bg-green no-rad" (click)="ExportToExcel(table_totalchats,'totalchats')">Export</button>
+		</div> -->
+		<div class="table-responsive" *ngIf="options && missedChatData.length">
+			<table class="table table-bordered" id="missedChats">
+				<thead>
+					<tr>
+						<th>Series</th>
+						<ng-template ngFor [ngForOf]="missedChatData" let-series>
+							<th>{{series.name}}</th>
+						</ng-template>
+					</tr>
+				</thead>
+				<tbody>
+					<ng-template ngFor [ngForOf]="options.xAxis.categories" let-category let-index="index">
+						<tr>
+							<td>{{category}}</td>
+							<ng-template ngFor [ngForOf]="missedChatData" let-series>
+								<td>{{(options.xAxis.categories.length > 1) ? series.data[index] : showTotal(series.data)}}
+								</td>
+							</ng-template>
+						</tr>
+					</ng-template>
+					<tr *ngIf="options.xAxis.categories.length > 1">
+						<td>Total</td>
+						<td>{{showTotal(missedChatData[0].data)}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- <div *ngIf="unreachable">
+	Server unreachable.
+</div> -->

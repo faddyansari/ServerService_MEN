@@ -1,0 +1,49 @@
+<div mat-dialog-title>
+	<h3>Set new role for users</h3>
+	<p>The role that you are trying to delete contains users so please set new roles for these users in order to proceed.</p>
+	<span *ngIf="errorMsg" class="text-red"><b>Error: {{errorMsg}}</b></span>
+</div>
+<div mat-dialog-content>
+	<div class="list-items clearfix style2 dialog-list">
+		<li class="item clearfix notif"
+			*ngFor="let agent of agentList"
+			[ngClass]="(agent.showError) ? 'border-red' : ''">
+			<div class="clearfix">
+				<div>
+					<div class="avatar ava-sm">
+						<span class="nameInitials">{{(agent.first_name | slice:0:1) | uppercase}}{{(agent.last_name) ? ((agent.last_name | slice:0:1) | uppercase) : ''}}</span>
+					</div>
+				</div>
+				<div class="info p-l-0">
+					<div class="name">
+						<b>{{agent.email}}</b>
+						<p>({{deletionRole}})</p>
+					</div>
+					<div class="link">
+						<div class="sel style1 sel-xs">
+							<select class="form-control input-sm m-0" [(ngModel)]="agent.role" (change)="checkSelection(agent)">
+								<ng-template ngFor [ngForOf]="roles" let-role>
+									<option *ngIf="role != selectedRole && role != 'superadmin'" value="{{role}}">
+										{{role}}
+									</option>
+								</ng-template>
+							</select>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</li>
+	</div>
+</div>
+<div class="mat-dialog-footer clearfix">
+	<mat-dialog-actions>
+		<button class="btn btn-xs bg-blue"
+			[ngClass]="(loading) ? 'btnSpinner' : ''"
+			(click)="save()">
+			<span>Submit</span>
+		</button>
+		<button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Cancel</span>
+		</button>
+	</mat-dialog-actions>
+</div>

@@ -1,0 +1,76 @@
+<div class="contact-list-sidebar">
+	<div class="nav-tabs-custom clearfix">
+		<app-contacts-nav class="nav nav-tabs filters clearfix" *ngIf="verified"></app-contacts-nav>
+		<div class="tab-content clearfix">
+			<div class="toolbox clearfix">
+				<div class="searchForm active clearfix">
+					<svg class="svg svg-default active">
+						<use href="/assets/img/icons/icons-sprite.svg#spy-glass"/>
+					</svg>
+					<form [formGroup]="conversationSearchForm">
+						<div class="input-block m-0">
+							<input type="text" class="form-control" placeholder="Search...."
+								autocomplete="off" formControlName="searchValue">
+						</div>
+					</form>
+				</div>
+			</div>
+			<!-- Pre Installation Data List Starts Here -->
+			<div class="tab-pane active preInstallation" *ngIf="!verified">
+				<div class="list-items clearfix style1">
+					<ul class="activateScrollbar clearfix">
+						<li class="item animated flipInX-delay clearfix" *ngFor="let item of [1,2,3,4,5,6,7,8,9,9]">
+							<div class="clearfix">
+								<div>
+									<div class="avatar ava-xs">
+										<div class="nameInitials"></div>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- Pre Installation Data List Ends Here -->
+			<div class="tab-pane active" *ngIf="verified">
+				<div class="list-items clearfix style1">
+					<ul class="activateScrollbar clearfix">
+						<li class="item clearfix notif"
+							[ngClass]="(selectedThread) ? (selectedThread._id == conversation._id) ? 'active' : '' : ''"
+							*ngFor="let conversation of conversationList | filter: conversationSearchForm.get('searchValue').value : ['to', 'from', 'to_name', 'from_name'] : false">
+							<div class="clearfix" (click)="setSelectedConversation(conversation)">
+								<div>
+									<div class="avatar ava-xs" *ngIf="(conversation.from == agent.email)">
+										<div class="nameInitials">{{(conversation.to_name | slice:0:2)}}</div>
+									</div>
+									<div class="avatar ava-xs" *ngIf="(conversation.to == agent.email)">
+										<div class="nameInitials">
+											{{(conversation.from_name | slice:0:2)}}</div>
+									</div>
+								</div>
+								<div class="notif-count msg-count pos-r-5"
+									*ngIf="(conversation.to == agent.email && conversation.LastSeen[0].messageReadCount && selectedThread._id != conversation._id )">
+									{{ conversation.LastSeen[0].messageReadCount }}
+								</div>
+								<div class="notif-count msg-count pos-r-5"
+									*ngIf="(conversation.from == agent.email && conversation.LastSeen[1].messageReadCount && selectedThread._id != conversation._id)">
+									{{ conversation.LastSeen[1].messageReadCount }}
+								</div>
+								<div class="info" *ngIf="(conversation.from == agent.email)">
+									<b class="name ellipsis fw-6" [title]="conversation.to_name">{{conversation.to_name}}</b>
+									<div class="email ellipsis fw-6" [title]="conversation.to">{{conversation.to}}</div>
+									<div class="date">{{conversation.createdOn | date:'mediumDate'}}</div>
+								</div>
+								<div class="info" *ngIf="(conversation.to == agent.email)">
+									<b class="name ellipsis fw-6" [title]="conversation.from_name">{{conversation.from_name}}</b>
+									<div class="email ellipsis fw-6" [title]="conversation.from">{{conversation.from}}</div>
+									<div class="date">{{conversation.createdOn | date:'mediumDate'}}</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

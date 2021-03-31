@@ -1,0 +1,559 @@
+<section class="content clearfix animated fadeIn info-hidden" id="agentComponent">
+    <div class="content-view">
+        <div class="contact-list-sidebar">
+            <div class="nav-tabs-custom clearfix">
+                <div class="toolbox clearfix" *ngIf="verified">
+                    <button class="btn btn-transparent svgOnHover p-9" *ngIf="listToView['agents']" [popper]="filterPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'right-end'">
+						<svg class="svg svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#filter"/>
+						</svg>
+					</button>
+                    <div class="searchForm clearfix" [ngClass]="searchForm && searchForm.get('searchValue').value ? 'active' : ''">
+                        <div class="search-bar">
+                            <form [formGroup]="searchForm">
+                                <div class="input-block m-0">
+                                    <input type="text" class="form-control input-sm" placeholder="search ...." autocomplete="off" formControlName="searchValue" (input)="setSearchValue()">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="search-icon svgOnHover">
+                            <svg class="svg active">
+								<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+							</svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav nav-tabs filters clearfix" *ngIf="verified">
+                    <ul class="clearfix">
+                        <li [ngClass]="(listToView['agents']) ? 'active' : ''">
+                            <a (click)="changeList('agents')">
+                                <span>AGENTS {{(totalAgents) ? '('+totalAgents+')' : '' }}</span>
+                            </a>
+                        </li>
+                        <li [ngClass]="(listToView['conversations']) ? 'active' : ''" *ngIf="package && package.chat">
+                            <a (click)="changeList('conversations')">
+                                <span>CHATS {{(totalConversations) ? '('+totalConversations+')' : '' }}</span>
+                            </a>
+                        </li>
+                        <li class="w-40 p-l-r-10" *ngIf="package && package.chat">
+                            <a class="svgOnHover w-20 p-t-b-5" [popper]="typePopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false" [popperPlacement]="'bottom'">
+                                <svg class="svg svg-orange active">
+									<use href="/assets/img/icons/icons-sprite.svg#plus"/>
+								</svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content clearfix">
+                    <app-agent-list-sidebar *ngIf="listToView['agents']"></app-agent-list-sidebar>
+                    <app-agent-conv-list-sidebar *ngIf="listToView['conversations']"></app-agent-conv-list-sidebar>
+                </div>
+            </div>
+        </div>
+        <div class="activateScrollbar clearfix" *ngIf="listToView['agents']">
+            <div class="box clearfix animated fadeIn delay-400">
+                <div class="box-body clearfix p-0">
+                    <div class="tabination clearfix" *ngIf="verified && (selectedAgent | json) != ({} | json)">
+                        <ul class="nav-tabs">
+                            <li [ngClass]="(pills['profile']) ? 'active' : ''"><a (click)="setPillActive('profile')">Profile</a></li>
+                            <li [ngClass]="(pills['notifications']) ? 'active' : ''" *ngIf="selectedAgent.email == agent.email"><a (click)="setPillActive('notifications')">Notifications</a></li>
+                        </ul>
+                        <ul class="tab-content p-7">
+                            <li class="tab-pane" [ngClass]="(pills['profile']) ? 'active' : ''">
+                                <div class="activateScrollbar clearfix p-0">
+                                    <div class="contacts-detail card" [ngClass]="(showAgentAccessInfo) ? 'active': ''">
+                                        <ul class="notif clearfix">
+                                            <li>
+                                                <div class="box-title">
+                                                    <div class="avatar ava-xxl b-4 m-r-0" [ngClass]="!(selectedAgent.liveSession) ? 'border-border' : (selectedAgent.liveSession.state == 'ACTIVE') ? 'border-green' : 'border-yellow-alpha6' ">
+                                                        <div class="nameInitials" *ngIf="!(selectedAgent.image)">
+                                                            <span>{{(selectedAgent.first_name | slice:0:1) | uppercase}}{{(selectedAgent.last_name) ? ((selectedAgent.last_name | slice:0:1) | uppercase) : ''}}</span>
+                                                        </div>
+                                                        <div class="avatar-img" *ngIf="(selectedAgent.image)">
+                                                            <img class="svg" src="{{selectedAgent.image}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="actions" *ngIf="edit && agent._id == selectedAgent._id">
+                                                        <div *ngIf="!file">
+                                                            <button class="btn btn-xs btn-theme" title="Upload Image" (click)="ClearFile()">
+																<label>
+																	Upload Photo
+																	<input #fileInput type="file" class="hide"
+																		alt="Upload Picture"
+																		(change)="UploadImage($event)">
+																</label>
+															</button>
+                                                        </div>
+                                                        <div class="btn-group" *ngIf="file">
+                                                            <button class="btn btn-xs btn-theme" (click)="SendFile()" [ngClass]="(uploading) ? 'btnSpinner' : ''">
+																<span>Upload</span>
+															</button>
+                                                            <button class="btn btn-xs btn-theme" (click)="ClearFile()">
+																<span>Cancel</span>
+															</button>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="agent._id == selectedAgent._id" title="{{(file) ? file.name : ''}}">
+                                                        <p *ngIf="(file)" class="ellipsis text-center">
+                                                            {{(file) ? file.name : ''}}</p>
+                                                    </div>
+                                                    <div class="m-t-20" *ngIf="displayChangePassword()">
+                                                        <a class="link fs-12" (click)="ChangePassword()">
+                                                            <span>Change Password</span>
+                                                        </a>
+                                                    </div>
+                                                    <!-- *ngIf="!edit && ((agent._id == selectedAgent._id) || (agent.role == 'superadmin' || agent.role == 'admin')) && !this.editRole"> -->
+                                                    <div class="m-t-20" *ngIf="!edit && ((agent._id == selectedAgent._id) && permissions.agents.canEdit) || ((agent._id != selectedAgent._id) && permissions.agents.canEditOthers) && !this.editRole">
+                                                        <a class="link fs-12" (click)="Edit()">
+                                                            <span>Edit Profile</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="m-t-20" *ngIf="editRoleEnabled && (agentRole != 'superadmin') && (agent.role == 'superadmin' || agent.role == 'admin') && !this.edit">
+                                                        <div *ngIf="!editRole">
+                                                            <a class="link fs-12" (click)="toggleEditRole()">
+                                                                <span>Edit Role</span>
+                                                            </a>
+                                                        </div>
+                                                        <div class="clearfix" *ngIf="editRole">
+                                                            <div class="input-block">
+                                                                <label>Assign Role:</label>
+                                                                <div class="sel style1 sel-sm">
+                                                                    <select id="inputState" name="role" class="form-control input-sm" [(ngModel)]="agentRole">
+																		<!-- <option [value]="'agent'">Agent</option>
+																		<option [value]="'supervisor'">Supervisor</option>
+																		<option [value]="'admin'">Admin</option> -->
+																		<ng-template ngFor [ngForOf]="roles" let-role>
+																			<option [value]="role"
+																				*ngIf="role != 'superadmin'">
+																				{{role}}</option>
+																		</ng-template>
+																	</select>
+                                                                </div>
+                                                            </div>
+                                                            <button class="btn btn-xs btn-theme" (click)="saveRoleForAgent()">
+																<span>Save</span>
+															</button>
+                                                            <button class="btn btn-xs btn-theme" (click)="cancelEdit()">
+																<span>Cancel</span>
+															</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="personal-details" *ngIf="!edit">
+                                                    <h4 class="ellipsis">{{ selectedAgent.first_name }} {{ selectedAgent.last_name }}</h4>
+                                                    <p class="ellipsis">{{ selectedAgent.nickname}}</p>
+                                                    <p class="ellipsis">{{ selectedAgent.email}}</p>
+                                                    <p>{{ selectedAgent.phone_no }}</p>
+                                                    <p class="badge bg-red">
+                                                        <span>{{ selectedAgent.gender}}</span>
+                                                    </p>
+                                                    <p class="badge bg-blue">
+                                                        <span>{{ selectedAgent.role }}</span>
+                                                    </p>
+                                                    <div class="m-t-10" *ngIf="(selectedAgent._id != agent._id)">
+                                                        <button class="btn btn-xs btn-theme" *ngIf="permissions.agents.canChat && package && package.chat" (click)="ToggleChat()">
+															<span>Chat</span>
+														</button>
+                                                        <button class="btn btn-xs btn-theme" (click)="TryCall(selectedAgent)" *ngIf="selectedAgent.liveSession && (agent.callingState && !agent.callingState.state && permissions.agents.canCall)" [disabled]="!callSettings.permissions.a2a">
+															<span>Call</span>
+														</button>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="!edit">
+                                                    <div class="input-block">
+                                                        <label>Joining Date:</label>
+                                                        <p>{{selectedAgent.created_date | date}}</p>
+                                                    </div>
+                                                    <div class="input-block" *ngIf="selectedAgent.lastLogin">
+                                                        <label>Last Login:</label>
+                                                        <p>{{selectedAgent.lastLogin | date}}</p>
+                                                    </div>
+                                                    <div class="input-block" *ngIf="selectedAgent.liveSession">
+                                                        <label>Login Since:</label>
+                                                        <p>{{ selectedAgent.liveSession.createdDate | date }}</p>
+                                                    </div>
+                                                    <div class="input-block" *ngIf="selectedAgent.liveSession">
+                                                        <label>Active Since:</label>
+                                                        <p>{{ selectedAgent.liveSession.createdDate | timeDifferencePipe }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="input-block">
+                                                        <label>Company:</label>
+                                                        <p class="ellipsis">{{ this.company }}</p>
+                                                    </div>
+                                                    <!-- <div class="input-block">
+														<label>Position:</label>
+														<span class="ellipsis" >{{ this.position }}</span>
+													</div> -->
+                                                </div>
+                                                <div *ngIf="!edit">
+                                                    <div class="input-block">
+                                                        <label>Available To:</label>
+                                                        <p>
+                                                            <span>Chat</span>
+                                                            <span *ngIf="selectedAgent.communicationAccess.voicecall">&nbsp;/&nbsp;Voice
+																Call</span>
+                                                            <span *ngIf="selectedAgent.communicationAccess.videocall">&nbsp;/&nbsp;Video
+																Call</span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="input-block">
+                                                        <label>Groups:</label>
+                                                        <p>
+                                                            <span>{{agentGroups.join(',')}}</span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="input-block">
+                                                        <label>Simultaneous Chats:</label>
+                                                        <p>
+                                                            <span>{{selectedAgent.settings.simchats}}</span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="input-block">
+                                                        <label>Accepting Chat:</label>
+                                                        <p>
+                                                            <span>{{ (selectedAgent.liveSession && selectedAgent.liveSession.acceptingChats ) ? 'Yes' : 'No' }}</span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="personal-details" *ngIf="edit" [formGroup]="agentEditForm">
+                                                    <div>
+                                                        <div class="row clearfix">
+                                                            <div class="col-sm-4 col-xs-12">
+                                                                <div class="input-block">
+                                                                    <label for="first_name">First Name</label>
+                                                                    <input type="text" class="form-control input-sm" formControlName="first_name" placeholder="First Name">
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label for="last_name">Last Name</label>
+                                                                    <input type="text" class="form-control input-sm" formControlName="last_name" placeholder="Last Name">
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label for="nickname">Display Name</label>
+                                                                    <input type="text" class="form-control input-sm" formControlName="nickname" placeholder="Display Name">
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label for="username">Username</label>
+                                                                    <input type="text" class="form-control input-sm" formControlName="username" placeholder="Username">
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-sm-4 col-xs-12">
+                                                                <div class="input-block">
+                                                                    <label for="phone_no">Phone Number</label>
+                                                                    <input type="text" class="form-control input-sm" formControlName="phone_no" (keypress)="NumbersOnly($event)" placeholder="eg. XXXX-XXXXXXX">
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label for="last_name">Gender</label>
+                                                                    <div class="pretty p-default p-round p-smooth">
+                                                                        <input type="radio" value="Male" formControlName="gender">
+                                                                        <div class="state">
+                                                                            <label>Male</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="pretty p-default p-round p-smooth">
+                                                                        <input type="radio" value="Female" formControlName="gender">
+                                                                        <div class="state">
+                                                                            <label>Female</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label for="simchats">Simultaneous Chats</label>
+                                                                    <input [ngClass]="(permissions.agents.allowedChangeConcurrentChat) ? '' : 'disabled'" type="number" class="form-control input-sm" min="1" [max]="package.maxConcurrentChats" formControlName="simchats" placeholder="Simultaneous Chats">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="((agent._id == selectedAgent._id) || (agent.role == 'superadmin' || agent.role == 'admin') || ((agent._id == selectedAgent._id) && permissions.agents.canEdit) || ((agent._id != selectedAgent._id) && permissions.agents.canEditOthers))">
+                                                            <button class="btn btn-xs btn-theme" (click)="Save()" [ngClass]="!(loading) ? '' : 'btnSpinner'" [disabled]="!agentEditForm.valid">
+																<span>Save</span>
+															</button>
+                                                            <button class="btn btn-xs btn-theme" (click)="Cancel()">
+																<span>Cancel</span>
+															</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="tab-pane" [ngClass]="(pills['notifications']) ? 'active' : ''" *ngIf="selectedAgent.email == agent.email">
+                                <div class="activateScrollbar clearfix p-0">
+                                    <div class="box clearfix animated fadeIn delay-400">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="box-body clearfix p-0">
+                                                    <div class="activateScrollbar clearfix">
+														<div class="box-subtitle clearfix">
+															<div>
+																<h5>Email Notifications</h5>
+															</div>
+														</div>
+                                                        <form [formGroup]="emailNotificationForm" class="clearfix" (change)="settingsChanged('email')" *ngIf="emailNotificationSettings">
+                                                            <div class="input-block m-b-10">
+                                                                <label>New ticket created</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="newTickCreate" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Ticket assigned to agent</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="assignToAgent" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="input-block m-b-10">
+                                                                <label>Note added to ticket</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="noteAddTick" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Replies to ticket</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="repliesToTicket" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Unattend Ticket Group</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="unattendTickGroup" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Agent Invite Email</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="agentInviteEmail" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        <br>
+                                                        <button class="btn btn-sm bg-blue" (click)="submitEmailSettings()" *ngIf="changes['email']">
+															<span>Save</span>
+														</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="box-body  clearfix p-0">
+                                                    <div class="activateScrollbar clearfix">
+														<div class="box-subtitle clearfix">
+															<div>
+																<h5>Window Notifications</h5>
+															</div>
+														</div>
+                                                        <form [formGroup]="windowNotificationsForm" class="clearfix" (change)="settingsChanged('window')" *ngIf="windowNotificationSettings">
+                                                            <div class="input-block m-b-10">
+                                                                <label>New ticket</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="newTicket" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Ticket message</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="ticketMessage" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Ticket assigned</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="ticketAssigned" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Ticket Updated</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="ticketUpdated" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Agent conversation</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="agentConversation" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Agent message</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="agentMessage" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Visitor conversation</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="visitorConversation" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-block m-b-10">
+                                                                <label>Visitor message</label>
+                                                                <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                                                    <input type="checkbox" formControlName="visitorMessage" />
+                                                                    <div class="state p-on">
+                                                                        <label>Allowed</label>
+                                                                    </div>
+                                                                    <div class="state p-off">
+                                                                        <label>Not Allowed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        <br>
+                                                        <button class="btn btn-sm bg-blue" (click)="submitWindowSettings()" *ngIf="changes['window']">
+															<span>Save</span>
+														</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="activateScrollbar clearfix p-7" *ngIf="listToView['conversations']">
+            <div class="box clearfix animated fadeIn delay-400">
+                <div class="box-body clearfix p-0">
+                    <div class="viewChat" *ngIf="!verified && !sbt" [ngClass]="!verified ? 'not-verified' : ''">
+                        <div class="preInstallation">
+                            <div class="chatScreen">
+                                <img class="svg" src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="50%">
+                                <h3>Looking for chats?</h3>
+                                <p>Install Beelinks on your website and start closing leads!</p>
+                                <button class="btn btn-sm bg-blue m-t-b-10">Install Now</button>
+                                <p>Or <a href="">send instructions to developer</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="viewChat" *ngIf="verified && (agentConversation | json) == ({} | json)" [ngClass]="verified ? 'verified' : ''">
+                        <div class="preInstallation">
+                            <div class="chatScreen">
+                                <img class="svg" src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="50%">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="viewChat" *ngIf="verified">
+                        <app-agents-chat class="chatWindow card p-0" *ngIf="(agentConversation | json) != ({} | json)">
+                        </app-agents-chat>
+                        <app-agent-chat-details class="viewHistory card p-0" [conversation]="agentConversation" [agent]="agent" *ngIf="showViewHistory && (agentConversation | json) != ({} | json)">
+                        </app-agent-chat-details>
+                        <app-preloader type="spin-loader-page" *ngIf="loadingConversation" class="floatToCenter">
+                        </app-preloader>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<popper-content #typePopper>
+    <ul class="activateScrollbar clearfix">
+        <li>
+            <a (click)="newConversationDialog('single')">Create new conversation</a>
+        </li>
+        <li>
+            <a (click)="newConversationDialog('group')">Create new group</a>
+        </li>
+    </ul>
+</popper-content>
+<!-- <app-agent-filters *ngIf="filterDrawer"></app-agent-filters> -->
+<popper-content #filterPopper>
+    <ul class="activateScrollbar clearfix">
+        <li [ngClass]="(selectedFilter == 'all') ? 'active': ''">
+            <a (click)="fetchFilteredAgents('all')">All {{'(' + this.agentCounts.total + ')'}}</a>
+        </li>
+        <li [ngClass]="(selectedFilter == 'online') ? 'active': ''">
+            <a (click)="fetchFilteredAgents('online')">Online {{'(' + agentCounts.agents.length + ')'}}</a>
+        </li>
+        <li [ngClass]="(selectedFilter == 'offline') ? 'active': ''">
+            <a (click)="fetchFilteredAgents('offline')">Offline
+				{{'(' + (agentCounts.total - agentCounts.agents.length) + ')'}}</a>
+        </li>
+    </ul>
+</popper-content>

@@ -1,0 +1,104 @@
+.date-range-picker {
+    // position: absolute;
+    // right: 0;
+    // top: 0;
+    // z-index: #{$zindex-dropdown};
+    // overflow: visible;
+    .date-range-container {
+        position: relative;
+        @include phone {
+            flex-direction: column;
+        }
+        @include phoneL {
+            flex-direction: row;
+        }
+        .date-range-inner {
+            // position: fixed;
+            // width: 500px;
+            // right: 0;
+            .dp-material ~ div {
+                position: inherit !important;
+            }
+            .calendar-container {
+                width: fit-content;
+                margin: auto;
+            }
+        }
+    }
+    .dp-material {
+        width: 100%;
+        > .dp-open ~ div {
+            position: inherit !important;
+            top: inherit !important;
+            left: inherit !important;
+            .dp-popup {
+                box-shadow: none !important;
+                background: transparent !important;
+                border: 0 !important;
+            }
+        }
+    }
+    .dp-popup {
+        > .dp-material {
+            > .dp-day-calendar-container {
+                > .dp-calendar-wrapper {
+                    box-shadow: inset 0px 0px 15px var(--black-alpha1);
+                    margin-top: -1px;
+                }
+                > .day-calendar-wrapper {
+                    display: flex;
+                    @include phone {
+                        flex-direction: column;
+                    }
+                    @include phoneL {
+                        flex-direction: row;
+                    }
+                }
+            }
+        }
+    }
+    &.in-popper {
+        .date-range-container {
+            .date-range-inner {
+                margin: 7px;
+                padding: 0;
+            }
+        }
+    }
+}
+
+dp-day-calendar {
+    .dp-weekdays,
+    .dp-calendar-week {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 15px;
+        font-size: 11px !important;
+    }
+    .dp-weekdays {
+        background-color: var(--border-light);
+    }
+}
+
+.date-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 10px;
+    .date-box-internal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 7px;
+        background-color: var(--theme-bg);
+        margin-bottom: 10px;
+        @include phone {
+            width: 100%;
+        }
+        @include tabletL {
+            width: 500px;
+        }
+    }
+}

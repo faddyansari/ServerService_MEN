@@ -1,0 +1,88 @@
+<div mat-dialog-content>
+    <div class="clearfix">
+        <!-- SHOWS CALER ICON -->
+        <div class="avatar ava-call" [ngClass]="(callAccepted) ? '' : 'ringing'">
+            <a class="no-pointer">
+                <span *ngIf="!agent_username && agent_email">{{(agent_email | slice:0:2) | uppercase}}</span>
+                <span *ngIf="agent_username">{{(agent_username | slice:0:2) | uppercase}}</span>
+                <!-- <span *ngIf="!(selectedAgent.image)">{{(selectedAgent.first_name | slice:0:1) |
+          uppercase}}{{(selectedAgent.last_name) ? ((selectedAgent.last_name
+          | slice:0:1) | uppercase) : ''}}</span> -->
+                <!-- <img class="svg" *ngIf="(selectedAgent.image)" src="{{selectedAgent.image}}" alt="User Image"> -->
+            </a>
+        </div>
+        <!-- SHOWS CALLER NAME -->
+        <div class="caller">
+            <div class="text-white fs-30 fw-8 ellipsis" *ngIf="!agent_username && agent_email">{{agent_email}}</div>
+            <div class="text-white fs-30 fw-8 ellipsis" *ngIf="agent_username">{{agent_username}}</div>
+        </div>
+        <!-- SHOWS STATUS -->
+        <div class="status">
+            <div *ngIf="(callStart)">
+                <div class="text-orange fs-30 fw-8">Calling</div>
+                <audio autoplay loop *ngIf="(callerTune.state)">
+                    <source [src]="callerTune.src" >
+                </audio>
+            </div>
+            <div *ngIf="(callAccepted)">
+                <div class="text-orange fs-30 fw-8">Accepted</div>
+            </div>
+            <div *ngIf="(callRejected)">
+                <div class="text-orange fs-30 fw-8">Call Rejected</div>
+            </div>
+            <div *ngIf="(callSelfEnded || callEnd)">
+                <div class="text-orange fs-30 fw-8">Call Ended</div>
+            </div>
+        </div>
+        <!-- SHOWS COUNT -->
+        <div class="counter">
+            <div *ngIf="(callAccepted || callSelfEnded || callEnd)">
+                <div>{{minutes|numberpad:2}}:{{seconds|numberpad:2}}</div>
+            </div>
+            <div *ngIf="(callRejected)">
+                <div *ngIf="count">({{count}}) </div>
+            </div>
+        </div>
+        <!-- SHOWS ANIMATIONS -->
+        <div class="animations" *ngIf="(callStart)">
+            <img class="svg" src="/assets/img/loaders/ringing-dot-loader.svg" width="80" alt="">
+        </div>
+        <!-- SHOWS BUTTONS -->
+        <div class="buttons">
+            <div *ngIf="(callAccepted)">
+                <button type="button" class="btn btn-sm btn-round bg-black svgOnHover" title="Mute Mic" (click)="ToggleMic()">
+					<svg class="svg w-30 h-30 active">
+						<use [attr.href]="(micEnabled) ? '/assets/img/icons/icons-sprite.svg#mic-on' : '/assets/img/icons/icons-sprite.svg#mic-off'" [ngClass]="(micEnabled) ? 'text-blue' : 'text-theme-pro-gray'"/>
+					</svg>
+                </button>
+                <button type="button" class="btn btn-sm btn-round bg-black svgOnHover" title="Mute Voice" (click)="ToggleAudio()">
+					<svg class="svg w-30 h-30 active">
+						<use [attr.href]="(audioEnabled) ? '/assets/img/icons/icons-sprite.svg#volume-on' : '/assets/img/icons/icons-sprite.svg#volume-off'" [ngClass]="(audioEnabled) ? 'text-blue' : 'text-theme-pro-gray'"/>
+					</svg>
+                </button>
+                <button type="button" class="btn btn-sm btn-round bg-red svgOnHover" title="End Call" (click)="endCall()" mat-dialog-close>
+                    <svg class="svg w-30 h-30 active">
+						<use href="/assets/img/icons/icons-sprite.svg#call-end" class="text-white"/>
+					</svg>
+                </button>
+            </div>
+            <div *ngIf="(!callAccepted && !callEnd)">
+                <button type="button" class="btn btn-sm btn-round bg-green svgOnHover" title="Recieve Call" (click)="acceptCall()">
+					<svg class="svg w-30 h-30 active">
+						<use href="/assets/img/icons/icons-sprite.svg#call-start" class="text-white"/>
+					</svg>
+                </button>
+                <button type="button" class="btn btn-sm btn-round bg-red svgOnHover" title="Reject Call" (click)="rejectCall()" mat-dialog-close>
+                    <svg class="svg w-30 h-30 active">
+						<use href="/assets/img/icons/icons-sprite.svg#call-end" class="text-white"/>
+					</svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix" [hidden]="!(callAccepted)">
+    <audio #self_audio autoplay muted></audio>
+    <audio #remote_audio autoplay></audio>
+</div>

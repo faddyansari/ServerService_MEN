@@ -1,0 +1,193 @@
+<div mat-dialog-content>
+    <mat-dialog-actions>
+        <a class="mat-dialog-close svgOnHover tooltip left" (click)="Close($event)">
+			<svg class="svg w-30 h-30 active">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel"/>
+			</svg>
+			<span class="tooltip-inner">Close Dialog</span>
+		</a>
+    </mat-dialog-actions>
+    <div class="activateScrollbar clearfix p-0">
+        <div class="detail-holder">
+            <img class="m-b-40" src="/assets/img/illustrations/add-ticket.jpg" alt="">
+            <button type="button" class="btn bg-charcoal btn-md">Import / Export Ticket</button>
+        </div>
+
+        <div class="form-holder">
+            <div class="activateScrollbar clearfix">
+                <form class="require-validation" [formGroup]="addTicketForm">
+                    <div mat-dialog-title class="m-b-30">
+                        <h2>Add Ticket</h2>
+                        <div class="actions">
+                            <button class="btn btn-md btn-theme" [popper]="templatePopper" [popperShowOnStart]="false"
+                                [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false"
+                                [popperPlacement]="'bottom'">
+                                Pick Ticket Template
+                            </button>
+                        </div>
+                        <!-- <h5 class="fw-4 text-gray-dark">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</h5> -->
+                    </div>
+                    <fieldset formGroupName="visitor">
+                        <div class="row clearfix">
+                            <!-- SUBJECT -->
+                            <div class="col-sm-6 col-xs-12">
+                                <div class="input-block">
+                                    <label>Subject *</label>
+                                    <input type="text" autocomplete="off" class="form-control input-md"
+                                        placeholder="Subject (Max Characters:100)" name="subject"
+                                        [formControl]="addTicketForm.controls['subject']" maxlength="100">
+                                </div>
+                            </div>
+                            <!-- STATE -->
+                            <div class="col-sm-6 col-xs-12">
+                                <div class="input-block">
+                                    <label>State *</label>
+                                    <div class="sel style1 sel-md">
+                                        <select id="state" name="state" class="form-control input-md"
+                                            [formControl]="addTicketForm.controls['state']">
+                                            <option value="" selected disabled>Select State</option>
+                                            <option value="OPEN">OPEN</option>
+                                            <option value="PENDING">PENDING</option>
+                                            <option value="SOLVED">SOLVED</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- PRIORITY -->
+                            <div class="col-sm-6 col-xs-12">
+                                <div class="input-block">
+                                    <label>Priority *</label>
+                                    <div class="sel style1 sel-md">
+                                        <select id="state" name="priority" class="form-control input-md"
+                                            [formControl]="addTicketForm.controls['priority']">
+                                            <option value="" selected disabled>Select Priority</option>
+                                            <option value="LOW">LOW</option>
+                                            <option value="MEDIUM">MEDIUM</option>
+                                            <option value="HIGH">HIGH</option>
+                                            <option value="URGENT">URGENT</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- GROUP -->
+                            <div class="col-sm-6 col-xs-12">
+                                <div class="input-block">
+                                    <label>Group</label>
+                                    <div class="sel style1 sel-md">
+                                        <select id="group" name="group" class="form-control input-md"
+                                            (change)="GetAvailableAgents()"
+                                            [formControl]="addTicketForm.controls['group']">
+                                            <option value="" selected disabled>Select Group</option>
+                                            <option value={{group.group_name}} *ngFor="let group of groups">
+                                                {{group.group_name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ASSIGNED TO AGENT -->
+                            <div class="col-sm-6 col-xs-12">
+                                <div class="input-block">
+                                    <label>Agent</label>
+                                    <app-custom-select class="input-md" [items]="all_agents"
+                                        [selectLabel]="'Select Agent to assign'" [bindLabel]="'email'"
+                                        [formControl]="addTicketForm.controls['assigned_to']"
+                                        [bindValue]="'email'" [selectedItems]="[addTicketForm.controls['assigned_to'].value]" [multiple]="false"
+                                        [lazyLoading]="true" (onLoadMore)="loadMoreAssignAgent($event)"
+                                        [clearOnSubmit]="false" (onSearch)="onSearchAssignAgent($event)">
+                                    </app-custom-select>
+                                </div>
+                            </div>
+                            <!-- WATCHERS -->
+                            <div class="col-sm-6 col-xs-12">
+                                <div class="input-block">
+                                    <label>Watchers</label>
+                                    <app-custom-select class="input-md" [items]="watch_agents"
+                                        [selectLabel]="'Select Watchers'"
+                                        [formControl]="addTicketForm.controls['watchers']"
+                                        [selectedItems]="addTicketForm.controls['watchers'].value" [bindLabel]="'email'" [bindValue]="'email'"
+                                        [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreWatchers($event)"
+                                        (onSearch)="onSearchWatchers($event)" (onDeSelect)="onDeSelect($event)">
+                                    </app-custom-select>
+                                </div>
+                            </div>
+                            <!-- VISITOR NAME -->
+                            <div class="col-xs-12">
+                                <div class="input-block">
+                                    <label>Visitor Name *</label>
+                                    <input type="text" autocomplete="off" class="form-control input-md"
+                                        placeholder="Name (Max Characters:100)" name="name" formControlName="name"
+                                        maxlength="100">
+                                </div>
+                            </div>
+                            <!-- VISITOR EMAIL -->
+                            <div class="col-xs-12">
+                                <div class="input-block">
+                                    <label>Visitor Email *</label>
+                                    <input type="email" autocomplete="off" class="form-control input-md"
+                                        placeholder="Email" name="email" formControlName="email">
+                                </div>
+                            </div>
+                            <!-- TAGS -->
+                            <div class="col-xs-12">
+                                <div class="input-block">
+                                    <label>Tags</label>
+                                    <app-chips-input class="form-control input-md tag-input" name="tags" [items]="addTicketForm.controls['tags'].value"
+                                        [regex]="tagPattern" [maxTag]="6" [formControl]="addTicketForm.controls['tags']"
+                                        [placeholder]="'Add Tags start with #'" [delimiters]="[',']"
+                                        [errorMsg]="'Incorrect tag'">
+                                    </app-chips-input>
+                                </div>
+                            </div>
+                            <!-- <div class="col-sm-6 col-xs-12">
+                                <div class="input-block">
+                                    <label>Form</label>
+                                    <div class="sel style1 sel-md">
+                                        <select name="cannedForm" name="cannedForm" class="form-control input-md"
+                                            [formControl]="addTicketForm.controls['cannedForm']">
+                                            <option value="" selected disabled>Select Form</option>
+                                            <option *ngFor="let form of cannedForms" [value]="form._id">{{form.formName}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- MESSAGE -->
+                            <div class="col-xs-12">
+                                <div class="input-block">
+                                    <label>Message</label>
+                                    <textarea autocomplete="off" class="form-control input-md no-resize" rows="5"
+                                        placeholder="Message" name="message" formControlName="message"></textarea>
+                                </div>
+                            </div>
+                            <!-- ACTIONS -->
+                            <div class="col-xs-12">
+                                <div class="mat-dialog-footer p-l-r-0 b-0">
+                                    <mat-dialog-actions>
+                                        <button class="btn btn-sm bg-blue" [disabled]="(addTicketForm.invalid)"
+                                            [ngClass]="(loading) ? 'btnSpinner' : ''" (click)="submitForm()">
+                                            <span>Submit</span>
+                                        </button>
+                                        <button class="btn btn-sm bg-red" mat-dialog-close>
+                                            <span>Cancel</span>
+                                        </button>
+                                    </mat-dialog-actions>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<popper-content #templatePopper>
+    <ul class="activateScrollbar clearfix" *ngIf="ticketTemplates && ticketTemplates.length">
+        <li *ngFor="let template of ticketTemplates" (click)="AutoFillTemplate(template.templateName)">
+            <a>
+                <span><b>{{template.templateName}}</b><br>{{template.templateDesc}}</span>
+            </a>
+        </li>
+    </ul>
+</popper-content>

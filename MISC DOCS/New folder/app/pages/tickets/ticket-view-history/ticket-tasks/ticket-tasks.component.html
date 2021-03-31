@@ -1,0 +1,87 @@
+<div class="toggleList">
+	<div class="input-block clearfix">
+		<input type="text"
+			class="form-control input-sm b-0 b-b-2 no-shadow border-gray-dark no-rad"
+			#tasks (keyup.enter)="onEnter(tasks.value)"
+			placeholder="Enter task here and hit enter.">
+	</div>
+</div>
+<ul class="toggleList task-list" *ngIf="ticketTasks && ticketTasks.length">
+	<li class="clearfix m-b-7" *ngFor="let todo of ticketTasks; let i=index">
+		<!-- EDIT PART -->
+		<div class="input-group-sm" [ngClass]="(todo.editable) ? 'editable' : ''"
+			*ngIf="todo.editable">
+			<input type="text" class="form-control" [value]="todo.todo"
+				placeholder="Edit please.." #editbox>
+			<div class="input-group-btn">
+				<button class="btn bg-gray-alpha4 border-tranparent p-l-r-5 svgOnHover tooltip left"
+					(click)="editedTask(todo.id,editbox.value,todo)">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#floppy" />
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#floppy" class="text-green" />
+					</svg>
+					<span class="tooltip-inner">Save</span>
+				</button>
+				<button class="btn bg-gray-alpha4 border-tranparent p-l-r-5 svgOnHover tooltip left"
+					(click)="Cancel(todo)">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+					</svg>
+					<span class="tooltip-inner">Cancel</span>
+				</button>
+			</div>
+		</div>
+		<div class="input-group-sm" *ngIf="!todo.editable">
+			<!-- CHECKBOX -->
+			<div class="input-group-addon b-0 p-0 p-t-b-8">
+				<div class="pretty p-svg p-fill p-smooth" #checkbox>
+					<input type="checkbox" (change)="TaskChecked(todo, $event)"
+						 [checked]="todo.completed">
+					<div class="state svgOnHover">
+						<svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+						</svg>
+						<label></label>
+					</div>
+				</div>
+			</div>
+			<div class="form-control b-0 no-shadow no-rad ellipsis"
+				[ngClass]="(todo.completed) ? 'line-through' : ''">{{todo.todo}}
+			</div>
+			<div class="input-group-btn">
+				<button class="btn btn-transparent bg-gray-alpha4 svgOnHover tooltip left" (click)=TaskDone()
+					*ngIf="display">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#ok-done" />
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#ok-done" class="text-green" />
+					</svg>
+					<span class="tooltip-inner">Mark as Completed!</span>
+				</button>
+				<button class="btn btn-transparent bg-gray-alpha4 svgOnHover tooltip left"
+					(click)="deleteTask(todo)">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#delete" />
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+					</svg>
+					<span class="tooltip-inner">Delete</span>
+				</button>
+				<button class="btn btn-transparent bg-gray-alpha4 svgOnHover tooltip left"
+					(click)="editTask(todo)">
+					<svg class="svg svg-blue active">
+						<use href="/assets/img/icons/icons-sprite.svg#edit" />
+					</svg>
+					<span class="tooltip-inner">Edit</span>
+				</button>
+			</div>
+		</div>
+	</li>
+</ul>

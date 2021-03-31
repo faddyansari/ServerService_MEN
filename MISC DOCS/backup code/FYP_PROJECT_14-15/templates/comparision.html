@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>AdminPanel</title>
+	<link media="all" rel="stylesheet" type="text/css" href="../static/all.css" />
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="js/jquery-1.7.2.min.js"><\/script>');</script>
+	<script type="text/javascript" src="../static/comp_js.js"></script>
+	<script type="text/javascript" src="../static/jquery.main.js"></script>
+	<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="css/ie.css" /><![endif]-->
+	<style type="text/css">
+		input[type=date] {
+    width: 20%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+.rio{
+	 width: 50%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+	input[type=text] {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+input[type=date]:focus {
+    border: 3px solid #555;
+}
+input[type=text]:focus {
+    border: 3px solid #555;
+}
+.rio:focus {
+    border: 3px solid #555;
+}
+.butto {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    margin-left:6%;
+}
+	</style>
+	
+
+
+
+</head>
+<body>
+
+<select id="source_comp" class="rio">
+	<option  value="" selected disabled hidden>Select Source</option>
+</select>
+
+<select id="destination_comp" class="rio">
+	<option  value="" selected disabled hidden>Select Destination</option>
+</select>
+
+<select id="airline1_comp" class="rio">
+	<option  value="" selected disabled hidden>Select First Airline</option>
+</select>
+
+<select id="src_mdl" class="rio">
+	<option  value="" selected disabled hidden>Select Model of First Airline</option>
+</select>
+
+<select id="airline2_comp" class="rio">
+	<option  value="" selected disabled hidden>Select Second Airline</option>
+</select>
+
+<select id="dst_mdl" class="rio">
+	<option  value="" selected disabled hidden>Select Model of Second Airline</option>
+</select>
+
+<a class="btn btn-lg btn-success" id="button_comp" role="button">Comparision</a>
+
+<div class="row">
+	<div class="container-fluid">
+		<table class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+			<thead class="heading" style="display: none;">
+				<tr>
+					<th>Id</th>
+					<th>Icao</th>
+					<th>Country</th>
+					<th>Miles</th>
+					<th>Average Altitude</th>
+					<th>Average Speed</th>
+					<th>Total Fuel</th>
+					<th>Countries In Route</th>
+				</tr>
+			</thead>
+			<tbody id="table_body1">
+						
+			</tbody>
+		</table>
+	</div>
+<div id="time_series"></div>
+	<div class="container-fluid">
+		<table class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+	<thead class="heading" style="display: none;">
+		<tr>
+			<th>Id</th>
+			<th>Icao</th>
+			<th>Country</th>
+			<th>Miles</th>
+			<th>Average Altitude</th>
+			<th>Average Speed</th>
+			<th>Total Fuel</th>
+			<th>Countries In Route</th>
+		</tr>
+	</thead>
+	<tbody id="table_body2">
+				
+	</tbody>
+</table>
+	</div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<div class="sub-nav-tabs clearfix">
+	<div *ngIf="agent.nsp == '/sbtjapaninquiries.com' || agent.nsp == '/localhost.com'">
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-tickets/customdashboard"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-orange active">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph"/>
+			</svg>
+			<span>Inquiry Dashboard</span>
+		</a>
+	</div>
+	<div *ngIf="agent.nsp != '/sbtjapaninquiries.com'">
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-tickets/totaltickets"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Total Tickets</span>
+		</a>
+	</div>
+	<div *ngIf="agent.nsp != '/sbtjapaninquiries.com'">
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-tickets/ticketresolutiontime"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Ticket Resolution Time</span>
+		</a>
+	</div>
+	<div *ngIf="agent.nsp != '/sbtjapaninquiries.com'">
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-tickets/firstticketresponse"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>First Ticket Response</span>
+		</a>
+	</div>
+</div>
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="activateScrollbar clearfix p-0">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>

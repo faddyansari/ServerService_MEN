@@ -1,0 +1,143 @@
+<section *ngIf="displayReady" class="content clearfix animated fadeIn info-hidden" id="chatComponent">
+	<div class="content-view">
+		<app-whatsapp-list-sidebar class="contact-list-sidebar" [Loading]="loadingContacts"
+			[selectedContact]="selectedContact"
+			[_contactsList]="(searchList && tempSearchValue) ? searchList : contactList"
+			(SearchValue)="SearchContact($event)" [Searching]="_Searching"
+			(selectContact)="SetSelectedContact($event)" (GetMoreContacts)="GetMoreContacts($event)"
+			(Edit)="EditContact($event)" [updatedContact]="updatedContact" [Initialized]="initialized">
+		</app-whatsapp-list-sidebar>
+		<div class="activateScrollbar clearfix p-7" *ngIf="selectedContact">
+			<div class="viewChat">
+				<div class="chatWindow card p-0">
+					<div class="box clearfix animated fadeIn delay-400">
+						<div class="box-header">
+							<h5 class="box-title ellipsis">
+								<span>{{(selectedContact.customerName) ? selectedContact.customerName : 'No Name'}} -
+									{{selectedContact.customerNo}}</span>
+								<!-- <button class="text-red w-30 h-30" *ngIf="selectedContact.OldMessagesCount">
+                                </button> -->
+								<svg (click)="ReloadMessages()" class="svg  w-20 h-20 active"
+									*ngIf="selectedContact.OldMessagesCount">
+									<use href="/assets/img/icons/icons-sprite.svg#refresh-circle-colored" />
+								</svg>
+								<span *ngIf="selectedContact.OldMessagesCount" class="tooltip-inner"
+									class="text-red w-15 h-15">{{selectedContact.OldMessagesCount}} Messages
+									Synced</span>
+							</h5>
+							<!-- <div class="box-tools">
+                                <button class="btn btn-xs btn-theme">
+                                    <span>Open History</span>
+                                </button>
+                            </div> -->
+						</div>
+						<div class="box-body clearfix p-0">
+							<div class="chatBody inbox">
+								<app-whatsapp-messages [contacatID]="selectedContact.customerName"
+									[customerNo]="selectedContact.customerNo"
+									[tempMessages]="selectedContact.tempMessages || []"
+									[messages]="selectedContact.messages || []" [agentEmail]="customEmail"
+									[customerName]="selectedContact.customerName"
+									(_CancelUpload)="__CancelUpload($event)"
+									(__ResendAttachment)="__ResendAttachment($event)" (UnsetReadCount)="Focused($event)"
+									(ReSendMessage)="ReSendMessage($event)" (GetMoreMessages)="GetMoreMessages($event)">
+								</app-whatsapp-messages>
+
+
+								<app-blob-attachment [uploading]="uploading" [fileValid]="fileValid"
+									[fileArray]="attachmentGallery" (onClear)="onClear($event)"
+									*ngIf="ShowAttachmentAreaDnd">
+								</app-blob-attachment>
+							</div>
+							<div class="chatFooter">
+								<!--
+                                <div class="sneakpeak-area animated slideInUp">
+                                    <span>Visitor Name is typing </span>
+                                    <img class="svg w-30 h-20" src="/assets/img/loaders/msg-loader.svg">
+                                </div>
+                                -->
+								<form>
+									<div class="msgArea">
+										<div class="tools">
+											<label class="btn btn-transparent svgOnHover tooltip top-left">
+												<svg class="svg w-25 h-25 svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#attachment" />
+												</svg>
+												<span class="tooltip-inner">Attach File</span>
+												<input #fileInput type="file" class="hide"
+													(change)="FileSelected($event)" multiple>
+											</label>
+											<button class="btn btn-transparent svgOnHover tooltip top"
+												*ngIf="!audioStarted" (click)="StartRecording()">
+												<svg class="svg w-25 h-25 svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#mic-on" />
+												</svg>
+												<span class="tooltip-inner">Voice Note</span>
+											</button>
+											<button class="btn btn-transparent svgOnHover tooltip top"
+												*ngIf="audioStarted" (click)="CancelRecording()">
+												<svg class="svg w-25 h-25 svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+												</svg>
+												<svg class="svg w-25 h-25 colored">
+													<use
+														href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+												</svg>
+												<span class="tooltip-inner">Cancel Recording</span>
+											</button>
+											<button class="btn btn-transparent svgOnHover tooltip top"
+												*ngIf="audioStarted" (click)="SendRecording()">
+												<svg class="svg svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#ok-circle" />
+												</svg>
+												<svg class="svg colored">
+													<use href="/assets/img/icons/icons-sprite.svg#ok-circle-colored" />
+												</svg>
+												<span class="tooltip-inner">Submit Recording</span>
+											</button>
+											<button class="btn text-black-light fs-13 wAuto" *ngIf="audioStarted">
+												<span>{{mins}} : {{seconds}}</span>
+											</button>
+											<!--
+                                            <button class="btn btn-transparent svgOnHover tooltip top">
+												<img class="svg w-25 h-25" src="/assets/img/loaders/spin-loader-gray.svg">
+												<span class="tooltip-inner">Loading ...</span>
+                                            </button>
+											<button class="btn btn-transparent svgOnHover tooltip top">
+                                                <svg class="svg w-25 h-25 svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#smiley"/>
+												</svg>
+												<svg class="svg w-25 h-25 colored">
+													<use href="/assets/img/icons/icons-sprite.svg#smiley-colored" class="text-mustard-light"/>
+												</svg>
+                                                <span class="tooltip-inner">Emojis</span>
+											</button>
+											-->
+										</div>
+										<textarea (focus)="Focused()" appAutoGrow [minHeight]="24" [maximumHeight]="200"
+											#chatMessage [restrictAutoSize]='restrictAutoSize' autocomplete="off"
+											name="message" maxlength="20000" placeholder="Type Message ..."
+											[ngModelOptions]="{standalone: true}"
+											[(ngModel)]="msgBody" (keydown)="keydown($event)"
+											(keyup)="keyup($event)"></textarea>
+										<div class="tools">
+											<button class="btn btn-transparent svgOnHover tooltip top-right"
+												(click)="SendMessage(msgBody)">
+												<svg class="svg svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#send-message" />
+												</svg>
+												<span class="tooltip-inner">Send</span>
+											</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<app-whatsapp-history [_contact]="selectedContact" (GetAttachments)="GetAttachments($event)"
+					class="viewHistory card p-0" *ngIf="selectedContact"></app-whatsapp-history>
+			</div>
+		</div>
+	</div>
+</section>

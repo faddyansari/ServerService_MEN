@@ -1,0 +1,10 @@
+<ul class="card-container clearfix style2">
+    <a routerLink="/settings/webhooks/script" *ngIf="package.customScript" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/custom-script-filled.svg">
+        <h5>Custom<br>Script</h5>
+    </a>
+    <a routerLink="/settings/webhooks/thirdparty" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+        <img class="svg" src="/assets/img/icons/settings/third-party-filled.svg">
+        <h5>3rd Party<br>Synchronization</h5>
+    </a>
+</ul>

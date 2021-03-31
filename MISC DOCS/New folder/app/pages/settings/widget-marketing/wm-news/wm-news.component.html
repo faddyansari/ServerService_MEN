@@ -1,0 +1,160 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Toggle News</h5>
+					</div>
+				</div>
+				<div class="activateScrollbar clearfix p-l-0">
+					<div class="pretty p-switch p-smooth p-fill p-toggle">
+						<input type="checkbox"  [checked]="widgetMarketingSettings.permissions && widgetMarketingSettings.permissions.news" (click)="toggleNewsPermission(!widgetMarketingSettings.permissions.news)"/>
+						<div class="state p-on">
+							<label>Enabled</label>
+						</div>
+						<div class="state p-off">
+							<label>Disabled</label>
+						</div>
+					</div>
+					<div class="box-subtitle clearfix">
+						<div>
+							<h5 *ngIf="!update">Add News</h5>
+							<h5 *ngIf="update">Update News</h5>
+						</div>
+					</div>
+					<form [formGroup]="newsForm">
+						<label>Title <span class="text-red"
+								*ngIf="(newsForm.controls['title'].errors && newsForm.controls['title'].errors['required'])">*</span></label>
+						<div class="input-block">
+							<input type="text" class="form-control input-sm" [formControl]="newsForm.controls['title']"
+								placeholder="Title">
+						</div>
+						<div class="input-block">
+							<label>Description <span class="text-red"
+									*ngIf="(newsForm.controls['desc'].errors && newsForm.controls['desc'].errors['required'])">*</span></label>
+							<textarea rows="3" class="form-control input-sm" [formControl]="newsForm.controls['desc']"
+								placeholder="Description"></textarea>
+						</div>
+						<div class="input-block" *ngIf="!update">
+							<label for="image">Image <span class="text-red"
+								*ngIf="!update">*</span></label>
+							<input type="file" name="image" class="form-control input-sm"
+								[formControl]="newsForm.controls['image']" (change)="imgSelected($event.target.files)"
+								accept="image/*">
+						</div>
+						<div class="input-block" *ngIf="!update">
+							<label for="image">Background</label>
+							<input type="file" name="background" class="form-control input-sm"
+								[formControl]="newsForm.controls['background']" (change)="bgSelected($event.target.files)"
+								accept="image/*">
+						</div>
+						<div class="input-block">
+							<label>Link</label>
+							<input type="text" class="form-control input-sm" [formControl]="newsForm.controls['link']"
+								placeholder="Link">
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue"
+							(click)="Submit(newsForm.value)"
+							[ngClass]="(loading) ? 'btnSpinner' : ''"
+							[disabled]="(!newsForm.valid)">
+
+							<span *ngIf="!update">Submit</span>
+							<span *ngIf="update">Update</span>
+						</button>
+						<button class="btn btn-sm bg-black"
+							*ngIf="update"
+							(click)="cancelUpdate()">
+
+							<span>Cancel</span>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>News List</h5>
+					</div>
+				</div>
+				<div class="toolbox clearfix">
+					<div class="searchForm clearfix">
+						<div class="search-bar">
+							<form [formGroup]="newsSearchForm">
+								<div class="input-block m-0">
+									<input type="text"[(ngModel)]="search"(input)="Typing($event)" class="form-control input-sm"
+										placeholder="search news ...."
+										autocomplete="off"
+										formControlName="searchValue">
+								</div>
+							</form>
+						</div>
+						<div class="search-icon svgOnHover">
+							<svg class="svg active">
+								<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+							</svg>
+						</div>
+					</div>
+				</div>
+				<div class="document-list clearfix">
+					<div class="activateScrollbar clearfix p-0">
+						<ul class="list-items clearfix style5" *ngIf="displayList.length && !cubeLoading" #scrollContainer (scroll)="ScrollChanged($event)">
+							<li class="item clearfix notif" *ngFor="let data of displayList | filter: search : ['title'] : false">
+								<div>
+									<div>
+										<div class="avatar ava-xl">
+											<img class="svg" [src]="data.image ? data.image : ''" width="100%">
+										</div>
+									</div>
+									<div class="info w70" >
+										<div class="name">
+											<b class="ellipsis" title="{{data.title}}">{{data.title}}</b>
+											<span class="ellipsis" title="{{data.desc}}">{{data.desc}}</span>
+										</div>
+									</div>
+									<span class="notif-count bg-transparent right text-blue" style="top:-5px;right:-3px;">Uploaded Date: {{data.createdOn | date:'mediumDate'}}</span>
+									<div class="actions">
+										<div class="tooltip top">
+											<div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+												<input type="checkbox" [checked]="data.active" (change)="Toggle(data._id,data.active)">
+												<div class="state p-on">
+													<label></label>
+												</div>
+												<div class="state p-off">
+													<label></label>
+												</div>
+											</div>
+											<span class="tooltip-inner">{{ (data.active) ? 'Active' : 'Inactive'}}</span>
+										</div>
+										<button class="btn btn-transparent svgOnHover tooltip left" (click)="setCurrentNews(data)">
+											<svg class="svg svg-blue active">
+												<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+											</svg>
+											<span class="tooltip-inner">Edit</span>
+										</button>
+										<button class="btn btn-transparent svgOnHover tooltip left" (click)="Delete(data._id)">
+											<svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+											</svg>
+											<svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+											</svg>
+											<span class="tooltip-inner">Delete</span>
+										</button>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="notAvailable floatToCenter" *ngIf="cubeLoading">
+						<app-preloader type="spin-loader-page"></app-preloader>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,64 @@
+<div class="row intent-list clearfix">
+	<div class="col-xs-12">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Regex Featurizer</h5>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="toggleRegexForm()"
+					[ngClass]="(!showRegexForm) ? 'border-blue' : 'border-red'">
+					<span>{{(!showRegexForm) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!showRegexForm) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!showRegexForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="popover-form" *ngIf="showRegexForm">
+			<b>Select Entity OR Intent</b>
+			<br>
+			<br>
+			<p class="clearfix m-b-10">
+				<input type="radio" value="entities" name="regex_value" [(ngModel)]="regex_value"> Entities
+				<input type="radio" value="intents" name="regex_value" [(ngModel)]="regex_value"> Intents
+			</p>
+			<form class="clearfix m-b-10" [formGroup]="RegexForm"
+				*ngIf="(regex_value == 'entities') || (regex_value == 'intents')">
+				<div class="input-block">
+					<div class="sel style1 sel-sm" *ngIf="regex_value == 'entities'">
+						<select class="form-control input-sm" formControlName="regex_value"
+							(change)="selectEntity($event)">
+							<option value="" selected>Select</option>
+							<option *ngFor="let e of entity_list; let i = index" [value]="e.entity_name">
+								{{e.entity_name}}</option>
+						</select>
+					</div>
+					<div class="sel style1 sel-sm" *ngIf="regex_value == 'intents'">
+						<select class="form-control input-sm" formControlName="regex_value"
+							(change)="selectIntent($event)">
+							<option value="" selected>Select</option>
+							<option *ngFor="let e of intent_list; let i = index" [value]="e.name">{{e.name}}</option>
+						</select>
+					</div>
+				</div>
+				<button class="btn btn-sm bg-blue" (click)="addRegexValue(selectedValue)" [disabled]="!selectedValue">
+					<span>Add</span>
+				</button>
+			</form>
+		</div>
+		<div class="document-list">
+			<ul class="activateScrollbar clearfix">
+				<li class="item" *ngIf="regex_list.length">
+					<div class="info" *ngFor="let i of regex_list; let index=index;">
+						<div class="m-r-14">
+							<b>{{i.regex_value}}</b>
+						</div>
+						<app-chips-input class="form-control input-sm tag-input w100" placeholder="Enter Regex..."
+							(onAdd)="onEnter($event,i)" (onRemove)="onRemoveTag($event,i)" [items]=i.regex [maxTag]=1>
+						</app-chips-input>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

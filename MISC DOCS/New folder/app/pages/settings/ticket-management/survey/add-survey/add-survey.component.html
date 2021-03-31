@@ -1,0 +1,336 @@
+<form class="clearfix m-b-10" [formGroup]="surveyForm">
+
+	<div class="row clearfix m-b-20">
+		<div class="col-md-4 col-sm-5 col-xs-12">
+			<!-- Survey Name -->
+			<div class="input-block">
+				<label>Survey Name</label>
+				<input type="text" class="form-control input-sm" name="surveyName" id="surveyName"
+					placeholder="Enter Survey Name, Keep meaningful name.." formControlName="surveyName">
+			</div>
+
+			<hr class="bg-border">
+
+			<!-- Rating Order -->
+			<div class="input-block">
+				<label>Rating order</label>
+				<div class="sel style1 sel-sm">
+					<select class="form-control input-sm" formControlName="criteria" (change)="ChangeRatings()">
+						<option value="asc" [selected]="true">Good to bad</option>
+						<option value="desc">Bad to good</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Basic Question -->
+	<fieldset class="m-b-20">
+		<h5>Overall Experience Question</h5>
+		<div class="card clearfix m-0">
+			<div class="input-block">
+				<label>Basic Question</label>
+				<input type="text" class="form-control input-sm" name="basicQuestion"
+					placeholder="How would you rate overall satisfaction to resolve your query by our agent?"
+					formControlName="basicQuestion">
+			</div>
+			<!-- Point Scale Basic -->
+			<div class="point-scale-selection clearfix" *ngIf="!editCase">
+				<div>
+					<label class="m-0">Point Scale</label>
+				</div>
+				<div>
+					<div class="clearfix">
+						<div class="pretty p-default p-round p-smooth">
+							<input type="radio" name="pointScaleBasic" value="2" formControlName="pointScaleBasic"
+								(change)="changeBasic($event)">
+							<div class="state">
+								<label> 2 </label>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="pretty p-default p-round p-smooth">
+							<input type="radio" name="pointScaleBasic" value="3" formControlName="pointScaleBasic"
+								(change)="changeBasic($event)">
+							<div class="state">
+								<label> 3 </label>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="pretty p-default p-round p-smooth">
+							<input type="radio" name="pointScaleBasic" value="5" formControlName="pointScaleBasic"
+								(change)="changeBasic($event)">
+							<div class="state">
+								<label> 5 </label>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="pretty p-default p-round p-smooth">
+							<input type="radio" name="pointScaleBasic" value="7" formControlName="pointScaleBasic"
+								(change)="changeBasic($event)">
+							<div class="state">
+								<label> 7 </label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="editCase">
+				<p>You have selected {{surveyForm.get('pointScaleBasic').value}} Point Scale</p>
+			</div>
+			<!-- Scale Label -->
+			<div class="point-scale-question clearfix"
+				[ngClass]="(surveyForm.get('criteria').value) == 'asc' ? 'good-to-bad' : ''">
+				<ng-template ngFor let-a [ngForOf]="[1,2,3,4,5,6,7]" let-index="index">
+					<div class="satisfaction-lvl clearfix"
+						[ngClass]="GetRadioDataBasic(surveyForm.get('pointScaleBasic').value)[index] ? 'active' : ''">
+						<div class="input-block m-0"
+							*ngIf="GetRadioDataBasic(surveyForm.get('pointScaleBasic').value)[index]">
+							<div class="lvl-color clearfix"></div>
+							<textarea class="form-control input-lg b-0 bg-transparent no-shadow"
+								[(ngModel)]="GetRadioDataBasic(surveyForm.get('pointScaleBasic').value)[index].name"
+								[ngModelOptions]="{standalone: true}"></textarea>
+						</div>
+					</div>
+				</ng-template>
+			</div>
+		</div>
+	</fieldset>
+
+	<!-- Thank you box -->
+	<fieldset class="m-b-20">
+		<div class="card clearfix m-0">
+			<div class="input-block">
+				<label>Thank you page</label>
+				<input type="text" autocomplete="off" class="form-control input-sm"
+					placeholder="Thank you for your feedback" name="thankyouMessage"
+					formControlName="thankyouMessage">
+			</div>
+
+			<div class="pretty p-svg p-fill p-smooth m-b-14">
+				<input type="checkbox" formControlName="commentBox">
+				<div class="state svgOnHover">
+					<svg class="svg svg-icon active">
+						<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+					</svg>
+					<label class="fw-6">Include additional comments box</label>
+				</div>
+			</div>
+
+			<div class="input-block" *ngIf="surveyForm.get('commentBox').value">
+				<input type="text" autocomplete="off" class="form-control input-sm"
+					placeholder="How would you rate overall satisfaction with resolution provided by our agent?"
+					name="additionalDetails" formControlName="additionalDetails">
+			</div>
+		</div>
+	</fieldset>
+
+	<!-- Questions -->
+	<fieldset class="m-b-20" *ngIf="!editCase">
+		<button class="btn btn-sm btn-theme"
+			(click)="removeAdditionalQuestion()"
+			*ngIf="addTrue">
+			<span>Remove Question</span>
+		</button>
+		<button class="btn btn-sm btn-theme"
+			(click)="addAdditionalQuestion()"
+			*ngIf="!addTrue">
+			<span>Add Additional Question(s)</span>
+		</button>
+		<div class="btn btn-transparent svgOnHover tooltip top-left" *ngIf="!addTrue">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#info-circle"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#info-circle" class="text-blue"/>
+			</svg>
+			<span class="tooltip-inner">
+				Additional survey questions appear
+				<br>
+				in the Thank You page after the customer
+				<br>
+				takes the satisfaction survey.
+				<br>
+				<br>
+				Questions can be about
+				<br>
+				product / company / agent.
+			</span>
+		</div>
+	</fieldset>
+
+	<!-- Additional Question Part -->
+	<fieldset class="m-b-20">
+		<h5 *ngIf="addTrue">Additional Question(s)</h5>
+		<!-- Point Scale Add -->
+		<div class="card clearfix m-0" *ngIf="addTrue">
+			<div class="point-scale-selection clearfix" *ngIf="!editCase">
+				<div>
+					<label>Point Scale</label>
+				</div>
+				<div>
+					<div class="clearfix">
+						<div class="pretty p-default p-round p-smooth">
+							<input type="radio" name="pointScaleAdd" value="2" formControlName="pointScaleAdd"
+								(change)="changeAdd($event)">
+							<div class="state">
+								<label> 2 </label>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="pretty p-default p-round p-smooth">
+							<input type="radio" name="pointScaleAdd" value="3" formControlName="pointScaleAdd"
+								(change)="changeAdd($event)">
+							<div class="state">
+								<label> 3 </label>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="pretty p-default p-round p-smooth">
+							<input type="radio" name="pointScaleAdd" value="5" selected formControlName="pointScaleAdd"
+								(change)="changeAdd($event)">
+							<div class="state">
+								<label> 5 </label>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="pretty p-default p-round p-smooth">
+							<input type="radio" name="pointScaleAdd" value="7" selected formControlName="pointScaleAdd"
+								(change)="changeAdd($event)">
+							<div class="state">
+								<label> 7 </label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="editCase">
+				<p>You have selected {{surveyForm.get('pointScaleAdd').value}} Point Scale</p>
+			</div>
+			<!-- Scale Label -->
+			<div class="point-scale-question clearfix"
+				[ngClass]="(surveyForm.get('criteria').value) == 'asc' ? 'good-to-bad' : ''">
+				<ng-template ngFor let-a [ngForOf]="[1,2,3,4,5,6,7]" let-index="index">
+					<div class="satisfaction-lvl clearfix"
+						[ngClass]="GetRadioDataAdd(surveyForm.get('pointScaleAdd').value)[index] ? 'active' : ''">
+						<div class="input-block m-0"
+							*ngIf="GetRadioDataAdd(surveyForm.get('pointScaleAdd').value)[index]">
+							<div class="lvl-color clearfix"></div>
+							<textarea class="form-control input-lg b-0 bg-transparent no-shadow"
+								[(ngModel)]="GetRadioDataAdd(surveyForm.get('pointScaleAdd').value)[index].name"
+								[ngModelOptions]="{standalone: true}"></textarea>
+						</div>
+					</div>
+				</ng-template>
+			</div>
+
+			<ul class="list-items clearfix style5 m-b-20"
+				*ngIf="addTrue"
+				formArrayName="AdditionalQuestions">
+				<ng-template ngFor let-ques [ngForOf]="GetControls('AdditionalQuestions')" let-index="index">
+					<li class="item clearfix" [formGroupName]="index">
+						<div>
+							<div class="info">
+								<div class="input-block">
+									<!-- <label>Question # {{index+1}} </label> -->
+									<input type="text" autocomplete="off" class="form-control input-sm"
+										placeholder="Are you satisfied with our customer support experience?"
+										name="question" formControlName="question">
+								</div>
+							</div>
+							<!-- Actions within formarray -->
+							<div class="actions">
+								<button class="btn btn-transparent svgOnHover tooltip top"
+									(click)="deleteQuestion(index)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveUp(index)">
+									<svg class="svg svg-blue active">
+										<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+									</svg>
+									<span class="tooltip-inner">Swap Up</span>
+								</button>
+								<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveDown(index)">
+									<svg class="svg svg-blue active">
+										<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+									</svg>
+									<span class="tooltip-inner">Swap Down</span>
+								</button>
+							</div>
+						</div>
+					</li>
+				</ng-template>
+			</ul>
+			<button class="btn btn-md btn-theme"
+				(click)="addQuestion()" title="Add More">
+				<label>Add Question</label>
+			</button>
+		</div>
+	</fieldset>
+
+
+	<!-- Emails should sent at -->
+	<fieldset>
+		<h6> Which emails should have the satisfaction survey?</h6>
+		<div class="input-block">
+			<div class="pretty p-default p-round p-smooth">
+				<input type="radio" value="closed" name="sendWhen" formControlName="sendWhen">
+				<div class="state">
+					<label>Emails sent after a ticket is "Closed".</label>
+				</div>
+			</div>
+		</div>
+		<div class="input-block">
+			<div class="pretty p-default p-round p-smooth">
+				<input type="radio" value="resolved" name="sendWhen" formControlName="sendWhen">
+				<div class="state">
+					<label>Emails sent after a ticket is "Resolved".</label>
+				</div>
+			</div>
+		</div>
+		<div class="input-block">
+			<div class="pretty p-default p-round p-smooth">
+				<input type="radio" value="replies" name="sendWhen" formControlName="sendWhen">
+				<div class="state">
+					<label>All "Replies" sent to customer.</label>
+				</div>
+			</div>
+		</div>
+		<div class="input-block">
+			<div class="pretty p-default p-round p-smooth">
+				<input type="radio" value="manually_attached" name="sendWhen" formControlName="sendWhen">
+				<div class="state">
+					<label>Allow agents to attach survey form manually.</label>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+
+	<!-- Action Buttons -->
+	<div class="clearfix">
+		<button type="button" class="btn btn-xs bg-blue" *ngIf="!selectedSurvey" (click)="AddSurvey()"
+			[disabled]="!surveyForm.valid">
+			<span>Save</span>
+		</button>
+		<button type="button" class="btn btn-xs bg-blue" *ngIf="selectedSurvey" (click)="UpdateSurvey()">
+			<span>Update</span>
+		</button>
+		<button type="button" class="btn btn-xs bg-red" (click)="CancelSurvey()">
+			<span>Cancel</span>
+		</button>
+
+	</div>
+
+</form>

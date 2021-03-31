@@ -1,0 +1,262 @@
+<div class="box clearfix animated fadeIn delay-400" id="ticketFilters">
+	<div class="box-header">
+		<h5 class="box-title">Search</h5>
+		<div class="box-tools">
+			<div class="btn-group">
+				<button class="btn btn-xxs btn-theme" [ngClass]="(loading) ? 'btnSpinner' : ''" (click)="Reload()">
+					<span>Reload</span>
+				</button>
+				<button class="btn btn-xxs btn-theme" [disabled]="CheckFiltersEmpty()" (click)="ClearFields()">
+					<span>Clear</span>
+				</button>
+				<button class="btn btn-xxs btn-theme svgOnHover tooltip bottom-right hidden-md hidden-lg" (click)="toggleFilters()">
+					<svg class="svg svg-white active">
+						<use href="/assets/img/icons/icons-sprite.svg#filter"/>
+					</svg>
+					<span class="tooltip-inner">Toggle Filters</span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="box-body clearfix p-0">
+		<div class="activateScrollbar clearfix p-0">
+			<div class="vhList notif clearfix">
+				<div class="nav-tabs-custom">
+					<div class="tab-content">
+						<div class="input-block">
+							<label>Sort by</label>
+							<div class="input-block m-b-20">
+								<div class="input-group">
+									<div class="pretty p-default p-round p-smooth m-r-20">
+										<input type="radio" value="1" [(ngModel)]="sortBy.type" (change)="updateSort()">
+										<div class="state">
+											<label>ASC</label>
+										</div>
+									</div>
+									<div class="pretty p-default p-round p-smooth">
+										<input type="radio" checked value="-1" [(ngModel)]="sortBy.type"
+											(change)="updateSort()">
+										<div class="state">
+											<label>DESC</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-xs" (change)="updateSort()" [(ngModel)]="sortBy.name">
+									<option value="datetime">Created date</option>
+									<option value="lasttouchedTime">Last updated</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="input-block m-b-20">
+							<div class="input-group">
+								<div class="pretty p-default p-round p-smooth m-r-20">
+									<input type="radio" value="$or" name="filter" [(ngModel)]="clause"
+										(change)="UpdateClause()">
+									<div class="state">
+										<label>Having</label>
+									</div>
+								</div>
+								<div class="pretty p-default p-round p-smooth">
+									<input type="radio" checked value="$and" name="filter" [(ngModel)]="clause"
+										(change)="UpdateClause()">
+									<div class="state">
+										<label>Where</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Select Date</label>
+							<div class="input-group" [popper]="dateRangePopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true"
+								[popperHideOnScroll]="false" (popperOnShown)="ShowDateRange($event)" [popperPlacement]="'left-start'">
+								<input type="text" class="form-control input-xs" *ngIf="daterange" value="{{(daterange.from | date:'shortDate') + '-' +  (daterange.to | date:'shortDate')}}"
+									disabled>
+								<!--
+								<div *ngIf="daterange">
+									<span *ngIf="daterange.to">From: {{(daterange.from | date:'shortDate')}} -
+									</span>
+									<span *ngIf="daterange.from">To: {{(daterange.to | date:'shortDate')}}</span>
+								</div>
+								-->
+								<input type="text" class="form-control input-xs" *ngIf="!daterange" placeholder="Select Period">
+								<div class="input-group-addon svgOnHover" (click)="clearDate($event)" *ngIf="daterange">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+									</svg>
+								</div>
+								<div class="input-group-addon svgOnHover tooltip top-right" *ngIf="!daterange">
+									<svg class="svg svg-blue active">
+										<use href="/assets/img/icons/icons-sprite.svg#calendar"/>
+									</svg>
+									<span class="tooltip-inner">Date Picker</span>
+								</div>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Agent Assign type</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-xs" (change)="assignTypeChanged()"
+									[(ngModel)]="agentAssignType">
+									<option value="all" selected>All</option>
+									<option value="assigned">Assigned</option>
+									<option value="unassigned">Unassigned</option>
+								</select>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Group Assign type</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-xs" (change)="assignTypeChanged()"
+									[(ngModel)]="groupAssignType">
+									<option value="all" selected>All</option>
+									<option value="assigned">Assigned</option>
+									<option value="unassigned">Unassigned</option>
+								</select>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Priority</label>
+							<app-custom-select class="input-xs" [items]="priorityList" [selectLabel]="'Select Priority'"
+								[(ngModel)]="selectedItems" [selectedItems]="selectedItems" [multiple]="true"
+								[search]="false" (onDeSelect)="onDeSelect($event)" (onSelect)="onItemSelect($event)">
+							</app-custom-select>
+						</div>
+						<div class="input-block">
+							<label>Status</label>
+							<app-custom-select class="input-xs" [items]="statusList" [selectLabel]="'Select Status'"
+								[(ngModel)]="selectedStatus" [selectedItems]="selectedStatus" [multiple]="true"
+								[search]="false" (onDeSelect)="onDeSelect($event)" (onSelect)="onItemSelect($event)">
+							</app-custom-select>
+						</div>
+						<div class="input-block">
+							<label>Merged</label>
+							<div class="sel style1 sel-xs">
+								<select class="form-control input-xs" (change)="mergeTypeChanged()"
+									[(ngModel)]="mergeType">
+									<option value="all" selected>All</option>
+									<option value="yes">Yes</option>
+									<option value="no">No</option>
+								</select>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Agents</label>
+							<app-custom-select class="input-xs" [items]="agentList" [selectLabel]="'Select Agents'"
+								[(ngModel)]="selectedAgents" [selectedItems]="selectedAgents" [bindLabel]="'email'"
+								[bindValue]="'email'" [multiple]="true" [lazyLoading]="true"
+								(onLoadMore)="loadMore($event)" (onSearch)="onSearch($event)"
+								(onSelect)="onItemSelect($event)" (onDeSelect)="onDeSelect($event)">
+							</app-custom-select>
+						</div>
+						<!--
+						<div class="input-block multi-select" [popper]="agentPopper" [popperShowOnStart]="false"
+							[popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false"
+							[popperPlacement]="'bottom'" [ngClass]="selectedAgents.length ? 'selected' : ''">
+							<label class="">Agents</label>
+							<div class="sel style1 sel-xs">
+								<div class="form-control input-xs"
+									[ngClass]="selectedAgents.length ? 'selected-items' : ''">
+									<div class="badge svgOnHover" *ngFor="let agent of selectedAgents; let index=index"
+										title="{{agent}}">
+										<span>{{agent}}</span>
+										<svg class="svg w-15 h-15 active dismiss" (click)="clearAgent($event,agent)">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-black"/>
+										</svg>
+									</div>
+									<input type="text" placeholder="Search agent..." autocomplete="off"
+										[(ngModel)]="dropDown_typeahead" (input)="searchInput.next()">
+									<button class="btn btn-transparent svgOnHover tooltip top clearFIeld"
+										*ngIf="selectedAgents.length > 1" (click)="clearAllAgents($event)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Clear Search</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					 	-->
+						<div class="input-block">
+							<label>Groups</label>
+							<app-custom-select class="input-xs" [items]="groupList" [selectLabel]="'Select Groups'"
+								[(ngModel)]="selectedGroups" [selectedItems]="selectedGroups" [multiple]="true"
+								[search]="true" (onDeSelect)="onDeSelect($event)" (onSelect)="onItemSelect($event)">
+							</app-custom-select>
+						</div>
+						<!--
+						<div class="input-block">
+							<label>ID</label>
+							<input type="text" class="form-control input-xs" placeholder="Enter ID(comma separated)"
+								autocomplete="off" [(ngModel)]="selectedIDs"
+								(keyup)="GetCommaSeparatedIDs(selectedIDs)">
+						</div>
+						-->
+						<div *ngFor="let field of dynamicFields;let i = index">
+							<div class="input-block" *ngIf="field.elementType == 'dropdown'">
+								<label>{{field.label}}</label>
+								<!-- <app-custom-select [items]="field.options" [selectLabel]="'Select ' + field.label"
+									[(ngModel)]="field.value" [selectedItems]="field.value" [multiple]="true" [search]="true"
+									(onDeSelect)="onDynamicItemDeSelect($event)" (onSelect)="onDynamicItemSelect($event)">
+								</app-custom-select> -->
+								<ng-multiselect-dropdown class="top form-control input-xs p-0 b-0 m-0" [placeholder]="'Select ' + field.label" [data]="field.options"
+									[settings]="dynamicDropdownSettings" [(ngModel)]="field.value" (onSelect)="onDynamicItemSelect($event,field.value)"
+									(onDeSelect)="onDynamicItemDeSelect($event)">
+								</ng-multiselect-dropdown>
+							</div>
+							<div class="input-block" *ngIf="field.elementType == 'textbox'">
+								<label>{{field.label}}</label>
+								<input type="text" class="form-control input-xs" [placeholder]="field.label"
+									autocomplete="off" [(ngModel)]="field.value"
+									(keyup)="DynamicFieldTextBoxChange(i,field.value)">
+							</div>
+							<div class="input-block" *ngIf="field.elementType == 'checkbox'">
+								<label>{{field.name}}</label>
+								<div class="input-block">
+									<div class="input-group">
+										<div class="pretty p-default">
+											<input [(ngModel)]="field.value" type="checkbox" name="field-name"
+												(change)="DynamicFieldTextBoxChange(i,field.value)">
+											<div class="state"><label>{{field.name}}</label></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<popper-content #dateRangePopper>
+	<app-date-range-picker class="date-range-picker in-popper" (submit)="onDateSelect($event)" #datePicker>
+	</app-date-range-picker>
+</popper-content>
+
+<popper-content #agentPopper>
+	<ul class="activateScrollbar clearfix" #scrollContainer>
+		<li *ngFor="let agent of agentList" (click)="onItemSelect_dropdown(agent.email)" [ngClass]="(agent.selected) ? 'hide' : ''">
+			<a class="svgOnHover">
+				<svg class="svg w-15 h-15 svg-default active" (click)="clearAgent($event,agent.email)" *ngIf="agent.selected">
+					<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+				</svg>
+				<span>{{agent.email}}</span>
+			</a>
+		</li>
+		<li *ngIf="!agentList.length || showNoAgents">
+			<span>
+				No Agents!
+			</span>
+		</li>
+	</ul>
+</popper-content>

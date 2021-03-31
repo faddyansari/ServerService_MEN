@@ -1,0 +1,41 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-header notif">
+		<h5 class="box-title ellipsis">
+			<span class="ellipsis">Recent Chat History</span>
+		</h5>
+	</div>
+	<div class="box-body clearfix p-0">
+		<div class="list-items clearfix">
+			<ul class="activateScrollbar clearfix p-0" #scrollContainer (scroll)="ScrollChanged($event)">
+				<li class="item clearfix notif"
+					[ngClass]="(selectedCustomerConversation) ? (selectedCustomerConversation._id == conversation._id) ? 'active' : '' : ''"
+					*ngFor="let conversation of conversationList">
+					<div class="clearfix" (click)="_crmService.setSelectedConversation(conversation._id)">
+						<div>
+							<div class="avatar ava-md">
+								<div class="nameInitials" *ngIf="conversation.visitorName">
+									{{(conversation.visitorName | slice:0:1)}}{{(conversation.visitorName | split:' ')}}</div>
+							</div>
+						</div>
+						<div class="info">
+							<b class="name ellipsis fw-6">{{conversation.visitorName}}</b>
+							<span class="ellipsis msg" *ngIf="conversation.lastMessage && !conversation.lastMessage.attachment">{{conversation.lastMessage.body}}</span>
+							<span class="svgOnHover ellipsis msg" *ngIf="conversation.lastMessage && conversation.lastMessage.attachment">
+								<svg class="svg w-15 h-15 svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+								</svg>
+								<span>{{((conversation.lastMessage.body | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+							</span>
+							<span class="date">{{ conversation.lastMessage.date | date:'mediumDate'}}</span>
+						</div>
+					</div>
+				</li>
+				<li *ngIf="loading">
+					<app-preloader type="dot-loader"></app-preloader>
+				</li>
+				<!-- <span *ngIf="!ifMoreRecentChats">No More Chats Found</span> -->
+			</ul>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,37 @@
+<li *ngFor="let form of Forms">
+    <div class="info card">
+        <div class="name">
+            <b>Form Name:</b>
+            <span>{{form.formName}}</span>
+            <br>
+            <b *ngIf="form.actionUrl">Action URL:</b>
+            <!-- (form.actionType == 'Custom URL') ? form.actionUrl : form.actionType -->
+            <span class="text-blue" *ngIf="form.actionUrl">{{ form.actionUrl }}</span>
+
+        </div>
+        <div class="name" *ngIf="form.lastModified">
+            <b> Modified At:</b>
+            <span>{{form.lastModified.date | agoPipe}}</span>
+            <br>
+            <b>Modified By:</b>
+            <span class="text-blue">{{form.lastModified.by }}</span>
+        </div>
+        <div class="actions">
+            <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="EditForm(form)">
+                <svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+				</svg>
+				<span class="tooltip-inner">Edit</span>
+            </button>
+            <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="DeleteForm(form._id)">
+                <svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+				</svg>
+				<svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+				</svg>
+				<span class="tooltip-inner">Delete</span>
+            </button>
+        </div>
+    </div>
+</li>

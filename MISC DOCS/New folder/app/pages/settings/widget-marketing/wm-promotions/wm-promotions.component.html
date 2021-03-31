@@ -1,0 +1,195 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Toggle Promotions</h5>
+					</div>
+				</div>
+				<div class="activateScrollbar clearfix p-l-0">
+					<div class="input-block">
+						<div class="pretty p-switch p-smooth p-fill p-toggle">
+							<input type="checkbox" [checked]="widgetMarketingSettings.permissions.promotions"
+								(click)="togglePromotionPermission(!widgetMarketingSettings.permissions.promotions)"/>
+							<div class="state p-on">
+								<label>Enabled</label>
+							</div>
+							<div class="state p-off">
+								<label>Disabled</label>
+							</div>
+						</div>
+					</div>
+					<div class="box-subtitle clearfix">
+						<div>
+							<h5 *ngIf="!update">Add Promotion</h5>
+							<h5 *ngIf="update">Update Promtion</h5>
+						</div>
+					</div>
+					<form [formGroup]="promotionForm">
+						<div class="input-block">
+							<label>Type</label>
+							<div class="sel style1 sel-sm">
+								<select type="text" class="form-control input-sm" [formControl]="promotionForm.controls['type']" (change)="TypeChange($event.target.value)">
+									<option value="banner" selected>Banner</option>
+									<option value="post">Post</option>
+									<option value="product">Product</option>
+								</select>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Title <span class="text-red"
+									*ngIf="(promotionForm.controls['title'].errors && promotionForm.controls['title'].errors['required'])">*</span></label>
+							<input type="text" class="form-control input-sm" [formControl]="promotionForm.controls['title']" placeholder="Title">
+						</div>
+						<div class="input-block">
+							<label>Description <span class="text-red"
+									*ngIf="(promotionForm.controls['desc'].errors && promotionForm.controls['desc'].errors['required'])">*</span></label>
+							<textarea rows="3" class="form-control input-sm" [formControl]="promotionForm.controls['desc']" placeholder="Description"></textarea>
+						</div>
+						<div class="row clearfix" *ngIf="promotionForm.get('type').value == 'product'">
+							<div class="col-md-7" >
+								<div class="input-block">
+									<label>Currency <span class="text-red"
+											*ngIf="(promotionForm.controls['currency'].errors && promotionForm.controls['currency'].errors['required'])">*</span></label>
+									<div class="sel style1 sel-sm">
+										<select type="text" class="form-control input-sm" [formControl]="promotionForm.controls['currency']">
+											<ng-template ngFor [ngForOf]="currencyList" let-currency>
+												<option [value]="currency">{{currency}}</option>
+											</ng-template>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="input-block">
+									<label>Price <span class="text-red"
+											*ngIf="(promotionForm.controls['price'].errors && promotionForm.controls['price'].errors['required']) ">*</span></label>
+									<input type="number" class="form-control input-sm" [formControl]="promotionForm.controls['price']" placeholder="Price" min="0">
+								</div>
+							</div>
+						</div>
+						<div class="input-block" *ngIf="!update">
+							<label>Image <span class="text-red"
+									*ngIf="(promotionForm.controls['image'].errors && promotionForm.controls['image'].errors['required']) && !update">*</span></label>
+							<input type="file" name="image" class="form-control input-sm" [formControl]="promotionForm.controls['image']"
+								(change)="imgSelected($event.target.files)" accept="image/*">
+						</div>
+						<div class="input-block" *ngIf="!update">
+							<label>Background <span class="text-red"
+									*ngIf="(promotionForm.controls['background'].errors && promotionForm.controls['background'].errors['required'])">*</span></label>
+							<input type="file" name="background" class="form-control input-sm" [formControl]="promotionForm.controls['background']"
+								(change)="bgSelected($event.target.files)" accept="image/*">
+						</div>
+						<div class="input-block">
+							<label>Link <span class="text-red" *ngIf="(promotionForm.controls['link'].errors && promotionForm.controls['link'].errors['required'])">*</span></label>
+							<input type="text" class="form-control input-sm" [formControl]="promotionForm.controls['link']" placeholder="Link">
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue" (click)="Submit(promotionForm.value)" [ngClass]="(loading) ? 'btnSpinner' : ''"
+							[disabled]="(promotionForm.invalid)">
+							<span *ngIf="!update">Submit</span>
+							<span *ngIf="update">Update</span>
+						</button>
+						<button class="btn btn-sm bg-black"
+							*ngIf="update"
+							(click)="cancelUpdate()">
+							<span>Cancel</span>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Promotion List</h5>
+					</div>
+				</div>
+				<div class="toolbox clearfix">
+					<div class="searchForm clearfix">
+						<div class="search-bar">
+							<form [formGroup]="promSearchForm">
+								<div class="input-block m-0">
+									<input type="text"[(ngModel)]="search" (input)="Typing($event)" class="form-control input-sm" placeholder="search promotions ...." autocomplete="off" formControlName="searchValue">
+								</div>
+							</form>
+						</div>
+						<div class="search-icon svgOnHover">
+							<svg class="svg active">
+								<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+							</svg>
+						</div>
+					</div>
+				</div>
+				<div class="document-list clearfix">
+					<div class="activateScrollbar clearfix p-0">
+						<ul class="list-items clearfix style5" *ngIf="displayList.length && !cubeLoading" #scrollContainer (scroll)="ScrollChanged($event)">
+							<li class="item clearfix notif" *ngFor="let data of displayList | filter: search : ['title'] : false">
+								<div>
+									<div>
+										<div class="avatar ava-xl">
+											<img class="svg" [src]="data.image" width="100%">
+										</div>
+									</div>
+									<div class="info">
+										<div class="name">
+											<b class="ellipsis" title="{{data.title}}">{{data.title}}</b>
+											<span class="line-clamp clamp-2" title="{{data.desc}}">{{data.desc}}</span>
+											<a *ngIf="data.link" [attr.href]="data.link" target="_blank">
+											<span *ngIf="data.price" title="{{data.currency}} {{data.price}}"> {{data.currency}} {{data.price}} </span>
+											<span class="text-blue">view details</span>
+											<!-- [target]="((data.link | attachmentType) == 'document' ? '_parent' : '_blank')"> -->
+											</a>
+										</div>
+									</div>
+									<div class="notif-count bg-transparent right text-blue" style="top:-5px;right:-3px;">Created Date: {{data.createdOn | date:'mediumDate'}}</div>
+									<div class="actions">
+										<!-- <div class="status">
+											<button class="btn btn-xs" [ngClass]="(data.active) ? 'bg-green' : 'bg-red'"
+												(click)="Toggle(data._id,data.active)">
+												<span>{{ (data.active) ? 'Active' : 'Inactive'}}</span>
+											</button>
+										</div> -->
+										<div class="tooltip left">
+											<div class="pretty p-switch p-smooth p-fill p-toggle m-0">
+												<input type="checkbox" [checked]="data.active" (change)="Toggle(data._id,data.active)">
+												<div class="state p-on">
+													<label></label>
+												</div>
+												<div class="state p-off">
+													<label></label>
+												</div>
+											</div>
+											<span class="tooltip-inner">{{ (data.active) ? 'Active' : 'Inactive'}}</span>
+										</div>
+										<button class="btn btn-transparent svgOnHover tooltip left"  (click)="setCurrentPromtions(data)">
+											<svg class="svg svg-blue active">
+												<use href="/assets/img/icons/icons-sprite.svg#edit" />
+											</svg>
+											<span class="tooltip-inner">Edit</span>
+										</button>
+										<button class="btn btn-transparent svgOnHover tooltip left" (click)="Delete(data._id)">
+											<svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+											</svg>
+											<svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+											</svg>
+											<span class="tooltip-inner">Delete</span>
+										</button>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="notAvailable floatToCenter" *ngIf="cubeLoading">
+					<app-preloader type="spin-loader-page"></app-preloader>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

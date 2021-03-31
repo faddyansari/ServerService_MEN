@@ -1,0 +1,10 @@
+<div class="range-slider">
+	<input type="range" class="rs-range" step="1"
+		value="{{dbValue}}" min="{{minVal}}" max="{{maxVal}}"
+		(keydown)="DisableInput($event)"
+		(input)="showSliderValue($event)" [disabled]="disabled">
+	<div class="box-minmax">
+		<span>{{displayVal}}</span>
+		<span>{{bulletPosition? bulletPosition: dbValue}}</span>
+	</div>
+</div>

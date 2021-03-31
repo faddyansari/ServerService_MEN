@@ -1,0 +1,151 @@
+$colors: (
+	'purple': #6d4072,
+	'blue': #56a6ff,
+	'madison': #313e4d,
+	'brown': #4f331b,
+	'green': #3c763d,
+	'olive': #368763,
+	'teal': #15b49c,
+	'red': #c73b39,
+	'valencia': #d64646,
+	'orange': #ff681f,
+	'mustard': #f0a13c,
+	'yellow': #f6bb15,
+	'white': #ffffff,
+	'off-white': #f5f5f5,
+	'gray': #d2d6de,
+	'theme-gray': #a1a1a2,
+	'theme-pro-gray': #5d5f60,
+	'muted': #777777,
+	'charcoal': #181d22,
+	'black': #000000
+);
+
+$notifColors: (
+	'default': #e5e5e5,
+	'info': #58c1de,
+	'primary': #3378b9,
+	'warning': #f7b555,
+	'success': #52ba5b,
+	'danger': #e55353,
+);
+
+$skinColors: (
+	'charcoal': #1f282e
+);
+
+$socialColors: (
+	'facebook': #3b5998,
+	'linkedin': #0E76A8,
+	'twitter': #1DA1F2,
+	'youtube': #e60000,
+	'instagram': #3F729B,
+	'whatsapp': #34af23,
+	'google': #dd4b39,
+	'viber': #9069ae,
+	'email': #1d70cc,
+	'vkontakte': #41648a,
+	'bitbucket': #205081
+);
+
+$elements: (
+	'card': #faf9ff,
+	'theme-bg': #edf1f6,
+	// 'shadow': #dce4ed,
+	// 'border': #d6dde9,
+	'shadow': #C8D1E1,
+	'border': #C8D1E1,
+	'dropdown': #f5f6f8
+);
+
+$phone-width: 300px;
+$phone-landscape-width: 568px;
+$tablet-portrait-width: 768px;
+$phone-and-tablet-portrait-width: 1023px;
+$tablet-landscape-width: 1024px;
+$desktop-width: 1280px;
+$laptop-landscape-width: 1366px;
+$desktop-wide-width: 1440px;
+$container-padding: 10px;
+
+$gutter-width: 7px;
+$col-of-12: 12;
+$i-12: $col-of-12;
+
+$headerSpace: 100px;
+$sidebarHeader: 60px;
+$sidebarMenu: 40px;
+
+$internalScrollBarPadding: 20px;
+$scrollBarPadding: 7px;
+$cardMargin: 7px;
+$scrollableArea: $headerSpace + ($scrollBarPadding * 2) + ($cardMargin * 2);
+// collapsed
+$collapsedScrollableArea: $scrollableArea - $sidebarMenu;
+$collapsedHeaderSpace: $headerSpace - $sidebarMenu;
+
+// Chat Window
+$chatHeader: 50px;
+$chatFooter: 50px;
+$chatBody: $headerSpace + ($scrollBarPadding * 2) + ($cardMargin * 2) + $chatFooter + 1px;
+$chatWindow: $chatBody + ($cardMargin * 2);
+$viewHistory: $chatBody + ($cardMargin * 2);
+// collapsed
+$collapsedChatBody: $chatBody - $sidebarMenu;
+$collapsedChatWindow: $chatWindow - $sidebarMenu;
+$collapsedViewHistory: $chatWindow - $sidebarMenu;
+
+// Ticket View
+$scrollableList: $headerSpace + ($scrollBarPadding * 2);
+$ticketBody: $headerSpace + ($scrollBarPadding * 2) + ($cardMargin * 2) + $chatHeader + $chatFooter;
+// collapsed
+$collapsedScrollableList: $scrollableList - $sidebarMenu;
+$collapsedTicketBody: $ticketBody - $sidebarMenu;
+
+$contentNav: 60px;
+$boxBody: $headerSpace + $contentNav;
+$collapsedBoxBody: $collapsedHeaderSpace + $contentNav;
+
+$scrollbarPadding: 40px;
+$settingsInternal: $boxBody + ($internalScrollBarPadding * 2);
+$collapsedSettingsInternal: $collapsedBoxBody + ($internalScrollBarPadding * 2);
+
+$tabinationHeight: 40px;
+$settingsTabination: $settingsInternal + $tabinationHeight;
+
+// Contact List Sidebar
+$toolboxHeight: 38px;
+$navTabsHeight: 32px;
+$listSidebarToolbox: $headerSpace + $toolboxHeight + $navTabsHeight;
+// collapsed
+$collapsedHeaderSpaceListSidebarToolbox: $sidebarHeader + $toolboxHeight + $navTabsHeight;
+
+$msgFooter: 70px;
+$msgBody: $headerSpace + $msgFooter;
+
+$contactListSidebar: 280px;
+
+$flag-icon-css-path: '../img/flags' !default;
+$flag-icon-rect-path: '/4x3/' !default;
+$flag-icon-square-path: '/1x1/' !default;
+
+$input-margin: 10px;
+$input-caret-position-top: calc(0px - #{$input-margin});
+$input-padding-tb: 12px;
+$input-padding-lr: 12px;
+/*INPUT SIZES*/
+$input-xs: 10px;
+$input-sm: 12px;
+$input-md: 13px;
+$input-lg: 14px;
+/*INPUT SIZES*/
+$input-height: 25px;
+
+$zindex-dialogs: 99999;
+$zindex-dropdown: 9999;
+$zindex-sticky: 1020;
+$zindex-fixed: 1030;
+$zindex-modal-backdrop: 1040;
+$zindex-modal: 1050;
+$zindex-popover: 1060;
+$zindex-tooltip: 1070;

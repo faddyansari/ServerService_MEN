@@ -1,0 +1,135 @@
+<div class="box clearfix animated fadeIn delay-400 displaySettings" id="chatCustomizationComponent"
+	*ngIf="displaySettings">
+	<div class="box-body clearfix p-0">
+		<div class="row clearfix">
+			<div class="col-sm-6 col-xs-12">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Dialog Theme</h5>
+					</div>
+				</div>
+				<form [formGroup]="form">
+					<div class="pallet-list">
+						<div class="pallet-box">
+							<label>Background Color</label>
+							<input class="btn btn-xs btn-block color-picker-handle" formControlName="dialogBgColor"
+								(colorPickerChange)="ColorChange('dialogBgColor', $event)"
+								[(colorPicker)]="displaySettings.dialogBgColor" [cpPosition]="'right'" [cpWidth]="'200'"
+								[cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="displaySettings.dialogBgColor">
+						</div>
+						<div class="pallet-box">
+							<label>Primary button Color</label>
+							<input class="btn btn-xs btn-block color-picker-handle" formControlName="dialogBtnColor"
+								(colorPickerChange)="ColorChange('dialogBtnColor', $event)"
+								[(colorPicker)]="displaySettings.dialogBtnColor" [cpPosition]="'right'"
+								[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="displaySettings.dialogBtnColor">
+						</div>
+						<div class="pallet-box">
+							<label>Primary button Text</label>
+							<input class="btn btn-xs btn-block color-picker-handle" formControlName="dialogBtnTextColor"
+								(colorPickerChange)="ColorChange('dialogBtnTextColor', $event)"
+								[(colorPicker)]="displaySettings.dialogBtnTextColor" [cpPosition]="'right'"
+								[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="displaySettings.dialogBtnTextColor">
+						</div>
+						<div class="pallet-box">
+							<label>Secondry button Color</label>
+							<input class="btn btn-xs btn-block color-picker-handle"
+								formControlName="dialogSecondaryBtnColor"
+								(colorPickerChange)="ColorChange('dialogSecondaryBtnColor', $event)"
+								[(colorPicker)]="displaySettings.dialogSecondaryBtnColor" [cpPosition]="'right'"
+								[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="displaySettings.dialogSecondaryBtnColor">
+						</div>
+						<div class="pallet-box">
+							<label>Secondary button Text</label>
+							<input class="btn btn-xs btn-block color-picker-handle"
+								formControlName="dialogSecondaryBtnTextColor"
+								(colorPickerChange)="ColorChange('dialogSecondaryBtnTextColor', $event)"
+								[(colorPicker)]="displaySettings.dialogSecondaryBtnTextColor" [cpPosition]="'right'"
+								[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="displaySettings.dialogSecondaryBtnTextColor">
+
+						</div>
+					</div>
+					<div class="box-subtitle clearfix">
+						<div>
+							<h5>Content</h5>
+						</div>
+					</div>
+					<div class="pallet-list">
+						<div class="pallet-box">
+							<label>Text</label>
+							<input class="btn btn-xs btn-block color-picker-handle" formControlName="dialogTextColor"
+								(colorPickerChange)="ColorChange('dialogTextColor', $event)"
+								[(colorPicker)]="displaySettings.dialogTextColor" [cpPosition]="'right'"
+								[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+								[style.background]="displaySettings.dialogTextColor">
+
+						</div>
+						<div class="pallet-box">
+							<label>Logo Color</label>
+							<input class="btn btn-xs btn-block color-picker-handle no-userSelect"
+								formControlName="dialogLogoColor"
+								(colorPickerChange)="ColorChange('dialogLogoColor', $event)"
+								[(colorPicker)]="displaySettings.dialogLogoColor" [cpPosition]="'right'"
+								[cpHeight]="'270'" [cpWidth]="'200'" [cpDialogDisplay]="'popup'"
+								[style.background]="displaySettings.dialogLogoColor">
+
+						</div>
+					</div>
+					<div class="flex f-row f-wrap f-gap5 m-b-10">
+						<div>
+							<button class="btn btn-sm bg-blue" (click)="SubmitForm()"
+								[ngClass]="(loading) ? 'btnSpinner' : ''" [disabled]="form.invalid">
+								<span>Save</span>
+							</button>
+						</div>
+						<div>
+							<button class="btn btn-sm bg-blue" (click)="Reset()" [ngClass]="(loading) ? 'disabled' : ''">
+								<span>Restore</span>
+							</button>
+						</div>
+						<div>
+							<button class="btn btn-sm bg-black" (click)="ResetToDefaults()" [ngClass]="(loading) ? 'disabled' : ''">
+								<span>Reset To Default</span>
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-sm-6 col-xs-12">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Preview Content</h5>
+					</div>
+				</div>
+				<div class="from-dialogs clearfix"
+					[ngStyle]="{'background-color': displaySettings.dialogBgColor}">
+					<div class="text-center clearfix">
+						<div class="svgOnHover">
+							<svg class="svg w-80 h-80 active" #logo id="logo" name="logo">
+								<use href="/assets/img/icons/icons-sprite.svg#bubble-icon" [ngStyle]="{'color': displaySettings.dialogLogoColor}"/>
+							</svg>
+						</div>
+						<h5 [ngStyle]="{color: displaySettings.dialogTextColor}" class="title-with-border border-gray">We are currently unavailable.</h5>
+						<h6 [ngStyle]="{color: displaySettings.dialogTextColor}">Would you like to submit a Ticket?</h6>
+						<br>
+						<div class="flex_btns">
+							<div>
+								<button type="button" class="btn btn-sm"
+									[ngStyle]="{'background-color': displaySettings.dialogBtnColor, color : displaySettings.dialogBtnTextColor}">Yes</button>
+							</div>
+							<div>
+								<button type="button" class="btn btn-sm"
+									[ngStyle]="{'background-color': displaySettings.dialogSecondaryBtnColor, color : displaySettings.dialogSecondaryBtnTextColor }">No</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

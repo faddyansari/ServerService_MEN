@@ -1,0 +1,35 @@
+<div mat-dialog-title>
+    <h3>Add Story</h3>
+</div>
+
+<div mat-dialog-content>
+    <form class="require-validation" [formGroup]="addStoryForm">
+        <div class="row clearfix m-0">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <fieldset formGroupName="story_name">
+                    <div class="row clearfix">
+                        <div class="col-sm-12 col-xs-12">
+                            <div class="input-block">
+                                <label>Story Name</label>
+                                <input type="text" autocomplete="off" class="form-control input-sm" placeholder="Story Name" name="story_name" [formControl]="addStoryForm.controls['story_name']">
+                            </div>
+                        </div>
+                    </div>                    
+                </fieldset>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+     <mat-dialog-actions>
+        <button class="btn btn-xs bg-blue"
+            [disabled]="(addStoryForm.invalid)"
+            (click)="submitForm(addStoryForm.value)">
+            <span>Add</span>
+        </button>
+        <button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+            <span>Cancel</span>
+        </button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>FLIGHT DASHBOARD</title>
+  <script src="plugins/chart.js/chart.js"></script>
+  <script src="plugins/jquery/jquery.js"></script>
+  </head>

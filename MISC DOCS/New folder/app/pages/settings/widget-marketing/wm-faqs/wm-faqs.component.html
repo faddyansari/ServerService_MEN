@@ -1,0 +1,133 @@
+<div class="box clearfix animated fadeIn delay-400" id="newsComponent">
+	<div class="box-body clearfix p-0">
+		<div class="row clearfix">
+			<div class="col-md-4 col-sm-5 col-xs-12">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Toggle FAQs</h5>
+					</div>
+				</div>
+				<div class="activateScrollbar clearfix p-l-0">
+					<div class="input-block">
+						<div class="pretty p-switch p-smooth p-fill p-toggle">
+							<input type="checkbox" [checked]="widgetMarketingSettings.permissions.faqs"
+								(click)="toggleFaqPermission(!widgetMarketingSettings.permissions.faqs)"/>
+							<div class="state p-on">
+								<label>Enabled</label>
+							</div>
+							<div class="state p-off">
+								<label>Disabled</label>
+							</div>
+						</div>
+					</div>
+					<div class="box-subtitle clearfix">
+						<div>
+						<h5 *ngIf="!update">Add FAQ</h5>
+						<h5 *ngIf="update">Update FAQ</h5>
+						</div>
+					</div>
+					<form [formGroup]="faqForm">
+						<div class="input-block">
+							<label>Question <span class="text-red"
+									*ngIf="(faqForm.controls['question'].errors && faqForm.controls['question'].errors['required'])">*</span></label>
+							<input type="text" class="form-control input-sm" [formControl]="faqForm.controls['question']"
+								placeholder="Question">
+						</div>
+						<div class="input-block">
+							<label>Answer <span class="text-red"
+									*ngIf="(faqForm.controls['answer'].errors && faqForm.controls['answer'].errors['required'])">*</span></label>
+							<textarea [ngxSummernote]="config" rows="3" class="form-control input-sm" [formControl]="faqForm.controls['answer']"
+								placeholder="Answer"></textarea>
+								<!-- <div [ngxSummernote]="config"></div> -->
+						</div>
+						<!-- <div [froalaEditor]>Hello, Froala!</div> -->
+						<button type="submit" class="btn btn-sm bg-blue"
+							(click)="Submit(faqForm.value)"
+							[ngClass]="(loading) ? 'btnSpinner' : ''"
+							[disabled]="(faqForm.invalid)">
+
+							<span *ngIf="!update">Submit</span>
+							<span *ngIf="update">Update</span>
+						</button>
+						<button class="btn btn-sm bg-black"
+							*ngIf="update"
+							(click)="cancelUpdate()">
+
+							<span>Cancel</span>
+						</button>
+					</form>
+				</div>
+			</div>
+			<div class="col-md-8 col-sm-7 col-xs-12">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>FAQs</h5>
+					</div>
+				</div>
+				<div class="toolbox clearfix">
+					<div class="searchForm clearfix">
+						<div class="search-bar">
+							<form [formGroup]="faqSearchForm">
+								<div class="input-block m-0">
+									<input type="text" [(ngModel)]="search" (input)="Typing($event)" class="form-control input-sm"
+										placeholder="search faqs ...."
+										autocomplete="off"
+										formControlName="searchValue">
+								</div>
+							</form>
+						</div>
+						<div class="search-icon svgOnHover">
+							<svg class="svg active">
+								<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+							</svg>
+						</div>
+					</div>
+				</div>
+				<div class="document-list clearfix">
+					<div class="activateScrollbar clearfix p-0">
+						<ul class="list-items clearfix style5" #scrollContainer (scroll)="ScrollChanged($event)" *ngIf="faqList.length && !cubeLoading">
+							<li class="item clearfix notif" *ngFor="let data of faqList | filter: faqSearchForm.get('searchValue').value : ['question','answer'] : false"
+								[ngClass]="(data.selected) ? 'active' : ''">
+								<div>
+									<div>
+										<div class="avatar ava-sm">
+											<span class="nameInitials question-count"></span>
+											<!-- <img class="svg" [src]="data.image ? data.image : ''" width="100%"> -->
+										</div>
+									</div>
+									<div class="info">
+										<div class="name">
+											<b class="ellipsis" title="{{data.question}}">{{data.question}}</b>
+											<span class="line-clamp clamp-2" [innerHTML]="data.answer"></span>
+										</div>
+									</div>
+									<span class="notif-count bg-transparent right text-blue" style="top:-5px;right:-3px;">Updated Date: {{data.createdOn | date:'mediumDate'}}</span>
+									<div class="actions">
+										<button class="btn btn-transparent svgOnHover tooltip left" (click)="setCurrentFaq(data)">
+											<svg class="svg svg-blue active">
+												<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+											</svg>
+											<span class="tooltip-inner">Edit</span>
+										</button>
+										<button class="btn btn-transparent svgOnHover tooltip left" (click)="Delete(data._id)">
+											<svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+											</svg>
+											<svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+											</svg>
+											<span class="tooltip-inner">Delete</span>
+										</button>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="notAvailable floatToCenter" *ngIf="cubeLoading">
+						<app-preloader type="spin-loader-page"></app-preloader>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,55 @@
+<div class="activateScrollbar clearfix"
+	*ngIf="!(currentRoute.endsWith('htmlEditor') || currentRoute.endsWith('importTemplate') || IfBuilder())">
+	<ul class="card-container clearfix">
+		<li>
+			<a class="svgOnHover" (click)="ToggleOptions()">
+				<svg class="svg w-80 h-80 active">
+					<use href="/assets/img/icons/icons-sprite.svg#template-builder-colored"/>
+				</svg>
+				<h5 class="m-l-r-0">Template<br>Builder</h5>
+				<!-- <span>Use our email layout templates on our drag and drop editor to create your campaign.</span> -->
+			</a>
+			<ul class="card-subnav dropdown_list" [ngClass]="showDialog ? 'active' : ''">
+				<li>
+					<a routerLink="builder/basic" (click)="STOPPROPAGATION($event)">
+						<h5>Basic</h5>
+					</a>
+				</li>
+				<li>
+					<a routerLink="builder/commerce" (click)="STOPPROPAGATION($event)">
+						<h5>Commerce</h5>
+					</a>
+				</li>
+				<li>
+					<a routerLink="builder/three-col" (click)="STOPPROPAGATION($event)">
+						<h5>Three Column</h5>
+					</a>
+				</li>
+				<li>
+					<a routerLink="builder/text" (click)="STOPPROPAGATION($event)">
+						<h5>Text</h5>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a class="svgOnHover" routerLink="htmlEditor" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+				<svg class="svg w-80 h-80 active">
+					<use href="/assets/img/icons/icons-sprite.svg#html-editor-colored"/>
+				</svg>
+				<h5>HTML<br>Editor</h5>
+				<!-- <span>Create email with a regular HTML editor</span> -->
+			</a>
+		</li>
+		<li>
+			<a class="svgOnHover" routerLink="importTemplate" [routerLinkActive]="['active']" (click)="STOPPROPAGATION($event)">
+				<svg class="svg w-80 h-80 active">
+					<use href="/assets/img/icons/icons-sprite.svg#import-template-colored"/>
+				</svg>
+				<h5 class="m-l-r-0">Import<br>Template</h5>
+				<!-- <span>Upload a new template (from a file, a URL or just paste the HTML-code)</span> -->
+			</a>
+		</li>
+	</ul>
+	<router-outlet></router-outlet>
+</div>

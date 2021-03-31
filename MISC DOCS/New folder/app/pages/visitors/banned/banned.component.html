@@ -1,0 +1,33 @@
+<ul class="list-items clearfix style2">
+	<li class="item" *ngFor="let visitor of BannedvisitorList">
+		<div class="p-t-b-10 p-l-r-15">
+			<div class="info">
+				<div class="name ellipsis">
+					<b>Visitor Name:</b>
+					<span>{{(visitor.username) ? visitor.username : (visitor.email) ? visitor.email : ''}}</span>
+					<br>
+					<b>Device ID:</b>
+					<span class="text-blue">{{visitor.deviceID}}</span>
+				</div>
+				<div class="name ellipsis" *ngIf="visitor.bannedOn">
+					<b>Last Modified at:</b>
+					<span>{{visitor.bannedOn | agoPipe}}</span>
+					<br>
+					<b>For Hours:</b>
+					<span class="text-blue">{{visitor.banSpan}}</span>
+				</div>
+				<div class="actions">
+					<button class="btn btn-xs btn-theme" (click)="UnbanVisitor(visitor.deviceID)">
+						<span>{{ (visitor.banned) ? 'Unban Visitor' : 'Ban Visitor'}}</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</li>
+</ul>
+<div class="notAvailable floatToCenter" *ngIf="!BannedvisitorList.length">
+	<svg class="svg w-100 h-100 active">
+		<use href="/assets/img/icons/icons-sprite.svg#no-visitors-colored" class="text-gray"/>
+	</svg>
+	<span>No Banned Visitors</span>
+</div>

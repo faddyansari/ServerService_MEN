@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'Muli-Regular';
+    src: url('../fonts/Muli-Regular.eot');
+    src: url('../fonts/Muli-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Muli-Regular.woff2') format('woff2'),
+        url('../fonts/Muli-Regular.woff') format('woff'),
+        url('../fonts/Muli-Regular.ttf') format('truetype'),
+        url('../fonts/Muli-Regular.svg#Muli-Regular') format('svg');
+    font-style : normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Muli-Bold';
+    src: url('../fonts/Muli-Bold.eot');
+    src: url('../fonts/Muli-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Muli-Bold.woff2') format('woff2'),
+        url('../fonts/Muli-Bold.woff') format('woff'),
+        url('../fonts/Muli-Bold.ttf') format('truetype'),
+        url('../fonts/Muli-Bold.svg#Muli-Bold') format('svg');
+    font-style : normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Muli-ExtraBold';
+    src: url('../fonts/Muli-ExtraBold.eot');
+    src: url('../fonts/Muli-ExtraBold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Muli-ExtraBold.woff2') format('woff2'),
+        url('../fonts/Muli-ExtraBold.woff') format('woff'),
+        url('../fonts/Muli-ExtraBold.ttf') format('truetype'),
+        url('../fonts/Muli-ExtraBold.svg#Muli-ExtraBold') format('svg');
+    font-style : normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Muli-Black';
+    src: url('../fonts/Muli-Black.eot');
+    src: url('../fonts/Muli-Black.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Muli-Black.woff2') format('woff2'),
+        url('../fonts/Muli-Black.woff') format('woff'),
+        url('../fonts/Muli-Black.ttf') format('truetype'),
+        url('../fonts/Muli-Black.svg#Muli-Black') format('svg');
+    font-style : normal;
+    font-weight: normal;
+}

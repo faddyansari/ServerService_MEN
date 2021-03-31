@@ -1,0 +1,226 @@
+<div class="row clearfix intent-list">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Intents</h5>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+					(click)="toggleIntentForm()"
+					[ngClass]="(!showIntentForm) ? 'border-blue' : 'border-red'">
+					<span>{{(!showIntentForm) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!showIntentForm) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!showIntentForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="popover-form" *ngIf="showIntentForm">
+			<form [formGroup]="IntentForm">
+				<div class="input-block">
+					<input type="text" autocomplete="off" class="form-control input-sm"
+						placeholder="Intent name"
+						[formControl]="IntentForm.controls['name']">
+				</div>
+				<button class="btn btn-sm bg-blue"
+					(click)="AddIntent(IntentForm.get('name').value)"
+					[disabled]="IntentForm.invalid">
+					<span>Add</span>
+				</button>
+			</form>
+		</div>
+		<div class="document-list">
+			<ul class="activateScrollbar clearfix">
+				<li class="notif clearfix" *ngFor="let i of intent_list;let index = index;" [ngClass]="(i.trainingPhrases) ? 'active' : ''">
+					<div class="info"
+						(click)="showTrainingPhrases(i)"
+						*ngIf="!i.del && !i.editable">
+						<div class="desc m-r-14">
+							<b title="{{i.name}}" id="i.name">{{i.name}}</b>
+						</div>
+						<div class="actions">
+							<button class="btn btn-transparent svgOnHover tooltip left"
+								(click)="editIntent(i)">
+								<svg class="svg svg-blue active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip left"
+								(click)="deleteIntent(i, index)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+						</div>
+					</div>
+					<div class="info card"
+						*ngIf="!i.del && i.editable">
+						<div class="desc m-r-14">
+							<div class="input-block m-0">
+								<input type="text" class="form-control input-sm" [(ngModel)]="updatedIntent">
+							</div>
+						</div>
+						<div class="actions">
+							<button class="btn btn-transparent svgOnHover tooltip left"
+								(click)="cancelEdit(i)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+								</svg>
+								<span class="tooltip-inner">Cancel</span>
+							</button>
+							<button class="btn btn-transparent svgOnHover tooltip left"
+								(click)="updateIntent(i)"
+								[disabled]="!i.name">
+								<svg class="svg svg-green active">
+									<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+								</svg>
+								<span class="tooltip-inner">Save</span>
+							</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Training Phrases</h5>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+					(click)="toggleTrainingPhraseForm()"
+					*ngIf="trainingPhraseSelected"
+					[ngClass]="(!showTrainingPhrasesForm) ? 'border-blue' : 'border-red'">
+					<span>{{(!showTrainingPhrasesForm) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!showTrainingPhrasesForm) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!showTrainingPhrasesForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="popover-form" *ngIf="showTrainingPhrasesForm">
+			<div *ngFor="let i of intent_list;let index = index;">
+				<form [formGroup]="TrainingForm"
+					*ngIf="i.trainingPhrases && showTrainingPhrasesForm">
+					<div class="input-block">
+						<input type="text" autocomplete="off" class="form-control input-sm"
+							placeholder="Training Phrase"
+							[formControl]="TrainingForm.controls['training_phrases']">
+					</div>
+					<button class="btn btn-sm bg-blue m-r-5"
+						(click)="AddTPhrase(TrainingForm.get('training_phrases').value, i._id)"
+						[disabled]="TrainingForm.invalid">
+						<span>Add</span>
+					</button>
+				</form>
+			</div>
+		</div>
+		<div class="document-list">
+			<ul class="activateScrollbar clearfix">
+				<div *ngFor="let i of intent_list;let index = index;">
+					<div class="view" *ngIf="i.trainingPhrases">
+						<li class="notif clearfix" *ngFor="let j of t_phrase_list; let index = index;">
+							<div class="info" *ngIf="j.intent_id == i._id">
+								<div class="desc m-r-14">
+									<p (mouseup)="toggleSelection(j)" [innerHTML]="j.text"></p>
+								</div>
+								<div class="actions">
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										*ngIf="!j.isScroll && j.entities.length"
+										(click)=scrollDown(j)>
+										<svg class="svg svg-default active">
+											<use href="/assets/img/icons/icons-sprite.svg#arrow-double-down"/>
+										</svg>
+										<span class="tooltip-inner">Show</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										*ngIf="j.isScroll"
+										(click)=scrollUp(j)>
+										<svg class="svg svg-default active">
+											<use href="/assets/img/icons/icons-sprite.svg#arrow-double-up"/>
+										</svg>
+										<span class="tooltip-inner">Hide</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										(click)="deleteTrainPhrase(j, index)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										title="Mark"
+										(click)="MarkPhrase(j)"
+										[disabled]="!j.markable">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#ok-done"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#ok-done" class="text-green"/>
+										</svg>
+										<span class="tooltip-inner">Mark It</span>
+									</button>
+								</div>
+							</div>
+							<div class="table-responsive m-b-10 w100" *ngIf="j.isScroll && j.intent_id == i._id">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>Entity</th>
+											<th>Values</th>
+											<th class="w-80 text-center">Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-template ngFor [ngForOf]="j.entities" let-e let-index="index">
+											<tr *ngIf="!e.entity_del">
+												<td>
+													<div class="input-block m-b-0">
+														<div class="sel style1 sel-sm">
+															<select (change)="selectEntity(j,e, $event)" class="form-control input-sm">
+																<option value="" selected>Select</option>
+																<option *ngFor="let i of entities_list" [value]="i._id"
+																	[selected]="i._id == e.entity">{{i.entity_name}}</option>
+															</select>
+														</div>
+													</div>
+												</td>
+												<td>{{e.value}}</td>
+												<td>
+													<div class="text-center">
+														<button class="btn btn-transparent svgOnHover tooltip left"
+															(click)="deleteMarkedEntity(j._id, e.id,index)">
+															<svg class="svg svg-default">
+																<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+															</svg>
+															<svg class="svg colored">
+																<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+															</svg>
+															<span class="tooltip-inner">Delete</span>
+														</button>
+													</div>
+												</td>
+											</tr>
+										</ng-template>
+									</tbody>
+								</table>
+							</div>
+						</li>
+					</div>
+				</div>
+			</ul>
+		</div>
+	</div>
+</div>

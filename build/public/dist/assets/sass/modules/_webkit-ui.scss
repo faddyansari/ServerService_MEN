@@ -1,0 +1,192 @@
+// PLACEHOLDER
+input::placeholder input::-webkit-input-placeholder,
+input:-moz-placeholder,
+input::-moz-placeholder,
+input:-ms-input-placeholder {
+  color: var(--gray);
+  @include transition(all 300ms ease);
+  &:focus {
+    color: var(--gray-dark);
+    @include transition(all 300ms ease);
+  }
+}
+
+// SCROLLBAR
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track {
+  background-color: var(--shadow-alpha5);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--shadow);
+  &:hover {
+    border: 1px solid var(--shadow);
+  }
+}
+
+// FILE
+// input[type="file"]::-webkit-file-upload-button {
+//     visibility: hidden;
+// }
+
+// DATE
+input[type='date']::-webkit-inner-spin-button,
+input[type='date']::-webkit-outer-spin-button,
+input[type='date']::-webkit-calendar-picker-indicator {
+  @include appearance(none);
+  display: none;
+  margin: 0;
+}
+input[type='date']::-webkit-calendar-picker-indicator {
+  background-image: url('/assets/img/icons/calendar-bg-outline.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  padding: 11px 8px;
+  background-color: var(--gray-alpha5);
+  opacity: 1;
+  height: 14px;
+  display: block;
+  border-left: 1px solid var(--theme-gray);
+  color: var(--theme-gray);
+  cursor: pointer;
+  &:active,
+  &:focus,
+  &:focus-within,
+  &:hover {
+    background-color: var(--gray);
+    color: var(--blue);
+  }
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+}
+
+input[type='search']::-webkit-search-cancel-button {
+  position: absolute;
+  opacity: 1;
+  right: 0px;
+  top: 0px;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  cursor: pointer;
+  margin: 0;
+  appearance: inherit !important;
+  background-color: var(--theme-bg);
+  background-image: url('/assets/img/icons/cancel-bg-outline.svg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 60%;
+  border-left: 1px solid var(--border);
+  &:hover {
+    background-color: var(--theme-bg-dark);
+    background-image: url('/assets/img/icons/cancel-bg-filled.svg');
+  }
+}
+
+input[type='text']::-ms-clear,
+input[type='password']::-ms-reveal,
+input[type='date']::-webkit-clear-button {
+  display: none;
+}
+
+// input[type="range" i]::-webkit-slider-thumb,
+// input[type="range"]::-webkit-slider-thumb,
+// input[type="range"]::-moz-range-thumb {
+// 	@include appearance(none);
+// 	border-radius: 50%;
+// 	background: transparent;
+// 	background-color: var(--blue);
+// 	width: 20px;
+// 	height: 20px;
+// }
+// input[type="range"]::-webkit-slider-runnable-track {
+// 	@include appearance(none);
+// 	background: transparent;
+// 	background-color: var(--gray-dark);
+// }
+
+.range-slider {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  .rs-range {
+    @include appearance(none);
+    position: relative;
+    &:focus {
+      outline: none;
+    }
+    &::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 2px;
+      cursor: pointer;
+      box-shadow: none;
+      background: var(--gray-dark);
+      border-radius: 0px;
+      border: none;
+      @include appearance(none);
+    }
+    &::-moz-range-track {
+      width: 100%;
+      height: 1px;
+      cursor: pointer;
+      box-shadow: none;
+      background: var(--black);
+      border-radius: 0px;
+      border: 0px solid #010101;
+      @include appearance(none);
+    }
+    &::-webkit-slider-thumb {
+      border: 0px solid var(--black);
+      box-shadow: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: var(--blue);
+      cursor: pointer;
+      margin-top: -10px;
+      @include appearance(none);
+    }
+    &::-moz-range-thumb {
+      border: 0px solid var(--black);
+      box-shadow: 0px 10px 10px var(--black-alpha2);
+      height: 42px;
+      width: 22px;
+      border-radius: 22px;
+      background: var(--black);
+      cursor: pointer;
+      margin-top: -20px;
+      @include appearance(none);
+    }
+    &::-moz-focus-outer {
+      border: 0;
+      @include appearance(none);
+    }
+  }
+  .box-minmax {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    @extend %fw-6;
+    color: var(--charcoal);
+  }
+}

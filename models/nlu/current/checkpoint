@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/owais/SBT-CHAT/SBT CHAT SERVER/models/nlu/current/component_3_EmbeddingIntentClassifier.ckpt"
+all_model_checkpoint_paths: "/home/owais/SBT-CHAT/SBT CHAT SERVER/models/nlu/current/component_3_EmbeddingIntentClassifier.ckpt"

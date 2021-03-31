@@ -1,0 +1,17 @@
+<div class="badge chips svgOnHover"
+	*ngFor="let item of items; let index=index"
+	title="{{item}}">
+	<span>{{item}}</span>
+	<svg class="svg w-15 h-15 active dismiss" *ngIf="!valueDisabled" (click)="onRemoveTag(index)">
+		<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-black"/>
+	</svg>
+</div>
+<input *ngIf="(maxTag == 0 || (items && items.length < maxTag))" maxlength="32"
+	#box
+	(keyup)="Keyup($event,box.value)"
+	[disabled]="valueDisabled"
+	(keydown)="KeyDown($event,box.value)"
+	(blur)="Blur($event,box.value)"
+	(paste)="Paste($event)"
+	[placeholder]=placeholder>
+<p class="text-red" *ngIf="showError">{{showError}}</p>

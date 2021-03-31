@@ -1,0 +1,32 @@
+<div class="box clearfix animated fadeIn delay-400">
+    <div class="box-body clearfix p-0">
+        <div class="box-subtitle clearfix">
+            <div>
+                <h5 *ngIf="!addPolicy && !selectedPolicy">SLA Policies</h5>
+                <h5 *ngIf="addPolicy && !selectedPolicy">Add New SLA Policy</h5>
+                <h5 *ngIf="addPolicy && selectedPolicy">Edit SLA Policy</h5>
+            </div>
+            <div *ngIf="!selectedPolicy && !addPolicy">
+                <button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="AddSLAPolicy()" [ngClass]="(!selectedPolicy && !addPolicy) ? 'border-blue' : 'border-red'">
+					<span>{{(!selectedSurvey && !addPolicy) ? 'Add New SLA Policy' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!selectedPolicy && !addPolicy) ? 'bg-blue' : 'bg-red'">
+						<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!selectedPolicy && !addPolicy" />
+						<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="selectedPolicy && addPolicy" />
+					</svg>
+				</button>
+                <button type="button" class="btn btn-xs bg-blue" (click)="SaveReorder()" *ngIf="reOrderEnable && allSLAPolicies && allSLAPolicies.length" [disabled]="!changeInReorder">
+					<span>Save</span>
+				</button>
+                <button type="button" class="btn btn-xs bg-red" (click)="CancelReorder()" *ngIf="reOrderEnable && allSLAPolicies && allSLAPolicies.length">
+					<span>Cancel</span>
+				</button>
+            </div>
+        </div>
+        <app-add-sla-policies class="document-list clearfix bg-transparent" [ngClass]="(!selectedPolicy && !addPolicy) ? 'hide' : '' " [PolicyObject]="(addPolicy && !selectedPolicy) ? policyObject : selectedPolicy" *ngIf="addPolicy || selectedPolicy">
+        </app-add-sla-policies>
+
+
+        <app-sla-policies-list class="document-list clearfix" *ngIf="!addPolicy && !selectedPolicy">
+        </app-sla-policies-list>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+.pretty {
+    &.p-toggle {
+        .state {
+            .svg {
+                color: var(--white);
+                stroke: var(--white);
+                padding: 0;
+            }
+            &.p-on {
+                opacity: 0;
+                display: none;
+            }
+            &.p-off,
+            .svg,
+            img {
+                opacity: 1;
+                display: inherit;
+            }
+        }
+        input {
+            &:checked ~ .state {
+                label {
+                    color: var(--blue) !important;
+                }
+                &.p-on {
+                    opacity: 1;
+                    display: inherit;
+                }
+                &.p-off {
+                    opacity: 0;
+                    display: none;
+                    
+                }
+            }
+        }
+    }
+}

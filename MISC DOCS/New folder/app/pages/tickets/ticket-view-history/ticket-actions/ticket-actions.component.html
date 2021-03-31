@@ -1,0 +1,201 @@
+<div class="clearfix" *ngIf="permissions.canChangeState">
+	<div class="input-block">
+		<label>Mark As</label>
+		<div class="input-group-xs">
+			<div class="sel style1 sel-xs w100">
+				<select [(ngModel)]="selectedStatus" class="form-control">
+					<option value='' selected disabled>Select</option>
+					<option *ngIf="(selectedThread.state | lowercase) != 'open'"
+						value='OPEN'>
+						Open</option>
+					<option *ngIf="(selectedThread.state | lowercase) != 'pending'"
+						value='PENDING'>Pending</option>
+					<option *ngIf="(selectedThread.state | lowercase) != 'solved'"
+						value='SOLVED'>Solved</option>
+					<option *ngIf="(selectedThread.state | lowercase) != 'closed'"
+						value='CLOSED'>Closed</option>
+					<!-- <option *ngIf="(selectedThread.state | lowercase) != 'facebook'"
+                        value='FACEBOOK'>Facebook</option> -->
+				</select>
+			</div>
+			<div class="input-group-btn">
+				<button class="btn btn-theme min-w-80" [disabled]="!(selectedStatus)"
+					(click)='changeStatus(selectedStatus)'>
+					<span>Save</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="clearfix m-b-10" *ngIf="permissions.canAddTag">
+    <div *ngIf="selectedThread.tags && selectedThread.tags.length">
+        <div class="input-block m-b-0">
+            <label>Tags</label>
+        </div>
+        <div class="badge svgOnHover tooltip top-right" *ngFor="let tag of selectedThread.tags;let index=index"
+            title="{{tag}}">
+			<span>{{tag}}</span>
+			<svg class="svg w-15 h-15 svg-default dismiss" (click)="DeleteTag(tag,index)">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel"/>
+			</svg>
+			<svg class="svg w-15 h-15 colored dismiss" (click)="DeleteTag(tag,index)">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel-colored"/>
+			</svg>
+			<span class="tooltip-inner">Delete</span>
+        </div>
+    </div>
+    <form [formGroup]="tagForm">
+        <!--
+		<div class="input-block">
+            <div class="input-group-xs">
+                <input type="text" class="form-control w100 w100 p-0 b-0" placeholder="#tag"
+                    formControlName="hashTag" maxlength="33">
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-theme min-w-80"
+                        (click)="addTags(tagForm.get('hashTag').value)"
+                        [disabled]="tagForm.invalid">
+                        <span>Add</span>
+                    </button>
+				</div>
+			</div>
+		</div>
+		-->
+		<div class="input-block">
+			<label>Tag As</label>
+			<input list="tags" type="text"
+				(change)="selectTag($event)"
+				class="form-control input-xs"
+				placeholder="Select or type tag"
+				[formControl]="tagForm.controls['hashTag']"
+				maxlength="32">
+			<datalist id="tags">
+				<option *ngFor="let tag of tagList" [value]="tag">
+				</option>
+			</datalist>
+		</div>
+        <p>To tag a ticket, type # followed by the word and press Enter, <span class="text-red">Maximum
+                tags allowed : 6</span> </p>
+    </form>
+</div>
+<div class="clearfix" *ngIf="selectedThread.state !='CLOSED' && permissions.canAssignAgent">
+    <div class="input-block">
+        <label>Assign Agent</label>
+        <div class="input-group-xs">
+            <app-custom-select class="input-xs" [items]="all_agents"
+                [selectLabel]="'Select Agent'" [bindLabel]="'email'"
+                [bindValue]="'email'" [(ngModel)]="selectedAgent" [multiple]="false"
+                [selectedItems]="[selectedAgent]"
+                [lazyLoading]="true" (onLoadMore)="loadMore($event)"
+                [clearOnSubmit]="false" (onSearch)="onSearch($event)">
+            </app-custom-select>
+            <div class="input-group-btn">
+                <button class="btn btn-theme min-w-80" (click)='AssignAgentForTicket(selectedAgent)'
+                    [disabled]="(!selectedAgent || selectedAgent == selectedThread.assigned_to)">
+                    <span>Save</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix" *ngIf="permissions.canAssignGroup && selectedThread.state !='CLOSED'">
+	<div class="input-block">
+		<label>Assign Group</label>
+		<!-- <span>some description comes herer</span> -->
+		<div class="input-group-xs">
+			<div class="sel style1 sel-xs w100">
+				<select [(ngModel)]="selectedGroup" class="form-control"
+					(change)="getAgentsForSelectedGroup()">
+					<option value='' selected=selected>Select</option>
+					<option value="{{group.group_name}}"
+						*ngFor="let group of all_groups;let i=index">
+						{{group.group_name}}
+					</option>
+				</select>
+			</div>
+			<div class="input-group-btn">
+				<button class="btn btn-theme min-w-80"
+					(click)='AssignGroupForTicket(selectedGroup)'
+					[disabled]="(!selectedGroup || selectedGroup == selectedThread.group)">
+
+					<span>Save</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="clearfix" *ngIf="!selectedThread.merged && selectedThread.state !='CLOSED' && permissions.canSnooze">
+	<div class="input-block">
+		<label>Snooze At</label>
+		<div class="input-group-xs">
+			<input class="form-control w100" mode="daytime" name="date"
+				placeholder="Select Date and Time" theme="dp-material"
+				[dpDayPicker]="datePickerConfig" (onSelect)="DateSelected($event)"
+				[(ngModel)]="snooze_time">
+			<div class="input-group-btn">
+				<button class="btn btn-theme min-w-80" (click)="Snooze(snooze_time)"
+					[disabled]="!snooze_time || minimumSnoozeTimeError">
+					<span>Snooze</span>
+				</button>
+			</div>
+		</div>
+		<p *ngIf="minimumSnoozeTimeError" class="text-red">Snooze time must be greater than 20 min. since the ticket has been created.</p>
+		<p>Snooze ticket applied time within a day, <span class="text-red">Maximum allowed snoozes: 4</span></p>
+	</div>
+</div>
+<div *ngFor="let field of fields">
+	<div class="input-block" *ngIf="field.elementType == 'textbox'">
+		<label>{{field.name}}</label>
+		<div class="input-group-xs">
+			<input [(ngModel)]="selectedThread.dynamicFields[field.name]" type="text"
+				class="form-control w100" [placeholder]="field.label">
+			<div class="input-group-btn">
+				<button class="btn btn-theme min-w-80"
+					*ngIf="field.elementType == 'textbox'"
+					[ngClass]="(savingCustomFields[field.name]) ? 'btnSpinner' : ''"
+					(click)="SaveCustomField(selectedThread._id,field.name,selectedThread.dynamicFields[field.name])">
+					<span>Save</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="input-block" *ngIf="field.elementType == 'checkbox'">
+		<label>{{field.name}}</label>
+		<div class="input-group-xs f-justify-between">
+			<div class="pretty p-default m-t-7">
+				<input [(ngModel)]="selectedThread.dynamicFields[field.name]"
+					type="checkbox" name="field-name">
+				<div class="state"><label>{{field.name}}</label></div>
+			</div>
+			<div class="input-group-btn">
+				<button class="btn btn-theme min-w-80"
+					[ngClass]="(savingCustomFields[field.name]) ? 'btnSpinner' : ''"
+					(click)="SaveCustomField(selectedThread._id,field.name,selectedThread.dynamicFields[field.name])">
+					<span>Save</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="input-block" *ngIf="field.elementType == 'dropdown'">
+		<label>{{field.name}}</label>
+		<div class="input-group-xs">
+			<div class="sel style1 sel-xs w100">
+				<select [(ngModel)]="selectedThread.dynamicFields[field.name]"
+					class="form-control">
+					<option value=''>Select {{field.name}}</option>
+					<option value={{option.value}}
+						*ngFor="let option of field.options; let i=index">
+						{{option.name}}</option>
+				</select>
+			</div>
+			<div class="input-group-btn">
+				<button class="btn btn-theme min-w-80"
+					[ngClass]="(savingCustomFields[field.name]) ? 'btnSpinner' : ''"
+					(click)="SaveCustomField(selectedThread._id,field.name,selectedThread.dynamicFields[field.name])">
+					<span>Save</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

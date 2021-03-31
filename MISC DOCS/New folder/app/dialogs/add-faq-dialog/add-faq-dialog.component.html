@@ -1,0 +1,27 @@
+<div mat-dialog-title>
+	<h3>Add message as FAQ</h3>
+</div>
+
+<div mat-dialog-content>
+	<div class="input-block">
+		<label>Question</label>
+		<input type="text" placeholder="Question" [(ngModel)]="question" class="form-control input-sm">
+	</div>
+	<div class="input-block">
+		<label>Answer</label>
+		<input type="text" placeholder="Answer" [(ngModel)]="answer" class="form-control input-sm">
+	</div>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+	<mat-dialog-actions>
+		<button class="btn btn-xs bg-blue"
+			[disabled]="!answer || !question"
+			(click)="addFaq()" [ngClass]="(loading) ? 'btnSpinner' : ''">
+			<span>Submit</span>
+		</button>
+		<button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Cancel</span>
+		</button>
+	</mat-dialog-actions>
+</div>

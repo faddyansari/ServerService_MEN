@@ -1,0 +1,137 @@
+<div class="nav-tabs-custom clearfix">
+	<!--
+	<div class="chat-title">
+        <div class="heading svgOnHover">
+            <svg class="svg active h-32 w-32">
+                <use href="assets/img/icons/icons-sprite.svg#chats-outline" class="text-blue" />
+            </svg>
+            <span>Chats</span>
+        </div>
+        <div class="chat-btns-box">
+            <button class="btn chat-btns btn-theme btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="19.07" height="15.733" viewBox="0 0 19.07 15.733">
+                    <g id="Group_4218" data-name="Group 4218" transform="translate(12264.82 9584.229)">
+                        <path id="Path_2355" data-name="Path 2355"
+                            d="M1229.026,839.072a1.765,1.765,0,0,0-1.389-.7,3.218,3.218,0,0,1-.735-.169c-.325-.127-.476-.633-.546-1.131a1.921,1.921,0,0,0,.2-.2l.035-.033a5.507,5.507,0,0,0,1.11-3.24,2.725,2.725,0,1,0-5.447,0,5.178,5.178,0,0,0,1.342,3.481c-.074.5-.221,1-.542,1.126a3.281,3.281,0,0,1-.743.169,1.769,1.769,0,0,0-1.385.7c-.023.037-.019.051-.019.055.166.333,2.244.553,4.07.567,1.83-.014,3.9-.233,4.066-.567C1229.045,839.123,1229.049,839.109,1229.026,839.072Zm-6.136-5.477a2.086,2.086,0,1,1,4.171,0,4.837,4.837,0,0,1-.932,2.779l-.02.028a1.739,1.739,0,0,1-.445.372,1.778,1.778,0,0,1-.689.139,1.891,1.891,0,0,1-.685-.128A4.126,4.126,0,0,1,1222.89,833.6Zm2.089,5.444c-.793-.008-1.5-.049-2.089-.1a2.676,2.676,0,0,0,.387-.12,1.648,1.648,0,0,0,.9-1.353,1.953,1.953,0,0,0,.8.176,1.909,1.909,0,0,0,.8-.174,1.659,1.659,0,0,0,.9,1.351,3,3,0,0,0,.387.12C1226.48,838.99,1225.772,839.031,1224.979,839.039Z"
+                            transform="translate(-13474.795 -10411.156)" fill="#181d22" />
+                        <g id="Group_3213" data-name="Group 3213" transform="translate(-12264.82 -9584.229)">
+                            <g id="Group_1382" data-name="Group 1382" transform="translate(0)">
+                                <path id="Path_944" data-name="Path 944"
+                                    d="M1153.2,841.52a9.863,9.863,0,0,0,1.938-5.747,4.746,4.746,0,1,0-9.479,0,9.33,9.33,0,0,0,2.3,6.138,4.509,4.509,0,0,0,.533.356,5.532,5.532,0,0,0,1.9.333,3.3,3.3,0,0,0,2.457-.712c.1-.1.2-.2.3-.308Z"
+                                    transform="translate(-1143.225 -830.783)" fill="#181d22" />
+                                <path id="Path_945" data-name="Path 945"
+                                    d="M1155.736,854.272a3.089,3.089,0,0,0-2.441-1.245,5.673,5.673,0,0,1-1.3-.3,1.416,1.416,0,0,1-.7-.895,5.293,5.293,0,0,1-.753.517,5.466,5.466,0,0,1-1.945.358,5.677,5.677,0,0,1-1.927-.332,4.818,4.818,0,0,1-.768-.542,1.414,1.414,0,0,1-.7.893,5.719,5.719,0,0,1-1.3.3,3.09,3.09,0,0,0-2.443,1.245c-.047.066-.036.087-.031.1.289.59,3.947.98,7.173,1,3.22-.024,6.881-.415,7.169-1C1155.772,854.359,1155.782,854.339,1155.736,854.272Z"
+                                    transform="translate(-1141.422 -839.641)" fill="#181d22" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </button>
+            <button class="btn chat-btns btn-theme">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14">
+                    <g id="Group_4216" data-name="Group 4216" transform="translate(-0.427 0.174)">
+                        <g id="Group_1154" data-name="Group 1154">
+                            <ellipse id="Circle" cx="6.5" cy="7" rx="6.5" ry="7" transform="translate(0.426 -0.174)"
+                                fill="#181d22" />
+                        </g>
+                        <g id="Group_1155" data-name="Group 1155" transform="translate(6.716 3.642) rotate(45)">
+                            <path id="Check" d="M0,4.347,4.347,0" fill="none" stroke="#fff" stroke-linecap="round"
+                                stroke-miterlimit="10" stroke-width="2" />
+                            <path id="Check-2" data-name="Check" d="M4.347,4.347,0,0" fill="none" stroke="#fff"
+                                stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                        </g>
+                    </g>
+                </svg>
+
+            </button>
+        </div>
+	</div>
+	-->
+	<div class="toolbox clearfix">
+        <button class="btn btn-transparent svgOnHover p-9" (click)="toggleFilterDrawer()" *ngIf="activeTab == 'ARCHIVE'">
+            <svg class="svg svg-default active">
+				<use href="/assets/img/icons/icons-sprite.svg#filter"/>
+			</svg>
+        </button>
+        <div class="searchForm clearfix" [ngClass]="searchForm && searchForm.get('searchValue').value ? 'active' : ''">
+            <div class="search-bar">
+                <form [formGroup]="searchForm">
+                    <div class="input-block m-0">
+                        <input type="text" class="form-control input-sm" placeholder="search ...." autocomplete="off"
+                            formControlName="searchValue">
+                    </div>
+                </form>
+            </div>
+            <div class="search-icon svgOnHover">
+                <svg class="svg active">
+					<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+				</svg>
+            </div>
+        </div>
+	</div>
+    <div class="nav nav-tabs filters clearfix" *ngIf="verified">
+        <ul class="clearfix">
+            <li [ngClass]="(activeTab == 'INBOX') ? 'active' : ''" (click)="_chatService.setActiveTab('INBOX')">
+                <a>
+                    <span>INBOX</span>
+                    <!-- <span class="badge" *ngIf="(chatList.length < 100)">{{chatList.length}}</span>
+                    <span class="badge" *ngIf="(chatList.length >= 100)">99+</span> -->
+                </a>
+            </li>
+            <li [ngClass]="(activeTab == 'ARCHIVE') ? 'active' : ''" (click)="_chatService.setActiveTab('ARCHIVE')">
+                <a>
+                    <span>ARCHIVE</span>
+                    <!-- <span class="badge" *ngIf="(archiveList.length < 100)">{{archiveList.length}}</span>
+                    <span class="badge" *ngIf="(archiveList.length >= 100)">99+</span> -->
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content clearfix">
+        <!-- Pre Installation Data List Starts Here -->
+        <div class="tab-pane active preInstallation" *ngIf="!verified">
+            <div class="list-items clearfix style1">
+                <ul class="activateScrollbar clearfix">
+                    <li class="item animated flipInX-delay clearfix" *ngFor="let item of [1,2,3,4,5,6,7,8]">
+                        <div class="clearfix">
+                            <div>
+                                <div class="avatar ava-xs">
+                                    <div class="nameInitials"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Pre Installation Data List Ends Here -->
+        <div class="tab-pane active"
+            *ngIf="!(loading) && ((activeTab == 'INBOX' && chatList.length > 0) || (activeTab == 'ARCHIVE' && archiveList.length > 0)) && verified">
+            <app-chat-list-inbox class="w100" *ngIf="activeTab == 'INBOX'"
+                [searchValue]="searchForm.get('searchValue').value"></app-chat-list-inbox>
+            <app-chat-list-archive class="w100" *ngIf="activeTab == 'ARCHIVE'"
+                [searchValue]="searchForm.get('searchValue').value"></app-chat-list-archive>
+        </div>
+        <ul class="notAvailable floatToCenter"
+            *ngIf="(loading && activeTab == 'ARCHIVE') || (loadingCurrentConversations && activeTab == 'INBOX')">
+            <app-preloader type="spin-loader-page"></app-preloader>
+        </ul>
+        <div class="notAvailable"
+            *ngIf="(activeTab == 'INBOX' && chatList.length == 0 && !loadingCurrentConversations)">
+            <svg class="svg w-100 h-100 active">
+				<use href="/assets/img/icons/icons-sprite.svg#contacts" class="text-gray"/>
+			</svg>
+            <span>No Chats Available</span>
+        </div>
+        <div class="notAvailable"
+            *ngIf="(activeTab == 'ARCHIVE' && archiveList.length == 0 && archivesSynced && !loading)">
+            <svg class="svg w-100 h-100 active">
+				<use href="/assets/img/icons/icons-sprite.svg#contacts" class="text-gray"/>
+			</svg>
+            <span>No Archives Available</span>
+        </div>
+    </div>
+</div>
+
+<app-drawer-filters *ngIf="filterDrawer && activeTab == 'ARCHIVE'" (onFetch)="fetchCalled($event)"
+    (onClose)="CloseFilter($event)" [filters]="filters"></app-drawer-filters>

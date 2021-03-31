@@ -1,0 +1,24 @@
+<div class="box clearfix animated fadeIn delay-400" *ngIf="!sbt" id="thirdPartyComponent">
+	<div class="box-body  clearfix p-0">
+		<div class="activateScrollbar clearfix p-0">
+			<div class="box-subtitle clearfix">
+				<div>
+					<h5>App Token</h5>
+				</div>
+			</div>
+			<form [formGroup]="generateAppTokenForm">
+				<div class="input-group-sm">
+					<input type="text" class="form-control" name="app_token" id="app_token" placeholder="Press on button to generate" formControlName="generatedAppToken" readonly>
+					<div class="input-group-btn">
+						<button type="submit" class="btn btn-sm bg-blue"
+							(click)="GenerateAppToken()">
+							<span>Generate</span>
+						</button>
+					</div>
+				</div>
+				<small *ngIf="(currentAppTokenObj.userGetValidated && currentAppTokenObj.userGetValidated != 'unknown')">Apptoken has been verified via GET at https://beelinks.solutions/contact/verifyAppToken</small>
+				<small *ngIf="(!currentAppTokenObj.userGetValidated)">Apptoken has not been verified via GET at https://app.beelinks.solutions/contact/verifyAppToken</small>
+			</form>
+		</div>
+	</div>
+</div>

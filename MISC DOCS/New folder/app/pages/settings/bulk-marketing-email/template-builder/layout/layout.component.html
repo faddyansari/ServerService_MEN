@@ -1,0 +1,787 @@
+<!-- < *ngFor="let result of elementsList;let i=index"> -->
+<ng-template ngFor let-result [ngForOf]="elementsList" let-i="index">
+
+	<!-- Editing button -->
+	<div [ngClass]="(editClosed && activeId == result.id) ? 'active' : ''" [ngClass]="isDragged ? 'no-pointer' : ''"
+		draggable="true" (dragstart)="dragStart($event)" (dragover)="allowDrop($event)" (dragleave)="DragLeave($event)"
+		*ngIf="(result.type =='button' && result.generalSettings && result.parentStyling && result.childStyling)"
+		[id]="result.id"
+		[ngStyle]="{'text-align':result.parentStyling.textAlignParent,
+		'background-color': result.parentStyling.backgroundColorParent,
+		'padding-top':result.parentStyling.paddingParent_top + 'px',
+		'padding-bottom':result.parentStyling.paddingParent_bottom + 'px',
+		'padding-left':result.parentStyling.paddingParent_left + 'px',
+		'padding-right':result.parentStyling.paddingParent_right + 'px',
+		'margin-top':result.parentStyling.marginParent_top + 'px',
+		'margin-bottom':result.parentStyling.marginParent_bottom + 'px',
+		'margin-left':result.parentStyling.marginParent_left + 'px',
+		'margin-right':result.parentStyling.marginParent_right + 'px',
+		'border-width':result.parentStyling.borderParent_width + 'px',
+		'border-style':result.parentStyling.borderParent_style,
+		'border-color':result.parentStyling.borderParent_color}">
+		<a [attr.href]="result.generalSettings.buttonLink" target="_blank" class="no-pointer" role="button"
+			[ngStyle]="{
+			'background-color': result.childStyling.colorChild,
+			'color':result.childStyling.textColorChild,
+			'border-radius':result.childStyling.borderRadiusChild + 'px',
+			'padding-top':result.childStyling.paddingChild_top + 'px',
+			'padding-bottom':result.childStyling.paddingChild_bottom + 'px',
+			'padding-left':result.childStyling.paddingChild_left + 'px',
+			'padding-right':result.childStyling.paddingChild_right + 'px',
+			'font-weight':result.childStyling.fontWeightChild,
+			'font-style':result.childStyling.fontStyleChild,
+			'font-size':result.childStyling.button_FontSizeChild + 'px',
+			'border-width':result.childStyling.borderChild_width + 'px',
+			'border-style':result.childStyling.borderChild_style,
+			'border-color':result.childStyling.borderChild_color,
+			'width':result.childStyling.button_WidthChild + result.childStyling.scaleTypeChild,
+			'display': 'inline-block', 'text-align': 'center'}">
+			<span>{{result.generalSettings.buttonText}}</span>
+		</a>
+		<div class="actions">
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="DeleteElement($event,result.id,'Edit')">
+				<svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+				</svg>
+				<svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+				</svg>
+				<span class="tooltip-inner">Delete</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="EditElement($event,result.id,'Edit')">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+				</svg>
+				<span class="tooltip-inner">Edit</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="CloneElement($event,result)">
+				<svg class="svg svg-green active">
+					<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+				</svg>
+				<span class="tooltip-inner">Clone</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderUp(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Up</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderDown(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Down</span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Editing Paragrapgh -->
+	<div [ngClass]="(editClosed && activeId == result.id) ? 'active' : ''" [ngClass]="isDragged ? 'no-pointer' : ''"
+		*ngIf="(result.type =='paragraph'  && result.generalSettings && result.parentStyling && result.childStyling)"
+		[id]="result.id" [ngStyle]="{
+		'text-align':result.parentStyling.textAlignParent,
+		'background-color':result.parentStyling.backgroundColorParent,
+		'padding-top':result.parentStyling.paddingParent_top + 'px',
+		'padding-bottom':result.parentStyling.paddingParent_bottom + 'px',
+		'padding-left':result.parentStyling.paddingParent_left + 'px',
+		'padding-right':result.parentStyling.paddingParent_right + 'px',
+		'margin-top':result.parentStyling.marginParent_top + 'px',
+		'margin-bottom':result.parentStyling.marginParent_bottom + 'px',
+		'margin-left':result.parentStyling.marginParent_left + 'px',
+		'margin-right':result.parentStyling.marginParent_right + 'px',
+		'border-width':result.parentStyling.borderParent_width + 'px',
+		'border-style':result.parentStyling.borderParent_style,
+		'border-color':result.parentStyling.borderParent_color}">
+		<p [innerHTML]="result.generalSettings.paragraphText" [ngStyle]="{'background-color': result.childStyling.colorChild,
+			'color':result.childStyling.textColorChild,
+			'border-radius':result.childStyling.borderRadiusChild + 'px',
+			'padding-top':result.childStyling.paddingChild_top + 'px',
+			'padding-bottom':result.childStyling.paddingChild_bottom + 'px',
+			'padding-left':result.childStyling.paddingChild_left + 'px',
+			'padding-right':result.childStyling.paddingChild_right + 'px',
+			'border-width':result.childStyling.borderChild_width + 'px',
+			'border-style':result.childStyling.borderChild_style,
+			'border-color':result.childStyling.borderChild_color}">
+		</p>
+		<div class="actions">
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="DeleteElement($event,result.id,'Edit')">
+				<svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+				</svg>
+				<svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+				</svg>
+				<span class="tooltip-inner">Delete</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="EditElement($event,result.id,'Edit')">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+				</svg>
+				<span class="tooltip-inner">Edit</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="CloneElement($event,result)">
+				<svg class="svg svg-green active">
+					<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+				</svg>
+				<span class="tooltip-inner">Clone</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderUp(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Up</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderDown(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Down</span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Editing Social Links -->
+	<div [ngClass]="(editClosed && activeId == result.id) ? 'active' : ''" [ngClass]="isDragged ? 'no-pointer' : ''"
+		*ngIf="(result.type =='SocialMediaLinks' && result.generalSettings && result.parentStyling && result.childStyling)"
+		[id]="result.id" [ngStyle]="{
+		'text-align':result.parentStyling.textAlignParent,
+		'background-color':result.parentStyling.backgroundColorParent,
+		'padding-top':result.parentStyling.paddingParent_top + 'px',
+		'padding-bottom':result.parentStyling.paddingParent_bottom + 'px',
+		'padding-left':result.parentStyling.paddingParent_left + 'px',
+		'padding-right':result.parentStyling.paddingParent_right + 'px',
+		'margin-top':result.parentStyling.marginParent_top + 'px',
+		'margin-bottom':result.parentStyling.marginParent_bottom + 'px',
+		'margin-left':result.parentStyling.marginParent_left + 'px',
+		'margin-right':result.parentStyling.marginParent_right + 'px',
+		'border-width':result.parentStyling.borderParent_width + 'px',
+		'border-style':result.parentStyling.borderParent_style,
+		'border-color':result.parentStyling.borderParent_color}">
+		<a class="no-pointer svgOnHover" [attr.href]="link.path" target="_blank"
+			*ngFor="let link of result.generalSettings.SocialLinks">
+			<svg class="svg active" [ngStyle]="{
+				'width': result.childStyling.button_WidthChild + result.childStyling.scaleTypeChild,
+				'height': result.childStyling.button_WidthChild + result.childStyling.scaleTypeChild,
+				'background-color': result.childStyling.colorChild,
+				'padding-top':result.childStyling.paddingChild_top + 'px',
+				'padding-bottom':result.childStyling.paddingChild_bottom + 'px',
+				'padding-left':result.childStyling.paddingChild_left + 'px',
+				'padding-right':result.childStyling.paddingChild_right + 'px',
+				'border-width':result.childStyling.borderChild_width + 'px',
+				'border-style':result.childStyling.borderChild_style,
+				'border-color':result.childStyling.borderChild_color,
+				'border-radius':result.childStyling.borderRadiusChild + 'px'}">
+				<use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + (ReturnImg(link.linkType))" [ngClass]="'text-' + (ReturnImg(link.linkType))"/>
+			</svg>
+		</a>
+		<div class="actions">
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="DeleteElement($event,result.id,'editCase')">
+				<svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+				</svg>
+				<svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+				</svg>
+				<span class="tooltip-inner">Delete</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="EditElement($event,result.id,'editCase')">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+				</svg>
+				<span class="tooltip-inner">Edit</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="CloneElement($event,result)">
+				<svg class="svg svg-green active">
+					<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+				</svg>
+				<span class="tooltip-inner">Clone</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderUp(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Up</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderDown(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Down</span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Editing Image -->
+	<div [ngClass]="(editClosed && activeId == result.id) ? 'active' : ''" [ngClass]="isDragged ? 'no-pointer' : ''"
+		*ngIf="(result.type =='image' && result.generalSettings && result.parentStyling && result.childStyling)"
+		[id]="result.id" [ngStyle]="{
+		'text-align':result.parentStyling.textAlignParent,
+		'background-color':result.parentStyling.backgroundColorParent,
+		'padding-top':result.parentStyling.paddingParent_top + 'px',
+		'padding-bottom':result.parentStyling.paddingParent_bottom + 'px',
+		'padding-left':result.parentStyling.paddingParent_left + 'px',
+		'padding-right':result.parentStyling.paddingParent_right + 'px',
+		'margin-top':result.parentStyling.marginParent_top + 'px',
+		'margin-bottom':result.parentStyling.marginParent_bottom + 'px',
+		'margin-left':result.parentStyling.marginParent_left + 'px',
+		'margin-right':result.parentStyling.marginParent_right + 'px',
+		'border-width':result.parentStyling.borderParent_width + 'px',
+		'border-style':result.parentStyling.borderParent_style,
+		'border-color':result.parentStyling.borderParent_color}">
+		<a class="no-pointer" target="_blank" [attr.href]="result.generalSettings.buttonLink">
+			<svg class="svg svg-default active" *ngIf="!(result.generalSettings.imageSrc)">
+				<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+			</svg>
+			<img class="svg" [src]="(result.generalSettings.imageSrc == true)"
+				*ngIf="(result.generalSettings.imageSrc)" [ngStyle]="{
+				'background-color': result.childStyling.colorChild,
+				'width': result.childStyling.button_WidthChild + result.childStyling.scaleTypeChild,
+				'padding-top':result.childStyling.paddingChild_top + 'px',
+				'padding-bottom':result.childStyling.paddingChild_bottom + 'px',
+				'padding-left':result.childStyling.paddingChild_left + 'px',
+				'padding-right':result.childStyling.paddingChild_right + 'px',
+				'border-width':result.childStyling.borderChild_width + 'px',
+				'border-style':result.childStyling.borderChild_style,
+				'border-color':result.childStyling.borderChild_color,
+				'border-radius':result.childStyling.borderRadiusChild + 'px'}">
+		</a>
+		<div class="actions">
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="DeleteElement($event,result.id,'Edit')">
+				<svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+				</svg>
+				<svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+				</svg>
+				<span class="tooltip-inner">Delete</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="EditElement($event,result.id,'Edit')">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+				</svg>
+				<span class="tooltip-inner">Edit</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="CloneElement($event,result)">
+				<svg class="svg svg-green active">
+					<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+				</svg>
+				<span class="tooltip-inner">Clone</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderUp(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Up</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderDown(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Down</span>
+			</button>
+		</div>
+
+	</div>
+
+	<!-- Editing Separator -->
+	<div [ngClass]="(editClosed && activeId == result.id) ? 'active' : ''" [ngClass]="isDragged ? 'no-pointer' : ''"
+		*ngIf="(result.type =='separator' && result.generalSettings && result.parentStyling && result.childStyling)"
+		[id]="result.id" [ngStyle]="{
+		'text-align':result.parentStyling.textAlignParent,
+		'background-color':result.parentStyling.backgroundColorParent,
+		'padding-top':result.parentStyling.paddingParent_top + 'px',
+		'padding-bottom':result.parentStyling.paddingParent_bottom + 'px',
+		'padding-left':result.parentStyling.paddingParent_left + 'px',
+		'padding-right':result.parentStyling.paddingParent_right + 'px',
+		'margin-top':result.parentStyling.marginParent_top + 'px',
+		'margin-bottom':result.parentStyling.marginParent_bottom + 'px',
+		'margin-left':result.parentStyling.marginParent_left + 'px',
+		'margin-right':result.parentStyling.marginParent_right + 'px',
+		'border-width':result.parentStyling.borderParent_width + 'px',
+		'border-style':result.parentStyling.borderParent_style,
+		'border-color':result.parentStyling.borderParent_color}">
+		<hr [ngStyle]="{
+			'background-color': result.childStyling.colorChild,
+			'padding-top':result.childStyling.paddingChild_top + 'px',
+			'padding-bottom':result.childStyling.paddingChild_bottom + 'px',
+			'padding-left':result.childStyling.paddingChild_left + 'px',
+			'padding-right':result.childStyling.paddingChild_right + 'px',
+			'border-width':result.childStyling.borderChild_width + 'px',
+			'border-style':result.childStyling.borderChild_style,
+			'border-color':result.childStyling.borderChild_color}"/>
+		<div class="actions">
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="DeleteElement($event,result.id,'Edit')">
+				<svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+				</svg>
+				<svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+				</svg>
+				<span class="tooltip-inner">Delete</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+				(click)="EditElement($event,result.id,'Edit')">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+				</svg>
+				<span class="tooltip-inner">Edit</span>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="CloneElement($event,result)">
+				<svg class="svg svg-green active">
+					<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+				</svg>
+				<span class="tooltip-inner">Clone</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderUp(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Up</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderDown(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Down</span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Editing Section -->
+	<div *ngIf="result.type.includes('container')" [id]="result.id">
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+			<tbody>
+				<tr>
+					<td [width]="containerChilds.width" [id]="containerChilds.id"
+						*ngFor="let containerChilds of result.childs">
+						<div class="elements-droppable no-elements no-pointer textClass">
+							<!-- <span>Drop Item Here ...</span> -->
+						</div>
+						<ng-template *ngIf="containerChilds.sectionChilds" ngFor let-sectionElements [ngForOf]="containerChilds.sectionChilds" let-j="index">
+
+							<!-- Editing Button -->
+							<div [ngClass]="(editClosed && activeId == sectionElements.id) ? 'active' : ''"
+								[ngClass]="isDragged ? 'no-pointer' : ''" [id]="sectionElements.id"
+								*ngIf="(sectionElements.type =='button' && sectionElements.generalSettings && sectionElements.parentStyling && sectionElements.childStyling)"
+								[ngStyle]="{
+								'text-align':sectionElements.parentStyling.textAlignParent,
+								'background-color':sectionElements.parentStyling.backgroundColorParent,
+								'padding-top':sectionElements.parentStyling.paddingParent_top + 'px',
+								'padding-bottom':sectionElements.parentStyling.paddingParent_bottom + 'px',
+								'padding-left':sectionElements.parentStyling.paddingParent_left + 'px',
+								'padding-right':sectionElements.parentStyling.paddingParent_right + 'px',
+								'margin-top':sectionElements.parentStyling.marginParent_top + 'px',
+								'margin-bottom':sectionElements.parentStyling.marginParent_bottom + 'px',
+								'margin-left':sectionElements.parentStyling.marginParent_left + 'px',
+								'margin-right':sectionElements.parentStyling.marginParent_right + 'px',
+								'border-width':sectionElements.parentStyling.borderParent_width + 'px',
+								'border-style':sectionElements.parentStyling.borderParent_style,
+								'border-color':sectionElements.parentStyling.borderParent_color,
+								'display': 'inline-block'}">
+								<!-- (click)="window.open(sectionElements.generalSettings.buttonLink,'_blank',location=yes);" -->
+								<a class="no-pointer" [attr.href]="sectionElements.generalSettings.buttonLink"
+									target="_blank" role="button" [ngStyle]="{
+									'background-color': sectionElements.childStyling.colorChild,
+									'color':sectionElements.childStyling.textColorChild,
+									'border-radius':sectionElements.childStyling.borderRadiusChild + 'px',
+									'padding-top':sectionElements.childStyling.paddingChild_top + 'px',
+									'padding-bottom':sectionElements.childStyling.paddingChild_bottom + 'px',
+									'padding-left':sectionElements.childStyling.paddingChild_left + 'px',
+									'padding-right':sectionElements.childStyling.paddingChild_right + 'px',
+									'font-weight':sectionElements.childStyling.fontWeightChild,
+									'font-style':sectionElements.childStyling.fontStyleChild,
+									'font-size':sectionElements.childStyling.button_FontSizeChild + 'px',
+									'border-width':sectionElements.childStyling.borderChild_width + 'px',
+									'border-style':sectionElements.childStyling.borderChild_style,
+									'border-color':sectionElements.childStyling.borderChild_color,
+									'width':sectionElements.childStyling.button_WidthChild + sectionElements.childStyling.scaleTypeChild}">
+									<span>{{sectionElements.generalSettings.buttonText}}</span>
+								</a>
+								<div class="actions">
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="DeleteElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="EditElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="CloneElement($event,sectionElements,containerChilds)">
+										<svg class="svg svg-green active">
+											<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+										</svg>
+										<span class="tooltip-inner">Clone</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderUp(j,sectionElements.id)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Up</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderDownSec(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Down</span>
+									</button>
+
+								</div>
+							</div>
+							<!-- Editing Paragrapgh -->
+							<div [ngClass]="(editClosed && activeId == sectionElements.id) ? 'active' : ''"
+								[ngClass]="isDragged ? 'no-pointer' : ''"
+								*ngIf="(sectionElements.type =='paragraph' && sectionElements.generalSettings && sectionElements.parentStyling && sectionElements.childStyling)"
+								[id]="sectionElements.id" [ngStyle]="{
+								'text-align':sectionElements.parentStyling.textAlignParent,
+								'background-color':sectionElements.parentStyling.backgroundColorParent,
+								'padding-top':sectionElements.parentStyling.paddingParent_top + 'px',
+								'padding-bottom':sectionElements.parentStyling.paddingParent_bottom + 'px',
+								'padding-left':sectionElements.parentStyling.paddingParent_left + 'px',
+								'padding-right':sectionElements.parentStyling.paddingParent_right + 'px',
+								'margin-top':sectionElements.parentStyling.marginParent_top + 'px',
+								'margin-bottom':sectionElements.parentStyling.marginParent_bottom + 'px',
+								'margin-left':sectionElements.parentStyling.marginParent_left + 'px',
+								'margin-right':sectionElements.parentStyling.marginParent_right + 'px',
+								'border-width':sectionElements.parentStyling.borderParent_width + 'px',
+								'border-style':sectionElements.parentStyling.borderParent_style,
+								'border-color':sectionElements.parentStyling.borderParent_color}">
+								<p [innerHTML]="sectionElements.generalSettings.paragraphText" [ngStyle]="{'background-color': sectionElements.childStyling.colorChild,
+									'color':sectionElements.childStyling.textColorChild,
+									'border-radius':sectionElements.childStyling.borderRadiusChild + 'px',
+									'padding-top':sectionElements.childStyling.paddingChild_top + 'px',
+									'padding-bottom':sectionElements.childStyling.paddingChild_bottom + 'px',
+									'padding-left':sectionElements.childStyling.paddingChild_left + 'px',
+									'padding-right':sectionElements.childStyling.paddingChild_right + 'px',
+									'border-width':sectionElements.childStyling.borderChild_width + 'px',
+									'border-style':sectionElements.childStyling.borderChild_style,
+									'border-color':sectionElements.childStyling.borderChild_color}">
+								</p>
+								<div class="actions">
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="DeleteElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="EditElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="CloneElement($event,sectionElements,containerChilds)">
+										<svg class="svg svg-green active">
+											<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+										</svg>
+										<span class="tooltip-inner">Clone</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderUp(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Up</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderDownSec(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Down</span>
+									</button>
+
+								</div>
+							</div>
+							<!-- Editing Links -->
+							<div [ngClass]="(editClosed && activeId == sectionElements.id) ? 'active' : ''"
+								[ngClass]="isDragged ? 'no-pointer' : ''"
+								*ngIf="(sectionElements.type =='SocialMediaLinks' && sectionElements.generalSettings && sectionElements.parentStyling && sectionElements.childStyling)"
+								[id]="sectionElements.id" [ngStyle]="{
+								'text-align':sectionElements.parentStyling.textAlignParent,
+								'background-color':sectionElements.parentStyling.backgroundColorParent,
+								'padding-top':sectionElements.parentStyling.paddingParent_top + 'px',
+								'padding-bottom':sectionElements.parentStyling.paddingParent_bottom + 'px',
+								'padding-left':sectionElements.parentStyling.paddingParent_left + 'px',
+								'padding-right':sectionElements.parentStyling.paddingParent_right + 'px',
+								'margin-top':sectionElements.parentStyling.marginParent_top + 'px',
+								'margin-bottom':sectionElements.parentStyling.marginParent_bottom + 'px',
+								'margin-left':sectionElements.parentStyling.marginParent_left + 'px',
+								'margin-right':sectionElements.parentStyling.marginParent_right + 'px',
+								'border-width':sectionElements.parentStyling.borderParent_width + 'px',
+								'border-style':sectionElements.parentStyling.borderParent_style,
+								'border-color':sectionElements.parentStyling.borderParent_color}">
+								<a class="no-pointer svgOnHover" target="_blank" [attr.href]="link.path"
+									*ngFor="let link of sectionElements.generalSettings.SocialLinks" [ngStyle]="{
+									'width': result.childStyling.button_WidthChild + result.childStyling.scaleTypeChild,
+									'height': result.childStyling.button_WidthChild + result.childStyling.scaleTypeChild,
+									'background-color': sectionElements.childStyling.colorChild,
+									'padding-top':sectionElements.childStyling.paddingChild_top + 'px',
+									'padding-bottom':sectionElements.childStyling.paddingChild_bottom + 'px',
+									'padding-left':sectionElements.childStyling.paddingChild_left + 'px',
+									'padding-right':sectionElements.childStyling.paddingChild_right + 'px',
+									'border-width':sectionElements.childStyling.borderChild_width + 'px',
+									'border-style':sectionElements.childStyling.borderChild_style,
+									'border-color':sectionElements.childStyling.borderChild_color,
+									'border-radius':sectionElements.childStyling.borderRadiusChild + 'px'}">
+									<svg class="svg active">
+										<use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + (ReturnImg(link.linkType))"
+											[ngClass]="'text-' + (ReturnImg(link.linkType))"/>
+									</svg>
+								</a>
+								<div class="actions">
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="DeleteElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="EditElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="CloneElement($event,sectionElements,containerChilds)">
+										<svg class="svg svg-green active">
+											<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+										</svg>
+										<span class="tooltip-inner">Clone</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderUp(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Up</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderDownSec(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Down</span>
+									</button>
+
+								</div>
+							</div>
+							<!-- Editing Image -->
+							<div [ngClass]="(editClosed && activeId == sectionElements.id) ? 'active' : ''"
+								[ngClass]="isDragged ? 'no-pointer' : ''"
+								*ngIf="(sectionElements.type =='image' && sectionElements.generalSettings && sectionElements.parentStyling && sectionElements.childStyling)"
+								[id]="sectionElements.id" [ngStyle]="{
+								'text-align':sectionElements.parentStyling.textAlignParent,
+								'background-color':sectionElements.parentStyling.backgroundColorParent,
+								'padding-top':sectionElements.parentStyling.paddingParent_top + 'px',
+								'padding-bottom':sectionElements.parentStyling.paddingParent_bottom + 'px',
+								'padding-left':sectionElements.parentStyling.paddingParent_left + 'px',
+								'padding-right':sectionElements.parentStyling.paddingParent_right + 'px',
+								'margin-top':sectionElements.parentStyling.marginParent_top + 'px',
+								'margin-bottom':sectionElements.parentStyling.marginParent_bottom + 'px',
+								'margin-left':sectionElements.parentStyling.marginParent_left + 'px',
+								'margin-right':sectionElements.parentStyling.marginParent_right + 'px',
+								'border-width':sectionElements.parentStyling.borderParent_width + 'px',
+								'border-style':sectionElements.parentStyling.borderParent_style,
+								'border-color':sectionElements.parentStyling.borderParent_color}">
+								<a [attr.href]="sectionElements.generalSettings.buttonLink" class="no-pointer"
+									target="_blank">
+									<svg class="svg svg-default active" *ngIf="!(sectionElements.generalSettings.imageSrc)">
+										<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+									</svg>
+									<img class="svg" [src]="(sectionElements.generalSettings.imageSrc == true)"
+										*ngIf="(sectionElements.generalSettings.imageSrc)" [ngStyle]="{
+										'background-color':sectionElements.childStyling.colorChild,
+										'width':sectionElements.childStyling.button_WidthChild + sectionElements.childStyling + scaleTypeChild,
+										'padding-top':sectionElements.childStyling.paddingChild_top + 'px',
+										'padding-bottom':sectionElements.childStyling.paddingChild_bottom + 'px',
+										'padding-left':sectionElements.childStyling.paddingChild_left + 'px',
+										'padding-right':sectionElements.childStyling.paddingChild_right + 'px',
+										'border-width':sectionElements.childStyling.borderChild_width + 'px',
+										'border-style':sectionElements.childStyling.borderChild_style,
+										'border-color':sectionElements.childStyling.borderChild_color,
+										'border-radius':sectionElements.childStyling.borderRadiusChild + 'px'}">
+								</a>
+								<div class="actions">
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="DeleteElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="EditElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="CloneElement($event,sectionElements,containerChilds)">
+										<svg class="svg svg-green active">
+											<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+										</svg>
+										<span class="tooltip-inner">Clone</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderUp(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Up</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderDownSec(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Down</span>
+									</button>
+
+								</div>
+							</div>
+							<!-- Editing Separator -->
+							<div [ngClass]="(editClosed && activeId == sectionElements.id) ? 'active' : ''"
+								[ngClass]="isDragged ? 'no-pointer' : ''"
+								*ngIf="(sectionElements.type =='separator' && sectionElements.generalSettings && sectionElements.parentStyling && sectionElements.childStyling)"
+								[id]="sectionElements.id" [ngStyle]="{
+								'text-align':sectionElements.parentStyling.textAlignParent,
+								'background-color':sectionElements.parentStyling.backgroundColorParent,
+								'padding-top':sectionElements.parentStyling.paddingParent_top + 'px',
+								'padding-bottom':sectionElements.parentStyling.paddingParent_bottom + 'px',
+								'padding-left':sectionElements.parentStyling.paddingParent_left + 'px',
+								'padding-right':sectionElements.parentStyling.paddingParent_right + 'px',
+								'margin-top':sectionElements.parentStyling.marginParent_top + 'px',
+								'margin-bottom':sectionElements.parentStyling.marginParent_bottom + 'px',
+								'margin-left':sectionElements.parentStyling.marginParent_left + 'px',
+								'margin-right':sectionElements.parentStyling.marginParent_right + 'px',
+								'border-width':sectionElements.parentStyling.borderParent_width + 'px',
+								'border-style':sectionElements.parentStyling.borderParent_style,
+								'border-color':sectionElements.parentStyling.borderParent_color}">
+								<hr [ngStyle]="{
+									'background-color': sectionElements.childStyling.colorChild,
+									'padding-top':sectionElements.childStyling.paddingChild_top +'px',
+									'padding-bottom':sectionElements.childStyling.paddingChild_bottom +'px',
+									'padding-left':sectionElements.childStyling.paddingChild_left +'px',
+									'padding-right':sectionElements.childStyling.paddingChild_right +'px',
+									'border-width':sectionElements.childStyling.borderChild_width +'px',
+									'border-style':sectionElements.childStyling.borderChild_style,
+									'border-color':sectionElements.childStyling.borderChild_color}"/>
+								<div class="actions">
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="DeleteElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="EditElement($event,sectionElements.id,'Edit')">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip top"
+										(click)="CloneElement($event,sectionElements,containerChilds)">
+										<svg class="svg svg-green active">
+											<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+										</svg>
+										<span class="tooltip-inner">Clone</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderUp(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Up</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip top"
+										(click)="reOrderDownSec(j,sectionElements)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+										</svg>
+										<span class="tooltip-inner">Swap Down</span>
+									</button>
+								</div>
+							</div>
+						</ng-template>
+						<div class="elements-droppable no-elements no-pointer"
+							*ngIf="(containerChilds.sectionChilds && containerChilds.sectionChilds.length >= 5)">
+							<!-- <span>Drop Item Here ...</span> -->
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="actions">
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="DeleteElement($event,result.id)">
+				<svg class="svg svg-default">
+					<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+				</svg>
+				<svg class="svg colored">
+					<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+				</svg>
+			</button>
+			<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="CloneElement($event,result)">
+				<svg class="svg svg-green active">
+					<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+				</svg>
+				<span class="tooltip-inner">Clone</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderUp(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Up</span>
+			</button>
+			<button class="btn btn-transparent svgOnHover tooltip top" (click)="reOrderDown(i)">
+				<svg class="svg svg-blue active">
+					<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+				</svg>
+				<span class="tooltip-inner">Swap Down</span>
+			</button>
+		</div>
+	</div>
+
+</ng-template>
+
+<!-- draggable="true" (dragstart)="dragStart($event)" (dragover)="allowDrop($event)" (dragleave)="DragLeave($event)" -->

@@ -1,0 +1,196 @@
+<div mat-dialog-content>
+	 <mat-dialog-actions>
+		<a class="mat-dialog-close svgOnHover tooltip left" (click)="Close($event)">
+			<svg class="svg w-30 h-30 active">
+				<use href="/assets/img/icons/icons-sprite.svg#cancel"/>
+			</svg>
+			<span class="tooltip-inner">Close Dialog</span>
+		</a>
+	</mat-dialog-actions>
+	<div class="activateScrollbar clearfix p-0">
+		<div class="detail-holder">
+			<img class="m-b-40" src="/assets/img/illustrations/add-agent.jpg" alt="">
+			<button type="button" class="btn bg-charcoal btn-lg" (click)="ShowImportExportDialog()">Import / Export Agents</button>
+		</div>
+		<div class="form-holder">
+			<div class="activateScrollbar clearfix">
+				<form class="require-validation" [formGroup]="agentRegForm" (ngSubmit)="submitForm(agentRegForm.value)">
+					<div mat-dialog-title class="m-b-30">
+						<h2>Add Agent</h2>
+						<!-- <h5 class="fw-4 text-gray-dark">Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</h5> -->
+					</div>
+					<fieldset>
+						<div class="row clearfix">
+							<div class="col-sm-6 col-xs-12">
+								<div class="input-block">
+									<label>First Name</label>
+									<input type="text" autocomplete="off" class="form-control input-lg" placeholder="First Name" name="first_name" [formControl]="agentRegForm.controls['first_name']">
+									<p class="help-block">Appears on reports and chat transcripts.</p>
+								</div>
+							</div>
+							<div class="col-sm-6 col-xs-12">
+								<div class="input-block">
+									<label>Last Name</label>
+									<input type="text" autocomplete="off" class="form-control input-lg" placeholder="Last Name" name="last_name" [formControl]="agentRegForm.controls['last_name']">
+									<p class="help-block">Appears on reports and chat transcripts.</p>
+								</div>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Nick Name</label>
+							<input type="text" autocomplete="off" class="form-control input-lg" placeholder="Nick Name" name="nickname" [formControl]="agentRegForm.controls['nickname']">
+							<p class="help-block">Appears on chat window and is useful to transfer chats.</p>
+						</div>
+						<div class="input-block">
+							<label>Phone</label>
+							<input type="tel" autocomplete="off" class="form-control input-lg" placeholder="Phone No" name="agentphone_no" [formControl]="agentRegForm.controls['agentphone_no']" (keypress)="_validationService.NumbersOnly($event)">
+							<br>
+							<p class="help-block">Phone Number for Admin reference</p>
+						</div>
+						<div class="row clearfix">
+							<div class="col-sm-6 col-xs-12">
+								<div class="input-block has-feedback">
+									<label>Email</label>
+									<input type="email" autocomplete="off" class="form-control input-lg" placeholder="Email" name="agentemail" [formControl]="agentRegForm.controls['agentemail']">
+									<div class="form-control-feedback">
+										<p class="text-red" *ngIf="agentRegForm.get('agentemail').hasError('required') || agentRegForm.get('agentemail').hasError('email')">Please Provide Valid Email</p>
+										<p class="text-red" *ngIf="agentRegForm.get('agentemail').hasError('isEmailUnique')">This email has been registered already</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-xs-12">
+								<div class="input-block">
+									<label>Password</label>
+									<input type="password" class="form-control input-lg" name="agentpassword" placeholder="Password" [formControl]="agentRegForm.controls['agentpassword']" ng-minlength="8" ng-maxlength="30">
+								</div>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Gender</label>
+							<div class="clearfix">
+								<div class="pretty p-default p-round p-smooth">
+									<input type="radio" checked name="gender" value="Male" [formControl]="agentRegForm.controls['gender']">
+									<div class="state">
+										<label> Male </label>
+									</div>
+								</div>
+								<div class="pretty p-default p-round p-smooth">
+									<input type="radio" name="gender" value="Female" [formControl]="agentRegForm.controls['gender']">
+									<div class="state">
+										<label> Female </label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Type</label>
+							<div class="sel style1 sel-sm">
+								<select  name="role" class="form-control input-lg" [formControl]="agentRegForm.controls['role']" >
+									<option [selected]="true" value="">Select role</option>
+									<ng-template ngFor [ngForOf]="roles" let-role let-i="index">
+										<ng-template [ngIf]="role != 'superadmin'">
+											<option [selected]="i==0" value="{{ role }}">{{ role }}</option>
+										</ng-template>
+									</ng-template>
+								</select>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Group</label>
+							<div class="sel style1 sel-sm">
+								<select name="group" class="form-control input-lg" [formControl]="agentRegForm.controls['ticketgroups']">
+									<option [selected]="true" value="">Select group</option>
+									<option *ngFor="let group of groupsList; let i=index" [selected]="i==0" value="{{ group }}">{{ group }}</option>
+								</select>
+							</div>
+							<p class="help-block">Groups decided by the admin to see specific country groups.</p>
+						</div>
+						<div class="input-block">
+							<label>Simultaneous Chats</label>
+							<input type="number" name="simchats" class="form-control input-lg" placeholder="Simultaneous Chats" [formControl]="agentRegForm.controls['simchats']">
+							<p class="help-block">Only 1 simultaneous chat is allowed for free users.</p>
+						</div>
+						<div class="input-block">
+							<label>Calls</label>
+							<div class="clearfix">
+								<div class="pretty p-svg p-fill p-smooth">
+									<input type="checkbox" name='enablechat' [formControl]="agentRegForm.controls['enablechat']">
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+										</svg>
+										<label> Enable Chat </label>
+									</div>
+								</div>
+								<div class="pretty p-svg p-fill p-smooth">
+									<input type="checkbox" name='voicecall' [formControl]="agentRegForm.controls['voicecall']">
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+										</svg>
+										<label> Enable Voice Calls </label>
+									</div>
+								</div>
+								<div class="pretty p-svg p-fill p-smooth">
+									<input type="checkbox" name='enablevideocall' [formControl]="agentRegForm.controls['videocall']">
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+										</svg>
+										<label> Enable Video Calls </label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="input-block">
+							<label>Allow Agents to Edit</label>
+							<div class="clearfix">
+								<div class="pretty p-svg p-fill p-smooth">
+									<input checked type="checkbox" name='editprofilepic' value='editprofilepic' [formControl]="agentRegForm.controls['editprofilepic']">
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+										</svg>
+										<label> Profile Pic </label>
+									</div>
+								</div>
+								<div class="pretty p-svg p-fill p-smooth">
+									<input checked type="checkbox" name='editname' value='editname' [formControl]="agentRegForm.controls['editname']">
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+										</svg>
+										<label> Name </label>
+									</div>
+								</div>
+								<div class="pretty p-svg p-fill p-smooth">
+									<input checked type="checkbox" name='editnickname' value='editnickname' [formControl]="agentRegForm.controls['editnickname']">
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+										</svg>
+										<label> Nick Name </label>
+									</div>
+								</div>
+								<div class="pretty p-svg p-fill p-smooth">
+									<input checked type="checkbox" name='editpassword' value='editpassword' [formControl]="agentRegForm.controls['editpassword']">
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+										</svg>
+										<label> Password </label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+					<div class="mat-dialog-footer clearfix b-0 p-l-r-0">
+						 <mat-dialog-actions>
+							<button type="button" [disabled]="(agentRegForm.invalid)" class="btn bg-blue btn-lg" [ngClass]="(loading) ? 'btnSpinner' : ''" (click)="submitForm(agentRegForm.value)">Submit</button>
+						</mat-dialog-actions>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

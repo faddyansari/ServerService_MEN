@@ -1,0 +1,26 @@
+<img class="svg" src="/assets/img/loaders/stat-loader.svg" width="12" height="auto" *ngIf="(type == 'stat-loader')"/>
+
+<div class="preloader bubble-pops" *ngIf="(type=='bubble-pop')">
+    <div class="bubble-pop"></div>
+    <p class="bubble-label">Loading</p>
+</div>
+
+<div class="preloader smiley" *ngIf="(type=='smiley')">
+    <div class="leftEye"></div>
+    <div class="rightEye"></div>
+    <div class="mouth"></div>
+</div>
+
+<img class="svg" src="/assets/img/loaders/cube-grid-loader.svg" width="40" height="40" *ngIf="(type=='cube-grid')"/>
+
+<img class="svg" src="/assets/img/loaders/spin-loader-page.svg" width="80" height="80" *ngIf="(type=='spin-loader-page')"/>
+
+<img class="svg" src="/assets/img/loaders/dot-loader.svg" width="40" height="auto" *ngIf="(type == 'dot-loader')"/>
+
+<div class="pageloader overlay floatToCenter" *ngIf="(type=='overlay')">
+    <img src="/assets/img/loaders/bee-loader.gif" alt="" width="300" height="300">
+</div>
+
+<div class="pageloader overlay floatToCenter" *ngIf="(type=='training-overlay')">
+    <img src="/assets/img/loaders/bee-loader.gif" alt="" width="300" height="300">
+</div>

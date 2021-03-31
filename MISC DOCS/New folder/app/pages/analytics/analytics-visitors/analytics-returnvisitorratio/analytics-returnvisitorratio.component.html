@@ -1,0 +1,46 @@
+<app-analytics-datebox [agentEnabled]="false" (onResult)="onFilterResult($event)" [compareEnabled]="false" [countryEnabled]="true" ></app-analytics-datebox>
+  <div class="statistics clearfix" [ngClass]="(loading) ? 'disabled': ''" >
+    <div id="highchart" style="height:300px;"></div>
+  </div>
+  <div class="statistics clearfix" *ngIf="!noDataAvailable">
+
+  <br>
+	<br>
+	<button class="btn btn-xs bg-green"  style="position: fixed;bottom: 40px;left: 100px;z-index: 99999;"
+		(click)="Export()">Export</button>
+
+    <div class="table-area clearfix" *ngIf="!noDataAvailable">
+      <div class="table-responsive" *ngIf="options && returnVisitorRatioData.length">
+        <table class="table table-bordered" id="returnVisitorRatio">
+          <thead>
+            <tr>
+              <th>Series</th>
+              <ng-template ngFor [ngForOf]="returnVisitorRatioData" let-series>
+                <th>{{series.name}}</th>
+              </ng-template>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-template ngFor [ngForOf]="options.xAxis.categories" let-category let-index="index">
+              <tr>
+                <td>{{category}}</td>
+                <ng-template ngFor [ngForOf]="returnVisitorRatioData" let-series>
+                  <td>{{(options.xAxis.categories.length > 1) ? (series.data[index] + '%') : (showTotal(series.data) + '%')}}
+                  </td>
+                </ng-template>
+              </tr>
+            </ng-template>
+            
+            <tr *ngIf="options.xAxis.categories.length > 1">
+              <td>Total</td>
+              <ng-template ngFor [ngForOf]="returnVisitorRatioData" let-series>
+                <td>
+                  {{(showTotal(series.data) + '%')}}
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

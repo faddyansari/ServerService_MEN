@@ -1,0 +1,106 @@
+.hourly {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    background-color: rgb(221, 226, 230);
+    > .hinner {
+        position: absolute;
+        top: 0px;
+        height: 6px;
+        min-width: 1px;
+        float: left;
+    }
+}
+
+.hourly-details {
+    padding-top: 5px;
+    > .haccept {
+        color: slategray;
+        font-size: 10px;
+        line-height: 1.23;
+        font-weight: normal;
+        display: inline-block;
+        min-width: 170px;
+    }
+    > .hnaccept {
+        color: slategray;
+        font-size: 10px;
+        line-height: 1.23;
+        font-weight: normal;
+    }
+}
+
+.agent-info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    > span {
+        margin-left: -12px;
+    }
+}
+
+.css-11nmnbk {
+    position: sticky;
+    top: 0px;
+    display: flex;
+    flex-direction: row;
+    -webkit-box-align: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.css-g3hns8 {
+    position: relative;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    flex: 1 0 auto;
+}
+.css-1qz765s {
+    -webkit-box-flex: 0;
+    flex-grow: 0;
+    font-size: 13px;
+    line-height: 1.23;
+    font-weight: bold;
+    color: rgba(66, 77, 87, 0.5);
+}
+
+.css-mi4jq5 {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    /* display: flex; */
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    /* align-items: flex-end; */
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    /* -webkit-box-flex: 1; */
+    -ms-flex-positive: 1;
+    /* flex-grow: 1; */
+    -ms-flex-preferred-size: 0px;
+    /* flex-basis: 0px; */
+}
+.css-eraoxo {
+    width: 1px;
+    height: 8px;
+    margin-bottom: 7px;
+    background-color: rgba(66, 77, 87, 0.8);
+}
+.css-ieq2sz {
+    width: 1px;
+    height: 4px;
+    margin-bottom: 7px;
+    background-color: rgba(66, 77, 87, 0.4);
+}
+
+.bg-custom-red {
+    background-color: rgb(214, 70, 70);
+}
+
+.bg-custom-green {
+    background-color: rgb(75, 182, 120);
+}

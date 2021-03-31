@@ -1,0 +1,55 @@
+<div class="box clearfix animated fadeIn delay-400" id="callPermissionsComponent">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Permissions</h5>
+			</div>
+		</div>
+		<form [formGroup]="callSettingsForm" id="callSettings" class="clearfix">
+			<div class="input-block">
+				<label>Allow agent to agent calls</label>
+				<div class="pretty p-switch p-smooth p-fill p-toggle">
+					<input type="checkbox" [checked]="callSettings.permissions.a2a" name="a2a" (click)="SetPermissions('a2a')"/>
+					<div class="state p-on">
+						<label>Allowed</label>
+					</div>
+					<div class="state p-off">
+						<label>Not Allowed</label>
+					</div>
+				</div>
+			</div>
+			<div class="input-block">
+				<label>Allow agent to visitor calls</label>
+				<div class="pretty p-switch p-smooth p-fill p-toggle">
+					<input type="checkbox" [checked]="callSettings.permissions.a2v" name="a2v" (click)="SetPermissions('a2v')"/>
+					<div class="state p-on">
+						<label>Allowed</label>
+					</div>
+					<div class="state p-off">
+						<label>Not Allowed</label>
+					</div>
+				</div>
+			</div>
+			<div class="input-block">
+				<label>Allow visitor to agent calls</label>
+				<div class="pretty p-switch p-smooth p-fill p-toggle">
+					<input type="checkbox" [checked]="callSettings.permissions.v2a" name="v2a" (click)="SetPermissions('v2a')"/>
+					<div class="state p-on">
+						<label>Allowed</label>
+					</div>
+					<div class="state p-off">
+						<label>Not Allowed</label>
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-sm bg-blue" [ngClass]="(loading) ? 'btnSpinner' : ''" (click)="Submit()">
+				<span>Save</span>
+			</button>
+		</form>
+		<div class="text-red" *ngIf="_settingsService.getSettingsStatus() | async">
+			<h5 class="badge bg-red">
+				<span><b>Note:</b> Settings have been changed please reload the page.</span>
+			</h5>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,38 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5 *ngIf="!addInternalPolicy && !selectedInternalPolicy">Internal SLA Policies</h5>
+				<h5 *ngIf="addInternalPolicy && !selectedInternalPolicy">Add New SLA Policy</h5>
+				<h5 *ngIf="addInternalPolicy && selectedInternalPolicy">Edit SLA Policy</h5>
+			</div>
+			<div *ngIf="!selectedInternalPolicy && !addInternalPolicy">
+				<button class="btn btn-xs btn-icon bg-white right svgOnHover" (click)="AddInternalSLAPolicy()"
+					[ngClass]="(!selectedInternalPolicy && !addInternalPolicy) ? 'border-blue' : 'border-red'">
+					<span>{{(!selectedSurvey && !addInternalPolicy) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!selectedInternalPolicy && !addInternalPolicy) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!selectedInternalPolicy && !addInternalPolicy) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+
+			</div>
+				<!-- <button type="button" class="btn btn-xs bg-black" (click)="ReorderSLAPolicy()" *ngIf="!reOrderEnable && allInternalSLAPolicies && allInternalSLAPolicies.length">
+					<span>Reorder</span>
+				</button> -->
+				<button type="button" class="btn btn-xs bg-blue" (click)="SaveReorder()" *ngIf="reOrderEnable && allInternalSLAPolicies && allInternalSLAPolicies.length" [disabled]="!changeInReorder">
+					<span>Save</span>
+				</button>	<button type="button" class="btn btn-xs bg-red" (click)="CancelReorder()" *ngIf="reOrderEnable && allInternalSLAPolicies && allInternalSLAPolicies.length">
+					<span>Cancel</span>
+				</button>
+			</div>
+
+		<app-add-internal-sla-policies class="document-list clearfix bg-transparent"
+			[ngClass]="(!selectedInternalPolicy && !addInternalPolicy) ? 'hide' : '' "
+			*ngIf="addInternalPolicy || selectedInternalPolicy"
+			[InternalPolicyObject]="(addInternalPolicy) ? InternalpolicyObject : selectedInternalPolicy">
+		</app-add-internal-sla-policies>
+
+		<app-internal-sla-policies-list class="document-list clearfix" *ngIf="!addInternalPolicy && !selectedInternalPolicy">
+		</app-internal-sla-policies-list>
+	</div>
+</div>

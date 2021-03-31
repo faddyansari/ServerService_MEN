@@ -1,0 +1,114 @@
+<!-- SHOWS CALEE ICON -->
+<div class="avatar ava-call ringing m-b-10">
+	<a class="nameInitials no-pointer">
+		<span>AA</span>
+	</a>
+</div>
+<!-- SHOWS CALLEE NAME -->
+<div class="callee">
+	<h5 class="m-b-0">Visitor/Agent Full Name</h5>
+	<h6 class="m-b-0">Visitor/Agent Username</h6>
+</div>
+<!-- SHOWS STATUS -->
+<div class="status">
+	<div>
+		<h5 class="text-orange">Connecting</h5>
+		<h5 class="text-orange">Ringing</h5>
+		<h5 class="text-orange">Call Accepted</h5>
+		<h5 class="text-orange">Call Rejected</h5>
+		<h5 class="text-orange">Call Ended</h5>
+		<h5 class="text-orange">User Is Busy, callback later</h5>
+		<!--
+		<audio autoplay loop *ngIf="(callerTune.state)">
+			<source [src]="callerTune.src">
+		</audio>
+		-->
+	</div>
+
+	<!-- SHOWS COUNT -->
+	<div class="counter">
+		<div>
+			<div>20:44</div>
+		</div>
+		<!--
+		<div>
+			<div *ngIf="count">Redial In (10) </div>
+		</div>
+		-->
+	</div>
+
+	<!--
+	<div>
+		<audio autoplay>
+			<source [src]="callerTuneEnd.src">
+		</audio>
+	</div>
+	-->
+
+	<!-- SHOWS ANIMATIONS -->
+	<div class="animations">
+		<img class="svg" src="/assets/img/loaders/ringing-dot-loader.svg" width="80" alt="">
+	</div>
+
+	<!-- SHOWS BUTTONS -->
+	<div class="call-buttons">
+		<button class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-30 h-30 svg-green active">
+				<use href="/assets/img/icons/icons-sprite.svg#redial" />
+			</svg>
+			<span class="tooltip-inner">Redial</span>
+		</button>
+		<button class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-30 h-30 active">
+				<use href="/assets/img/icons/icons-sprite.svg#call-hold" class="text-purple" />
+			</svg>
+			<span class="tooltip-inner">On Hold</span>
+		</button>
+		<button class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-30 h-30 svg-red active">
+				<use href="/assets/img/icons/icons-sprite.svg#call-end" />
+			</svg>
+			<span class="tooltip-inner">End Call</span>
+		</button>
+		<button class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-30 h-30 svg-green active">
+				<use href="/assets/img/icons/icons-sprite.svg#call-transfer" />
+			</svg>
+			<span class="tooltip-inner">Call Transfer</span>
+		</button>
+	</div>
+
+	<!-- SHOWS BUTTONS -->
+	<div class="call-buttons">
+		<button class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-30 h-30 svg-default active">
+				<use href="/assets/img/icons/icons-sprite.svg#mic-off" />
+			</svg>
+			<span class="tooltip-inner">Mic Off</span>
+		</button>
+		<button class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-30 h-30 active">
+				<use href="/assets/img/icons/icons-sprite.svg#mic-on" class="text-blue" />
+			</svg>
+			<span class="tooltip-inner">Mic On</span>
+		</button>
+		<button class="btn btn-transparent svgOnHover tooltip top" (click)="toggleDialPad()">
+			<svg class="svg w-30 h-30 svg-orange active">
+				<use href="/assets/img/icons/icons-sprite.svg#keypad" />
+			</svg>
+			<span class="tooltip-inner">Dialpad</span>
+		</button>
+		<button class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-30 h-30 svg-default active">
+				<use href="/assets/img/icons/icons-sprite.svg#volume-off" />
+			</svg>
+			<span class="tooltip-inner">Voice Off</span>
+		</button>
+		<button class="btn btn-transparent svgOnHover tooltip top">
+			<svg class="svg w-30 h-30 active">
+				<use href="/assets/img/icons/icons-sprite.svg#volume-on" class="text-blue" />
+			</svg>
+			<span class="tooltip-inner">Voice On</span>
+		</button>
+	</div>
+	<app-dialpad *ngIf="showDialPad"></app-dialpad>

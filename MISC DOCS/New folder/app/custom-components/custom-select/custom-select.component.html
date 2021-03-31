@@ -1,0 +1,41 @@
+<div class="custom-select-wrapper"
+	[popper]="optionsPopper" [popperShowOnStart]="false" [popperDisabled]="selectDisabled"
+	[popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false"
+	[popperPlacement]="placement" (click)="toggle()"
+	[ngClass]="(dropdownState) ? 'open' : ''"
+	(popperOnHidden)="dropdownState = false"
+	>
+	<div class="custom-select">
+		<div class="custom-select__trigger">
+			<ng-template [ngIf]="multiple">
+				<div class="badge" *ngFor="let item of selectedItems.slice(0,3); let index=index" title="{{item}}">
+					<span>{{item}}</span>
+					<svg class="svg w-15 h-15 active dismiss" (click)="remove($event, index)">
+						<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-black"/>
+					</svg>
+				</div>
+			</ng-template>
+			<span class="ellipsis" title="{{(!multiple) ? (selectedItems[0]) ? selectedItems[0] : selectLabel : (!selectedItems.length) ? selectLabel : ''}}">
+				{{(!multiple) ? (selectedItems[0]) ? selectedItems[0] : selectLabel : (!selectedItems.length) ? selectLabel : ''}}
+			</span>
+			<div class="arrow" (click)="forceClose($event)"></div>
+		</div>
+	</div>
+	<popper-content #optionsPopper>
+		<div class="input-block custom-option-search" *ngIf="search" (click)="searchClicked($event)">
+			<input type="search" class="form-control input-sm" placeholder="Search..."
+				[(ngModel)]="searchValue" (input)="searchInput.next()">
+		</div>
+		<div class="activateScrollbar" #scrollContainer (scroll)="onScroll($event)">
+			<div class="custom-options clearfix">
+				<span class="custom-option" (click)="select($event, '')">{{selectLabel}}</span>
+				<ng-template ngFor [ngForOf]="items | filter: searchValue : (bindValue) ? [bindValue] : []" let-item>
+					<ng-template [ngIf]="display((item[bindValue]) ? item[bindValue] : item)">
+						<span class="custom-option"
+							(click)="select($event, (item[bindValue]) ? item[bindValue] : item)">{{(bindLabel) ? item[bindLabel] : item}}</span>
+					</ng-template>
+				</ng-template>
+			</div>
+		</div>
+	</popper-content>
+</div>

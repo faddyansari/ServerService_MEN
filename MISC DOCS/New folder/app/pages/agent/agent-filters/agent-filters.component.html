@@ -1,0 +1,86 @@
+<div class="drawer-filters left">
+	<div class="box clearfix animated fadeIn delay-400" id="chatFilters">
+		<div class="box-header">
+			<h5 class="box-title">Filters</h5>
+			<div class="box-tools">
+				<div class="btn-group">
+					<button class="btn btn-xxs btn-theme" (click)="Reload()">
+						<span>Reload</span>
+					</button>
+					<button class="btn btn-xxs btn-theme" [disabled]="CheckFiltersEmpty()" (click)="ClearFields()">
+						<span>Clear</span>
+					</button>
+					<!-- TODO Functionality - Should Close Drawer Filter on Click -->
+					<button class="btn btn-xxs bg-transparent svgOnHover tooltip bottom-right p-l-r-5"
+						(click)="CloseFilter()">
+						<svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+						</svg>
+						<svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+						</svg>
+						<span class="tooltip-inner">Close</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="box-body clearfix p-0">
+			<div class="activateScrollbar clearfix p-0">
+				<div class="vhList notif clearfix">
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="input-block">
+								<label>Sort by</label>
+								<div class="input-block m-b-20">
+									<div class="input-group">
+										<div class="pretty p-default p-round p-smooth m-r-20">
+											<input type="radio" value="1" [(ngModel)]="sortBy.type"
+												(change)="updateSort()">
+											<div class="state">
+												<label>ASC</label>
+											</div>
+										</div>
+										<div class="pretty p-default p-round p-smooth">
+											<input type="radio" checked value="-1" [(ngModel)]="sortBy.type"
+												(change)="updateSort()">
+											<div class="state">
+												<label>DESC</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="input-block">
+								<label>Groups</label>
+								<app-custom-select class="input-xs" [items]="groupList" [selectLabel]="'Select Groups'" [(ngModel)]="selectedGroups" [selectedItems]="selectedGroups" [multiple]="true"
+									[search]="true" (onDeSelect)="onDeSelect($event)" (onSelect)="onItemSelect($event)">
+								</app-custom-select>
+							</div>
+							<div class="input-block">
+								<label>Agents</label>
+								<app-custom-select class="input-xs" [items]="agentList" [selectLabel]="'Select Agents'"
+									[(ngModel)]="selectedAgents" [selectedItems]="selectedAgents" [bindLabel]="'email'"
+									[bindValue]="'email'" [multiple]="true" [lazyLoading]="true"
+									(onLoadMore)="loadMore($event)" (onSearch)="onSearch($event)"
+									(onSelect)="onItemSelect($event)" (onDeSelect)="onDeSelect($event)">
+								</app-custom-select>
+							</div>
+							<div class="input-block">
+								<label>Status</label>
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-xs" (change)="changeStatus()" [(ngModel)]="agentStatus">
+										<option value="all" selected>All</option>
+										<option value="online">Online</option>
+										<option value="offline">Offline</option>
+										<option value="idle">Idle</option>
+										<option value="active">Active</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

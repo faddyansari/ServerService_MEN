@@ -1,0 +1,70 @@
+<section class="content animated fadeIn" id="analyticsComponent" [ngClass]="!viewContentInfo ? 'info-hidden' : ''">
+	<div class="content-nav clearfix">
+		<h3>
+			<span>Analytics</span>
+		</h3>
+		<ul class="breadcrumbs clearfix">
+			<li>
+				<a>Home</a>
+			</li>
+		</ul>
+		<div class="content-tools">
+			<div class="btn-group">              
+				<a class="btn btn-xs btn-theme" (click)="toggleInfoArea()">
+					<span>INFO</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="content-view">
+		<div class="activateScrollbar clearfix">
+			<div class="tabination clearfix">
+				<ul class="nav-tabs">
+					<li *ngIf="permissions && permissions.visitors"
+						[routerLinkActive]="['active']"
+						(click)="STOPPROPAGATION($event)">
+						<a routerLink="/analytics/analytics-visitors">Visitors</a>
+					</li>						
+					<li *ngIf="permissions && permissions.agents"
+						[routerLinkActive]="['active']"
+						(click)="STOPPROPAGATION($event)">
+						<a routerLink="/analytics/analytics-agents">Agents</a>
+					</li>						
+					<li *ngIf="permissions && permissions.chats"
+						[routerLinkActive]="['active']"
+						(click)="STOPPROPAGATION($event)">
+						<a routerLink="/analytics/analytics-chats">Chats</a>
+					</li>						
+					<li *ngIf="permissions && permissions.tickets"
+						[routerLinkActive]="['active']"
+						(click)="STOPPROPAGATION($event)">
+						<a routerLink="/analytics/analytics-tickets">Tickets</a>
+					</li>
+				</ul>
+				<div class="tab-content p-7" *ngIf="displayTab()">
+					<div class="tab-pane active">
+						<div class="card p-0 w100 clearfix">
+							<app-preloader class="floatToCenter" type="cube-grid" *ngIf="loadingNestedRouteConfig"></app-preloader>
+							<router-outlet *ngIf="!loadingNestedRouteConfig"></router-outlet>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="content-info" *ngIf="viewContentInfo">
+	<div class="content-nav clearfix">
+		<h3>
+			<span>Info</span>
+		</h3>
+		<div class="content-tools">
+			<div class="btn-group">              
+				<a class="btn btn-xs bg-red" (click)="toggleInfoArea()">
+					<span>Close Info</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</section>

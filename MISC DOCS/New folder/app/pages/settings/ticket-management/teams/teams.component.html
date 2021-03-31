@@ -1,0 +1,200 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Teams</h5>
+					</div>
+					<div *ngIf="teamPermissions && teamPermissions.enabled && teamPermissions.canCreate">
+						<button class="btn btn-xs btn-icon bg-white right" (click)="ShowForm()"
+							[ngClass]="(!showForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showForm && (teamPermissions && teamPermissions.enabled && teamPermissions.canCreate)">
+					<form class="clearfix" [formGroup]="addTeamForm">
+						<div class="input-block">
+							<label>Team Name</label>
+							<input type="text" class="form-control input-sm" name="team_name" id="team_name"
+								placeholder="Enter Team Name" formControlName="team_name">
+						</div>
+						<div class="input-block">
+							<label>Enter Team Description</label>
+							<textarea autocomplete="off" class="form-control input-sm no-resize" rows="5"
+								placeholder="Team Description" name="desc" formControlName="desc"></textarea>
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue" [disabled]="(addTeamForm.invalid)"
+							(click)="insertTeam()">
+							<span>Add Team</span>
+						</button>
+					</form>
+				</div>
+				<div class="popover-form" *ngIf="editForm && (teamPermissions && teamPermissions.enabled && teamPermissions.canCreate)">
+					<form class="clearfix" [formGroup]="editTeamForm">
+						<!-- <div class="input-block">
+							<label>Team ID</label>
+							<input type="text" class="form-control input-sm" name="_id" id="_id"
+								placeholder="Enter Team Name" formControlName="_id">
+						</div> -->
+						<div class="input-block">
+							<label>Team Name</label>
+							<input type="text" class="form-control input-sm" name="team_name" id="team_name"
+								placeholder="Enter Team Name" formControlName="team_name">
+						</div>
+						<div class="input-block">
+							<label>Team Description</label>
+							<textarea autocomplete="off" class="form-control input-sm no-resize" rows="5"
+								placeholder="Team Description" name="desc" formControlName="desc"></textarea>
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue" [disabled]="(editTeamForm.invalid)"
+							(click)="save()">
+							<span>Save</span>
+						</button>
+						<button type="submit" class="btn btn-sm bg-red"
+							(click)="cancel()">
+							<span>Cancel</span>
+						</button>
+					</form>
+				</div>
+				<div class="document-list clearfix">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix" *ngIf="filteredTeams().length">
+							<input type="search" class="form-control input-sm"
+								placeholder="Search..." [(ngModel)]="searchValue">
+						</li>
+						<li class="notif clearfix" (click)="setSelectedTeam(team._id)" [ngClass]="(selectedTeam && selectedTeam._id  == team._id) ? 'active' : ''"
+							*ngFor="let team of filteredTeams() | filter: searchValue : ['team_name','desc', 'agents.email'] : false">
+							<div class="info">
+								<div class="desc">
+									<b>{{team.team_name}}</b>
+									<br>
+									<span>{{team.desc}}</span>
+								</div>
+								<div class="actions" *ngIf="teamPermissions && teamPermissions.enabled">
+									<button class="btn btn-transparent svgOnHover tooltip left" *ngIf="teamPermissions.canDelete" (click)="deleteTeam($event,team._id)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button type="button" class="btn btn-transparent svgOnHover tooltip left" *ngIf="teamPermissions.canCreate && !editForm"
+										(click)="editTeam(team)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="tagsData" class="col-md-8 col-sm-7 col-xs-12" *ngIf="selectedTeam && checkVisibility()">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Agents</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon bg-white right m-r-10" [disabled]="(!selectedTeam)"
+							*ngIf="teamPermissions && teamPermissions.enabled && teamPermissions.canAddAgents"
+							(click)="ShowAddAgentForm()"
+							[ngClass]="(!showAddAgentForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showAddAgentForm) ? 'Add Agents' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showAddAgentForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(showAddAgentForm) ? '/assets/img/icons/icons-sprite.svg#cancel' : '/assets/img/icons/icons-sprite.svg#plus'" class="text-white"/>
+							</svg>
+						</button>
+						<button class="btn btn-xs bg-red m-r-10"
+							*ngIf="(isAgentSelected) && (teamPermissions && teamPermissions.enabled && teamPermissions.canRemoveAgents)"
+							(click)="RemoveSelectedAgents()">
+							<span>Remove Agents</span>
+						</button>
+						<button class="btn btn-xs bg-black m-r-10"
+							*ngIf="(isAgentSelected) && (teamPermissions && teamPermissions.enabled && teamPermissions.canRemoveAgents)"
+							(click)="cancelRemoveAgent()">
+							<span>Cancel</span>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showAddAgentForm && (teamPermissions && teamPermissions.enabled && teamPermissions.canAddAgents)">
+					<div class="input-block clearfix">
+						<div class="input-group-sm">
+							<app-custom-select class="input-sm" [items]="agentList" [selectLabel]="'Select Agents'"
+								[(ngModel)]="selectedAgents" [selectedItems]="selectedAgents" [bindLabel]="'email'" [bindValue]="'email'"
+								[multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMore($event)"
+								(onSearch)="onSearch($event)">
+							</app-custom-select>
+							<div class="input-group-btn">
+								<button type="submit" class="btn bg-green"
+									(click)="AddAgents()">
+									<span>Add</span>
+								</button>
+							</div>
+						</div>
+						<p>Add agents for selected Team.</p>
+					</div>
+				</div>
+				<div class="document-list clearfix">
+					<div class="activateScrollbar clearfix">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="text-center w-50">
+										<input type="checkbox" [checked]="isAllAgentsChecked()"
+											*ngIf="selectedTeam.agents.length && (teamPermissions && teamPermissions.enabled && teamPermissions.canRemoveAgents)"
+											(change)="SelectAllAgents($event)"/></th>
+									<th>Agent</th>
+									<th class="text-center w-100">
+										<div class="flex f-align-center f-justify-center">
+											<div class="svgOnHover tooltip bottom-right h-20 m-r-5">
+												<svg class="svg svg-blue active">
+													<use href="/assets/img/icons/icons-sprite.svg#info-circle"/>
+												</svg>
+												<span class="tooltip-inner"><span class="text-red-light">Note:</span> Excluded agents will not appear in the list of assignable agents</span>
+											</div>
+											<span>Exclude</span>
+										</div>
+									</th>
+									<!-- <th style="width: 40px">Action</th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let agent of selectedTeam.agents">
+									<td class="text-center w-50">
+										<input type="checkbox" (change)="agentChecked()"
+											*ngIf="teamPermissions && teamPermissions.enabled && teamPermissions.canRemoveAgents"
+											[(ngModel)]="agent.checked"/></td>
+									<td style="cursor: pointer;user-select: none;" (click)="toggleAgentSelect(agent.email)">{{agent.email}}</td>
+									<td class="text-center w-80">
+										<div class="pretty p-switch p-smooth p-fill p-toggle">
+											<input type="checkbox" [(ngModel)]="agent.excluded" (change)="toggleExclude(agent.email, $event.target.checked)"/>
+											<div class="state p-on">
+												<label></label>
+											</div>
+											<div class="state p-off">
+												<label></label>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

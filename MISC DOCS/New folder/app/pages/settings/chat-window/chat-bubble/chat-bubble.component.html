@@ -1,0 +1,489 @@
+<div class="box clearfix animated fadeIn delay-400 displaySettings" id="chatCustomizationComponent"
+	*ngIf="displaySettings">
+	<div class="box-body clearfix p-0">
+		<form>
+			<div class="row clearfix">
+				<div class="col-sm-7 col-xs-12">
+					<div class="box-subtitle clearfix">
+						<div>
+							<h5>For Mobile View</h5>
+						</div>
+					</div>
+
+					<div class="input-block">
+						<div class="row input-group-sm">
+							<div class="col-sm-3 col-xs-12">
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-sm"
+										[(ngModel)]="displaySettings.barEnabledForMobile"
+										(ngModelChange)="SetBarEnabledForView($event,'barEnabledForMobile')" name="barEnabledForMobile">
+										<option [selected]="displaySettings.barEnabledForMobile" [ngValue]="true">
+											Chat Bar</option>]
+										<option [selected]="!displaySettings.barEnabledForMobile" [ngValue]="false">
+											Chat Bubble</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="box-subtitle clearfix">
+						<div>
+							<h5>For Desktop View</h5>
+						</div>
+					</div>
+					<div class="input-block">
+						<div class="row input-group-sm">
+							<div class="col-sm-3 col-xs-12">
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-sm"
+										[(ngModel)]="displaySettings.barEnabledForDesktop"
+										(ngModelChange)="SetBarEnabledForView($event,'barEnabledForDesktop')" name="barEnabledForDesktop">
+										<option [selected]="displaySettings.barEnabledForDesktop" [ngValue]="true">
+											Chat Bar</option>]
+										<option [selected]="!displaySettings.barEnabledForDesktop" [ngValue]="false">
+											Chat Bubble</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="input-block">
+						<div class="input-group">
+							<div class="pretty p-default p-round p-smooth">
+								<input type="radio" name="chatdisplay" [checked]="displaySettings.barEnabled"
+									(change)="SetBarEnabled(true)">
+								<div class="state">
+									<label>Chat Bar Configurations</label>
+								</div>
+							</div>
+							<div class="pretty p-default p-round p-smooth">
+								<input type="radio" name="chatdisplay" [checked]="!displaySettings.barEnabled"
+									(change)="SetBarEnabled(false)">
+								<div class="state">
+									<label>Chat Bubble Configurations</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row clearfix">
+						<div class="col-xs-12 clearfix">
+							<div class="box-subtitle clearfix">
+								<div>
+									<h5>Border Radius in px</h5>
+								</div>
+							</div>
+							<div class="input-block">
+								<div class="row input-group-sm">
+									<div class="col-sm-3 col-xs-12">
+										<app-range-slider
+											[dbValue]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].radius.topLeft"
+											[minVal]="0" [maxVal]="50" [displayVal]="'Top Left'"
+											[controlValue]="'topLeft'" (controlVal)="SetControl($event)"
+											[settingType]="!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'"
+											[setting]="'radius'">
+										</app-range-slider>
+									</div>
+									<div class="col-sm-3 col-xs-12">
+										<app-range-slider
+											[dbValue]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].radius.topRight"
+											[minVal]="0" [maxVal]="50" [displayVal]="'Top Right'"
+											[controlValue]="'topRight'" (controlVal)="SetControl($event)"
+											[settingType]="!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'"
+											[setting]="'radius'">
+										</app-range-slider>
+									</div>
+									<div class="col-sm-3 col-xs-12">
+										<app-range-slider
+											[dbValue]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].radius.bottomLeft"
+											[minVal]="0" [maxVal]="50" [displayVal]="'Bottom Left'"
+											[controlValue]="'bottomLeft'" (controlVal)="SetControl($event)"
+											[settingType]="!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'"
+											[setting]="'radius'">
+										</app-range-slider>
+									</div>
+									<div class="col-sm-3 col-xs-12">
+										<app-range-slider
+											[dbValue]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].radius.bottomRight"
+											[minVal]="0" [maxVal]="50" [displayVal]="'Bottom Right'"
+											[controlValue]="'bottomRight'" (controlVal)="SetControl($event)"
+											[settingType]="!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'"
+											[setting]="'radius'">
+										</app-range-slider>
+									</div>
+								</div>
+							</div>
+							<div class="box-subtitle clearfix">
+								<div>
+									<h5>Canvas Position</h5>
+								</div>
+							</div>
+							<div class="input-block">
+								<div class="row input-group-sm">
+									<div class="col-sm-3 col-xs-12"
+										[formGroup]="(!displaySettings.barEnabled) ? chatBubbleForm : chatBarForm">
+										<div class="sel style1 sel-xs">
+											<select class="form-control input-sm" formControlName="position"
+												(change)='SetPosition($event)'
+												[(ngModel)]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].position">
+												<option
+													[selected]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].position == 'bottom-right'"
+													value="bottom-right">Bottom Right</option>
+												<option
+													[selected]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].position == 'bottom-left'"
+													value="bottom-left">Bottom Left</option>
+												<!-- <option
+													[selected]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].position == 'top-right'"
+													value="top-right">Top Right</option>
+												<option
+													[selected]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].position == 'top-left'"
+													value="top-left">Top Left</option> -->
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-3 col-xs-12" *ngIf="positionOption['left']">
+										<app-range-slider
+											[dbValue]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].absolutePosition.left"
+											[minVal]="0" [maxVal]="200" [displayVal]="'Left Margin'"
+											[controlValue]="'left'" (controlVal)="SetControl($event)"
+											[setting]="'absolutePosition'"
+											[settingType]="!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'">
+										</app-range-slider>
+									</div>
+									<div class="col-sm-3 col-xs-12" *ngIf="positionOption['right']">
+										<app-range-slider
+											[dbValue]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].absolutePosition.right"
+											[minVal]="0" [maxVal]="200" [displayVal]="'Right Margin'"
+											[controlValue]="'right'" (controlVal)="SetControl($event)"
+											[setting]="'absolutePosition'"
+											[settingType]="!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'">
+										</app-range-slider>
+									</div>
+									<div class="col-sm-3 col-xs-12" *ngIf="positionOption['top']">
+										<app-range-slider
+											[dbValue]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].absolutePosition.top"
+											[minVal]="0" [maxVal]="200" [displayVal]="'Top Margin'"
+											[controlValue]="'top'" (controlVal)="SetControl($event)"
+											[setting]="'absolutePosition'"
+											[settingType]="!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'"
+											[disabled]="true">
+										</app-range-slider>
+									</div>
+									<div class="col-sm-3 col-xs-12" *ngIf="positionOption['bottom']">
+										<app-range-slider
+											[dbValue]="displaySettings.settings[!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'].absolutePosition.bottom"
+											[minVal]="0" [maxVal]="200" [displayVal]="'Bottom Margin'"
+											[controlValue]="'bottom'" (controlVal)="SetControl($event)"
+											[setting]="'absolutePosition'"
+											[settingType]="!displaySettings.barEnabled ? 'chatbubble' : 'chatbar'">
+										</app-range-slider>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<fieldset class="clearfix m-b-10" [formGroup]="chatBubbleForm"
+						*ngIf="displaySettings && !displaySettings.barEnabled">
+						<!-- <h5>{{ (displaySettings && displaySettings.barEnabled) ? 'Chat Bar Settings' : 'Chat Bubble Settings' }}</h5> -->
+						<div class="box-subtitle clearfix">
+							<div>
+								<h5>Chat Bubble Settings</h5>
+							</div>
+						</div>
+						<div class="pallet-list">
+							<div class="pallet-box">
+								<label>Background Color</label>
+								<input class="btn btn-xs btn-block color-picker-handle" formControlName="bgColor"
+									(colorPickerChange)="ColorChange('bgColor', $event)"
+									[(colorPicker)]="displaySettings.settings.chatbubble.bgColor" [cpPosition]="'right'"
+									[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+									[style.background]="displaySettings.settings.chatbubble.bgColor">
+							</div>
+							<div class="pallet-box">
+								<label>Logo Color</label>
+								<input class="btn btn-xs btn-block color-picker-handle" formControlName="logoColor"
+									(colorPickerChange)="ColorChange('logoColor', $event)"
+									[(colorPicker)]="displaySettings.settings.chatbubble.logoColor"
+									[cpPosition]="'right'" [cpWidth]="'200'" [cpHeight]="'270'"
+									[cpDialogDisplay]="'popup'"
+									[style.background]="displaySettings.settings.chatbubble.logoColor">
+							</div>
+							<!-- <div class="pallet-box">
+								<label>Bubble Position</label>
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-sm" formControlName="position"
+										(change)='SetPosition($event)'
+										[(ngModel)]="displaySettings.settings.chatbubble.position">
+										<option
+											[selected]="displaySettings.settings.chatbubble.position == 'bottom-right'"
+											value="bottom-right">Bottom Right</option>
+										<option
+											[selected]="displaySettings.settings.chatbubble.position == 'bottom-left'"
+											value="bottom-left">Bottom Left</option>
+										<option [selected]="displaySettings.settings.chatbar.position == 'top-right'"
+											value="top-right">Top Right</option>
+										<option [selected]="displaySettings.settings.chatbar.position == 'top-left'"
+											value="top-left">Top Left</option>
+									</select>
+								</div>
+							</div> -->
+						</div>
+						<div class="box-subtitle clearfix">
+							<div>
+								<h5>Signals Settings</h5>
+							</div>
+						</div>
+						<div class="input-block">
+							<div class="input-group">
+								<div class="pretty p-default p-round p-smooth">
+									<input type="radio" name="signalsEnable" (change)="SignalEnabled(true)"
+										[checked]="displaySettings.settings.chatbubble.signals.enabled"
+										formControlName="signalsEnable">
+									<div class="state">
+										<label>Enable</label>
+									</div>
+								</div>
+								<div class="pretty p-default p-round p-smooth">
+									<input type="radio" name="signalsEnable" (change)="SignalEnabled(false)"
+										[checked]="!displaySettings.settings.chatbubble.signals.enabled"
+										formControlName="signalsEnable">
+									<div class="state">
+										<label>Disable</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="pallet-list" *ngIf="displaySettings.settings.chatbubble.signals.enabled">
+							<div class="pallet-box">
+								<label>Color</label>
+								<input class="btn btn-xs btn-block color-picker-handle" formControlName="signalColor"
+									(colorPickerChange)="ColorChange('signalColor', $event)"
+									[(colorPicker)]="displaySettings.settings.chatbubble.signals.signalColor"
+									[cpPosition]="'right'" [cpWidth]="'200'" [cpHeight]="'270'"
+									[cpDialogDisplay]="'popup'"
+									[style.background]="displaySettings.settings.chatbubble.signals.signalColor">
+							</div>
+							<div class="pallet-box">
+								<label>Opacity</label>
+								<input type="number" class="form-control input-sm" min="0" max="1" step=".01"
+									[value]="displaySettings.settings.chatbubble.signals.opacity"
+									formControlName="signalOpacity"
+									[(ngModel)]="displaySettings.settings.chatbubble.signals.opacity"
+									(keydown)="DisableInput($event)">
+							</div>
+						</div>
+						<div class="flex f-row f-wrap f-gap5 m-b-10">
+							<div>
+								<button class="btn btn-sm bg-blue" [ngClass]="(loading) ? 'btnSpinner' : ''"
+									[disabled]="chatBubbleForm.invalid" (click)="SaveSettings('chatbubble')">
+
+									<span>Save</span>
+								</button>
+							</div>
+							<div>
+								<button class="btn btn-sm bg-blue" (click)="Reset()">
+
+									<span>Restore</span>
+								</button>
+							</div>
+							<div>
+								<button class="btn btn-sm bg-black" [ngClass]="(loading) ? 'disabled' : ''"
+									(click)="ResetToDefaults()">
+
+									<span>Reset To Default</span>
+								</button>
+							</div>
+						</div>
+					</fieldset>
+					<fieldset class="clearfix m-b-10" [formGroup]="chatBarForm"
+						*ngIf="displaySettings && displaySettings.barEnabled">
+						<div class="box-subtitle clearfix">
+							<div>
+								<h5>Chat Bar Settings</h5>
+							</div>
+						</div>
+						<div class="pallet-list">
+							<div class="pallet-box">
+								<label>Background Clr</label>
+								<input class="btn btn-xs btn-block color-picker-handle" formControlName="bgColor"
+									(colorPickerChange)="ColorChange('barColor', $event)"
+									[(colorPicker)]="displaySettings.settings.chatbar.bgColor" [cpPosition]="'right'"
+									[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+									[style.background]="displaySettings.settings.chatbar.bgColor">
+							</div>
+							<div class="pallet-box">
+								<label>Logo Clr</label>
+								<input class="btn btn-xs btn-block color-picker-handle" formControlName="logoColor"
+									(colorPickerChange)="ColorChange('logoColor', $event)"
+									[(colorPicker)]="displaySettings.settings.chatbar.logoColor" [cpPosition]="'right'"
+									[cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+									[style.background]="displaySettings.settings.chatbar.logoColor">
+							</div>
+
+							<!-- <div class="pallet-box">
+								<label>Border Radius</label>
+								<div class="input-group">
+									<input type="number" class="form-control input-sm" min="0" max="60"
+										(keydown)="DisableInput($event)"
+										[(ngModel)]="displaySettings.settings.chatbar.borderRadius"
+										formControlName="borderRadius" placeholder="Border Radius">
+									<label class="p-7">px</label>
+								</div>
+							</div> -->
+						</div>
+						<div class="pallet-list">
+							<div class="pallet-box w100 input-block">
+								<label>Title</label>
+								<input type="text" class="form-control input-sm"
+									[(ngModel)]="displaySettings.settings.chatbar.title" formControlName="title"
+									placeholder="Title">
+							</div>
+						</div>
+						<div class="flex f-row f-wrap f-gap5 m-b-10">
+							<div>
+								<button class="btn btn-sm bg-blue" [ngClass]="(loading) ? 'btnSpinner' : ''"
+									[disabled]="chatBarForm.invalid" (click)="SaveSettings('chatbar')">
+
+									<span>Save</span>
+								</button>
+							</div>
+							<div>
+								<button class="btn btn-sm bg-blue" [ngClass]="(loading) ? 'disabled' : ''"
+									(click)="Reset()">
+
+									<span>Reset</span>
+								</button>
+							</div>
+							<div>
+								<button class="btn btn-sm bg-black" [ngClass]="(loading) ? 'disabled' : ''"
+									(click)="ResetToDefaults()">
+
+									<span>Reset To Default</span>
+								</button>
+							</div>
+						</div>
+					</fieldset>
+
+				</div>
+				<div class="col-sm-5 col-xs-12">
+					<!--
+					<div class="pretty p-smooth p-image p-round p-toggle">
+						<input type="checkbox">
+						<div class="state p-on">
+							<label>Hide Logo</label>
+						</div>
+						<div class="statep-off">
+							<label>Show Logo</label>
+						</div>
+					</div>
+					<div class="input-block">
+						<label>Upload Background Image Sample</label>
+						<div class="input-group-sm">
+							<input type="file" id="background-upload" class="form-control choose-file-input">
+							<div class="input-group-btn">
+								<button class="btn bg-green">
+									<span>Upload</span>
+								</button>
+							</div>
+						</div>
+					</div>
+					-->
+					<!-- <app-preloader type='cube-grid'></app-preloader> -->
+					<div class="box-subtitle clearfix">
+						<div>
+							<h5>Preview Content</h5>
+						</div>
+					</div>
+					<div class="activateScrollbar" style="overflow: visible;">
+						<div class="display-panel">
+							<div id="bz-cb" *ngIf="!displaySettings.barEnabled"
+								[ngClass]="((displaySettings.settings.chatbubble.position == 'bottom-left') || (displaySettings.settings.chatbubble.position == 'top-left')) ? 'left' : 'right'"
+								[ngStyle]="{
+									'background-color': displaySettings.settings.chatbubble.bgColor,
+									'border-top-left-radius': displaySettings.settings.chatbubble.radius.topLeft + 'px',
+									'border-top-right-radius': displaySettings.settings.chatbubble.radius.topRight + 'px',
+									'border-bottom-left-radius': displaySettings.settings.chatbubble.radius.bottomLeft + 'px',
+									'border-bottom-right-radius': displaySettings.settings.chatbubble.radius.bottomRight + 'px',
+									'top': displaySettings.settings.chatbubble.absolutePosition.top + ((displaySettings.settings.chatbubble.absolutePosition.top != 'inherit') ? 'px' : ''),
+									'bottom': displaySettings.settings.chatbubble.absolutePosition.bottom + ((displaySettings.settings.chatbubble.absolutePosition.bottom != 'inherit') ? 'px' : ''),
+									'left': displaySettings.settings.chatbubble.absolutePosition.left + ((displaySettings.settings.chatbubble.absolutePosition.left != 'inherit') ? 'px' : ''),
+									'right': displaySettings.settings.chatbubble.absolutePosition.right + ((displaySettings.settings.chatbubble.absolutePosition.right != 'inherit') ? 'px' : '')
+								}">
+								<div class="bizz-cb" id="sb-bubble">
+									<div id="bubble-frame" class="bizz-cb-icon notif svgOnHover">
+										<svg class="svg active" #logo id="logo" name="logo">
+											<use href="/assets/img/icons/icons-sprite.svg#bubble-icon"
+												[ngStyle]="{'color': displaySettings.settings.chatbubble.logoColor}" />
+										</svg>
+										<span class="notif-count pulse" [ngStyle]="{
+											'left' : (
+												(displaySettings.settings.chatbubble.radius.topLeft < '25') ? '-5px' : ((displaySettings.settings.chatbubble.radius.topLeft > '25' && displaySettings.settings.chatbubble.radius.topLeft < '40') ? '-3px' : 0)
+											),
+											'top' : (
+												(displaySettings.settings.chatbubble.radius.topLeft < '25') ? '-5px' : ((displaySettings.settings.chatbubble.radius.topLeft > '25' && displaySettings.settings.chatbubble.radius.topLeft < '40') ? '-3px' : 0)
+											)}">22</span>
+										<div id="signals" *ngIf="displaySettings.settings.chatbubble.signals.enabled"
+											[ngStyle]="{
+											'opacity': displaySettings.settings.chatbubble.signals.opacity}">
+											<span class="signal s2" [ngStyle]="{
+													'border-color': displaySettings.settings.chatbubble.signals.signalColor,
+													'border-top-left-radius': displaySettings.settings.chatbubble.radius.topLeft + 'px',
+													'border-top-right-radius': displaySettings.settings.chatbubble.radius.topRight + 'px',
+													'border-bottom-left-radius': displaySettings.settings.chatbubble.radius.bottomLeft + 'px',
+													'border-bottom-right-radius': displaySettings.settings.chatbubble.radius.bottomRight + 'px'
+												}">
+											</span>
+											<span class="signal s3" [ngStyle]="{
+													'border-color': displaySettings.settings.chatbubble.signals.signalColor,
+													'border-top-left-radius': displaySettings.settings.chatbubble.radius.topLeft + 'px',
+													'border-top-right-radius': displaySettings.settings.chatbubble.radius.topRight + 'px',
+													'border-bottom-left-radius': displaySettings.settings.chatbubble.radius.bottomLeft + 'px',
+													'border-bottom-right-radius': displaySettings.settings.chatbubble.radius.bottomRight + 'px'
+												}">
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- true -->
+							<div id="bz-cb" class="bar" *ngIf="displaySettings.barEnabled" [ngStyle]="{
+								'background-color': displaySettings.settings.chatbar.bgColor,
+								'border-top-left-radius': displaySettings.settings.chatbar.radius.topLeft + 'px',
+								'border-top-right-radius': displaySettings.settings.chatbar.radius.topRight + 'px',
+								'border-bottom-left-radius': displaySettings.settings.chatbar.radius.bottomLeft + 'px',
+								'border-bottom-right-radius': displaySettings.settings.chatbar.radius.bottomRight + 'px',
+								'top': displaySettings.settings.chatbar.absolutePosition.top + ((displaySettings.settings.chatbar.absolutePosition.top != 'inherit') ? 'px' : ''),
+								'bottom': displaySettings.settings.chatbar.absolutePosition.bottom + ((displaySettings.settings.chatbar.absolutePosition.bottom != 'inherit') ? 'px' : ''),
+								'left': displaySettings.settings.chatbar.absolutePosition.left + ((displaySettings.settings.chatbar.absolutePosition.left != 'inherit') ? 'px' : ''),
+								'right': displaySettings.settings.chatbar.absolutePosition.right + ((displaySettings.settings.chatbar.absolutePosition.right != 'inherit') ? 'px' : '')
+							}">
+								<div class="bizz-cb bar">
+									<div class="bizz-cb-icon notif svgOnHover">
+										<svg class="svg active" #logo id="logo" name="logo">
+											<use href="/assets/img/icons/icons-sprite.svg#bubble-icon"
+												[ngStyle]="{'color': displaySettings.settings.chatbar.logoColor}" />
+										</svg>
+										<span class="notif-count pulse">22</span>
+									</div>
+									<h2 id="title" max="20">{{displaySettings.settings.chatbar.title}}</h2>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<datalist id="tickmarks">
+				<option value="0" label="0%">
+				<option value="10">
+				<option value="20">
+				<option value="30">
+				<option value="40">
+				<option value="50" label="50%">
+				<option value="60">
+				<option value="70">
+				<option value="80">
+				<option value="90">
+				<option value="100" label="100%">
+			</datalist>
+		</form>
+	</div>
+</div>

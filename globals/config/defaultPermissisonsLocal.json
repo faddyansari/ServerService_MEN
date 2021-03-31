@@ -1,0 +1,121 @@
+{
+    "tickets": {
+        "enabled": true,
+        "canMerge": true,
+        "canCreate": true,
+        "canAddGroupAdmins": true,
+        "canViewLog": true,
+        "canGroup": true,
+        "allowCC": true,
+        "allowBCC": true,
+        "canView": "all",
+        "canAssignAgent": true,
+        "canAssignGroup": true,
+        "canAddNote": true,
+        "canAddTag": true,
+        "canAddTask": true,
+        "canChangeState": true,
+        "canExport": true,
+        "canSetPriority": true,
+        "canSnooze": true
+    },
+    "agents": {
+        "enabled": true,
+        "canCreate": true,
+        "canEdit": true,
+        "canChat": true,
+        "canCall": true,
+        "canViewStats": true,
+        "canChangeOwnPassword": true,
+        "canChangeOthersPassword": true,
+        "allowedChangeConcurrentChat": false,
+        "chatSuperVision": false,
+        "chatSuperVisionIntrusion": false,
+        "canAddConversationTag": false
+    },
+    "chats": {
+        "enabled": true,
+        "allowEmoji": true,
+        "canView": "all",
+        "canChat": true,
+        "allowAttachments": true,
+        "allowVoicenotes": true,
+        "allowCalling": true,
+        "allowAddAsFaq": true,
+        "allowChatTransfer": true,
+        "allowTypingStatus": true
+    },
+    "dashboard": {
+        "enabled": true
+    },
+    "visitors": {
+        "enabled": true
+    },
+    "analytics": {
+        "enabled": true,
+        "visitors": true,
+        "canView": "all",
+        "chats": true,
+        "agents": true,
+        "tickets": true
+    },
+    "crm": {
+        "enabled": true
+    },
+    "chatbot": {
+        "enabled": true
+    },
+    "settings": {
+        "enabled": true,
+        "automatedResponses": {
+            "enabled": true
+        },
+        "rolesAndPermissions": {
+            "enabled": true,
+            "canView": [
+                "supervisor",
+                "agent"
+            ],
+            "canAddRole": true,
+            "canModifyOwn": false,
+            "canModifyOther": true,
+            "canDeleteRole": true
+        },
+        "formDesigner": {
+            "enabled": true
+        },
+        "ticketManagement": {
+            "enabled": true
+        },
+        "chatTimeouts": {
+            "enabled": true
+        },
+        "callSettings": {
+            "enabled": true
+        },
+        "contactSettings": {
+            "enabled": true
+        },
+        "chatWindowSettings": {
+            "enabled": true
+        },
+        "chatAssistant": {
+            "enabled": true
+        },
+        "webhooks": {
+            "enabled": true
+        },
+        "integerations": {
+            "enabled": true
+        },
+        "knowledgeBase": {
+            "enabled": true
+        },
+        "widgetMarketing": {
+            "enabled": true
+        }
+    },
+    "installation": {
+        "enabled": false
+    }
+}

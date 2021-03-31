@@ -1,0 +1,58 @@
+<div class="box clearfix animated fadeIn delay-400" id="inavtivitySettingsComponent">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Rules for Inactive Chat</h5>
+			</div>
+		</div>
+		<form id="chatSettings" class="pull-left" [formGroup]="chatTimeoutSettingsForm" *ngIf="loadingSettings">
+			<div class="flex f-row f-align-center f-responsive f-gap10 clearfix m-b-10">
+				<div>
+					<b>If the agent is not replying, TRANSFER chat in</b>
+				</div>
+				<div>
+					<input type="number" class="form-control input-sm m-0" max="60" name="transferIn" formControlName="transferIn"/>
+				</div>
+				<div>
+					<span>Minutes.</span>
+				</div>
+			</div>
+			<small class="error text-red fs-10" *ngIf="chatTimeoutSettingsForm.get('transferIn').hasError('invalidInput')">Inactivity Transfer Time
+				Should
+				be greater than 0</small>
+			<div class="flex f-row f-align-center f-responsive f-gap10 clearfix m-b-10">
+				<div>
+					<b>Make User INACTIVE if there is NO ACTIVITY for</b>
+				</div>
+				<div>
+					<input type="number" class="form-control input-sm m-0" max="60" name="inactiveTimeout" formControlName="inactiveTimeout"/>
+				</div>
+				<div>
+					<span>Minutes.</span>
+				</div>
+			</div>
+			<p class="error text-red fs-10" *ngIf="chatTimeoutSettingsForm.get('inactiveTimeout').hasError('invalidInput')">Inactivity Time Should be greater than 0</p>
+			<p class="error text-red fs-10" *ngIf="invalideTimeoutSetting">Inactivity Time Should be greater than Transfer time</p>
+			<div class="flex f-row f-align-center f-responsive f-gap10 clearfix">
+				<div>
+					<b>END User Session if there is NO ACTIVITY for</b>
+				</div>
+				<div>
+					<input type="number" class="form-control input-sm m-0" max="60" name="endSessionTimeout" formControlName="endSessionTimeout"/>
+				</div>
+				<div>
+					<span>Minutes.</span>
+				</div>
+			</div>
+			<small class="error text-red fs-10" *ngIf="chatTimeoutSettingsForm.get('endSessionTimeout').hasError('invalidInput')">Inactivity End Chat Time Should be greater than 0</small>
+			<button class="btn btn-sm bg-blue" [disabled]="chatTimeoutSettingsForm.invalid" [ngClass]="(loading) ? 'btnSpinner' : ''"
+				(click)="Submit(chatTimeoutSettingsForm.value)">
+
+				<span>Save</span>
+			</button>
+		</form>
+		<div *ngIf="_chatSettings.getSettingsChangedStatus() | async">
+			<h5 class="fs-10 text-red p-t-10">NOTE: SETTINGS HAVE BEEN CHANGED PLEASE RELOAD SETTINGS PAGE.</h5>
+		</div>
+	</div>
+</div>

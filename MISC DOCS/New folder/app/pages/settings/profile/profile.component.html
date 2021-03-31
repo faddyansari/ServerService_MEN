@@ -1,0 +1,171 @@
+<form class="box clearfix animated fadeIn delay-400">
+    <div class="box-body clearfix p-0">
+        <div class="row clearfix">
+            <div class="col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label class="w30 pull-left">First Name</label>
+                    <div class="w70 pull-left">
+                        <input type="text" autocomplete="off" class="form-control" placeholder="First Name" name="first_name">
+                        <br>
+                        <p class="help-block">Appears on reports and chat transcripts.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="w30 pull-left">Last Name</label>
+                    <div class="w70 pull-left">
+                        <input type="text" autocomplete="off" class="form-control" placeholder="Last Name" name="last_name">
+                        <p class="help-block">Appears on reports and chat transcripts.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="w30 pull-left">Nick Name</label>
+                    <div class="w70 pull-left">
+                        <input type="text" autocomplete="off" class="form-control" placeholder="Nick Name" name="nickname">
+                        <p class="help-block">Appears on chat window and is useful to transfer chats.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="w30 pull-left">Phone</label>
+                    <div class="w70 pull-left">
+                        <input type="tel" autocomplete="off" class="form-control" placeholder="Phone No" name="agentphone_no">
+                        <p class="help-block">Phone Number for Admin reference</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="w30 pull-left">Email</label>
+                    <div class="w70 pull-left">
+                        <input type="email" autocomplete="off" class="form-control" placeholder="Email" name="agentemail" email>
+                        <p class="text-red">Please Provide Valid Email</p>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="w30 pull-left">Password</label>
+                    <div class="w70 pull-left">
+                        <input type="password" class="form-control" name="agentpassword" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="w30 pull-left">Gender</label>
+                    <div class="w70 pull-left">
+                        <div class="pretty p-default p-round p-smooth">
+                            <input type="radio" checked name="gender" value="Male">
+                            <div class="state">
+                                <label> Male </label>
+                            </div>
+                        </div>
+                        <div class="pretty p-default p-round p-smooth">
+                            <input type="radio" name="gender" value="Female">
+                            <div class="state">
+                                <label> Female </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label class="w30 pull-left">Role</label>
+                    <div class="w70 pull-left">
+                        <select id="inputState" name="role" class="form-control">
+                            <option [ngValue]="'agent'" [selected]="true">Agent</option>
+                            <option [ngValue]="'supervisor'">Supervisor</option>
+                            <option [ngValue]="'admin'">Admin</option>
+                        </select>
+                        <p class="help-block">Agent roles are prioritized to receive max simultaneous chats in the order agent to admin</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="w30 pull-left">Group</label>
+                    <div class="w70 pull-left">
+                        <select class="form-control" name="group">
+                            <option>level</option>
+                            <option>level</option>
+                            <option>level</option>
+                        </select>
+                        <p class="help-block">Groups decided by the admin to see specific country groups.</p>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="w30 pull-left">Simultaneous Chats</label>
+                    <div class="w70 pull-left">
+                        <input type="number" class="form-control" placeholder="Simultaneous Chats" name="simchats">
+                        <p class="help-block">Only 1 simultaneous chat is allowed for free users.</p>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="w30 pull-left">Calls</label>
+                    <div class="w70 pull-left">
+                        <div class="pretty p-svg p-fill p-smooth">
+                            <input type="checkbox" name='enablechat'>
+                            <div class="state svgOnHover">
+                                <svg class="svg svg-icon active">
+									<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+								</svg>
+                                <label> Enable Chat </label>
+                            </div>
+                        </div>
+                        <div class="pretty p-svg p-fill p-smooth">
+                            <input type="checkbox" name='voicecall'>
+                            <div class="state svgOnHover">
+                                <svg class="svg svg-icon active">
+									<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+								</svg>
+                                <label> Enable Voice Calls </label>
+                            </div>
+                        </div>
+                        <div class="pretty p-svg p-fill p-smooth">
+                            <input type="checkbox" name='enablevideocall'>
+                            <div class="state svgOnHover">
+                                <svg class="svg svg-icon active">
+									<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+								</svg>
+                                <label> Enable Video Calls </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="w30 pull-left">Allow Agents to Edit</label>
+                    <div class="w70 pull-left">
+                        <div class="pretty p-svg p-fill p-smooth">
+                            <input checked type="checkbox" name='editprofilepic' value='editprofilepic'>
+                            <div class="state svgOnHover">
+                                <svg class="svg svg-icon active">
+									<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+								</svg>
+                                <label> Profile Pic </label>
+                            </div>
+                        </div>
+                        <div class="pretty p-svg p-fill p-smooth">
+                            <input checked type="checkbox" name='editname' value='editname'>
+                            <div class="state svgOnHover">
+                                <svg class="svg svg-icon active">
+									<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+								</svg>
+                                <label> Name </label>
+                            </div>
+                        </div>
+                        <div class="pretty p-svg p-fill p-smooth">
+                            <input checked type="checkbox" name='editnickname' value='editnickname'>
+                            <div class="state svgOnHover">
+                                <svg class="svg svg-icon active">
+									<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+								</svg>
+                                <label> Nick Name </label>
+                            </div>
+                        </div>
+                        <div class="pretty p-svg p-fill p-smooth">
+                            <input checked type="checkbox" name='editpassword' value='editpassword'>
+                            <div class="state svgOnHover">
+                                <svg class="svg svg-icon active">
+									<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+								</svg>
+                                <label> Password </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

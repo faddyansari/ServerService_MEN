@@ -1,0 +1,51 @@
+<div mat-dialog-title>
+	<h3>Import / Export</h3>
+</div>
+
+<div mat-dialog-content>
+	<form [formGroup]="importExportForm">
+		<div class="input-block">
+			<input type="file" id="fileInput"
+				class="form-control input-sm"
+				(change)="selectFile($event)"
+				autocomplete="off" name="Import File"
+				[formControl]="importExportForm.controls['importFile']">
+		</div>
+		<b class="text-red" *ngIf="submitted && !(importExportForm.get('importFile').value)">Please choose a file to import</b>
+		<b class="text-red" *ngIf="largeFileSize">File upload limit is 5MB</b>
+		<b class="text-red" *ngIf="wrongFileType">File must be of type .XLS or .XLSX or .CSV </b>
+		<!-- <div class="DoubleSepY h50"></div> -->
+		<!-- <div class="col-md-6 col-sm-6 col-xs-12">
+			<div class="row clearfix">
+				<div class="col-sm-6 col-xs-12">
+					<div class="input-block">
+						<label>Export</label>
+						<button type="button" class="btn btn-sm bg-blue pull-left" (click)="exportContacts()" mat-dialog-close>Export Contacts</button>
+						<input type="submit" id="fileOutput" autocomplete="off" class="form-control col-sm-7 col-xs-12" name="Export File" [formControl]="importExportForm.controls['exportFile']">
+					</div>
+				</div>
+			</div>
+		</div> -->
+	</form>
+	<!-- <div *ngIf="nsp && nsp == '/sps-uat'" class="clearfix">
+		<a class="btn btn-sm bg-blue"
+			href="https://s3-us-west-1.amazonaws.com/elasticbeanstalk-us-west-1-021594099427/samples/IT+Contacts.xlsx"
+			target="_parent">
+			<span>Downlad Sample Sheet</span>
+		</a>
+	</div> -->
+</div>
+
+<div class="mat-dialog-footer clearfix">
+	 <mat-dialog-actions>
+		<button type="button" class="btn btn-xs bg-blue"
+			id="uploadContacts"
+			(click)="submitImportContacts()"
+			[ngClass]="!fileUploadHandle ? 'disabled' : ''">
+			<span>Import</span>
+		</button>
+		<button type="button" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Cancel</span>
+		</button>
+	</mat-dialog-actions>
+</div>

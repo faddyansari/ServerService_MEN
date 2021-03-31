@@ -1,0 +1,186 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="box-body  clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Email Notifications</h5>
+					</div>
+				</div>
+				<div class="activateScrollbar clearfix p-0">
+					<form [formGroup]="emailNotificationForm" class="clearfix" (change)="settingsChanged('email')"
+						*ngIf="emailNotificationSettings">
+					
+						<div class="input-block m-b-10">
+							<label>Ticket assigned to group</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="assignToGroup"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="input-block m-b-10">
+							<label>Ticket assigned to agent</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="assignToAgent"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div> -->
+						<div class="input-block m-b-10">
+							<label>User activation email</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="userActEmail"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="input-block m-b-10">
+							<label>Note added to ticket</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="noteAddTick"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div> -->
+					</form>
+					<br>
+					<button class="btn btn-sm bg-blue" (click)="submitEmailSettings()" *ngIf="changes['email']">
+						<span>Save</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="col-md-4">
+			<div class="box-body  clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Window Notifications</h5>
+					</div>
+				</div>
+				<div class="activateScrollbar clearfix p-0">
+					<form [formGroup]="windowNotificationsForm" class="clearfix" (change)="settingsChanged('window')"
+						*ngIf="windowNotificationSettings">
+						<div class="input-block m-b-10">
+							<label>New ticket</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="newTicket"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block m-b-10">
+							<label>Ticket message</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="ticketMessage"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block m-b-10">
+							<label>Ticket assigned</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="ticketAssigned"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block m-b-10">
+							<label>Ticket Updated</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="ticketUpdated"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block m-b-10">
+							<label>Agent conversation</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="agentConversation"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block m-b-10">
+							<label>Agent message</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="agentMessage"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block m-b-10">
+							<label>Visitor conversation</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="visitorConversation"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+						<div class="input-block m-b-10">
+							<label>Visitor message</label>
+							<div class="pretty p-switch p-smooth p-fill p-toggle">
+								<input type="checkbox" formControlName="visitorMessage"/>
+								<div class="state p-on">
+									<label>Allowed</label>
+								</div>
+								<div class="state p-off">
+									<label>Not Allowed</label>
+								</div>
+							</div>
+						</div>
+					</form>
+					<br>
+					<button class="btn btn-sm bg-blue" (click)="submitWindowSettings()" *ngIf="changes['window']">
+						<span>Save</span>
+					</button>
+				</div>
+			</div>
+		</div> -->
+	</div>
+
+</div>

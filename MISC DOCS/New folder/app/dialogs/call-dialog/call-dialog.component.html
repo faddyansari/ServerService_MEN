@@ -1,0 +1,105 @@
+<div mat-dialog-content>
+    <div class="clearfix" *ngIf="user">
+        <!-- SHOWS CALEE ICON -->
+        <div class="avatar ava-call" [ngClass]="(callAccepted) ? '' : 'ringing'">
+            <a class="no-pointer">
+                <span *ngIf="user.type == 'Agents'">{{(user.first_name | slice:0:1) | uppercase}}{{(user.last_name) ? ((user.last_name | slice:0:1) | uppercase) : ''}}</span>
+                <span *ngIf="user.type == 'Visitors'">{{(user.username | slice:0:2) | uppercase}}</span>
+                <!-- <span *ngIf="!(selecteduser.image)">{{(selecteduser.first_name | slice:0:1) |
+			uppercase}}{{(selecteduser.last_name) ? ((selecteduser.last_name
+			| slice:0:1) | uppercase) : ''}}</span> -->
+                <!-- <img class="svg" *ngIf="(selecteduser.image)" src="{{selecteduser.image}}" alt="User Image"> -->
+            </a>
+        </div>
+        <!-- SHOWS CALLEE NAME -->
+        <div class="callee">
+            <div class="text-white fs-30 fw-8" *ngIf="user.type == 'Agents'">{{user.first_name}} {{user.last_name}}</div>
+            <div class="text-white fs-30 fw-8" *ngIf="user.type == 'Visitors'">{{user.username}}</div>
+        </div>
+        <!-- SHOWS STATUS -->
+        <div class="status">
+            <div *ngIf="(!callConnect)">
+                <div class="text-orange fs-30 fw-8">Connecting</div>
+            </div>
+            <div *ngIf="(callStart)">
+                <div class="text-orange fs-30 fw-8">Ringing</div>
+                <audio autoplay loop *ngIf="(callerTune.state)">
+                    <source [src]="callerTune.src" >
+                </audio>
+            </div>
+            <div *ngIf="(callAccepted)">
+                <div class="text-orange fs-30 fw-8">Call Accepted</div>
+            </div>
+            <div *ngIf="(callRejected)">
+                <div class="text-orange fs-30 fw-8">Call Rejected</div>
+            </div>
+            <div *ngIf="((callSelfEnded || callEnd) && !callConnect)">
+                <div class="text-orange fs-30 fw-8">Call Ended</div>
+            </div>
+        </div>
+        <!-- SHOWS STATUS -->
+        <div class="status">
+            <div *ngIf="(alreadyOnCall)">
+                <div class="text-orange fs-30 fw-8">Is Busy, callback later</div>
+            </div>
+        </div>
+        <!-- SHOWS COUNT -->
+        <div class="counter">
+            <div *ngIf="(callAccepted || callSelfEnded || callEnd)">
+                <div>{{minutes|numberpad:2}}:{{seconds|numberpad:2}}</div>
+            </div>
+            <div *ngIf="(callRejected)">
+                <div *ngIf="count">Redial In ({{count}}) </div>
+            </div>
+        </div>
+        <div *ngIf="(callSelfEnded || callEnd || callRejected || alreadyOnCall)">
+            <audio autoplay>
+                <source [src]="callerTuneEnd.src" >
+            </audio>
+        </div>
+        <!-- SHOWS ANIMATIONS -->
+        <div class="animations" *ngIf="(callStart)">
+            <img class="svg" src="/assets/img/loaders/ringing-dot-loader.svg" width="80" alt="">
+		</div>
+		ringing-dot-loader
+        <!-- SHOWS BUTTONS -->
+        <div class="buttons">
+            <div *ngIf="(callAccepted)">
+                <button type="button" class="btn btn-sm btn-round bg-black svgOnHover" title="Mute Mic" (click)="ToggleMic()">
+					<svg class="svg w-30 h-30 active">
+						<use [attr.href]="(micEnabled) ? '/assets/img/icons/icons-sprite.svg#mic-on' : '/assets/img/icons/icons-sprite.svg#mic-off'" [ngClass]="(micEnabled) ? 'text-blue' : 'text-theme-pro-gray'"/>
+					</svg>
+                </button>
+                <button type="button" class="btn btn-sm btn-round bg-black svgOnHover" title="Mute Voice" (click)="ToggleAudio()">
+					<svg class="svg w-30 h-30 active">
+						<use [attr.href]="(audioEnabled) ? '/assets/img/icons/icons-sprite.svg#volume-on' : '/assets/img/icons/icons-sprite.svg#volume-off'" [ngClass]="(audioEnabled) ? 'text-blue' : 'text-theme-pro-gray'"/>
+					</svg>
+                </button>
+            </div>
+            <div *ngIf="(callRejected)">
+                <button type="button" class="btn btn-sm btn-round bg-green svgOnHover" title="Redial" (click)="reCall()" [disabled]="(!showRetry)">
+					<svg class="svg w-30 h-30 active">
+						<use href="/assets/img/icons/icons-sprite.svg#call-redial" class="text-white"/>
+					</svg>
+                </button>
+                <button type="button" class="btn btn-sm btn-round bg-red svgOnHover" title="End Call" (click)="endCall()" mat-dialog-close>
+                    <svg class="svg w-30 h-30 active">
+						<use href="/assets/img/icons/icons-sprite.svg#call-end" class="text-white"/>
+					</svg>
+                </button>
+            </div>
+            <div *ngIf="(!callRejected)">
+                <button type="button" class="btn btn-sm btn-round bg-red" title="End Call" (click)="endCall()" mat-dialog-close>
+                    <svg class="svg w-30 h-30 active">
+						<use href="/assets/img/icons/icons-sprite.svg#call-end" class="text-white"/>
+					</svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix" [hidden]="!(callAccepted)">
+    <audio #self_audio autoplay muted></audio>
+    <audio #remote_audio autoplay></audio>
+</div>

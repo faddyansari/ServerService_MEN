@@ -1,0 +1,104 @@
+<div class="list-items clearfix style1">
+    <ul class="activateScrollbar clearfix" #scrollContainer (scroll)="ScrollChanged($event)">
+        <li class="item clearfix animated flipInX-delay notif clearfix p-0"
+            [ngClass]="(selectedConversation) ? (selectedConversation._id == conversation._id) ? 'active' : '' : ''"
+            *ngFor="let conversation of archivesList | filter:  searchValue : ['visitorName','tags','visitorEmail','agentEmail','clientID'] : false">
+            <div class="clearfix" (click)="_chatService.setSelectedArchive(conversation._id)"
+                *ngIf="(archivesList | filter: searchValue : ['visitorName','tags','visitorEmail','agentEmail','clientID'] : false).length">
+                <div>
+                    <div class="avatar ava-xs">
+                        <div class="nameInitials" *ngIf="conversation.visitorName"
+                            [ngStyle]="(conversation.viewColor) ? {'background-color' : conversation.viewColor} : ''">
+                            {{(conversation.visitorName | slice:0:1)}}{{(conversation.visitorName | split:' ')}}
+                        </div>
+                    </div>
+                </div>
+                <div class="info" *ngIf="!conversation.lastmessage">
+                    <b class="name ellipsis fw-6">{{conversation.visitorName}}</b>
+                    <!-- <span class="ellipsis msg"
+                        *ngIf="conversation.lastMessage && !conversation.lastMessage.attachment && conversation.lastMessage.chatFormData">{{conversation.lastMessage.chatFormData}}</span>
+                    <span class="ellipsis msg"
+                        *ngIf="conversation.lastMessage && !conversation.lastMessage.attachment && !conversation.lastMessage.chatFormData"
+                        [innerHTML]="conversation.lastMessage.body | safeUrl : 'html'"></span>
+                    <span class="ellipsis msg"
+                        *ngIf="conversation.lastMessage && conversation.lastMessage.attachment  && !conversation.lastMessage.chatFormData"><i
+                            class="icon-attach"></i>{{((conversation.lastMessage.body | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+                    <span class="date">{{ conversation.lastMessage.date | date:'mediumDate'}}</span> -->
+                    <span class="ellipsis msg"
+                        *ngIf="conversation.lastMessage && !(conversation.lastMessage.attachment) && CheckAttachmentType(conversation.lastMessage.body) && (conversation.lastMessage.chatFormData)">{{conversation.lastMessage.chatFormData}}
+                    </span>
+                    <span class="ellipsis msg"
+                        *ngIf="conversation.lastMessage && !(conversation.lastMessage.attachment) && CheckAttachmentType(conversation.lastMessage.body) && !(conversation.lastMessage.chatFormData)"
+                        [innerHTML]="conversation.lastMessage.body | safeUrl : 'html'"></span>
+                    <!-- <span class="ellipsis msg" *ngIf="conversation.lastMessage"
+                        [innerHTML]="conversation.lastMessage.body | safeUrl : 'html'"></span> -->
+                    <span class="svgOnHover ellipsis msg"
+                        *ngIf="conversation.lastMessage && (conversation.lastMessage.attachment) && !(conversation.lastMessage.chatFormData)">
+                        <svg class="svg w-15 h-15 svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+						</svg>
+                        <span
+                            *ngIf="CheckAttachmentType(conversation.lastMessage.body)">{{(((conversation.lastMessage.filename) | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+                        <span
+                            *ngIf="!CheckAttachmentType(conversation.lastMessage.body) && conversation.lastMessage.body.length > 1">Attachments
+                            ({{conversation.lastMessage.body.length}})</span>
+                        <span
+                            *ngIf="!CheckAttachmentType(conversation.lastMessage.body) && conversation.lastMessage.body.length < 2">{{(((conversation.lastMessage.body[0].filename) | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+                    </span>
+                    <!-- conversation.lastMessage.body -->
+                </div>
+                <div class="info" *ngIf="conversation.lastmessage">
+                    <b class="name ellipsis fw-6">{{conversation.visitorName}}</b>
+                    <span class="ellipsis msg"
+                        *ngIf="conversation.lastmessage && !(conversation.lastmessage.attachment) && CheckAttachmentType(conversation.lastmessage.body) && (conversation.lastmessage.chatFormData)">{{conversation.lastmessage.chatFormData}}
+                    </span>
+                    <span class="ellipsis msg"
+                        *ngIf="conversation.lastmessage && !(conversation.lastmessage.attachment) && CheckAttachmentType(conversation.lastmessage.body) && !(conversation.lastmessage.chatFormData)"
+                        [innerHTML]="conversation.lastmessage.body | safeUrl : 'html'"></span>
+                    <!-- <span class="ellipsis msg" *ngIf="conversation.lastmessage"
+                        [innerHTML]="conversation.lastmessage.body | safeUrl : 'html'"></span> -->
+                    <span class="svgOnHover ellipsis msg"
+                        *ngIf="conversation.lastmessage && (conversation.lastmessage.attachment) && !(conversation.lastmessage.chatFormData)">
+						<svg class="svg w-15 h-15 svg-default active" *ngIf="!(result.generalSettings.imageSrc)">
+							<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+						</svg>
+                        <span
+                            *ngIf="CheckAttachmentType(conversation.lastmessage.body)">{{(((conversation.lastmessage.filename) | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+                        <span
+                            *ngIf="!CheckAttachmentType(conversation.lastmessage.body) && conversation.lastmessage.body.length > 1">Attachments
+                            ({{conversation.lastmessage.body.length}})</span>
+                        <span
+                            *ngIf="!CheckAttachmentType(conversation.lastmessage.body) && conversation.lastmessage.body.length < 2">{{(((conversation.lastmessage.body[0].filename) | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+                    </span>
+                </div>
+                <div class="notif-count right bg-transparent">
+                    <!-- <span >{{ conversation.createdOn | date :'mediumDate'}}</span> -->
+                    <span class="text-blue">{{ conversation.createdOn | date :'mediumDate'}}</span>
+                    <span class="text-blue">{{ conversation.createdOn | date :'shortTime'}}</span>
+                    <!-- <span class="text-blue">{{ conversation.createdOn | agoPipe}}</span> -->
+                    <!-- <span class="text-blue">{{ conversation.createdOn | date :'shortDate'}}</span> -->
+                    <!-- <span class="text-blue">{{ conversation.createdOn |dayDifferencePipe}}</span> -->
+                </div>
+                <div class="missed-chats svgOnHover tooltip left"
+                    *ngIf="conversation.missed">
+                    <svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#missed-chats"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#missed-chats-colored"/>
+					</svg>
+                    <span class="tooltip-inner">Missed</span>
+                </div>
+            </div>
+        </li>
+        <li class="notAvailable" *ngIf="!(archivesList | filter: searchValue : ['visitorName'] : false).length">
+            <svg class="svg w-100 h-100 active">
+				<use href="/assets/img/icons/icons-sprite.svg#chats" class="text-gray"/>
+			</svg>
+            <span>No Archives Found!</span>
+        </li>
+        <li *ngIf="loadingMoreArchives">
+            <app-preloader type="dot-loader"></app-preloader>
+        </li>
+    </ul>
+</div>

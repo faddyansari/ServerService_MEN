@@ -1,0 +1,126 @@
+<div class="nav-tabs-custom clearfix">
+	<div class="toolbox clearfix" *ngIf="verified">
+		<!--
+		<button class="btn btn-transparent svgOnHover p-9" (click)="toggleFilterDrawer()">
+			<svg class="svg svg-default active">
+				<use href="/assets/img/icons/icons-sprite.svg#filter"/>
+			</svg>
+		</button>
+		<button class="btn btn-transparent svgOnHover p-9" mat-button [matMenuTriggerFor]="menu">
+			<svg class="svg svg-default active">
+				<use href="/assets/img/icons/icons-sprite.svg#filter"/>
+			</svg>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button mat-menu-item (click)="setFilter('')" [ngClass]="(sortBy == '') ? 'bg-blue' : ''">All</button>
+			<button mat-menu-item (click)="setFilter('conv')" [ngClass]="(sortBy == 'conv') ? 'bg-blue' : ''">Conversations</button>
+		</mat-menu>
+		-->
+		<div class="searchForm clearfix"
+			[ngClass]="searchForm && searchForm.get('searchValue').value ? 'active' : ''">
+			<div class="search-bar">
+				<form [formGroup]="searchForm">
+					<div class="input-block m-0">
+						<input type="text" class="form-control input-sm"
+							placeholder="search contacts ...."
+							autocomplete="off"
+							formControlName="searchValue"
+							(input)='onSearchInput.next()'>
+					</div>
+				</form>
+			</div>
+			<div class="search-icon svgOnHover">
+				<svg class="svg active">
+					<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="nav nav-tabs filters clearfix" *ngIf="verified">
+		<ul class="clearfix">
+			<li>
+				<a>
+					<span>CONTACTS</span>
+					<!-- <span class="badge" *ngIf="((offlineCount + idleCount + activeCount) < 100)">{{(offlineCount + idleCount + activeCount)}}</span>
+					<span class="badge" *ngIf="((offlineCount + idleCount + activeCount) >= 100)">99+</span> -->
+				</a>
+			</li>
+			<!-- <li>
+				<a>
+					<span>CONVERSATIONS</span>
+					<span class="badge" *ngIf="((offlineCount + idleCount + activeCount) < 100)">{{(offlineCount + idleCount + activeCount)}}</span>
+					<span class="badge" *ngIf="((offlineCount + idleCount + activeCount) >= 100)">99+</span>
+				</a>
+			</li> -->
+		</ul>
+	</div>
+	<div class="tab-content clearfix">
+		<!-- Pre Installation Data List Starts Here -->
+		<div class="tab-pane active preInstallation" *ngIf="!verified">
+			<div class="list-items clearfix style1">
+				<ul class="activateScrollbar clearfix">
+					<li class="item animated flipInX-delay clearfix" *ngFor="let item of [1,2,3,4,5,6,7,8,9,9]">
+						<div class="clearfix">
+							<div>
+								<div class="avatar ava-xs">
+									<div class="nameInitials"></div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Pre Installation Data List Ends Here -->
+		<div class="tab-pane active" *ngIf="verified">
+			<div class="list-items clearfix style1">
+				<ul class="activateScrollbar clearfix" #scrollContainer (scroll)="ScrollChanged($event)">
+					<li class="item animated flipInX-delay notif clearfix"
+						[ngClass]="(selectedCustomer) ? (selectedCustomer._id == customer._id) ? 'active' : '' : ''"
+						*ngFor="let customer of SortBy(customerList)">
+						<div class="clearfix"
+							(click)="setSelectedCustomer(customer.deviceID)">
+							<div>
+								<div class="avatar ava-xs">
+									<div class="nameInitials" *ngIf="(!customer.image)">
+										{{(customer.username | slice:0:1)}}
+									</div>
+									<!--
+									<div class="avatar-img online" *ngIf="(agent.image)">
+										<img class="svg" attr.agentid="{{agent._id}}"  src="{{agent.image}}">
+									</div>
+									<span *ngIf="agent.messageReadCount && agent._id != Agent.deviceID" class="notif-count msg-count">
+										{{ agent.messageReadCount }}
+									</span>
+									-->
+								</div>
+							</div>
+							<div class="notif-count msg-count"
+								*ngIf="customer.convoLength">
+								{{customer.convoLength}}
+							</div>
+							<div class="info">
+								<b class="name ellipsis fw-6">{{customer.username }}</b>
+								<span class="ellipsis msg">{{customer.email}} </span>
+								<!-- <span class="msg">offline : {{agent.minutes}} Minutes ago</span> -->
+							</div>
+						</div>
+					</li>
+					<li class="notAvailable floatToCenter" *ngIf="!loadingCustomers && !(SortBy(customerList)).length && !customerList.length">
+						<svg class="svg w-100 h-100 active">
+							<use href="/assets/img/icons/icons-sprite.svg#contacts" class="text-gray"/>
+						</svg>
+						<span>No Contacts Found!</span>
+					</li>
+					<li class="notAvailable floatToCenter" *ngIf="loadingMoreCustomers || loadingCustomers">
+						<app-preloader type="spin-loader-page"></app-preloader>
+						<br>
+						<span>Loading...!</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <app-drawer-filters *ngIf="filterDrawer"></app-drawer-filters> -->

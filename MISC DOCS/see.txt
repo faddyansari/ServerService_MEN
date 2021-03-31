@@ -1,0 +1,63 @@
+  public static async GroupAutoAssign() {
+        let count = 0;
+        let currentTime = new Date();
+        let currentDateTime = new Date().toISOString();
+        let datetime = new Date(this.addHours(48)).toISOString();
+        console.log('Greater than: ' + datetime);
+        let dateStr = new Date().toISOString().split('T');
+        dateStr[1] = '19:00:00:000Z';
+        let lessthanDatetime = dateStr[0] + 'T' + dateStr[1];
+        console.log('Less Than: ', lessthanDatetime);
+        let previousTickets = await Tickets.getPreviousTicketsByNSP('/localhost.com', datetime, lessthanDatetime);
+        if (previousTickets && previousTickets.length) {
+            previousTickets.map(async ticket => {
+                /**CONDITIONS TO PICK TICKET */
+                if (
+                    (!ticket.checkingTime || currentDateTime > ticket.checkingTime) &&
+                    (ticket.sbtVisitor || !ticket.entertained || ticket.sbtVisitorPhone || ticket.source == 'livechat' || ticket.source == 'email' || ticket.visitor.phone)
+                    && (!ticket.CustomerInfo || ticket.CustomerInfo && ticket.CustomerInfo.salesPersonName == 'FREE')) {
+                    if (ticket.group) {
+                        let generalsettingsdata = await TicketGroupsModel.getGeneralSettings('/localhost.com', ticket.group);
+                        if (generalsettingsdata.enabled) {
+                            Array(generalsettingsdata.assignmentLimit).fill(0).map(async limit => {
+                                let unEntertainedTickets = await Tickets.getMessagesByTicketId([ticket._id]);
+                                if (unEntertainedTickets && unEntertainedTickets.length) {
+                                    ticket.entertained = true;
+                                }
+                                else ticket.entertained = false;
+                                if (!ticket.entertained) {
+                                    ticket.checkingTime = new Date(currentTime.setMinutes(currentTime.getMinutes() + generalsettingsdata.unEntertainedTime)).toISOString();
+                                    ticket = this.getBestFittedAgentInShiftTimes(ticket.group, ticket);
+                                    if (ticket.assigned_to != '') {
+                                        let logSchema: TicketLogSchema = {
+                                            title: 'Ticket Assigned to Shift Time Agent',
+                                            status: ticket.assigned_to,
+                                            updated_by: 'Group Auto Assignment',
+                                            user_type: 'Group Auto Assignment',
+                                            time_stamp: new Date().toISOString()
+                                        }
+                                        ticket.ticketlog.push(logSchema);
+                                    } else {
+                                        ticket.assigned_to = generalsettingsdata.fallbackNoShift;
+
+                                        let logSchema: TicketLogSchema = {
+                                            title: 'Ticket Assigned to Fallback Agent (no-one in shift)',
+                                            status: ticket.assigned_to,
+                                            updated_by: 'Group Auto Assignment',
+                                            user_type: 'Group Auto Assignment',
+                                            time_stamp: new Date().toISOString()
+                                        }
+                                        ticket.ticketlog.push(logSchema);
+
+                                    }
+                                    count = count + 1;
+                                }
+                            })
+                            
+                        }
+                    }
+                }
+            })
+        }
+
+    }

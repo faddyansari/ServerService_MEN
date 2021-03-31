@@ -1,0 +1,184 @@
+.searching-server-dialog {
+	.mat-dialog-container {
+		background: transparent !important;
+		box-shadow: none !important;
+	}
+}
+
+.calling-dialog {
+	@extend %textCenter;
+	@include phone {
+		@include dialog-size("xl");
+	}
+	@include tabletP {
+		@include dialog-size("md");
+	}
+	.buttons {
+		@extend %displayFlex;
+		@extend %flexRow;
+		justify-content: center;
+		> div {
+			> button {
+				width: 50px;
+				height: 50px;
+				@extend %radCircle;
+				margin: 0 5px;
+			}
+		}
+	}
+}
+
+.rule-confirmation,
+.quick-reply,
+.big-img,
+.small-dialog,
+.add-tag {
+	@include dialog-size("sm");
+	height: 95vh;
+}
+
+.quick-note {
+	@include dialog-size("sm");
+}
+
+.bigImg {
+	width: 300px;
+	margin-bottom: 100px;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+.confirmation-dialog {
+	@include phone {
+		@include dialog-size("xl");
+	}
+	@include tabletL {
+		@include dialog-size("xs");
+	}
+}
+
+.full-page-dialog {
+	@include dialog-size("full");
+	padding: 0px !important;
+	.mat-dialog-container {
+		padding: 0px !important;
+		border-radius: 0px !important;
+		border: 0 !important;
+		.mat-dialog-title {
+			padding: 0px !important;
+			margin-bottom: 20px !important;
+			background-color: transparent !important;
+			border: 0px !important;
+			h2, h5 {
+				margin: 0 !important;
+			}
+		}
+		.mat-dialog-content {
+			padding: 0px !important;
+			@include dialog-size("full");
+			> .activateScrollbar {
+				height: 100vh;
+				display: flex;
+				@include phone {
+					flex-direction: column;
+				}
+				@include tabletL {
+					flex-direction: row;
+				}
+			}
+			.detail-holder,
+			.form-holder {
+				position: relative;
+				display: flex;
+				@include phone {
+					width: 100%;
+				}
+				@include tabletL {
+					height: 100vh;
+				}
+			}
+			.detail-holder {
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				@include phone {
+					padding: 40px;
+					> img {
+						width: 60%;
+					}
+				}
+				@include tabletL {
+					width: 40%;
+					> img {
+						width: 100%;
+					}
+				}
+				@include desktop-wide {
+					padding: 80px;
+				}
+			}
+			.form-holder {
+				background-color: var(--card);
+				@include tabletL {
+					width: 60%;
+				}
+				> .activateScrollbar {
+					@include phone {
+						padding: 40px;
+					}
+					@include phone_and_tablet {
+						overflow: inherit;
+					}
+					@include tabletL {
+						height: 100vh;
+					}
+					@include desktop-wide {
+						padding: 80px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.responsive-dialog {
+	@include phone {
+		@include dialog-size("xl");
+	}
+	@include tabletP {
+		@include dialog-size("md");
+	}
+	@include desktop {
+		@include dialog-size("sm");
+	}
+	.mat-dialog-container {
+		display: flex;
+		flex-direction: column;
+		.mat-dialog-content {
+			> .nav-tabs-custom {
+				&.vertical {
+					> .nav-tabs {
+						@include tabletL {
+							width: 150px;
+						}
+						.checkbox-list {
+							display: flex;
+							@include tabletL {
+								flex-direction: column;
+							}
+						}
+					}
+					> .tab-content {
+						@include tabletL {
+							width: calc(100% - 150px);
+						}
+					}
+				}
+				
+			}
+			> .notAvailable {
+				width: calc(100% - 40px);
+			}
+		}
+	}
+}

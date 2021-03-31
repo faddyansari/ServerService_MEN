@@ -1,0 +1,220 @@
+<div class="row clearfix" id="chatEngagementComponent">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Chat Engagement</h5>
+					</div>
+				</div>
+				<form id="chatEngagement" [formGroup]="assignmentSettingsForm">
+					<div class="input-block">
+						<label>Automatic Engagement</label>
+						<div class="pretty p-default p-round p-smooth p-toggle">
+							<input type="radio" name="autoEng" [checked]="assignmentSettings && assignmentSettings.aEng"
+								(click)="SetAssignmentSettings('autoEng')">
+							<div class="state p-on">
+								<label>ON</label>
+							</div>
+							<div class="state p-off">
+								<label>OFF</label>
+							</div>
+						</div>
+					</div>
+					<div class="input-block">
+						<label>Manual Engagement</label>
+						<div class="pretty p-default p-round p-smooth p-toggle">
+							<input type="radio" name="mEng" [checked]="assignmentSettings && assignmentSettings.mEng"
+								(click)="SetAssignmentSettings('mEng')">
+							<div class="state p-on">
+								<label>ON</label>
+							</div>
+							<div class="state p-off">
+								<label>OFF</label>
+							</div>
+						</div>
+					</div>
+					<div class="input-block" *ngIf="(nsp == '/hrm.sbtjapan.com' || nsp == '/sps-uat' || !production) && package && package.chats.chatEngagement.bot">
+						<label>Bot Engagement</label>
+						<div class="pretty p-switch p-smooth p-fill p-toggle">
+							<input type="checkbox" [checked]="assignmentSettings && assignmentSettings.botEnabled"
+								name="botEnabled"
+								(change)="assignmentSettings.botEnabled = !assignmentSettings.botEnabled">
+							<div class="state p-on">
+								<label>Enabled</label>
+							</div>
+							<div class="state p-off">
+								<label>Disabled</label>
+							</div>
+						</div>
+					</div>
+					<div class="input-block" *ngIf="package && package.chats.chatEngagement.priorityAgent">
+						<label>Set Priority Agent</label>
+						<input type="email" class="form-control input-sm" name="email" formControlName="email"
+							placeholder="email@example.com">
+						<p>Assigns all initiated chats to a specific agent who can transfer the chat to selected agents.
+						</p>
+					</div>
+					<div class="input-block" *ngIf="assignmentSettings && !assignmentSettings.aEng">
+						<p class="text-red">Note: These settings will only apply if Automatic Engagement is turned ON.
+						</p>
+					</div>
+					<div class="input-block" *ngIf="_chatSettingsService.getSettingsChangedStatus() | async">
+						<p class="text-red"><b>Note:</b> Settings have been changed please reload the page.</p>
+					</div>
+					<button class="btn btn-sm bg-blue" *ngIf="assignmentSettings"
+						[disabled]="((!assignmentSettings.mEng && !assignmentSettings.aEng) || (!assignmentSettingsForm.valid))"
+						[ngClass]="(loading) ? 'btnSpinner' : ''"
+						(click)="Submit(assignmentSettings.aEng,assignmentSettings.mEng,assignmentSettings.botEnabled)">
+						<span>Save</span>
+					</button>
+					<br>
+					<small *ngIf="rulsetError" class="text-red">Unable To Enable Automatic Assignment Since RuleSets Are
+						Empty.</small>
+					<br>
+					<small *ngIf="workFlowError" class="text-red">Unable To Enable Chat Bot Please Define Workflow
+						First.</small>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Rule Sets</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+							[ngClass]="(!showRulesetForm) ? 'border-blue' : 'border-red'" (click)="ToggleRulesetForm()">
+							<span>{{(!showRulesetForm) ? 'Create' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showRulesetForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showRulesetForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showRulesetForm">
+					<div class="input-block">
+						<div class="sel style1 sel-sm">
+							<select class="form-control input-sm" [(ngModel)]="selectedRule"
+								(change)="SelectRuleSet($event.target.value)">
+								<option value="">Select ruleset</option>
+								<option value="r_activity_time">Based on visitor activity time on particular page
+								</option>
+								<option value="r_pages_visited">Based on visitor number of pages visited</option>
+								<option value="r_particular_page">Based on visitor particular page visited</option>
+							</select>
+						</div>
+					</div>
+					<div *ngIf="selectedRule == 'r_activity_time'">
+						<form [formGroup]="ruleSetOneForm">
+							<div class="input-block">
+								<label for="activityTime">Activity Time (mins)</label>
+								<input type="number" min="0" class="form-control input-sm" name="activityTime"
+									oninput="this.value = Math.abs(this.value)"
+									formControlName="activityTime">
+							</div>
+						</form>
+						<!-- <div class="input-block">
+							<label for="activityTime">Activity Time (mins)</label>
+							<input type="text" class="form-control input-sm" id="activityTime">
+						</div>
+						<div class="input-block">
+							<label for="pageUrl">Page Url (example: '/page1/page1' )</label>
+							<input type="text" class="form-control input-sm" id="pageUrl">
+						</div> -->
+						<button class="btn btn-sm bg-blue" [disabled]="(ruleSetOneForm.invalid)"
+							(click)="CreateRule(ruleSetOneForm, selectedRule)">
+							<span>Create</span>
+						</button>
+					</div>
+					<div *ngIf="selectedRule == 'r_pages_visited'">
+						<form [formGroup]="ruleSetTwoForm">
+							<div class="input-block">
+								<label for="pagesVisited">Number of Pages Visited</label>
+								<input type="number" class="form-control input-sm" name="pagesVisited"
+									formControlName="pagesVisited">
+							</div>
+						</form>
+						<button class="btn btn-sm bg-blue" [disabled]="(ruleSetTwoForm.invalid)"
+							(click)="CreateRule(ruleSetTwoForm, selectedRule)">
+							<span>Create</span>
+						</button>
+					</div>
+					<div *ngIf="selectedRule == 'r_particular_page'">
+						<form [formGroup]="ruleSetThreeForm">
+							<div class="input-block">
+								<label for="pageUrl">Page Url (example: '/page1/page1' )</label>
+								<input type="text" class="form-control input-sm" name="pageUrl"
+									formControlName="pageUrl">
+							</div>
+						</form>
+						<button class="btn btn-sm bg-blue" [disabled]="(ruleSetThreeForm.invalid)"
+							(click)="CreateRule(ruleSetThreeForm, selectedRule)">
+							<span>Create</span>
+						</button>
+					</div>
+				</div>
+				<div class="document-list">
+					<div class="activateScrollbar clearfix">
+						<table class="table table-bordered" *ngIf="(RuleSets && RuleSets.length)">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Rule Set</th>
+									<th class="text-center w-80">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<ng-template ngFor [ngForOf]="RuleSets" let-rule>
+									<ng-template [ngIf]="rule.id == 'r_activity_time' || rule.id == 'r_pages_visited'">
+										<tr>
+											<td>{{rule.id}}</td>
+											<td *ngIf="rule.pagesVisited && rule.id != 'r_activity_time'">
+												{{rule.pagesVisited}}</td>
+											<td *ngIf="rule.id == 'r_activity_time'">{{rule.activityTime}} mins</td>
+											<td class="text-center w-80">
+												<button class="btn btn-transparent svgOnHover tooltip left"
+													(click)="deleteRule(rule.id)">
+													<svg class="svg svg-default">
+														<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+													</svg>
+													<svg class="svg colored">
+														<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+													</svg>
+													<span class="tooltip-inner">Delete</span>
+												</button>
+											</td>
+										</tr>
+									</ng-template>
+									<ng-template [ngIf]="rule.id == 'r_particular_page'">
+										<ng-template ngFor [ngForOf]="rule.pageUrl" let-url>
+											<tr>
+												<td>{{rule.id}}</td>
+												<td>{{url}}</td>
+												<td class="text-center w-80">
+													<button class="btn btn-transparent svgOnHover tooltip left"
+														(click)="deleteRule(rule.id, url)">
+														<svg class="svg svg-default">
+															<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+														</svg>
+														<svg class="svg colored">
+															<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+														</svg>
+														<span class="tooltip-inner">Delete</span>
+													</button>
+												</td>
+											</tr>
+										</ng-template>
+									</ng-template>
+								</ng-template>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,145 @@
+<ul class="stat-container"
+	*ngIf="!loadingStats && (customerStats | json) != ({} | json)">
+	<li>
+		<h5>Average Session Time</h5>
+		<span>{{time_convert(customerStats.avgSessionTime)}}</span>
+	</li>
+	<li>
+		<h5>Sessions</h5>
+		<span>{{customerStats.totalSessions}}</span>
+	</li>
+	<li>
+		<h5>Chats</h5>
+		<span>{{customerStats.chatCount}}</span>
+	</li>
+	<li>
+		<h5 class="count">
+			Chat Ratio
+		</h5>
+		<br>
+		<span>{{customerStats.chatRatio}}</span>
+	</li>
+	<li>
+		<h5>Browsers</h5>
+		<ng-template ngFor [ngForOf]="browser_data" let-browser let-i="index">
+			<span class="svgOnHover">
+				<svg class="svg svg-default active">
+					<use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + browser.key"/>
+				</svg>
+				<!-- <span>{{browser.count}}</span> -->
+			</span>
+		</ng-template>
+		<span *ngIf="!browser_data.length">
+			No data!
+		</span>
+	</li>
+	<li>
+		<h5>Devices</h5>
+		<ng-template ngFor [ngForOf]="device_data" let-device let-i="index">
+			<span class="svgOnHover">
+				<svg class="svg svg-default active">
+					<use [attr.href]="'/assets/img/icons/icons-sprite.svg#' + device.key"/>
+				</svg>
+				<!-- <span>{{device.count}}</span> -->
+			</span>
+		</ng-template>
+		<span *ngIf="!device_data.length">
+			No data!
+		</span>
+	</li>
+	<li>
+		<h5>Locations</h5>
+		<ng-template ngFor [ngForOf]="customerStats.countries" let-data let-i="index">
+			<i class="flag ff-sm flag-{{data.country.split(',')[0]}}" title="{{data.country.split(',')[1]}}"></i>
+			<!-- <span>{{data.country.split(',')[1]}}</span> -->
+		</ng-template>
+		<span *ngIf="!customerStats.countries.length">
+			No data!
+		</span>
+	</li>
+</ul>
+<ul class="stat-container"
+	*ngIf="!loadingStats && (customerStats | json) != ({} | json)">
+	<ng-template ngFor [ngForOf]="customerStats.states" let-state let-i="index">
+		<li>
+			<h5>{{state.name}}</h5>
+			<span>{{state.count}}</span>
+		</li>
+	</ng-template>
+</ul>
+<ul class="stat-container"
+	*ngIf="!loadingStats && (customerStats | json) != ({} | json)">
+	<li class="topFive links-stat-list p-0">
+		<div class="title">
+			<h5>Top 5 visited links</h5>
+		</div>
+		<ul *ngIf="customerStats.urls.length">
+			<ng-template ngFor [ngForOf]="customerStats.urls" let-url let-i="index">
+				<li>
+					<a target="_blank" [attr.href]="url.name" target="_blank"
+						[title]="url.name">
+						<div class="icon">
+							<img [src]="sanitizedURL('https://www.google.com/s2/favicons?domain='+ FormatURL(url.name))"
+								onerror="this.onerror=null;this.src='/assets/img/icons/logo-icon-black-light.svg';"
+								alt="">
+						</div>
+						<div class="details">
+							<!-- <span class="ellipsis">{{ url.name }}</span> -->
+							<!-- <b class="name" [title]="url.name">{{extractHostname(url.name)}}</b> -->
+							<div class="link">
+								<span class="ellipsis">{{ url.name }}</span>
+							</div>
+						</div>
+					</a>
+				</li>
+			</ng-template>
+		</ul>
+		<ul *ngIf="!customerStats.urls.length">
+			<li>
+				<p class="nolink">No links visited!</p>
+			</li>
+		</ul>
+	</li>
+	<li class="topSource links-stat-list p-0">
+		<div class="title">
+			<h5>Top 5 Source links</h5>
+		</div>
+		<ul *ngIf="customerStats.sources.length">
+			<ng-template ngFor [ngForOf]="customerStats.sources" let-url let-i="index">
+				<li>
+					<a target="_blank" [attr.href]="url.name" target="_blank"
+						[title]="url.name">
+						<div class="icon">
+							<img [src]="sanitizedURL('https://www.google.com/s2/favicons?domain='+ FormatURL(url.name))"
+								onerror="this.onerror=null;this.src='/assets/img/icons/logo-icon-black-light.svg';"
+								alt="">
+						</div>
+						<div class="details">
+							<!-- <span class="ellipsis">{{ url.name }}</span> -->
+							<!-- <b class="name" [title]="url.name">{{extractHostname(url.name)}}</b> -->
+							<div class="link">
+								<span class="ellipsis">{{ url.name }}</span>
+							</div>
+						</div>
+					</a>
+				</li>
+			</ng-template>
+		</ul>
+		<ul *ngIf="!customerStats.sources.length">
+			<li>
+				<p class="nolink">No sources!</p>
+			</li>
+		</ul>
+	</li>
+</ul>
+<div class="notAvailable card p-0 m-0" *ngIf="!loadingStats && (customerStats | json) == ({} | json)">
+	<svg class="svg w-50 h-50 active">
+		<use href="/assets/img/icons/icons-sprite.svg#pie-chart" class="text-gray"/>
+	</svg>
+	<span>No Stats found!</span>
+</div>
+<div class="notAvailable card p-0 m-0" *ngIf="loadingStats">
+	<app-preloader type="cube-grid"></app-preloader>
+	<br>
+	<span>Loading Stats ...</span>
+</div>

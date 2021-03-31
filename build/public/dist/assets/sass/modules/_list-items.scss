@@ -1,0 +1,913 @@
+.list-items {
+  @extend %posRelative;
+  @extend %width100;
+  > .activateScrollbar {
+    @include phone {
+      height: 213px;
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      border-bottom-color: var(--border);
+    }
+    @include tabletL {
+      height: calc(100vh - 160px);
+      border-bottom: 0;
+    }
+  }
+  .item {
+    @extend %width100;
+    @extend %posRelative;
+    display: flex;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--border);
+    background-color: var(--white);
+    @extend %cursorPointer;
+    > div {
+      @extend %width100;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: left;
+      padding: 10px;
+      @extend %posRelative;
+      > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        @extend %p0;
+        @extend %fs12;
+        span {
+          color: var(--theme-pro-gray);
+        }
+        .selection {
+          width: 15px;
+          .pretty {
+            margin: auto !important;
+            width: 15px;
+          }
+        }
+        .email,
+        .name,
+        .flags {
+          line-height: 18px;
+          @extend %width100;
+          color: var(--theme-pro-gray);
+        }
+        .email {
+          @extend %fw-4;
+        }
+        .email,
+        .msg,
+        .subject {
+          @extend %fw-5;
+        }
+        .name {
+          display: flex;
+          flex-direction: column;
+        }
+        .timer,
+        .ip {
+          @extend %textCenter;
+        }
+        .date {
+          color: var(--blue);
+          @extend %fs10;
+        }
+        .msg {
+          line-height: 17px;
+          @extend %fs11;
+          @extend %noUserSelect;
+          @extend %noPointerEvent;
+        }
+        .flags {
+          display: flex;
+          align-items: center;
+          > span {
+            margin-left: 7px;
+          }
+        }
+        .select-tools {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          > div {
+            width: 15px;
+            height: 15px;
+            margin: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            img {
+              width: 100%;
+            }
+            > .tooltip {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+        .assigned-to,
+        .status,
+        .priority {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          @extend %cursorPointer;
+          span {
+            text-align: right;
+            width: auto;
+            &.ellipsis {
+              width: 90%;
+            }
+          }
+          .btn {
+            width: 20px;
+            text-align: right;
+          }
+        }
+        .custom-actions {
+          width: 35px;
+          border-left: 1px solid transparent;
+        }
+        .tags {
+          display: flex;
+          align-content: center;
+          flex-wrap: wrap;
+          .badge {
+            margin: 2px;
+            span {
+              color: var(--white);
+            }
+            &.bg-gray {
+              span {
+                color: var(--theme-pro-gray);
+              }
+            }
+          }
+        }
+        .state {
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+          > div {
+            margin-bottom: 5px;
+            &:last-child {
+              margin-bottom: 0;
+            }
+            &.state-danger {
+              background-color: var(--danger-alpha2);
+              border: 1px solid var(--danger);
+              color: var(--danger);
+            }
+          }
+        }
+      }
+      .showmoreItems {
+        @extend %floatToYCenter;
+        height: 20px;
+        right: 10px;
+        border: 0;
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0;
+      }
+      @extend %availability;
+      .newItem {
+        background-color: var(--blue-alpha6);
+      }
+      .info {
+        width: calc(100% - 50px);
+        @extend %height100;
+        display: flex;
+        justify-content: center;
+        @extend %textLeft;
+        line-height: 14px;
+        background: transparent !important;
+        h4 {
+          @extend %fw-4;
+        }
+        h4,
+        span {
+          @extend %m0;
+          @extend %p0;
+          cursor: text;
+        }
+        span {
+          margin-left: 0px;
+        }
+      }
+      .actions {
+        @extend %listActions;
+        > a:only-child {
+          margin-right: 10px;
+        }
+        .pretty {
+          label {
+            white-space: nowrap;
+          }
+        }
+      }
+      &.active {
+        background-color: var(--charcoal-alpha1);
+      }
+    }
+    .notif-count {
+      width: auto;
+      position: absolute;
+      top: 3px;
+      flex-direction: row;
+      &.right {
+        right: 10px;
+      }
+      &.left {
+        left: 10px;
+      }
+      > span {
+        border-left-width: 1px;
+        border-left-style: solid;
+        border-left-color: var(--gray);
+        padding-left: 7px;
+        margin-left: 7px;
+        display: flex;
+        align-items: center;
+        > img {
+          margin-right: 5px;
+        }
+        > b {
+          color: var(--gray-dark);
+        }
+        &:first-child {
+          padding-left: 0;
+          margin-left: 0;
+          border-left: 0;
+        }
+      }
+      &.msg-count {
+        @extend %floatToYCenter;
+        right: 8px;
+        line-height: 15px;
+        @extend %themeRadius;
+        @extend %b0;
+        padding: 0 5px;
+      }
+      &.loader-count {
+        right: 0px;
+        top: 35px;
+        @extend %noRad;
+        @extend %noBg;
+        i {
+          @extend %p0;
+          height: 18px;
+          width: 23px;
+          display: block;
+        }
+      }
+      &.ticket-flag {
+        @extend %noBg;
+        @extend %p0;
+        z-index: 999;
+        user-select: auto;
+        left: 4px;
+        top: 1px;
+        .badge {
+          @extend %noRad;
+          @extend %m0;
+          margin-right: 3px !important;
+          max-width: inherit;
+          &:hover {
+            background-color: var(--charcoal-light) !important;
+            span {
+              color: var(--white) !important;
+            }
+          }
+        }
+      }
+    }
+    .missed-chats {
+      position: absolute;
+      right: 10px;
+      top: 24px;
+    }
+    &.group {
+      > div {
+        > div {
+          .group-people {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            > span {
+              margin-left: -12px;
+            }
+          }
+        }
+      }
+      &:after {
+        height: 82px !important;
+      }
+    }
+    &:hover,
+    &.active {
+      background-color: var(--blue-alpha2);
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 70px;
+        @extend %transitionAll300;
+        background-color: var(--blue);
+      }
+      .info {
+        border-color: var(--blue-light);
+      }
+    }
+  }
+  .option-item {
+    flex-direction: column !important;
+    align-items: start !important;
+    @extend %noShadow;
+    cursor: inherit;
+    @include tabletP {
+      width: 50%;
+    }
+    &:hover,
+    &.active {
+      background-color: var(--card) !important;
+    }
+  }
+  &.style1 {
+    .item {
+      @extend %card;
+      flex-direction: row;
+      padding: 0 !important;
+      width: calc(100% - 14px);
+      overflow: hidden;
+      box-shadow: none !important;
+      &:hover,
+      &.active {
+        &:after {
+          height: 65px;
+          left: inherit;
+          right: 0;
+        }
+      }
+      > div {
+        padding-top: 15px;
+        .info {
+          @extend %p0;
+          width: 70%;
+        }
+      }
+    }
+  }
+  &.style2,
+  &.style3 {
+    .item {
+      border: 0;
+      margin: 0 0 7px 0;
+      cursor: default;
+      width: max-content;
+      max-width: fit-content;
+      min-width: 100%;
+      &:hover,
+      &.active {
+        &:after {
+          display: none !important;
+        }
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+      > div {
+        @extend %m0;
+        @extend %p0;
+        > .info {
+          @extend %card;
+          margin: 0 !important;
+          @extend %p0;
+          flex-direction: row;
+          justify-content: flex-start;
+          text-align: left;
+          box-shadow: none !important;
+          > div {
+            margin: 0 14px 0 0;
+          }
+          > .actions {
+            @extend %m0;
+          }
+        }
+      }
+    }
+  }
+  &.style2 {
+    .item {
+      > div {
+        .info {
+          padding: 5px 10px 5px 10px;
+          padding-right: 40px;
+          @include phone {
+            min-width: 1000px;
+            max-width: 100%;
+          }
+          @include laptop {
+            width: 100%;
+            min-width: 100%;
+          }
+          .border-status {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background-color: var(--gray-dark);
+            width: 3px;
+          }
+          &.unread {
+            > div {
+              h4 {
+                @extend %fw-6;
+              }
+              span {
+                @extend %fw-5;
+              }
+              > div {
+                > span {
+                  color: var(--black);
+                }
+                > span > span {
+                  color: var(--black);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &.style3 {
+    .item {
+      width: fit-content;
+      > div {
+        .info {
+          padding: 7px 10px !important;
+          min-width: 1470px;
+          max-width: 100%;
+          margin: 0 !important;
+        }
+      }
+    }
+  }
+  &.style4,
+  &.style6 {
+    @extend %p0;
+    .item {
+      @extend %card;
+      flex-direction: row;
+      margin: 5px 0;
+      padding: 10px !important;
+      &:after {
+        display: none;
+      }
+      > div {
+        @extend %p0;
+        .info {
+          @extend %p0;
+        }
+      }
+    }
+  }
+  &.style5 {
+    @extend %p14;
+    flex-direction: column;
+    .item {
+      @extend %card;
+      padding: 10px;
+      margin: 5px 0;
+      flex-direction: row;
+      justify-content: space-between;
+      cursor: pointer;
+      &:after {
+        display: none;
+      }
+      > div {
+        @extend %p0;
+        .info {
+          width: calc(100% - 200px);
+          margin-right: auto;
+          @extend %p0;
+          color: var(--black) !important;
+          .input-group-sm {
+            align-items: center;
+            > label {
+              flex: none;
+              width: 150px;
+            }
+          }
+        }
+      }
+    }
+    &.droppable-area {
+      border: 3px dashed var(--border);
+      border-top: 0;
+      border-bottom: 0;
+    }
+  }
+  &.style6 {
+    .item {
+      border-top: 0 !important;
+      border-right: 0 !important;
+      border-left: 0 !important;
+      margin: 0 !important;
+    }
+  }
+  &.noXScroll {
+    .item {
+      > div {
+        min-width: 100% !important;
+        @extend %width100;
+      }
+    }
+  }
+  &.dialog-list {
+    .item {
+      > div {
+        @extend %cursorPointer;
+        width: 100%;
+        min-width: 100%;
+      }
+      &.active {
+        > div {
+          .info {
+            background-color: var(--green-alpha2);
+            border-color: var(--green);
+            .avatar {
+              .nameInitials {
+                background-color: var(--green-alpha4);
+                color: var(--white);
+              }
+            }
+            .name,
+            .msg {
+              color: var(--green);
+            }
+          }
+        }
+      }
+    }
+  }
+  &.whatapp-style,
+  &.whatapp-style2 {
+    .item {
+      @extend %card;
+      flex-direction: row;
+      padding: 0 !important;
+      margin: 0 !important;
+      width: calc(100% - 14px);
+      box-shadow: none !important;
+      overflow: hidden;
+      border: 0;
+      &:hover,
+      &.active {
+        background-color: transparent !important;
+        &:after {
+          display: none;
+        }
+      }
+      > div {
+        padding-top: 15px;
+        .info {
+          @extend %p0;
+        }
+      }
+    }
+  }
+  &.whatapp-style {
+    .item {
+      > div {
+        .info {
+          width: 60%;
+        }
+        .availability {
+          @extend %displayFlex;
+          @extend %flexAlignCenter;
+          @extend %flexJustifyCenter;
+          color: var(--white);
+          background-color: #3267d1;
+          left: 38px;
+          width: 12px;
+          height: 12px;
+          bottom: 10px;
+        }
+        .action-btn {
+          @extend %displayFlex;
+          @extend %flexRow;
+          width: 40%;
+          .btn {
+            width: max-content;
+            background-color: #dce4ed;
+            @extend %radCircle;
+            padding: 6px;
+            margin: 0 10px;
+            img {
+              height: 20px;
+              width: 20px;
+            }
+          }
+          > :first-child {
+            margin-left: 0;
+          }
+          > :last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+  &.whatapp-style-2 {
+    .item {
+      > div {
+        .info {
+          @extend %posRelative;
+          width: 100%;
+          &:before {
+            content: '';
+            @extend %posAbsolute;
+            background-color: var(--gray);
+            width: calc(100% + 10px);
+            height: 1px;
+            bottom: -10px;
+            right: -10px;
+          }
+        }
+      }
+      &.status-1 {
+        .avatar {
+          @extend %posRelative;
+          overflow: inherit;
+          &:before {
+            content: '';
+            @extend %posAbsolute;
+            border: 1px solid #3267d1;
+            padding: 2px;
+            width: 100%;
+            height: 100%;
+            @extend %radCircle;
+          }
+        }
+        &.viewed {
+          .avatar {
+            &:before {
+              border-color: var(--gray);
+            }
+          }
+        }
+      }
+      &:last-child {
+        .info {
+          &:before {
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+}
+
+.whatapp-status-box {
+  .status-box {
+    @extend %posRelative;
+    .status-header {
+      @extend %posAbsolute;
+      @extend %width100;
+      .action-btn {
+        @extend %displayFlex;
+        @extend %flexAlignCenter;
+        justify-content: space-between;
+        @extend %p10;
+        @extend %width100;
+        img {
+          height: 20px;
+          width: 20px;
+        }
+        .circle {
+          width: max-content;
+          background-color: #dce4ed;
+          @extend %radCircle;
+          padding: 6px;
+          margin: 0 10px;
+          img {
+            height: 20px;
+            width: 20px;
+          }
+        }
+      }
+    }
+    .status-body {
+      @extend %posRelative;
+      min-height: 300px;
+      background-color: var(--charcoal-light);
+      textarea {
+        width: 100%;
+        height: auto;
+        @extend %floatToCenter;
+        color: var(--white);
+        background-color: transparent;
+        border: 0;
+        resize: none;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 150px;
+        @extend %fs20;
+        @extend %fw-7;
+      }
+    }
+  }
+}
+
+.document-list {
+  @extend %width100;
+  background-color: var(--theme-bg);
+  display: flex;
+  .activateScrollbar {
+    > li {
+      &:last-child {
+        margin-bottom: 50px !important;
+      }
+    }
+  }
+  li {
+    @extend %width100;
+    @extend %displayFlex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    &:hover,
+    &.active {
+      > .info {
+        background-color: var(--blue-alpha2);
+      }
+    }
+    > .info {
+      @extend %card;
+      margin: 0 0 10px 0;
+      padding: 10px;
+      line-height: 15px;
+      // color: var(--white-light);
+      @include phone {
+        flex-direction: column;
+      }
+      @include tabletL {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      > div {
+        @extend %textLeft;
+      }
+      .primary {
+        flex: none;
+        @extend %noRad;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .desc {
+        margin-right: auto !important;
+        word-break: break-all;
+        margin: 0 auto 7px 0 !important;
+        min-width: 20%;
+        max-width: 300px;
+      }
+      .name {
+        margin-right: auto;
+      }
+      .date {
+        width: 140px;
+        margin-left: 10px;
+        flex: none;
+      }
+      .primary {
+        width: 30px;
+        height: 30px;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+      .actions {
+        @extend %listActions;
+        .pretty {
+          margin-bottom: 0 !important;
+        }
+      }
+      .groups {
+        p {
+          margin: 0 !important;
+        }
+      }
+      .upload-date {
+        font-size: 11px;
+        color: var(--blue);
+        @extend %bgTransparent;
+      }
+      .notif-count {
+        font-size: 11px;
+        @extend %posAbsolute;
+        top: 10px;
+        right: 90px;
+        color: var(--blue);
+        @extend %p0;
+        @extend %bgTransparent;
+        &.status {
+          top: 30px;
+          pointer-events: all;
+        }
+      }
+      .download {
+        width: 65px;
+        height: 65px;
+        @extend %posAbsolute;
+        right: 0;
+        top: -1px;
+        border-radius: 3px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        overflow: hidden;
+        @extend %m0;
+        border-width: 1px;
+        border-style: dashed;
+        @extend %transitionAll300;
+        @include phone {
+          order: 2;
+        }
+        @include phoneL {
+          order: 3;
+        }
+        &:hover {
+          background-color: var(--orange-alpha5);
+        }
+        > a {
+          width: 65px;
+          height: 65px;
+          display: block;
+          font-size: 20px;
+          @extend %textCenter;
+          padding: 15px 0;
+          > img {
+            @extend %floatToCenter;
+          }
+        }
+      }
+    }
+  }
+}
+
+.pallet-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin: 0 -7px 14px -7px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border);
+  > div {
+    width: 140px;
+    box-sizing: border-box;
+  }
+  .pallet-box {
+    padding: 0 7px;
+    @extend %posRelative;
+    @extend %mb5;
+    box-sizing: content-box;
+    input.btn {
+      text-indent: -999px;
+    }
+    label {
+      @extend %fs11;
+    }
+  }
+}
+
+.export-data-list {
+  &.ticket-selected {
+    > div {
+      border: 0;
+    }
+  }
+  > .checkbox-list {
+    width: 180px;
+    border-style: solid;
+    border-color: var(--border);
+    @include phone {
+      border-bottom-width: 1px;
+    }
+    @include tabletL {
+      border-bottom-width: 0px;
+      border-right-width: 1px;
+    }
+  }
+  > .date-selector {
+    padding: 20px;
+  }
+}

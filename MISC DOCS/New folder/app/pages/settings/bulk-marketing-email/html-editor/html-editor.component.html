@@ -1,0 +1,26 @@
+<ul class="activateScrollbar clearfix">
+    <div class="input-block clearfix">
+        <div class="input-group-lg m-b-10">
+            <input type="text" class="form-control input-sm" name="template_name" id="template_name"
+                placeholder="Enter Template Name" [(ngModel)]="template_name" (ngModelChange)="Validation()">
+            <br>
+        </div>
+    </div>
+    <p class="text-red"><i>Write your code below with inline styling..</i></p>
+    <ngx-codemirror #codemirror [options]="codeMirrorOptions" [(ngModel)]="previewCode">
+    </ngx-codemirror>
+    <br>
+    <button type="button" class="btn btn-xs bg-blue" (click)="SaveTemplate()" *ngIf="!selectedtemplate"
+        [disabled]="AllValidations()">
+        <span>Save Template</span>
+    </button>
+    <button class="btn btn-xs bg-blue" (click)="UpdateTemplate()" *ngIf="selectedtemplate">
+        <span>Update Template</span>
+    </button>
+    <button type="button" class="btn btn-xs bg-blue" (click)="SaveTemplate()" *ngIf="selectedtemplate">
+        <span>Save as new template</span>
+    </button>
+    <button class="btn btn-xs bg-red" (click)="Cancel()">
+        <span>Cancel</span>
+    </button>
+</ul>

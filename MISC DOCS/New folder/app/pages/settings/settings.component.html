@@ -1,0 +1,41 @@
+<section class="content animated fadeIn" id="settingsComponent" [ngClass]="!viewContentInfo ? 'info-hidden' : ''">
+    <div class="content-nav clearfix">
+        <h3>
+            <span>{{breadCrumbTitle}}</span>
+        </h3>
+        <ul class="breadcrumbs clearfix">
+            <li *ngFor="let link of breadCrumbLinks; let i=index">
+                <a (click)="showSettingsMenu(breadCrumbLinks[1])" *ngIf="i < breadCrumbLinks.length - 1">{{link}}</a>
+                {{(i == breadCrumbLinks.length - 1) ? link : ''}}
+            </li>
+        </ul>
+        <div class="content-tools">
+            <div class="btn-group">              
+                <a class="btn btn-xs btn-theme" (click)="toggleInfoArea()">
+                    <span>INFO</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="content-view">
+        <div class="activateScrollbar clearfix">
+            <router-outlet *ngIf="!loadingNestedRouteConfig"></router-outlet>
+        </div>
+    </div>
+</section>
+
+<section class="content-info" *ngIf="viewContentInfo">
+    <div class="content-nav clearfix">
+        <h3>
+            <span>Info</span>
+        </h3>
+        <div class="content-tools">
+            <div class="btn-group">              
+                <a class="btn btn-xs bg-red" (click)="toggleInfoArea()">
+                    <span>Close Info</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div [innerHTML]="contentInfo"></div>
+</section>

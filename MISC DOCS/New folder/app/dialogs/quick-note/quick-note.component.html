@@ -1,0 +1,42 @@
+<div class="mat-grid">
+    <div mat-dialog-title>
+        <h3>QUICK NOTE:</h3>
+    </div>
+    <div mat-dialog-content>
+        <ul class="list-items clearfix style4" [ngClass]="(editNote) ? 'active' : ''">
+            <li class="item clearfix notif"
+                *ngFor="let val of data['details']">
+                <div class="clearfix">
+                    <div class="info">
+                        <div class="name">
+                            <b> Ticket ID:</b>
+                            <span> {{val.clientID}}</span>
+                        </div>
+                        <!-- <div class="name">
+                            <b>Ticket Subject: </b>
+                            <span> {{val.subject}}</span>
+                        </div>
+                        <div class="name" *ngIf="val.assigned_to">
+                            <b>Agent: </b>
+                            <span> {{val.assigned_to}}</span>
+                        </div> -->
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <textarea [ngxSummernote]="config" name="note" [(ngModel)]="ticketNote" rows="4" autocomplete="off"
+            class="form-control" (keyup)="keyupX($event)" (keydown)="keydownX($event)">
+        </textarea>
+    </div>
+    <div class="mat-dialog-footer clearfix">
+        <mat-dialog-actions>
+            <button type="submit" class="btn btn-xs bg-blue" [ngClass]="(editNote) ? 'btnSpinner' : ''"
+                (click)="Save()" [disabled]="isNullOrWhiteSpace()">
+                <span> Save</span>
+            </button>
+            <button type="button" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+                <span>Cancel</span>
+            </button>
+        </mat-dialog-actions>
+    </div>
+</div>

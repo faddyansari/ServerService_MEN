@@ -1,0 +1,243 @@
+<div class="viewChat clearfix">
+    <div class="preInstallation" *ngIf="!verified">
+        <div class="chatScreen">
+            <img src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="50%">
+            <h3>Looking for chats?</h3>
+            <p>Install Beelinks on your website and start closing leads!</p>
+            <button class="btn btn-sm bg-blue m-t-b-10">Install Now</button>
+            <p>Or <a href="">send instructions to developer</a></p>
+        </div>
+    </div>
+
+    <div class="preInstallation" *ngIf="verified && !selectedThread">
+        <div class="chatScreen">
+            <img src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="50%">
+        </div>
+    </div>
+
+
+    <div class="chatWindow card p-0" *ngIf="verified && selectedThread && (selectedThread | json) != ({} | json)">
+        <div class="box clearfix">
+            <div class="box-header clearfix">
+                <h5 class="box-title" title="{{selectedThread.subject}} {{selectedThread.CustomerInfo && selectedThread.CustomerInfo.customerId ? ' - CM ID: ' + selectedThread.CustomerInfo.customerId : ''}} {{ seeCMID() ?  ' - (Possible DUAL Id)' : ''}}">
+                    <span class="ellipsis w80">{{selectedThread.subject}}
+                        {{selectedThread.CustomerInfo && selectedThread.CustomerInfo.customerId ? ' - CM ID: ' + selectedThread.CustomerInfo.customerId : ''}} {{ seeCMID() ?  ' - (Possible DUAL Id)' : ''}}</span>
+                </h5>
+                <div class="box-tools ticket">
+                    <button class="btn btn-xs btn-theme svgOnHover tooltip bottom" (click)="_ticketService.RouteToTickets()" routerLink="/tickets">
+                        <svg class="svg svg-white active">
+                            <use href="/assets/img/icons/icons-sprite.svg#ticket-list" />
+                        </svg>
+                        <span class="tooltip-inner">BACK TO LIST</span>
+                    </button>
+                    <button class="btn btn-xs btn-theme tooltip bottom svgOnHover" (click)="GetTicket('previous')" [disabled]="!indexCheckPrevious">
+                        <svg class="svg svg-white active">
+                            <use href="/assets/img/icons/icons-sprite.svg#arrow-prev" />
+                        </svg>
+                        <span class="tooltip-inner">PREV</span>
+                    </button>
+                    <a [attr.href]="GetUrl()" target="_blank"></a>
+                    <button class="btn btn-xs btn-theme tooltip bottom svgOnHover" (click)="GetTicket('next')" [disabled]="!indexCheckNext">
+                        <svg class="svg svg-white active">
+                            <use href="/assets/img/icons/icons-sprite.svg#arrow-next" />
+                        </svg>
+                        <span class="tooltip-inner">NEXT</span>
+                    </button>
+
+                    <!-- <button class="btn btn-xs btn-theme svgOnHover tooltip bottom" (click)="RevertScenario()">
+						<svg class="svg svg-white active">
+							<use href="/assets/img/icons/icons-sprite.svg#redo"/>
+						</svg>
+                        <div class="tooltip-inner">REVERT SCENARIO</div>
+                    </button> -->
+
+
+                    <button class="btn btn-xs btn-theme tooltip bottom" [popper]="scenarioPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperPlacement]="'bottom'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="true">
+                        <svg class="svg svg-white active">
+                            <use href="/assets/img/icons/icons-sprite.svg#scenario-automation" />
+                        </svg>
+                        <!-- *ngIf="!scenarios || (scenarios && !scenarios.length)" -->
+                        <!-- *ngIf="scenarios && scenarios.length" -->
+                        <span class="tooltip-inner">EXECUTE SCENARIO</span>
+                    </button>
+                    <button class="btn btn-xs btn-theme tooltip bottom-right" [popper]="watcherPopper" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperPlacement]="'bottom'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="true">
+                        <svg class="svg svg-white active">
+                            <use href="/assets/img/icons/icons-sprite.svg#watchers" />
+                        </svg>
+                        <!-- *ngIf="!(selectedThread.watchers && selectedThread.watchers.length)" -->
+                        <!-- *ngIf="selectedThread.watchers && selectedThread.watchers.length" -->
+                        <span class="tooltip-inner">WATCHERS</span>
+                    </button>
+                    <button class="btn btn-xs btn-theme" (click)="OpenViewHistory()" *ngIf="!showViewHistory">
+                        <span>Open Details</span>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body clearfix p-0">
+                <div class="chatBody">
+                    <div class="ticket-messages" #scrollContainer>
+                        <div class="clearfix" *ngFor="let messagesGroup of selectedThread.messages">
+                            <div class="day-separator clearfix">
+                                <span>{{ messagesGroup.date | dayDifferencePipe }}</span>
+                            </div>
+                            <div class="chat-msg clearfix" [ngClass]="(message.senderType == 'Visitor') ? 'msg_recieved' : 'msg_sent'" *ngFor="let message of messagesGroup.groupedMessagesList" [attr.id]="message.tid[0] || message.tid " [ngStyle]="(message.senderType == 'Visitor') ? {'background-color' : (message.viewColor) ? message.viewColor + '20' : selectedThread.viewColor + '20'} : ''">
+                                <div class="chat-header">
+                                    <div class="detail">
+                                        <div>
+                                            <div class="avatar ava-lg" [ngStyle]="(message.senderType == 'Visitor') ? {'background-color' :(message.viewColor) ? message.viewColor  : selectedThread.viewColor } : ''">
+                                                <span class="nameInitials">{{((message.senderType == 'Visitor') ? selectedThread.visitor.name : 'Beelinks Support') | slice:0:2 | uppercase}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="chat-info">
+                                            <h4 class="m-0">
+                                                {{((message.senderType == 'Visitor') ? selectedThread.visitor.name : 'Beelinks Support')}}
+                                            </h4>
+                                            <span>{{ message.datetime | date:'mediumDate' }}
+                                                {{ message.datetime | date:'shortTime' }}</span>
+                                            <span>
+                                                <b>To:</b> {{ message.to }}, <b>From:</b> {{ message.from }}
+                                                <button class="btn btn-transparent svgOnHover tooltip top"
+                                                    [popper]="infoPopper" [popperShowOnStart]="false"
+                                                    [popperTrigger]="'click'" [popperPlacement]="'bottom'"
+                                                    [popperHideOnClickOutside]="true" [popperHideOnScroll]="true"
+                                                    (click)="populateInfo(message.to, message.from, message.cc, message.bcc)">
+                                                    <svg class="svg svg-default active w-12 h-12">
+                                                        <use
+                                                            href="/assets/img/icons/icons-sprite.svg#arrow-double-down" />
+                                                    </svg>
+                                                    <span class="tooltip-inner">View info</span>
+                                            </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="actions">
+                                        <button class="btn btn-transparent svgOnHover tooltip top" *ngIf="message.senderType == 'Visitor'" (click)="Reply(selectedThread.subject,message.to,message.replytoAddress,message.tid, message)">
+                                            <svg class="svg svg-blue active">
+                                                <use href="/assets/img/icons/icons-sprite.svg#reply" />
+                                            </svg>
+                                            <span class="tooltip-inner">Reply</span>
+                                        </button>
+                                        <button class="btn btn-transparent svgOnHover tooltip top" *ngIf="message.senderType == 'Visitor' && ((message.cc && message.cc.length) || (message.bcc && message.bcc.length))" (click)="ReplyAll(selectedThread.subject,message.to,message.replytoAddress, message.cc, message.bcc,message.tid, message)">
+                                            <svg class="svg svg-blue active">
+                                                <use href="/assets/img/icons/icons-sprite.svg#reply-all" />
+                                            </svg>
+                                            <span class="tooltip-inner">Reply All</span>
+                                        </button>
+                                        <button class="btn btn-transparent svgOnHover tooltip top" *ngIf="message.senderType == 'Visitor'" (click)="Forward(selectedThread.subject,message.to,message.tid, message)">
+                                            <svg class="svg svg-blue active">
+                                                <use href="/assets/img/icons/icons-sprite.svg#forward" />
+                                            </svg>
+                                            <span class="tooltip-inner">Forward</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <app-message-attachments [message]="message">
+                                </app-message-attachments>
+
+                            </div>
+                        </div>
+                        <!-- <app-ticket-msg-form id="ticketMsg" *ngIf="msg.to && msg.subject"
+                            (message)="SendTicketMessage($event)" (delete)="Clear($event)" [sending]="uploading"
+                            [to]="msg.to" [from]="selectedThread.visitor.email" [subject]="msg.subject"
+                            [type]="msg.type" [tid]="msg.tid" [form]='Forms'></app-ticket-msg-form> -->
+                        <app-ticket-msg-form id="ticketMsg" *ngIf="msg.from && msg.subject" (message)="SendTicketMessage($event)" (delete)="Clear($event)" (redirectToAR)="GotoAR($event)" [sending]="uploading" [automatedResponses]="automatedResponses" [to]="msg.to" [from]="msg.from"
+                            [subject]="msg.subject" [type]="msg.type" [tid]="msg.tid" [form]='Forms' [cc]='msg.cc' [survey]="survey" [threadMessage]="threadMessage">
+                        </app-ticket-msg-form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-ticket-view-history class="viewHistory card p-0" (tasks)="onEnter($event)" (checkedTask)="TaskDone($event)" (removeId)="deleteTask($event)" (updateTask)="editedTask($event)" (ticketnote)="SaveNote($event)" (deleteNote)="DeleteNote($event)" (demergeInfo)="Demerge($event)"
+        (ticketStatus)="changedStatus($event)" (TagToAdd)="addTags($event)" (TagToDelete)="deleteTag($event)" (assignedAgent)="AssignAgentForTicket($event)" (loadMore)="loadMoreAgents($event)" (SearchAgents)="OnSearchFromDB($event)" (SaveCustomFields)="SaveCustomField($event)"
+        (AssignedGroup)="assignGroupTicket($event)" (snoozeTime)="Snooze($event)" [selectedThread]="selectedThread" (threadId)="setSelectedThread($event)" (iconRegistration)="RegisterIconCustomer($event)" [all_agents]="all_agents" [agentList_original]="agentList_original"
+        [fields]="fields" [tagList]="tagList" [all_groups]="all_groups" [permissions]="permissions" [ended]="ended" [loadingMoreAgents]="loadingMoreAgents" [searchedData]="searchedData" [allActivatedPolicies]="allActivatedPolicies" [visitor_ticket_history]="visitor_ticket_history"
+        (iconSearchData)="SearchIconCustomer($event)" [(showFlyoutModel)]="showViewHistory" [currAgent]="agent" [agentName]="agentName != '' ? agentName : ''" [loadingReg]="loadingReg" [loadingIconSearch]="loadingIconSearch" *ngIf="showViewHistory && verified && selectedThread && (selectedThread | json) != ({} | json)"
+        [countryName]=''>
+
+    </app-ticket-view-history>
+</div>
+
+
+<popper-content #infoPopper>
+    <ul class="activateScrollbar p-7 clearfix">
+        <li *ngIf="messageDetails.to">
+            <p><b>To:</b> {{ messageDetails.to }}</p>
+        </li>
+        <li *ngIf="messageDetails.from">
+            <p><b>From:</b> {{ messageDetails.from }}</p>
+        </li>
+        <li *ngIf="messageDetails.cc">
+            <p><b>CC:</b> {{ messageDetails.cc }}</p>
+        </li>
+        <li *ngIf="messageDetails.bcc">
+            <p><b>BCC:</b> {{ messageDetails.bcc }}</p>
+        </li>
+    </ul>
+</popper-content>
+
+<popper-content #watcherPopper>
+    <div class="clearfix notif watcher-popper">
+        <h5>
+            <span>Ticket Watchers</span>
+            <span *ngIf="selectedThread && selectedThread.watchers && selectedThread.watchers.length">({{selectedThread.watchers.length}})</span>
+        </h5>
+        <div class="input-block m-0">
+            <label>Agents added as watchers will receive window/email notifications when this ticket is updated</label>
+            <div class="input-group-sm">
+                <app-custom-select class="input-sm" style="height: max-content;" [items]="watch_agents" [selectLabel]="'Select Watchers'" (onSelect)="AddWatchers($event)" [(ngModel)]="selectedwatchAgents" [selectedItems]="selectedwatchAgents" [bindLabel]="'email'" [bindValue]="'email'"
+                    [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreWatchers($event)" (onSearch)="onSearchWatchers($event)">
+                </app-custom-select>
+            </div>
+        </div>
+        <div class="activateScrollbar">
+            <ul class="list-items clearfix style4" *ngIf="selectedThread && selectedThread.watchers && selectedThread.watchers.length">
+                <li class="item" *ngFor="let watchAgent of selectedThread.watchers">
+                    <div>
+                        <div class="info">
+                            <div class="name" title="{{watchAgent}}">
+                                <span class="ellipsis">{{watchAgent}}</span>
+                            </div>
+                        </div>
+                        <div class="actions" *ngIf="watchAgent == agent.email">
+                            <button class="btn btn-transparent svgOnHover tooltip left" (click)="deleteWatchers(watchAgent)">
+                                <svg class="svg svg-default">
+                                    <use href="/assets/img/icons/icons-sprite.svg#minus-circle" />
+                                </svg>
+                                <svg class="svg colored">
+                                    <use href="/assets/img/icons/icons-sprite.svg#minus-circle-colored" />
+                                </svg>
+                                <span class="tooltip-inner">Unwatch Agent</span>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <button class="btn btn-transparent svgOnHover tooltip left m-0" (click)="ClosePopper()" style="position:absolute;right:0;top:0;">
+            <svg class="svg svg-default">
+                <use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+            </svg>
+            <svg class="svg colored">
+                <use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+            </svg>
+            <span class="tooltip-inner">Close</span>
+        </button>
+    </div>
+</popper-content>
+
+<popper-content #scenarioPopper>
+    <ul class="activateScrollbar clearfix">
+        <li class="f-column" *ngIf="!scenarios || scenarios && !scenarios.length">
+            <b>No Scenarios Added</b>
+            <a class="link" (click)="gotoScenario()">Create a Scenario</a>
+        </li>
+        <li *ngFor="let scenario of scenarios" (click)="ExecuteScenario(scenario)">
+            <a>
+                <span><b>{{scenario.scenarioTitle}}</b><br>{{scenario.scenarioDesc}}</span>
+            </a>
+        </li>
+    </ul>
+</popper-content>

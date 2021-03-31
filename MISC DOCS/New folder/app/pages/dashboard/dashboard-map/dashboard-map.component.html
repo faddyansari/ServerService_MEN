@@ -1,0 +1,18 @@
+<div class="flag-names f-gap7">
+	<div>
+		<i class="flag ff-sm flag-DF" title="Total"></i>
+		<span>Total<small>({{visitorList.length}})</small></span>
+	</div>
+	<ng-template ngFor [ngForOf]="countryData_fullname.slice(0,5)" let-data let-i="index">
+		<div class="svgOnHover">
+			<i class="flag ff-sm flag-{{data.shortname}}" title="{{data.country}}"></i>
+			<span>{{data.shortname}}<small>({{data.value}})</small></span>
+		</div>
+	</ng-template>
+</div>
+<div class="f-column">
+	<div id="highchart"></div>
+	<p class="text-center">
+		<span>{{(visitors_description) ? visitors_description : 'Loading....'}}</span>
+	</p>
+</div>

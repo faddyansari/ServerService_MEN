@@ -1,0 +1,271 @@
+<form class="m-b-15 clearfix" [formGroup]="addRuleSetForm">
+	<div class="clearfix">
+		<div class="input-block">
+			<label>Rule Name</label>
+			<input type="text" class="form-control input-sm w50" autocomplete="off" placeholder="Rule Name"
+				[formControl]="addRuleSetForm.controls['name']">
+		</div>
+
+		<div class="rulesets">
+
+			<div class="ruleset-header">
+				<div>
+					<div class="pretty p-default p-round">
+						<input type="radio" [formControl]="addRuleSetForm.controls['operator']" value="or" checked>
+						<div class="state">
+							<label>Match any of the below</label>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="pretty p-default p-round">
+						<input type="radio" [formControl]="addRuleSetForm.controls['operator']" value="and">
+						<div class="state">
+							<label>Match all of the below</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="ruleset-body">
+				<h5>In Chats</h5>
+				<div class="conditions" formArrayName="conditions"
+					*ngFor="let condition of GetControls('conditions'); let i = index;">
+
+					<div class="andOR" [formGroupName]="i" *ngIf="i">
+						<div class="andOrContent">
+							<div [ngClass]="(addRuleSetForm.get('operator').value) == 'and' ? 'active' : ''">AND</div>
+							<div [ngClass]="(addRuleSetForm.get('operator').value) == 'or' ? 'active' : ''">OR</div>
+						</div>
+					</div>
+
+					<div class="condition clearfix notif" [formGroupName]="i">
+
+						<div class="label">
+							<label>If </label>
+						</div>
+
+						<div>
+							<!-- [selected]="condition.key == ''" -->
+
+							<label class="text-black">Key Name *</label>
+
+
+
+							<div class="input-block">
+								<input list="filters" type="text" class="form-control input-sm"
+									placeholder="Enter Key Name"
+									formControlName="key" maxlength="51" (change)="KeyChanged(i)">
+							</div>
+							<datalist id="filters">
+								<option *ngFor="let key of customFields" [value]="key.name">
+								</option>
+							</datalist>
+						</div>
+
+						<div *ngIf="condition.get('key').value">
+							<!-- [selected]="condition.operatorOption == ''" -->
+							<div class="input-block">
+								<label>Select Matching Criterea</label>
+								<div class="sel style1 sel-sm">
+									<!-- conatins starts with , ends with functions -->
+									<select class="form-control input-sm" formControlName="matchingCriterea">
+										<option value='contains'>Contains</option>
+										<option value='startswith'>Starts with</option>
+										<option value='endswith'>Ends with</option>
+										<option value='matchexact'>Match Exact</option>
+										<option value='is'>Is</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div *ngIf="condition.get('key').value == 'location' && condition.get('key').value != ''">
+							<div class="input-block">
+								<input type="text" class="form-control input-sm" placeholder="Enter Location"
+									[matAutocomplete]="autoGroups" #autoLocation (keydown)="KeyPress()"
+									[(ngModel)]="searchItem"
+									(ngModelChange)="ModelChange($event)" [ngModelOptions]="{standalone: true}">
+								<mat-autocomplete class="smAutoComplete" #autoGroups="matAutocomplete"
+									(optionSelected)="OnLocationSelected(i,$event)" autoActiveFirstOption>
+									<mat-option *ngFor="let group of fileterCountryWithCodes | keys"
+										[value]="group.name">
+										<i class="flag ff-sm flag-{{group.name}}"></i>
+										<span>{{group.details}}</span>
+									</mat-option>
+								</mat-autocomplete>
+							</div>
+							<div class="badge svgOnHover" *ngFor="let keyword of condition.get('keywords').value">
+								<span class="m-0">
+									<i class="flag ff-sm flag-{{keyword}}"></i>
+									<span>{{locations[keyword]}}</span>
+								</span>
+								<svg class="svg w-15 h-15 active dismiss">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" />
+								</svg>
+							</div>
+						</div>
+
+						<!-- <div *ngIf="condition.get('key').value == 'source' && condition.get('key').value != ''">
+							<tag-input modelAsStrings='true' tabindex="5" editable='true' [onlyFromAutocomplete]="true"
+								placeholder='Select Source' formControlName="keywords">
+								<tag-input-dropdown [showDropdownIfEmpty]="true">
+								</tag-input-dropdown>
+							</tag-input>
+							<p class="text-red m-b-5" *ngIf="!condition.valid && condition.dirty" class="text-red">
+								Please Select Source</p>
+						</div>
+						<div *ngIf="condition.get('key').value == 'from' && condition.get('key').value != ''">
+							<app-chips-input class="form-control input-sm tag-input w100"
+								[ngClass]="(condition.get('key').hasError('invalid')) ? 'border-red' : ''"
+								[regex]="emailPattern" name="keywords" [placeholder]="'keywords'" [delimiters]="[',']"
+								formControlName="keywords" [errorMsg]="'Email is not valid'"></app-chips-input>
+						</div> -->
+
+						<div *ngIf="condition.get('key').value != 'location' && condition.get('key').value != ''">
+							<label>Please Enter Keywords</label>
+							<tag-input modelAsStrings='true' tabindex="5" editable='true' placeholder='Enter Keywords (*)' formControlName="keywords"></tag-input>
+							<!-- <p class="text-red m-b-5" *ngIf="!condition.valid && condition.dirty">Please Enter Keywords</p> -->
+						</div>
+
+						<div class="actions"
+							*ngIf="addRuleSetForm.get('conditions').controls.length > 1">
+							<button type="button" class="btn btn-transparent svgOnHover tooltip left" (click)="DeleteCondition(i)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete" />
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+						</div>
+
+					</div>
+					<!-- <app-newcondition></app-newcondition> -->
+				</div>
+			</div>
+
+			<div class="ruleset-footer m-b-20">
+				<button class="btn btn-sm btn-theme" (click)="AddCondition()">
+					<span>Add Condition</span>
+				</button>
+			</div>
+
+			<div class="ruleset-body">
+				<h5>Add Actions</h5>
+				<div class="conditions" formArrayName="actions">
+					<div class="condition clearfix notif" [formGroupName]="i"
+						*ngFor="let action of GetControls('actions'); let i = index;">
+
+						<div class="label">
+							<label>Action</label>
+						</div>
+
+						<div>
+							<div class="input-block">
+								<div class="sel style1 sel-sm">
+									<select formControlName="name" class="form-control input-sm"
+										(change)="ActionChanged(i,$event)">
+										<option value="" selected>Select Action</option>
+										<option value="{{action.name}}"
+											*ngFor="let action of GetAvailableActions(i) | keys">
+											{{action.details}}</option>
+										<!-- <option value="agent">Assign Agent</option>
+										<option value="note">Add note</option>
+										<option value="priority">Add Priority</option> -->
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div>
+							<div class="input-block">
+								<app-custom-select class="form-control input-sm" [items]="actionsData[action.get('name').value]"
+									[bindLabel]="actionsDataKey[action.get('name').value]"
+									[bindValue]="actionsDataKey[action.get('name').value]" [lazyLoading]="false"
+									(onLoadMore)="loadMore($event)" (onSearch)="onSearch($event)"
+									formControlName="value"
+									(onSelect)="SelectAction($event,action.get('name').value,i)">
+								</app-custom-select>
+							</div>
+						</div>
+
+						<div class="input-block" *ngIf="action.get('name').value == 'customFilter'">
+							<tag-input modelAsStrings='true' tabindex="5" editable='true'
+								placeholder='Enter Keywords (*)'
+								formControlName="keywords">
+							</tag-input>
+							<p class="text-red m-b-5" *ngIf="!action.valid && action.dirty">Please Enter Keywords</p>
+						</div>
+
+						<!-- <div *ngIf="action.get('name').value == 'group'">
+              <div class="input-block">
+                <div class="sel style1 sel-sm">
+                  <select formControlName="value" class="form-control input-sm">
+                    <option value="" selected>Select Group</option>
+                    <option value="{{group.group_name}}" *ngFor="let group of groupsList">
+                      {{group.group_name}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="action.get('name').value == 'agent'">
+              <div class="input-block">
+                <app-custom-select [items]="agentsList" [bindLabel]="'email'" [bindValue]="'email'" [lazyLoading]="true"
+                  (onLoadMore)="loadMore($event)" (onSearch)="onSearch($event)" formControlName="value"
+                  [selectedItems]="[action.get('value').value]">
+                </app-custom-select>
+              </div>
+            </div>
+
+            <div *ngIf="action.get('name').value == 'note'">
+              <div class="input-block">
+                <textarea class="form-control input-sm" [ngxSummernote]="config" name="note" formControlName="value"
+                  rows="4" autocomplete="off">
+								</textarea>
+              </div>
+            </div> -->
+
+						<div class="actions"
+							*ngIf="addRuleSetForm.get('actions').controls.length > 1">
+							<button class="btn btn-transparent svgOnHover tooltip left" (click)="DeleteAction(i)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete" />
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="ruleset-footer">
+				<button class="btn btn-sm btn-theme m-b-10" (click)="AddAction()">
+					<span>Add Action</span>
+				</button>
+			</div>
+
+		</div>
+
+		<button class="btn btn-sm bg-blue m-r-10" *ngIf="(!selectedRule)" [disabled]="addRuleSetForm.invalid"
+			(click)="AddRuleSet()">
+			<span>Save</span>
+		</button>
+
+		<button class="btn btn-sm bg-blue m-r-10" *ngIf="(selectedRule && selectedRule._id)"
+			[disabled]="addRuleSetForm.invalid" (click)="UpdateRuleSet(selectedRule._id)">
+			<span>Update</span>
+		</button>
+
+		<button class="btn btn-sm bg-black" (click)="CancelAddRule()">
+			<span>Cancel</span>
+		</button>
+	</div>
+</form>

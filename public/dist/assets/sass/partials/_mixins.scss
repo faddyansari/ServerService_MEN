@@ -1,0 +1,342 @@
+@mixin background-size($x, $y) {
+    -webkit-background-size: $x $y;
+    -moz-background-size: $x $y;
+    -ms-background-size: $x $y;
+    -o-background-size: $x $y;
+    background-size: $x $y;
+}
+
+@mixin text-shadow ($horizontal, $vertical, $blur, $color) {
+    -webkit-text-shadow: $horizontal $vertical $blur $color;
+    -moz-text-shadow: $horizontal $vertical $blur $color;
+    -ms-text-shadow: $horizontal $vertical $blur $color;
+    -o-text-shadow: $horizontal $vertical $blur $color;
+    text-shadow: $horizontal $vertical $blur $color;
+}
+
+@mixin box-shadow ($shadows) {
+    -webkit-box-shadow: $shadows;
+    -moz-box-shadow: $shadows;
+    -ms-box-shadow: $shadows;
+    -o-box-shadow: $shadows;
+    box-shadow: $shadows;
+}
+
+@mixin box-shadow-dual ($shadows1, $shadows2) {
+    -webkit-box-shadow: $shadows1, $shadows2;
+    -moz-box-shadow: $shadows1, $shadows2;
+    -ms-box-shadow: $shadows1, $shadows2;
+    -o-box-shadow: $shadows1, $shadows2;
+    box-shadow: $shadows1, $shadows2;
+}
+
+@mixin box-shadow-tri ($shadows1, $shadows2, $shadows3) {
+    -webkit-box-shadow: $shadows1, $shadows2, $shadows3;
+    -moz-box-shadow: $shadows1, $shadows2, $shadows3;
+    -ms-box-shadow: $shadows1, $shadows2, $shadows3;
+    -o-box-shadow: $shadows1, $shadows2, $shadows3;
+    box-shadow: $shadows1, $shadows2, $shadows3;
+}
+
+@mixin appearance($value) {
+    -webkit-appearance: $value;
+    -moz-appearance: $value;
+    -ms-appearance: $value;
+    -o-appearance: $value;
+    appearance: $value;
+}
+
+@mixin border-radius($value) {
+    -webkit-border-radius: $value;
+    -moz-border-radius: $value;
+    -ms-border-radius: $value;
+    -o-border-radius: $value;
+    border-radius: $value;
+}
+
+@mixin transform($transforms) {
+    -webkit-transform: $transforms;
+    -moz-transform: $transforms;
+    -o-transform: $transforms;
+    -ms-transform: $transforms;
+    transform: $transforms;
+}
+
+@mixin rotate($rotate) {
+    @include transform(rotate($rotate));
+}
+
+@mixin rotate3d($x, $y, $z, $rotate) {
+    @include transform(rotate3d($x, $y, $z, $rotate));
+}
+
+@mixin scale($scale) {
+	@include transform(scale($scale));
+}
+
+@mixin scale3d($x, $y, $z) {
+    @include transform(scale3d($x, $y, $z));
+}
+
+@mixin translateX($x) {
+    @include transform(translateX($x));
+}
+
+@mixin translateY($y) {
+    @include transform(translateY($y));
+}
+
+@mixin translateZ($z) {
+    @include transform(translateZ($z));
+}
+
+@mixin translate($x, $y) {
+    @include transform(translate($x, $y));
+}
+
+@mixin translate3d($x, $y, $z) {
+    @include transform(translate3d($x, $y, $z));
+}
+
+@mixin keyframes ($name) {
+    @-webkit-keyframes #{$name} {
+        @content;
+    }
+
+    @-moz-keyframes #{$name} {
+        @content;
+    }
+
+    @-ms-keyframes #{$name} {
+        @content;
+    }
+
+    @keyframes #{$name} {
+        @content;
+    }
+}
+
+@mixin animation ($animations) {
+    -webkit-animation: $animations;
+    -moz-animation: $animations;
+    -ms-animation: $animations;
+    -o-animation: $animations;
+    animation: $animations;
+}
+
+@mixin animation-dual ($animation1, $animation2) {
+    -webkit-animation: $animation1, $animation2;
+    -moz-animation: $animation1, $animation2;
+    -ms-animation: $animation1, $animation2;
+    -o-animation: $animation1, $animation2;
+    animation: $animation1, $animation2;
+}
+
+@mixin opacity($opacity) {
+    opacity: $opacity;
+    $opacity-ie: $opacity * 100;
+    filter: alpha(opacity=$opacity-ie);
+}
+
+@mixin transition ($transition) {
+    -webkit-transition: $transition;
+    -moz-transition: $transition;
+    -ms-transition: $transition;
+    -o-transition: $transition;
+    transition: $transition;
+}
+
+@mixin transition-dual ($transition1, $transition2) {
+    -webkit-transition: $transition1, $transition2;
+    -moz-transition: $transition1, $transition2;
+    -ms-transition: $transition1, $transition2;
+    -o-transition: $transition1, $transition2;
+    transition: $transition1, $transition2;
+}
+
+@mixin placeholder {
+    &::-webkit-input-placeholder,
+    &:-moz-placeholder,
+    &::-moz-placeholder,
+    &:-ms-input-placeholder {
+        @content;
+    }
+}
+
+@mixin box-sizing($box-model) {
+    -webkit-box-sizing: $box-model;
+    -moz-box-sizing: $box-model;
+    -ms-box-sizing: $box-model;
+    -o-box-sizing: $box-model;
+    box-sizing: $box-model;
+}
+
+@mixin user-select($select-value) {
+    -webkit-user-select: $select-value;
+    -khtml-user-select: $select-value;
+    -moz-user-select: $select-value;
+    -ms-user-select: $select-value;
+    -o-user-select: $select-value;
+    user-select: $select-value;
+}
+
+@mixin backface-visibility($visibility) {
+    -webkit-backface-visibility: $visibility;
+    -moz-backface-visibility: $visibility;
+    -ms-backface-visibility: $visibility;
+    -o-backface-visibility: $visibility;
+    backface-visibility: $visibility;
+}
+
+
+
+/*=============================================
+= FOR DEVICE RESPONSIVE =
+=============================================*/
+
+@mixin phone {
+    @media screen and (min-width:#{$phone-width}) {
+        @content;
+    }
+}
+
+@mixin phoneL {
+    @media screen and (min-width:#{$phone-landscape-width}) {
+        @content;
+    }
+}
+
+@mixin tabletP {
+    @media screen and (min-width:#{$tablet-portrait-width}) {
+        @content;
+    }
+}
+
+@mixin tabletL {
+    @media screen and (min-width:#{$tablet-landscape-width}) {
+        @content;
+    }
+}
+
+@mixin phone_and_tablet {
+    @media screen and (max-width:#{$tablet-portrait-width}) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media screen and (min-width:#{$desktop-width}) {
+        @content;
+    }
+}
+
+@mixin desktop_wide {
+    @media screen and (min-width:#{$desktop-wide-width}) {
+        @content;
+    }
+}
+
+@mixin only_phone {
+    @media screen and (max-width:#{$tablet-portrait-width - 1px}) {
+        @content;
+    }
+}
+
+/*=====  End of FOR DEVICE RESPONSIVE  ======*/
+
+
+
+/*=============================================
+= FOR GRIDS =
+=============================================*/
+
+@mixin grid-generator($size) {
+    @for $i from $number-of-columns through 1 {
+        .col-#{$size}-#{$i} {
+            width: percentage($i / $number-of-columns);
+            float: left;
+        }
+        .col-#{$size}-pull-#{$i} {
+            right: percentage($i / $number-of-columns);
+        }
+        .col-#{$size}-push-#{$i} {
+            left: percentage($i / $number-of-columns);
+        }
+        .col-#{$size}-offset-#{$i} {
+            margin-left: percentage($i / $number-of-columns);
+        }
+    }
+}
+
+/*=====  End of FOR GRIDS  ======*/
+
+
+
+/*=============================================
+= GRADIENT GENERATOR =
+=============================================*/
+
+@mixin linear-gradient($from, $to, $axis) {
+    background: transparent;
+    background: -moz-linear-gradient(top, $from 0%, $to 100%);
+    @if $axis=='vertical' {
+        background: --webkit-gradient(left top, left bottom, color-stop(0%, $from), color-stop(100%, $to));
+        background: --webkit-linear-gradient(top, $from 0%, $to 100%);
+        background: -o-linear-gradient(top, $from 0%, $to 100%);
+        background: -ms-linear-gradient(top, $from 0%, $to 100%);
+        background: linear-gradient(to bottom, $from 0%, $to 100%);
+    }
+    @else if $axis=='horizontal' {
+        background: -webkit-gradient(left top, right top, color-stop(0%, $from), color-stop(100%, $to));
+        background: -webkit-linear-gradient(left, $from 0%, $to 100%);
+        background: -o-linear-gradient(left, $from 0%, $to 100%);
+        background: -ms-linear-gradient(left, $from 0%, $to 100%);
+        background: linear-gradient(to right, $from 0%, $to 100%);
+    }
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$from}', endColorstr='#{$to}', GradientType=1 );
+}
+
+@mixin diagonal-gradient-tlbr($colorStart, $colorEnd) {
+    background: transparent;
+    background: -moz-linear-gradient(45deg, $colorStart 0%, $colorEnd 100%) ;
+    background: -webkit-gradient(left top, right bottom, color-stop(0%, $colorStart), color-stop(100%, $colorEnd)) ;
+    background: -webkit-linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    background: -o-linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    background: -ms-linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    background: linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$colorStart}', endColorstr='#{$colorEnd}', GradientType=1);
+}
+
+@mixin diagonal-gradient-bltr($colorStart, $colorEnd) {
+    background: transparent;
+    background: -moz-linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    background: -webkit-gradient(left bottom, right top, color-stop(0%, $colorStart), color-stop(100%, $colorEnd));
+    background: -webkit-linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    background: -o-linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    background: -ms-linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    background: linear-gradient(45deg, $colorStart 0%, $colorEnd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$colorStart}', endColorstr='#{$colorEnd}', GradientType=1);
+}
+
+/*=====  End of FOR GRADIENT GENERATOR  ======*/
+
+
+
+/*=============================================
+= FONT GENERATOR =
+=============================================*/
+@mixin font-face ($path, $name) {
+    @font-face {
+        font-family: $name;
+        src: url('#{$path + $name}.eot');
+        src: url('#{$path + $name}.eot?#iefix') format('embedded-opentype'),
+            url('#{$path + $name}.woff2') format('woff2'),
+            url('#{$path + $name}.woff') format('woff'),
+            url('#{$path + $name}.ttf') format('truetype'),
+            url('#{$path + $name}.svg#{"#"+$name}') format('svg');
+        font-style : normal;
+        font-weight: normal;
+    }
+}
+
+/*=====  End of FONT GENERATOR  ======*/

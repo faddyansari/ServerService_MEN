@@ -1,0 +1,83 @@
+<div class="activateScrollbar clearfix" *ngIf="allIntPolicies && allIntPolicies.length">
+	<ul class="list-items clearfix style4">
+		<li class="item clearfix notif" *ngFor="let policy of allIntPolicies;let index=index">
+			<div>
+				<div class="info f-row">
+
+					<div class="name">
+						<p>
+							<b>Policy Name:</b>
+							<span>{{policy.policyName}}</span>
+							<br>
+							<b *ngIf="policy.policyDesc">Policy Description:</b>
+							<span *ngIf="policy.policyDesc">{{policy.policyDesc}}</span>
+							<br>
+							<span class="tooltip bottom" *ngIf="policy.created">
+								<svg class="svg w-15 h-15 active">
+									<use href="/assets/img/icons/icons-sprite.svg#created-date" class="text-blue"/>
+								</svg>
+								<span class="text-red">{{policy.created.date | date :'mediumDate'}} |
+									{{ policy.created.date | date :'shortTime' }}</span>
+								<span class="tooltip-inner">Created Date</span>
+							</span>
+							<br>
+							<span class="tooltip top" *ngIf="policy.lastModified">
+								<svg class="svg w-15 h-15 active">
+									<use href="/assets/img/icons/icons-sprite.svg#updated-date" class="text-red"/>
+								</svg>
+								<span class="text-blue">{{policy.lastModified.date | date :'mediumDate'}} |
+									{{ policy.lastModified.date | date :'shortTime' }}</span>
+								<span class="tooltip-inner">Updated Date</span>
+							</span>
+						</p>
+					</div>
+				</div>
+				<div class="actions">
+					<div class="pretty p-switch p-smooth p-fill p-toggle tooltip top m-0" *ngIf="!reOrderEnable">
+						<input type="checkbox" [(ngModel)]="policy.activated"
+							(change)="toggleActivation(policy._id, policy.activated)" />
+						<div class="state p-on">
+							<label></label>
+						</div>
+						<div class="state p-off">
+							<label></label>
+						</div>
+						<span class="tooltip-inner" *ngIf="!policy.activated">Activate this policy</span>
+						<span class="tooltip-inner" *ngIf="policy.activated">De-activate this policy</span>
+					</div>
+					<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="editPolicy(policy)"
+						*ngIf="!reOrderEnable">
+						<svg class="svg svg-blue active">
+							<use href="/assets/img/icons/icons-sprite.svg#edit" />
+						</svg>
+						<span class="tooltip-inner">Edit</span>
+					</button>
+					<button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="deletePolicy(policy._id)"
+						*ngIf="!reOrderEnable">
+						<svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#delete" />
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+						</svg>
+						<span class="tooltip-inner">Delete</span>
+					</button>
+					<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveUp(policy._id,index,policy.order)"
+						*ngIf="reOrderEnable">
+						<svg class="svg svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#reorder-ascending"/>
+						</svg>
+						<span class="tooltip-inner">Swap Up</span>
+					</button>
+					<button class="btn btn-transparent svgOnHover tooltip top" (click)="moveDown(policy._id,index,policy.order)"
+						*ngIf="reOrderEnable">
+						<svg class="svg svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#reorder-descending"/>
+						</svg>
+						<span class="tooltip-inner">Swap Down</span>
+					</button>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>

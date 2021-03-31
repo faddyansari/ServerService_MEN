@@ -1,0 +1,412 @@
+<div class="tabination clearfix">
+    <ul class="nav-tabs">
+        <li [ngClass]="(pill1) ? 'active' : ''" *ngIf="permissions.canSeeRegisteredIconCustomer || permissions.canRegisterIconCustomer">
+            <a (click)="setPillActive('pill1')">{{ permissions.canSeeRegisteredIconCustomer && CustomerInfo && CustomerInfo.customerId ? 'Registered Customer' : permissions.canRegisterIconCustomer || !CustomerInfo ? 'Registration' : '' }}
+            </a></li>
+        <li [ngClass]="(pill2) ? 'active' : ''" *ngIf="permissions.canSeeRelatedCustomerInfo"><a (click)="setPillActive('pill2')">Related
+                Customer
+            </a>
+        </li>
+    </ul>
+
+
+    <ul class="tab-content">
+
+        <li class="tab-pane" [ngClass]="(pill1) ? 'active' : ''">
+            <!-- REGISTRATION FORM -->
+            <form class="require-validation" [formGroup]="registerCustomerForm" *ngIf="(!CustomerInfo || (CustomerInfo && !CustomerInfo.customerId)) && permissions.canRegisterIconCustomer">
+                <fieldset>
+                    <h6 *ngIf="RelatedCustomerInfo && RelatedCustomerInfo.length">Bind through customer Id</h6>
+                    <div class="clearfix" *ngIf="RelatedCustomerInfo && RelatedCustomerInfo.length">
+                        <div class="input-block">
+                            <div class="input-group-xs">
+                                <input type="text" class="form-control input-sm" placeholder="Bind Customer ID" [(ngModel)]="customerId" title="Note: Minimum 7 characters with no whitespace" [ngModelOptions]="{standalone: true}" />
+
+                                <div class="input-group-btn">
+                                    <button class="btn btn-theme min-w-80" (click)="RegisterCustomer()" [disabled]="ValidateCustomerId()">
+                                        <span>Bind</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="text-red">Note: Once you enter customer Id here, you will not be able to register customer, through below form</p>
+                        </div>
+                    </div>
+                    <h5 *ngIf="RelatedCustomerInfo && RelatedCustomerInfo.length">OR</h5>
+                    <h6 *ngIf="RelatedCustomerInfo && RelatedCustomerInfo.length">Fill registration form</h6>
+                    <div class="input-block">
+                        <label>Customer Name</label>
+                        <input type="text" class="form-control input-sm" placeholder="Customer Name" formControlName="customerName" />
+                    </div>
+                    <div class="input-block">
+                        <label>First Name</label>
+                        <input type="text" class="form-control input-sm" placeholder="First Name" formControlName="firstName" />
+                    </div>
+                    <div class="input-block">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control input-sm" placeholder="Last Name" formControlName="lastName" />
+                    </div>
+                    <div class="input-block">
+                        <label>Destination Country </label>
+                        <app-custom-select class="input-sm" [items]="destCountryCodesList" [selectLabel]="'Select Destination'" formControlName="destCountryCode" [selectedItems]="registerCustomerForm.controls['destCountryCode'].value" [bindValue]="'ItemName'" [bindLabel]="'ItemName'"
+                            [multiple]="false" [search]="true" (onSelect)="GetPortList()" (change)="GetPortList()">
+                        </app-custom-select>
+                    </div>
+
+                    <div class="input-block" *ngIf="registerCustomerForm.controls['destCountryCode'].value">
+                        <label>Arrival Port </label>
+                        <div class="sel style1 sel-sm">
+                            <select class="form-control input-sm" name="arrivalPortId" formControlName="arrivalPortId">
+                                <option value="" disabled selected>Select Arrival Port</option>
+                                <option *ngFor="let customer of autoPort" [value]="customer.ItemCode">
+                                    {{customer.ItemName}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-block">
+                        <label>Customer Type </label>
+                        <div class="sel style1 sel-sm">
+                            <select class="form-control input-sm" name="customerTypeId" formControlName="customerTypeId">
+                                <option value="" disabled selected>Select Customer Type</option>
+                                <option *ngFor="let customer of customerTypeList" [value]="customer.ItemCode">
+                                    {{customer.ItemName}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-block">
+                        <label>Sale Person Name </label>
+                        <app-custom-select class="input-sm" [items]="SalesEmployeeList" [selectLabel]="'Select Sales Person'" formControlName="salePersonUserCode" (onLoadMore)="loadMore($event)" [selectedItems]="registerCustomerForm.controls['salePersonUserCode'].value" [bindValue]="'EmployeeName'"
+                            [bindLabel]="'EmployeeName'" [multiple]="false" [search]="true">
+                        </app-custom-select>
+                    </div>
+
+                    <div class="input-block">
+                        <label>Contact Phone Type </label>
+                        <div class="sel style1 sel-sm">
+                            <select class="form-control input-sm" name="contactPhoneTypeId" formControlName="contactPhoneTypeId">
+                                <option value="" disabled selected>Select Phone Type</option>
+                                <option *ngFor="let phone of phoneIDList" [value]="phone.ItemCode">
+                                    {{phone.ItemName}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-block b-0" formArrayName="contactPhoneNumber">
+                        <label>Contact Phone Number</label>
+                        <ng-template ngFor let-phonenumber [ngForOf]="GetControls('contactPhoneNumber')" let-index="index">
+                            <div class="input-group-sm b-0" [formGroupName]="index">
+                                <div class="input-group-addon p-0 p-r-5 b-0" *ngIf="addNewNumber">
+                                    <div class="pretty p-default p-round p-smooth m-0" *ngIf="registerCustomerForm.get('contactPhoneNumber').controls.length > 1">
+                                        <input type="radio" title="Set as Default Phone Number" name="isDefaultPN" [id]="index" formControlName="isDefaultPN" [checked]="checkBoxPhone ? ((registerCustomerForm.controls['contactPhoneNumber']).controls[index]).controls['isDefaultPN'].value: ((registerCustomerForm.controls['contactPhoneNumber']).controls[index]).controls['isDefaultPN'].value"
+                                            [value]="checkBoxPhone ? ((registerCustomerForm.controls['contactPhoneNumber']).controls[index]).controls['isDefaultPN'].value: ((registerCustomerForm.controls['contactPhoneNumber']).controls[index]).controls['isDefaultPN'].value"
+                                            (change)="OnChange($event,index)" />
+                                        <div class="state">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="tel" class="form-control m-0" placeholder="Contact Phone Number" name="number" formControlName="number" maxlength="100" />
+                                <div class="input-group-btn" *ngIf="registerCustomerForm.get('contactPhoneNumber').controls.length > 1">
+                                    <button class="btn btn-transparent p-0 p-l-5 svgOnHover tooltip left" (click)="DeletePhoneNumber(index)">
+                                        <svg class="svg svg-default">
+                                            <use href="/assets/img/icons/icons-sprite.svg#delete" />
+                                        </svg>
+                                        <svg class="svg colored">
+                                            <use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+                                        </svg>
+                                        <span class="tooltip-inner">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <div>
+                            <p *ngIf="addNewNumber"><span class="text-red">Note:Atleast one phone number should be set
+                                    default</span>
+                            </p>
+
+                            <button class="btn btn-xs bg-blue" (click)="AddPhoneNumber()">
+                                <span>Add New Phone Number</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-block b-0" formArrayName="contactMailEmailAddress">
+                        <label>Contact Email Address</label>
+                        <ng-template ngFor let-email [ngForOf]="GetControls('contactMailEmailAddress')" let-index="index">
+                            <div class="input-group-sm b-0" [formGroupName]="index">
+                                <div class="input-group-addon p-0 p-r-5 b-0" *ngIf="addNewEmail">
+                                    <div class="pretty p-smooth p-default p-round m-0" *ngIf="registerCustomerForm.get('contactMailEmailAddress').controls.length > 1">
+                                        <input type="radio" title="Set as Default Email" [id]="index" name="isDefault" formControlName="isDefault" [checked]="checkBoxEmail ? ((registerCustomerForm.controls['contactMailEmailAddress']).controls[index]).controls['isDefault'].value: ((registerCustomerForm.controls['contactMailEmailAddress']).controls[index]).controls['isDefault'].value"
+                                            [value]="checkBoxEmail ? ((registerCustomerForm.controls['contactMailEmailAddress']).controls[index]).controls['isDefault'].value: ((registerCustomerForm.controls['contactMailEmailAddress']).controls[index]).controls['isDefault'].value"
+                                            (change)="OnChangeEmail($event,index)" />
+                                        <div class="state">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="tel" class="form-control m-0" placeholder="Contact Email address" name="address" formControlName="address" maxlength="100" />
+                                <div class="input-group-btn" *ngIf="registerCustomerForm.get('contactMailEmailAddress').controls.length > 1">
+                                    <button class="btn btn-transparent p-0 p-l-5 svgOnHover tooltip left" (click)="DeleteEmailAddress(index)">
+                                        <svg class="svg svg-default">
+                                            <use href="/assets/img/icons/icons-sprite.svg#delete" />
+                                        </svg>
+                                        <svg class="svg colored">
+                                            <use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+                                        </svg>
+                                        <span class="tooltip-inner">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <p *ngIf="addNewEmail"><span class="text-red">Note:Atleast one email address should be set
+                            default</span></p>
+                    <button class="btn btn-xs bg-blue" (click)="AddEmailAddress()">
+                        <span>Add New Email</span>
+                    </button>
+
+                </fieldset>
+
+                <fieldset>
+                    <div class="input-block">
+                        <label>Home Page On </label>
+                        <div class="clearfix">
+                            <div class="pretty p-default p-round p-smooth">
+                                <input name="homePageOnFlg" formControlName="homePageOnFlg" type="radio" value="1" class="ng-valid ng-dirty ng-touched" checked />
+                                <div class="state">
+                                    <label> Yes </label>
+                                </div>
+                            </div>
+                            <div class="pretty p-default p-round p-smooth">
+                                <input name="homePageOnFlg" formControlName="homePageOnFlg" type="radio" value="0" class="ng-valid ng-dirty ng-touched" />
+                                <div class="state">
+                                    <label> No </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-block">
+                        <label>My Page In</label>
+                        <div class="clearfix">
+                            <div class="pretty p-default p-round p-smooth">
+                                <input name="myPageOnFlg" formControlName="myPageOnFlg" type="radio" value="1" class="ng-valid ng-dirty ng-touched" checked />
+                                <div class="state">
+                                    <label> Yes </label>
+                                </div>
+                            </div>
+                            <div class="pretty p-default p-round p-smooth">
+                                <input name="myPageOnFlg" formControlName="myPageOnFlg" type="radio" value="0" class="ng-valid ng-dirty ng-touched" />
+                                <div class="state">
+                                    <label> No </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-block">
+                        <label>Bulk Email </label>
+                        <div class="clearfix">
+                            <div class="pretty p-default p-round p-smooth">
+                                <input name="bulkEmailFlg" formControlName="bulkEmailFlg" type="radio" value="1" class="ng-valid ng-dirty ng-touched" checked />
+                                <div class="state">
+                                    <label> Yes </label>
+                                </div>
+                            </div>
+                            <div class="pretty p-default p-round p-smooth">
+                                <input name="bulkEmailFlg" formControlName="bulkEmailFlg" type="radio" value="0" class="ng-valid ng-dirty ng-touched" />
+                                <div class="state">
+                                    <label> No </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-block">
+                        <label>Bulk Email Stock List </label>
+                        <div class="clearfix">
+                            <div class="pretty p-default p-round p-smooth">
+                                <input name="bulkEmailStockListFlg" formControlName="bulkEmailStockListFlg" type="radio" value="1" class="ng-valid ng-dirty ng-touched" checked />
+                                <div class="state">
+                                    <label> Yes </label>
+                                </div>
+                            </div>
+                            <div class="pretty p-default p-round p-smooth">
+                                <input name="bulkEmailStockListFlg" formControlName="bulkEmailStockListFlg" type="radio" value="0" class="ng-valid ng-dirty ng-touched" />
+                                <div class="state">
+                                    <label> No </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-xs bg-blue" (click)="RegisterCustomer()" [disabled]="!registerCustomerForm.valid || CheckDefaultEmail() || CheckDefaultPhone() || CheckCustomerId()" [ngClass]="(loadingReg) ? 'btnSpinner' : ''">
+                        <span>Register Now</span>
+                    </button>
+                    <p *ngIf="RelatedCustomerInfo && RelatedCustomerInfo.length && !loadingReg"><span class="text-red">Note: You
+                            can submit this registration form if you haven't added customer Id above</span></p>
+                    <p *ngIf="loadingReg"><span class="text-blue">Please wait, it might take some time</span></p>
+                </fieldset>
+
+            </form>
+
+            <div class="details" *ngIf="CustomerInfo && CustomerInfo.customerId && permissions.canRegisterIconCustomer && !permissions.canSeeRegisteredIconCustomer">
+                <p><span class="text-red"> Customer is registered already! <br><br> Sorry, you donot have permission to
+                        see registered Customer.</span></p>
+            </div>
+
+            <div class="details" *ngIf="(!CustomerInfo || (CustomerInfo && !CustomerInfo.customerId)) && permissions.canSeeRegisteredIconCustomer && !permissions.canRegisterIconCustomer">
+                <span><span class="text-red"> Customer not registered yet! <br><br> Sorry, you donot have permission to
+                        register Customer. </span></span>
+            </div>
+
+            <!-- REGISTERED CUSTOMER -->
+            <div class="details" *ngIf="CustomerInfo && CustomerInfo.customerId && permissions.canSeeRegisteredIconCustomer">
+                <br>
+                <h5 style="font-weight:bold">Customer Information:</h5>
+                <div class="email" title="{{CustomerInfo.customerId}}">
+                    <span> Customer Id:
+                        {{CustomerInfo.customerId}} </span>
+                </div>
+                <div class="email" *ngIf="CustomerInfo.customerName" title="{{CustomerInfo.customerName}}">
+                    <span> Customer Name:
+                        {{CustomerInfo.customerName}}
+                    </span>
+                </div>
+                <div class="email" *ngIf="CustomerInfo.customerEmail && CustomerInfo.customerEmail.length" title="{{CustomerInfo.customerEmail[0]}}">
+                    <span> Customer Email:
+                        {{CustomerInfo.customerEmail[0]}} <span class="text-blue"> (Default)</span>
+                    </span>
+                </div>
+                <div class="email" *ngIf="CustomerInfo.customerPhone && CustomerInfo.customerPhone.length" title="{{CustomerInfo.customerPhone[0]}}">
+                    <span>Customer Phone:
+                        {{CustomerInfo.customerPhone[0]}} <span class="text-blue"> (Default)</span>
+                    </span>
+                </div>
+                <div class="email" *ngIf="CustomerInfo.customerRank" title="{{CustomerInfo.customerRank}}">
+                    <span> Customer Rank:
+                        {{CustomerInfo.customerRank}}
+                    </span>
+                </div>
+                <div class="email" *ngIf="CustomerInfo.customerType" title="{{CustomerInfo.customerType}}">
+                    <span> Customer Type:
+                        {{CustomerInfo.customerType}}
+                    </span>
+                </div>
+                <div class="email" *ngIf="CustomerInfo.customerCountry" title="{{CustomerInfo.customerCountry}}">
+                    <span> Customer Country:
+                        {{CustomerInfo.customerCountry}}
+                    </span>
+                </div>
+                <br>
+                <h5 style="font-weight:bold">Sales Person Information:</h5>
+                <div class="email" *ngIf="CustomerInfo.salesPersonName  " title="{{CustomerInfo.salesPersonName}}">
+                    <span> Sales Person Name:
+                        {{CustomerInfo.salesPersonName}} </span>
+                </div>
+                <div class="email" *ngIf="CustomerInfo.salesPersonCode  " title="{{CustomerInfo.salesPersonCode}}">
+                    <span> Sales Person Code:
+                        {{CustomerInfo.salesPersonCode}} </span>
+                </div>
+                <div class="email" *ngIf="CustomerInfo.salesPersonOffice " title="{{CustomerInfo.salesPersonOffice}}">
+                    <span> Sales Person Office:
+                        {{CustomerInfo.salesPersonOffice}}
+                    </span>
+                </div>
+                <br>
+                <div *ngIf="CustomerInfo.customerEmail && CustomerInfo.customerEmail.length>1">
+                    <h5 style="font-weight:bold">Email List:</h5>
+
+                    <div class="email" *ngFor="let email of CustomerInfo.customerEmail;let index =index">
+                        <span class="ellipsis" title="{{email}}" *ngIf="index != 0"> {{email}}</span>
+
+                    </div>
+                </div>
+
+                <br>
+                <div *ngIf="CustomerInfo.customerPhone && CustomerInfo.customerPhone.length>1">
+
+                    <h5 style="font-weight:bold">Phone List:</h5>
+                    <div class="email" *ngFor="let phone of CustomerInfo.customerPhone;let index =index">
+                        <span class="ellipsis" title="{{phone}}" *ngIf="index != 0"> {{phone}} </span>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <!-- RELATED CUSTOMER INFO -->
+        <li class="tab-pane" [ngClass]="(pill2) ? 'active' : ''">
+            <div *ngIf="RelatedCustomerInfo && RelatedCustomerInfo.length && permissions.canSeeRelatedCustomerInfo">
+                <div class="details" *ngFor="let similar of RelatedCustomerInfo;let index = index">
+                    <h5 style="font-weight:bold">Customer Information:</h5>
+                    <div class="email" *ngIf="similar.customerName" title="{{similar.customerId}}">
+                        <span> Customer Id:
+                            {{similar.customerId}} </span>
+                    </div>
+                    <div class="email" *ngIf="similar.customerName" title="{{similar.customerName}}">
+                        <span> Customer Name:
+                            {{similar.customerName}}
+                        </span>
+                    </div>
+                    <div class="email" *ngIf="similar.customerEmail && similar.customerEmail.length" title="{{similar.customerEmail[0]}}">
+                        <span> Customer Email:
+                            {{similar.customerEmail[0]}} <span class="text-blue"> (Default)</span>
+                        </span>
+                    </div>
+                    <div class="email" *ngIf="similar.customerPhone && similar.customerPhone.length" title="{{similar.customerPhone[0]}}">
+                        <span>Customer Phone:
+                            {{similar.customerPhone[0]}} <span class="text-blue"> (Default)</span>
+                        </span>
+                    </div>
+                    <div class="email" *ngIf="similar.customerRank" title="{{similar.customerRank}}">
+                        <span> Customer Rank:
+                            {{similar.customerRank}}
+                        </span>
+                    </div>
+                    <div class="email" *ngIf="similar.customerType" title="{{similar.customerType}}">
+                        <span> Customer Type:
+                            {{similar.customerType}}
+                        </span>
+                    </div>
+                    <div class="email" *ngIf="similar.customerCountry" title="{{similar.customerCountry}}">
+                        <span> Customer Country:
+                            {{similar.customerCountry}}
+                        </span>
+                    </div>
+                    <br>
+                    <h5 style="font-weight:bold">Sales Person Information:</h5>
+                    <div class="email" *ngIf="similar.salesPersonName  " title="{{similar.salesPersonName}}">
+                        <span> Sales Person Name:
+                            {{similar.salesPersonName}} </span>
+                    </div>
+                    <div class="email" *ngIf="similar.salesPersonCode  " title="{{similar.salesPersonCode}}">
+                        <span> Sales Person Code:
+                            {{similar.salesPersonCode}} </span>
+                    </div>
+                    <div class="email" *ngIf="similar.salesPersonOffice " title="{{similar.salesPersonOffice}}">
+                        <span> Sales Person Office:
+                            {{similar.salesPersonOffice}}
+                        </span>
+                    </div>
+                    <br>
+                    <div *ngIf="similar.customerEmail && similar.customerEmail.length>1">
+                        <h5 style="font-weight:bold">Email List:</h5>
+
+                        <div class="email" *ngFor="let email of similar.customerEmail;let index =index">
+                            <span class="ellipsis" title="{{email}}" *ngIf="index != 0"> {{email}}</span>
+
+                        </div>
+                    </div>
+
+                    <br>
+                    <div *ngIf="similar.customerPhone && similar.customerPhone.length>1">
+
+                        <h5 style="font-weight:bold">Phone List:</h5>
+                        <div class="email" *ngFor="let phone of similar.customerPhone;let index =index">
+                            <span class="ellipsis" title="{{phone}}" *ngIf="index != 0"> {{phone}} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="details" *ngIf="permissions.canSeeRelatedCustomerInfo && !RelatedCustomerInfo || (RelatedCustomerInfo && !RelatedCustomerInfo.length)">
+                <p><span class="text-red"> No related customer data found! </span></p>
+            </div>
+        </li>
+    </ul>
+</div>

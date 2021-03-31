@@ -1,0 +1,301 @@
+<div class="box clearfix animated fadeIn delay-400" *ngIf="contact">
+	<div class="box-body clearfix p-0">
+		<div class="activateScrollbar clearfix">
+			<div class="vhDetails notif clearfix">
+				<div class="avatar ava-xl" title="selectedVisitor.username">
+					<div class="nameInitials" style="background-color: rgba(84, 84, 240, 0.836);">
+						<span>{{ (contact.customerName) ? (contact.customerName | slice:0:1 ) : 'NN' }}</span>
+					</div>
+				</div>
+				<div class="details">
+					<div class="name" title="selectedVisitor.username">
+						<span class="ellipsis">{{contact.customerName}}</span>
+					</div>
+					<div class="phone" title="selectedVisitor.phone">
+						<span class="ellipsis">{{contact.customerNo}}</span>
+					</div>
+					<!--
+					<div class="email" title="selectedVisitor.email">
+						<span>selectedVisitor.email</span>
+					</div>
+					<div class="country" title="selectedVisitor.fullCountryName">
+						<span>selectedVisitor.country</span>
+					</div>
+					<div class="ip svgOnHover">
+						<svg class="svg w-15 h-15 svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#ip"/>
+						</svg>
+						<span>selectedVisitor.ip</span>
+					</div>
+					<div class="feedback svgOnHover" title="currentConversation.feedback.Q2">
+						<svg class="svg w-15 h-15 svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#star-colored"/>
+							<use href="/assets/img/icons/icons-sprite.svg#thumbs-up" class="text-green"/>
+							<use href="/assets/img/icons/icons-sprite.svg#thumbs-down" class="text-red"/>
+						</svg>
+						<span>FeedBack</span>
+					</div>
+					-->
+				</div>
+				<div class="notif-count">
+					<span>Created On : {{contact.createdDate | date : 'mediumDate'}}</span>
+					<!-- <span class="id">ID: xxsfw32</span> -->
+				</div>
+			</div>
+			<div class="vhActions notif clearfix">
+				<div class="want-to-actions">
+					<!--
+					<div class="svgOnHover tooltip top-left" title="Transfer Chat">
+						<svg class="svg">
+							<use href="/assets/img/icons/icons-sprite.svg#transfer-chat"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#transfer-chat-colored"/>
+						</svg>
+						<span class="tooltip-inner">Transfer Chat</span>
+					</div>
+					<div class="svgOnHover tooltip top">
+						<svg class="svg">
+							<use href="/assets/img/icons/icons-sprite.svg#call-visitor"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#call-visitor-colored"/>
+						</svg>
+						<span class="tooltip-inner">Call Now</span>
+					</div>
+					<div class="svgOnHover tooltip top">
+						<svg class="svg">
+							<use href="/assets/img/icons/icons-sprite.svg#chat-end"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#chat-end-colored"/>
+						</svg>
+						<span class="tooltip-inner">End Chat</span>
+					</div>
+					<div class="svgOnHover tooltip top">
+						<svg class="svg svg-red active">
+							<use href="/assets/img/icons/icons-sprite.svg#ban-visitor"/>
+						</svg>
+						<span class="tooltip-inner">Ban Visitor</span>
+					</div> -->
+				</div>
+			</div>
+			<div class="vhList notif clearfix">
+				<div class="nav-tabs-custom">
+					<ul class="nav-tabs">
+						<!-- WHATSAPP MEDIA -->
+						<li [ngClass]="tabs['whatsapp_media'] ? 'active' : ''" (click)="vhListTabs('whatsapp_media')">
+							<h5 class="title-with-border border-black-alpha2 svgOnHover tooltip bottom">
+								<svg class="svg w-40 h-40 active">
+									<use [attr.href]="!tabs['whatsapp_media'] ? '/assets/img/icons/icons-sprite.svg#agent-group-media' : '/assets/img/icons/icons-sprite.svg#agent-group-media-colored'"
+										[ngClass]="!tabs['whatsapp_media'] ? 'text-theme-gray' : ''" />
+								</svg>
+								<span class="tooltip-inner">Shared Media</span>
+							</h5>
+						</li>
+						<!-- WHATSAPP STATUS -->
+						<li [ngClass]="tabs['whatsapp_status'] ? 'active' : ''" (click)="vhListTabs('whatsapp_status')">
+							<h5 class="title-with-border border-black-alpha2 svgOnHover tooltip bottom">
+								<svg class="svg w-40 h-40 active">
+									<use [attr.href]="!tabs['whatsapp_status']? '/assets/img/icons/icons-sprite.svg#agent-group-info': '/assets/img/icons/icons-sprite.svg#agent-group-info-colored'"
+										[ngClass]="!tabs['whatsapp_status'] ? 'text-theme-gray' : ''" />
+								</svg>
+								<span class="tooltip-inner">Status</span>
+							</h5>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<!-- WHATSAPP MEDIA -->
+						<div class="tab-pane" *ngIf="tabs['whatsapp_media']"
+							[ngClass]="tabs['whatsapp_media'] ? 'active' : ''">
+							<div class="notif">
+								<h6 class="title-with-border border-border p-10 bg-theme-bg m-b-0">Shared Images</h6>
+								<div class="notif-count bg-transparent p-0" style="top:12px;right:10px;">
+									<span class="btn btn-transparent svgOnHover">
+										<svg class="svg w-15 h-15 svg-default active">
+											<use href="/assets/img/icons/icons-sprite.svg#arrow-double-up"></use>
+											<!-- <use href="/assets/img/icons/icons-sprite.svg#arrow-double-down"></use> -->
+										</svg>
+									</span>
+								</div>
+							</div>
+							<div class="media-grid images">
+								<div *ngFor="let attachment of GetAttachmentsForView()"
+									[ngSwitch]="attachment.mimeType">
+									<div *ngSwitchCase="'1'">
+										<a href="{{attachment.mediaURL}}" target="_blank">
+											<img src="{{attachment.mediaURL}}" alt="" />
+										</a>
+										<div class="file-name tooltip top">
+											<span class="ellipsis w100">{{attachment.filename}}</span>
+											<span class="tooltip-inner">{{attachment.filename}}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="notif">
+								<h6 class="title-with-border border-border p-10 bg-theme-bg m-b-0">Shared Audios</h6>
+								<div class="notif-count bg-transparent p-0" style="top:12px;right:10px;">
+									<span class="btn btn-transparent svgOnHover">
+										<svg class="svg w-15 h-15 svg-default active">
+											<use href="/assets/img/icons/icons-sprite.svg#arrow-double-up"></use>
+											<!-- <use href="/assets/img/icons/icons-sprite.svg#arrow-double-down"></use> -->
+										</svg>
+									</span>
+								</div>
+							</div>
+							<div class="media-grid audio">
+								<div *ngFor="let attachment of GetAttachmentsForView()"
+									[ngSwitch]="attachment.mimeType">
+									<div *ngSwitchCase="'2'">
+										<a [href]="(attachment.mediaURL | safeUrl : 'url')" class="audio"
+											target="_blank">
+											<audio type="audio/mp3" [src]="(attachment.mediaURL | safeUrl : 'url')"
+												controls></audio>
+										</a>
+										<div class="file-name tooltip top">
+											<span class="ellipsis w100">{{attachment.filename}}</span>
+											<span class="tooltip-inner">{{attachment.filename}}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="notif">
+								<h6 class="title-with-border border-border p-10 bg-theme-bg m-b-0">Shared Videos</h6>
+								<div class="notif-count bg-transparent p-0" style="top:12px;right:10px;">
+									<span class="btn btn-transparent svgOnHover">
+										<svg class="svg w-15 h-15 svg-default active">
+											<use href="/assets/img/icons/icons-sprite.svg#arrow-double-up"></use>
+											<!-- <use href="/assets/img/icons/icons-sprite.svg#arrow-double-down"></use> -->
+										</svg>
+									</span>
+								</div>
+							</div>
+							<div class="media-grid video">
+								<div *ngFor="let attachment of GetAttachmentsForView()"
+									[ngSwitch]="attachment.mimeType">
+									<div *ngSwitchCase="'3'">
+										<a [href]="(attachment.mediaURL | safeUrl : 'url')" target="_blank">
+											<video type="video/mp4" [src]="(attachment.mediaURL | safeUrl : 'url')"
+												controls></video>
+										</a>
+										<div class="file-name tooltip top">
+											<span class="ellipsis w100">{{attachment.filename}}</span>
+											<span class="tooltip-inner">{{attachment.filename}}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="notif">
+								<h6 class="title-with-border border-border p-10 bg-theme-bg m-b-0">Shared Files</h6>
+								<div class="notif-count bg-transparent p-0" style="top:12px;right:10px;">
+									<span class="btn btn-transparent svgOnHover">
+										<svg class="svg w-15 h-15 svg-default active">
+											<use href="/assets/img/icons/icons-sprite.svg#arrow-double-up"></use>
+											<!-- <use href="/assets/img/icons/icons-sprite.svg#arrow-double-down"></use> -->
+										</svg>
+									</span>
+								</div>
+							</div>
+							<div class="media-grid documents">
+								<ul class="list-items clearfix style4">
+									<li class="item clearfix notif" *ngFor="let attachment of GetAttachmentsForView()"
+										[ngSwitch]="attachment.mimeType">
+										<div *ngSwitchCase="'4'">
+											<div class="info">
+												<a href="{{attachment.mediaURL}}"
+													target="_blank">{{(attachment.filename) ? attachment.filename : 'No File Name'}}</a>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<!-- WHATSAPP STATUS -->
+						<div *ngIf="tabs['whatsapp_status']" class="tab-pane"
+							[ngClass]="tabs['whatsapp_status'] ? 'active' : ''">
+							<div class="whatapp-status-box">
+								<h6 class="title-with-border border-border p-10 bg-theme-bg m-b-0">MY STATUS</h6>
+								<!--
+                                <ul class="list-items clearfix style4">
+                                    <li class="item clearfix">
+                                        <div class="clearfix">
+                                            <div>
+                                                <div class="avatar ava-xs">
+                                                    <div class="nameInitials">
+                                                        <span>AA</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="availability bg-green">
+                                                <svg class="svg active">
+													<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white"/>
+												</svg>
+											</div>
+                                            <div class="info">
+                                                <b class="name ellipsis fw-6">My Status</b>
+                                                <span class="ellipsis msg">Add to my Status</span>
+                                            </div>
+                                            <div class="actions">
+                                                <a class="btn btn-transparent svgOnHover tooltip left">
+                                                    <svg class="svg svg-green active">
+														<use href="/assets/img/icons/icons-sprite.svg#plus"/>
+													</svg>
+                                                    <span class="tooltip-inner">Add More</span>
+                                                </a>
+                                                <a class="btn btn-transparent svgOnHover tooltip left">
+                                                    <svg class="svg svg-blue active">
+														<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+													</svg>
+                                                    <span class="tooltip-inner">Edit</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+								</ul>
+								-->
+								<div class="status-box">
+									<div class="status-header">
+										<div class="action-btn">
+											<a class="svgOnHover">
+												<img src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/10228094851541068761-256.png"
+													alt="close-btn" />
+											</a>
+											<a class="circle btn svgOnHover">
+												<img
+													src="https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/7193089461555936494-256.png" />
+											</a>
+										</div>
+									</div>
+									<div class="status-body">
+										<textarea placeholder="Type a status"></textarea>
+									</div>
+								</div>
+								<!--
+								<h6 class="title-with-border border-border p-15 bg-theme-bg m-b-0">VIEWED STATUS</h6>
+                                <ul class="list-items whatapp-style-2 clearfix">
+                                    <li class="item status-8 viewed clearfix">
+                                        <div class="clearfix">
+                                            <div>
+                                                <div class="avatar ava-sm">
+                                                    <div class="nameInitials">
+                                                        <span>AA</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="info">
+                                                <b class="name ellipsis fw-6">Text</b>
+                                                <span class="ellipsis msg">Just now</span>
+                                            </div>
+                                        </div>
+                                    </li>
+								</ul>
+								-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

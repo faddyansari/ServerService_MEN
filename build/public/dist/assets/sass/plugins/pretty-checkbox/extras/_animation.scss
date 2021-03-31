@@ -1,0 +1,22 @@
+.pretty {
+	&.p-smooth {
+		.state {
+			@extend %transitionAll300;
+			&:before {
+				@extend %transitionAll300;
+			}
+			label {
+				@extend %transitionAll300;
+				&:before,
+				&:after {
+					@extend %transitionAll300;
+				}
+			}
+			.icon,
+			.svg,
+			img {
+				@extend %transitionAll300;
+			}
+		}
+	}
+}

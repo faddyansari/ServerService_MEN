@@ -1,0 +1,54 @@
+<!-- <div class="box-subtitle clearfix">
+  <div>
+    <h5>Create a Compaign:</h5>
+  </div>
+</div>
+Select Mailing List <br>
+
+<h4>Filter users on basis of following filters</h4>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label formArrayName="orders" *ngFor="let order of form.controls.orders.controls; let i = index">
+    <input type="checkbox" [formControlName]="i">
+    {{orders[i].country}}
+  </label>
+
+  <button>Submit</button>
+</form>
+
+
+<div>
+  <input type="checkbox" id="" name="bindingCheckbox" [(ngModel)]="bindingCheckbox"/><label>Add External Contacts with comma
+    separated</label>
+  <div class="form-group" *ngIf="bindingCheckbox">
+
+    <div class="col-md-3">
+      <label>
+        <textarea name="contacts" [(ngModel)]="contacts" rows="4" cols="10" autocomplete="off" class="form-control" ></textarea>
+      </label>
+
+    </div>
+
+
+  </div>
+</div>
+
+
+<br><br><br><br><br><br><br><br><br><br>
+<div class="input-block">
+    <label>Sender Email </label>
+    <input type="email" placeholder="Your Email" [(ngModel)]="emailSender" class="form-control input-sm text-black" required>
+  </div>
+
+  <div class="input-block">
+    <label>Sender Name</label>
+    <input type="text" placeholder="Your Name" [(ngModel)]="nameSender" class="form-control input-sm text-black" required>
+  </div>
+
+  <div class="input-block">
+    <label>Add Subject Line</label>
+    <input type="text" placeholder="Add Subject" [(ngModel)]="subject" class="form-control input-sm text-black" required>
+  </div>
+  <button type="submit" class="btn bg-green btn-sm  b-0 pull-center"
+  (click)="SendBulkEmails(contacts, nameSender,subject,emailSender)"
+  >Send Emails</button> -->

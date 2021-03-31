@@ -1,0 +1,23 @@
+<ul class="card-container clearfix style2">
+	<a
+		routerLink="/settings/widget-marketing/news"
+		[routerLinkActive]="['active']"
+		(click)="STOPPROPAGATION($event)">
+		<img class="svg" src="/assets/img/icons/settings/news-filled.svg">
+		<h5>News</h5>
+	</a>
+	<a
+		routerLink="/settings/widget-marketing/promotions"
+		[routerLinkActive]="['active']"
+		(click)="STOPPROPAGATION($event)">
+		<img class="svg" src="/assets/img/icons/settings/promotions-filled.svg">
+		<h5>Promotions</h5>
+	</a>
+	<a
+		routerLink="/settings/widget-marketing/faqs"
+		[routerLinkActive]="['active']"
+		(click)="STOPPROPAGATION($event)">
+		<img class="svg" src="/assets/img/icons/settings/faq-filled.svg">
+		<h5>FAQs</h5>
+	</a>
+</ul>

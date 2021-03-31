@@ -1,0 +1,50 @@
+<div class="mat-grid">
+    <div mat-dialog-title>
+        <h3>Transfer Chat to Agent</h3>
+    </div>
+    <div mat-dialog-content>
+        <ul class="list-items clearfix style4 dialog-list" *ngIf="show && data.length > 0">
+            <li class="item notif animated flipInX-delay clearfix"
+                [ngClass]="(agent.id == selectedAgent.id) ? 'active' : ''"
+                *ngFor="let agent of data" (click)="SelectedAgent(agent.id)">
+                <div>
+                    <div>
+                        <div class="avatar ava-sm">
+                            <div class="nameInitials"
+                                *ngIf="(!agent.image)">
+                                {{( agent.nickname | slice:0:1)}}
+                            </div>
+                            <div class="avatar-img online"
+                                *ngIf="(agent.image)">
+                                <img class="svg" src="{{agent.image}}"  attr.agentid="{{agent._id}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <div class="name">
+                            <b>{{agent.nickname}}</b>
+                            <span class="ellipsis msg">Active Chat : {{ (agent.chatCount) ? agent.chatCount : 0 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="notAvailable" *ngIf="!(data.length > 0)">
+            <svg class="svg w-100 h-100">
+				<use href="/assets/img/icons/icons-sprite.svg#agents" class="text-gray"/>
+			</svg>
+            <span>No Agents Available</span>
+        </div>
+    </div>
+    <div class="mat-dialog-footer clearfix">
+        <mat-dialog-actions>
+            <button class="btn btn-xs bg-blue"
+                [mat-dialog-close]="selectedAgent">
+                <span>Transfer</span>
+            </button>
+            <button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+                <span>Cancel</span>
+            </button>
+        </mat-dialog-actions>
+    </div>
+</div>

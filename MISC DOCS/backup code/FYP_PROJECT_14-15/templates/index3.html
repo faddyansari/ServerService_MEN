@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>FLIGHT DASHBOARD</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../static/plugins/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../static/dist/css/adminlte.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="../static/plugins/iCheck/flat/blue.css">
+  <!-- Morris chart -->
+  <link rel="stylesheet" href="../static/plugins/morris/morris.css">
+  <!-- jvectormap -->
+  <link rel="stylesheet" href="../static/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
+  <!-- Date Picker -->
+  <link rel="stylesheet" href="../static/plugins/datepicker/datepicker3.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="../static/plugins/daterangepicker/daterangepicker-bs3.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="../static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+/*.material-icons {vertical-align:-14%}*/
+<style>
+/*.loader {
+  
+}*/
+body
+{
+  font-family: "helvetica";
+  font-size: 100%
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.cube1, .cube2 {
+  background-color: white;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-cubemove 1.8s infinite ease-in-out;
+  animation: sk-cubemove 1.8s infinite ease-in-out;
+}
+
+.cube2 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+@-webkit-keyframes sk-cubemove {
+  25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }
+  50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }
+  75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }
+  100% { -webkit-transform: rotate(-360deg) }
+}
+
+@keyframes sk-cubemove {
+  25% { 
+    transform: translateX(42px) rotate(-90deg) scale(0.5);
+    -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+  } 50% { 
+    transform: translateX(42px) translateY(42px) rotate(-179deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+  } 50.1% { 
+    transform: translateX(42px) translateY(42px) rotate(-180deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+  } 75% { 
+    transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+    -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+  } 100% { 
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+  }
+}
+
+p
+{
+  font-size: 18px;
+}
+</style>
+</style>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+ <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../static/dist/css/adminlte.min.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="../static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  
+<!-- Navbar -->
+  <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+  
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+	  			<div class="bg-info-gradient">
+        <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+      </li>
+	
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="index2.html" class="nav-link"><strong>Home</strong></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link"><strong>Contact</strong></a>
+      </li>
+    </ul>
+
+    <!-- SEARCH FORM -->
+    <form class="form-inline ml-3">
+      <div class="input-group input-group-sm">
+	  
+        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-navbar" type="submit">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    
+  </nav>
+  </div>
+  </div>
+  
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="Home.html" class="brand-link">
+      
+      <span  class="brand-text font-weight-light"> <strong>FLIGHT ANALYSIS</strong></span>
+    </a>
+
+    
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-secondary fa fa-dashboard"></i>
+              <p>
+                Dashboard
+                <i class="right fa fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="showfuel" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>FUEL CONSUMPTION</strong></p>
+         
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="showcharge" class="nav-link ">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>CHARGE ESTIMATION</strong></p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="comparision" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>FLIGHT COMPARISION</strong></p>
+                </a>
+          </li>
+
+              <li class="nav-item">
+                <a href="showmap" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>FLIGHT TRACKING</strong></p>
+                </a>
+
+              </li>
+        <li class="nav-item">
+                <a href="showgt" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>GENERAL TASKS</strong></p>
+                </a>
+          </li>
+             
+             
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+ 
+  <!-- Content Wrapper. Contains page content -->
+  <!-- Main content -->
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+  			<div class="bg-secondary">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1> <strong>FLIGHT TRACKING</strong></h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+	
+	<div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+					<h1  class="w3-large"><strong>Enter ID of Flight</strong></h1>
+                    </span>
+                  </div>
+                  <input id="Id" type="text" class="form-control">
+                  <div class="input-group-append">
+				  <button id="Btn" type="submit" class="btn btn-success">Submit</button>
+                    <div class="input-group-text"><i class="material-icons w3-spin">local_airport</i></div>
+					
+                  </div>
+                </div>
+    <!-- /.content-header -->
+    <!-- <section class="content"> -->
+
+
+      <div id="MAAP" class="container-fluid " style="background: black"> 
+<div id="googleMap" style="width:100%;height:500px; color: black; position: relative;">
+</div>
+</div>
+
+<div id="loading_bar" style="display: none"> 
+<div  style=" height: 100px;
+    margin-top: 3%;
+    margin: auto 40px;
+    margin-left: 40%;
+    width: 0px;
+    margin-right: 30%;
+    margin-bottom: 0%;
+    /*background: black;*/
+    position: absolute;
+   /* color: white;
+    border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid grey;
+  border-bottom: 16px solid grey;*/
+/*  width: 120px;
+  height: 120px;*/
+/*  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;*/
+    top: 50%;"> 
+
+    <div class="cube1"></div>
+  <div class="cube2"></div>
+    </div>
+    </div>  
+
+<!-- <script>
+function myMap() {
+  var mapCanvas = document.getElementById("map");
+  var mapOptions = {
+    center: new google.maps.LatLng(51.5, -0.2), zoom: 10
+  };
+  var map = new google.maps.Map(mapCanvas, mapOptions);
+}
+</script>
+         -->
+          
+		 <!--  <div class="col-12">
+		  
+            <div class="card">
+			<div class="bg-info-gradient">
+                            <div class="card-header">
+                <h3 class="card-title"><strong>DIV</strong></h3>
+</div>
+               
+              
+              <div class="card-body table-responsive p-0">
+	
+                <table class="table table-hover">
+				
+                  <tr>
+                    <th>Content</th>
+                    <th>Information</th>
+                    <th>Content</th>
+                    <th>Information</th>
+                    <th>Content</th>
+					<th>Information</th>
+					<td></td>
+                  </tr>
+                  <tr>
+                    <td>ID</td>
+                    <td><span class="tag tag-success">11393571</span></td>
+                    <td>Icao</td>
+                    <td><span class="tag tag-success">ADDA23 2002</span></td>
+					<td>Model</td>
+                    <td><span class="tag tag-success">BOEING 717-200</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Average Speed</td>
+                    <td><span class="tag tag-success">444.3586206896552</span></td>
+                    <td>Average Altitude</td>
+                    <td><span class="tag tag-success">29625.862068965518</span></td>
+                    <td>Miles</td>
+                    <td><span class="tag tag-success">3349.526411946571</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Countries in route</td>
+                    <td><span class="tag tag-success">United States Of America</span></td>
+                    <td>Country</td>
+                    <td><span class="tag tag-success">United States</span></td>
+					<td>Fuel</td>
+                    <td><span class="tag tag-success">16747.632059732856</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Total Fuel:</strong></td>
+                    <td><span class="tag tag-success"><strong>16747.632059732856</strong></span></td>
+                    <td>  </td>
+                    <td><span class="tag tag-success">  </span></td>
+					<td><strong>Total Miles:</strong></td>
+                    <td><span class="tag tag-success"></span><strong>3349.526411946571</strong></td>
+					<td></td>
+                  </tr>
+                </table>
+
+              </div>
+           </div>
+		   </div>
+		   </div>
+    <!- /.content -->
+
+  
+  
+  <!-- <script> -->
+  
+  <!-- var ans;
+  
+    window.onload = function() {
+  // setup the button click
+
+  document.getElementById("Btn").onclick = function() {
+    var iD = document.getElementById("Id").value;
+    var data_send = {"Id" : iD};
+    
+  confirm("Are you sure ?");
+    document.getElementById("loading_bar").setAttribute("style","display: block");
+    document.getElementById("MAAP").setAttribute("style","opacity: 0.5");
+    doWork(data_send);
+  };
+}
+ -->
+<!-- function doWork(data) {
+  $.ajax({
+  type: "POST",
+  url: "http://127.0.0.1:5000/receiver",
+  data: data,
+  success: function(response){
+    document.getElementById("loading_bar").setAttribute("style","display:none;");
+    document.getElementById("MAAP").setAttribute("style","opacity: 1");
+  var res= JSON.parse(response);
+  var speed= res["Spd"];
+  var lat= res["Lat"];
+  var longi= res["Long"];
+  var to= res["To"];
+  calculate(speed,lat,longi,to);
+  }
+  })
+  // stop link reloading the page
+ event.preventDefault();
+}
+
+
+//calculating distance
+
+function calculate(spd,lati,longi,to)
+{
+  //converting speed from knots to m/s
+  var speed = spd * 0.5144;
+  var x=lati;
+  var y=longi;
+  myMap();
+  
+  //finding latitude and longitude of destination
+  var geocoder =  new google.maps.Geocoder();
+    geocoder.geocode( { 'address': to},    
+  function(results, status) 
+    {
+        if (status == google.maps.GeocoderStatus.OK)
+        {
+            var a=results[0].geometry.location.lat();
+            var b=results[0].geometry.location.lng();
+      
+      //calculating distance(m) b/w (x,y) and (a,b) using Heversine Formula
+      var Radius = 6371e3; 
+      var angle1 = (x*Math.PI)/180;
+      var angle2 = (a*Math.PI)/180;
+      var angle_diff1 = ((a-x)*Math.PI)/180;
+      var angle_diff2 = ((b-y)*Math.PI)/180;
+      var A = Math.sin(angle_diff1/2) * Math.sin(angle_diff1/2) +
+      Math.cos(angle1) * Math.cos(angle2) *
+      Math.sin(angle_diff2/2) * Math.sin(angle_diff2/2);
+      var c = 2 * Math.atan2(Math.sqrt(A), Math.sqrt(1-A));
+      distance = Radius * c;
+      
+      //calculating elapsed time(sec) to reach destination
+      var time= distance/speed;
+      
+      //converting sec in standard format of time hh:mm:ss
+      var MHSTime=new Date(time * 1000).toISOString().substr(11, 8)
+      
+      ans=MHSTime;
+      marker(x,y);
+      
+      
+        } 
+          else 
+        {
+            alert("Something got wrong " + status); 
+            document.getElementById("loading_bar").setAttribute("style","display:none;");
+    } 
+    
+    });
+  
+  
+}
+ -->
+
+<!-- 
+      function myMap() 
+      {
+        var speed= 400.0*0.5144;    //here
+        var distance=0;
+        var x= 51.5;           //here
+        var y= -0.2;           //here
+        var myLatlng = new google.maps.LatLng(x,y);
+        var mapProp= 
+        {
+          center:myLatlng,
+          zoom:10
+         };
+        var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+    } -->
+      //   <!-- var image =  -->
+      //   <!-- { -->
+      //     <!-- url: "http://www.boeing.com/resources/boeingdotcom/commercial/777x/assets/images/hotspots/product-01_960x410-mobile.png", // url -->
+      //     <!-- scaledSize: new google.maps.Size(130, 130), // scaled size -->
+      //   <!-- }; -->
+
+      //   <!-- var marker = new google.maps.Marker -->
+      //   <!-- ({ -->
+      //         <!-- position: myLatlng, -->
+      //         <!-- map: map, -->
+      //         <!-- icon: image -->
+      //   <!-- }); -->
+
+      //       <!-- var contentString =document.getElementById("content") -->
+
+      //       <!-- var infowindow = new google.maps.InfoWindow({content: contentString}); -->
+      //       <!-- infowindow.open(map, marker); -->
+          
+      // <!-- } -->
+    
+    
+    <!-- function marker(lat,longi)
+    {
+    var myLatlng = new google.maps.LatLng(lat,longi);
+    
+    var mapProp= 
+        {
+          center:myLatlng,
+          zoom:7
+         };
+     
+    var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+    
+    
+    var image = 
+        { 
+          url: "http://www.boeing.com/resources/boeingdotcom/commercial/777x/assets/images/hotspots/product-01_960x410-mobile.png", // url -->
+          <!-- scaledSize: new google.maps.Size(130, 130), // scaled size -->
+        <!-- }; 
+
+        var marker = new google.maps.Marker 
+        ({ 
+            position: myLatlng,
+            map: map, 
+            icon: image 
+        });    -->
+    
+
+     // var contentString =document.getElementById("content");
+     
+     //     var infowindow = new google.maps.InfoWindow({content: "Time left: "+ ans });
+     //     infowindow.open(map, marker);
+     // console.log(ans)
+     // infowindow.close();  
+     // infowindow.open(map, marker);
+
+    <!--  var contentString =document.getElementById("content");
+               
+               var infowindow = new google.maps.InfoWindow({content: "Time left: "+ ans });
+               infowindow.open(map, marker);
+               infowindow.close();  
+               infowindow.open(map, marker); -->
+  //   timeDiv.innerHTML = "Time left: "+ ans ;
+     
+<!--     }
+    
+    
+    
+    </script> -->
+  
+ <script>
+  
+  var ans;
+  
+    window.onload = function() {
+  // setup the button click
+  timeDiv=document.getElementById("ans");
+  document.getElementById("Btn").onclick = function() {
+    var iD = document.getElementById("Id").value;
+    var data_send = {"Id" : iD};
+    
+  prompt(data_send["Id"]);
+  document.getElementById("loading_bar").setAttribute("style","display: block");
+  document.getElementById("MAAP").setAttribute("style","opacity: 0.5");
+
+    doWork(data_send);
+
+  };
+  
+}
+
+function doWork(data) {
+  $.ajax({
+  type: "POST",
+  url: "http://127.0.0.1:5000/receiver",
+  data: data,
+  success: function(response){
+  var res= JSON.parse(response);
+  var speed= res["Spd"];
+  var lat= res["Lat"];
+  var longi= res["Long"];
+  var to= res["To"];
+  calculate(speed,lat,longi,to);
+  
+  }
+  });
+
+
+    $(document).ajaxComplete(function(){
+    $("#loading_bar").css("display", "none");
+    $("#MAAP").css("opacity", "1");
+});
+  // stop link reloading the page
+ event.preventDefault();
+}
+
+
+//calculating distance
+
+function calculate(spd,lati,longi,to)
+{
+  //converting speed from knots to m/s
+  var speed = spd * 0.5144;
+  var x=lati;
+  var y=longi;
+  myMap();
+  
+  //finding latitude and longitude of destination
+  var geocoder =  new google.maps.Geocoder();
+    geocoder.geocode( { 'address': to},    
+  function(results, status) 
+    {
+        if (status == google.maps.GeocoderStatus.OK)
+        {
+            var a=results[0].geometry.location.lat();
+            var b=results[0].geometry.location.lng();
+      
+      //calculating distance(m) b/w (x,y) and (a,b) using Heversine Formula
+      var Radius = 6371e3; 
+      var angle1 = (x*Math.PI)/180;
+      var angle2 = (a*Math.PI)/180;
+      var angle_diff1 = ((a-x)*Math.PI)/180;
+      var angle_diff2 = ((b-y)*Math.PI)/180;
+      var A = Math.sin(angle_diff1/2) * Math.sin(angle_diff1/2) +
+      Math.cos(angle1) * Math.cos(angle2) *
+      Math.sin(angle_diff2/2) * Math.sin(angle_diff2/2);
+      var c = 2 * Math.atan2(Math.sqrt(A), Math.sqrt(1-A));
+      distance = Radius * c;
+      
+      //calculating elapsed time(sec) to reach destination
+      var time= distance/speed;
+      
+      //converting sec in standard format of time hh:mm:ss
+      var MHSTime=new Date(time * 1000).toISOString().substr(11, 8)
+      
+      ans=MHSTime;
+      marker(x,y);
+      
+      
+        } 
+          else 
+        {
+            alert("Something got wrong " + status); 
+    } 
+    
+    });
+  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      function myMap() 
+      {
+        var speed= 400.0*0.5144;    //here
+        var distance=0;
+        var x= 33.2232;           //here
+        var y= 43.6793;           //here
+        var myLatlng = new google.maps.LatLng(x,y);
+        var mapProp= 
+        {
+          center:myLatlng,
+          zoom:4
+         };
+        var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+    }
+        <!-- var image =  -->
+        <!-- { -->
+          <!-- url: "http://www.boeing.com/resources/boeingdotcom/commercial/777x/assets/images/hotspots/product-01_960x410-mobile.png", // url -->
+          <!-- scaledSize: new google.maps.Size(130, 130), // scaled size -->
+        <!-- }; -->
+
+        <!-- var marker = new google.maps.Marker -->
+        <!-- ({ -->
+              <!-- position: myLatlng, -->
+              <!-- map: map, -->
+              <!-- icon: image -->
+        <!-- }); -->
+
+            <!-- var contentString =document.getElementById("content") -->
+
+            <!-- var infowindow = new google.maps.InfoWindow({content: contentString}); -->
+            <!-- infowindow.open(map, marker); -->
+          
+      <!-- } -->
+    
+    
+    function marker(lat,longi)
+    {
+    var myLatlng = new google.maps.LatLng(lat,longi);
+    
+    var mapProp= 
+        {
+          center:myLatlng,
+          zoom:7
+         };
+     
+    var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+    
+    
+    var image = 
+        { 
+          url: "http://www.boeing.com/resources/boeingdotcom/commercial/777x/assets/images/hotspots/product-01_960x410-mobile.png", // url -->
+          scaledSize: new google.maps.Size(130, 130), // scaled size -->
+        }; 
+
+        var marker = new google.maps.Marker 
+        ({ 
+            position: myLatlng,
+            map: map, 
+            icon: image 
+        }); 
+    
+
+     var contentString =document.getElementById("content");
+     
+         var infowindow = new google.maps.InfoWindow({content: "Time left: "+ ans });
+         infowindow.open(map, marker);
+     console.log(ans)
+     infowindow.close();  
+     infowindow.open(map, marker);
+  //   timeDiv.innerHTML = "Time left: "+ ans ;
+     
+    }
+    
+    
+    
+    </script>
+ 
+  
+  
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhv5a8EMnu3Vle0QC7c_QjjeVbMw2Ffr0&callback=myMap"></script>
+  
+  
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu-916DdpKAjTmJNIgngS6HL_kDIKU0aU&callback=myMap"></script> -->
+<!-- jQuery -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script> -->
+<script src="../static/../static/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="../static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Morris.js charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script type="text/javascript"></script>
+<!-- Sparkline -->
+<script src="../static/plugins/sparkline/jquery.sparkline.min.js"></script>
+<!-- jvectormap -->
+<script src="../static/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="../static/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="../static/plugins/knob/jquery.knob.js"></script>
+<!-- daterangepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="../static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- datepicker -->
+<script src="../static/plugins/datepicker/bootstrap-datepicker.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="../static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- Slimscroll -->
+<script src="../static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="../static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="../static/dist/js/adminlte.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../static/dist/js/pages/dashboard.js"></script>
+<!-- <script src="../static/maps.js"></script> -->
+<!-- AdminLTE for demo purposes -->
+<script src="../static/dist/js/demo.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="../static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script>
+
+  $(function () {
+    // Replace the <textarea id="editor1"> with a CKEditor
+    // instance, using default configuration.
+    ClassicEditor
+      .create(document.querySelector('#editor1'))
+      .then(function (editor) {
+        // The editor instance
+      })
+      .catch(function (error) {
+        console.error(error)
+      })
+
+    // bootstrap WYSIHTML5 - text editor
+
+    $('.textarea').wysihtml5({
+      toolbar: { fa: true }
+    })
+  })
+</script>
+</body>
+</html>

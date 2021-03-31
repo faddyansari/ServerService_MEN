@@ -1,0 +1,35 @@
+<div class="sub-nav-tabs clearfix">
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-agents/activity"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Agent Activity</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-agents/scorecard"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Scorecard</span>
+		</a>
+	</div>
+</div>
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="activateScrollbar clearfix p-0">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>

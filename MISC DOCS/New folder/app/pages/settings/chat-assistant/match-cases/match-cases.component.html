@@ -1,0 +1,151 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Criteria List</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="ToggleCriteriaForm()"
+							[ngClass]="(!criteriaForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!criteriaForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!criteriaForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!criteriaForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="criteriaForm">
+					<form [formGroup]="caseForm">
+						<div class="input-block">
+							<label class="text-black">Tag Name</label>
+							<input #tagName type="text" class="form-control input-sm" placeholder="Enter Tag Name" [formControl]="caseForm.controls['tagName']" maxlength="51">
+							<p class="text-red" [hidden]="!caseForm.get('tagName').hasError('matched')"><strong>Case Tag has been used already</strong><br></p>
+							<p class="error text-red" [hidden]="!caseForm.get('tagName').hasError('maxlength')">Tag Name should be less than 50 cahracters.<br></p>
+							<p>To use a case Tag during a State Machine Tuning, type # followed with name.</p>
+						</div>
+						<div class="input-block">
+							<label class="text-black">Assign Matching Criteria</label>
+							<div class="sel style1 sel-sm">
+								<select class="form-control input-sm" [formControl]="caseForm.controls['matchingCriteria']" (change)="CriteriaChanged($event.target.value)">
+									<option value='mec'>Match Exact Criteria</option>
+									<option value='mo'>Match Occurrence</option>
+									<option value='mb'>Match Beginning</option>
+									<option value='me'>Match Ending</option>
+									<option value='cre'>Custom Regular Expression</option>
+								</select>
+							</div>
+							<p>If you want a custom pattern, please select Custom Regular Expression from the list.</p>
+						</div>
+						<div class="input-block">
+							<label class="text-black">Response Text</label>
+							<textarea class="form-control input-sm" placeholder="Enter Bot Response"
+							[formControl]="caseForm.controls['responseText']"></textarea>
+							<p>If there is a matched case, the BOT will respond with the above text.</p>
+						</div>
+						<div class="input-block">
+							<label class="text-black">Criteria</label>
+							<textarea class="form-control input-sm" [placeholder]="(matchingCriteria != 'cre') ? 'Enter Match Case' : 'Enter Regular Expression'"
+							[formControl]="caseForm.controls['criteria']"></textarea>
+							<p>If a custom pattern is not selected, please enter the word or sentence to be judged.</p>
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue" [ngClass]="(loading) ? 'btnSpinner' : '' " [disabled]="caseForm.invalid"
+						(click)="AddCase()">Add Criteria</button>
+					</form>
+				</div>
+				<div class="activateScrollbar clearfix p-0">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Case List</h5>
+					</div>
+				</div>
+				<div class="document-list clearfix" *ngIf="!fetching">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix" *ngFor="let case of CaseList">
+							<div class="info">
+								<div class="name" *ngIf="!CheckEdit(case._id)">
+									<p><strong>{{((case.matchingCriteria == 'cre') ? 'Regular Expression ' : 'Match Case ' )}}</strong> <span class='text-red'>{{case.criteria}}</span></p>
+									<p><strong>Matching Criteria:</strong> <span class="text-green">{{GetCriteriaName(case.matchingCriteria)}}</span></p>
+									<p><strong>Bot Response:</strong> <span class="text-green">{{case.responseText}}</span></p>
+								</div>
+								<div class="name" *ngIf="CheckEdit(case._id)">
+									<div class="col-xs-12">
+										<div class="input-block">
+											<div class="sel style1 sel-sm">
+												<select class="form-control input-sm" [(ngModel)]="casesMap[case._id].matchingCriteria">
+													<option value='mec' [selected]="(case.matchingCriteria == 'mec')">Match Exact Criteria</option>
+													<option value='mo' [selected]="(case.matchingCriteria == 'mo')">Match Occurence</option>
+													<option value='mb' [selected]="(case.matchingCriteria == 'mb')">Match Begining</option>
+													<option value='me' [selected]="(case.matchingCriteria == 'me')">Match Ending</option>
+													<option value='cre' [selected]="(case.matchingCriteria == 'cre')">Custom Regular Expression</option>
+												</select>
+											</div>
+										</div>
+										<div class="input-block">
+											<textarea class="form-control input-sm" [(ngModel)]="casesMap[case._id].criteria"></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="">
+									<div class="badge bg-blue-alpha6 text-black">
+										<span>{{case.tagName}}</span>
+									</div>
+								</div>
+								<div class="actions">
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										(click)="EnableEdit(case._id)"
+										*ngIf="!CheckEdit(case._id)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										[ngClass]="CheckDelete(case._id) ? 'btnSpinner' : ''"
+										(click)="DeleteCase(case._id)"
+										*ngIf="!CheckEdit(case._id)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										(click)="CancelEdit(case._id,case.criteria,case.matchingCriteria)"
+										*ngIf="CheckEdit(case._id)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Cancel</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										(click)="SubmitEdit(case._id)"
+										*ngIf="CheckEdit(case._id)">
+										<svg class="svg svg-green active">
+											<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+										</svg>
+										<span class="tooltip-inner">Save</span>
+									</button>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<app-preloader *ngIf="fetching" type="cube-grid"></app-preloader>
+			</div>
+		</div>
+	</div>
+</div>

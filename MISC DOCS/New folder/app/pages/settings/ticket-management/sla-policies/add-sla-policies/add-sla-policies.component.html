@@ -1,0 +1,438 @@
+<div class="activateScrollbar clearfix p-0">
+    <form class="require-validation" [formGroup]="policyForm">
+        <!-- Policy Name -->
+        <div class="input-block">
+            <label>Policy Name</label>
+            <input type="text" class="form-control input-sm" autocomplete="off" formControlName="policyName" placeholder="Enter policy name.. Keep meaningful name">
+        </div>
+
+        <!-- Description of policy -->
+        <div class="input-block clearfix">
+            <label>Policy Description</label>
+            <textarea autocomplete="off" class="form-control input-sm no-resize" rows="5" placeholder="Description for policy" name="policyDesc" formControlName="policyDesc"></textarea>
+        </div>
+
+        <hr class="clearfix bg-border m-t-b-30">
+        <!-- Apply To -->
+        <fieldset class="w100 clearfix">
+            <div class="input-block">
+                <h5 class="m-0 p-0">Apply this to:</h5>
+                <p>Choose when this SLA policy must be enforced</p>
+                <p class="text-red small">Select at least one trigger condition.</p>
+            </div>
+            <div class="list-items clearfix style4 p-0">
+                <li class="item clearfix f-column" formArrayName="policyApplyTo">
+                    <ng-template ngFor let-applyTo [ngForOf]="GetControls('policyApplyTo')" let-index="index">
+                        <div class="clearfix">
+                            <div class="info" [formGroupName]="index">
+                                <div class="row clearfix">
+                                    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12">
+                                        <div class="input-block">
+                                            <div class="sel style1 sel-sm">
+                                                <select class="form-control input-sm" formControlName="name">
+													<option value="" selected disabled>Select Category</option>
+													<option value="{{applyTo.name}}"
+														*ngFor="let applyTo of GetAvailableApplyTo(index) | keys">
+														{{applyTo.details}}</option>
+												</select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12" *ngIf="applyTo.get('name').value == 'group'">
+                                        <div class="input-block">
+                                            <app-custom-select class="fom-control input-sm" [items]="Groups" [selectLabel]="'Select Group'" formControlName="value" [bindLabel]="'group_name'" [bindValue]="'group_name'" [selectedItems]="((policyForm.controls['policyApplyTo']).controls[index]).controls['value'].value"
+                                                [multiple]="true" [search]="false"></app-custom-select>
+                                            <p class="text-red m-t-10" *ngIf="!applyTo.valid && applyTo.dirty">Please Select Group</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12" *ngIf="applyTo.get('name').value == 'source'">
+                                        <div class="input-block">
+                                            <app-custom-select class="fom-control input-sm" [items]="srcList" [selectLabel]="'Select Source'" formControlName="value" [selectedItems]="((policyForm.controls['policyApplyTo']).controls[index]).controls['value'].value" [multiple]="true" [search]="false"></app-custom-select>
+                                            <p class="text-red m-t-10" *ngIf="!applyTo.valid && applyTo.dirty">* Please Select Source</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1" *ngIf="policyForm.get('policyApplyTo')['controls'].length >1">
+                                        <button class="btn btn-sm btn-transparent p-t-b-6 svgOnHover tooltip top-right" (click)="DeleteApplyTo(index)">
+											<svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#delete" />
+											</svg>
+											<svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+											</svg>
+											<span class="tooltip-inner">Delete</span>
+										</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="clearfix">
+                        <button class="btn btn-sm btn-theme" (click)="addApplyTo()" *ngIf="policyForm.get('policyApplyTo')['controls'].length < 2">
+							<span>Add New</span>
+						</button>
+                    </div>
+                </li>
+            </div>
+        </fieldset>
+
+        <hr class="clearfix bg-border m-t-b-30">
+        <!-- SLA Targets -->
+        <fieldset class="w100 clearfix">
+            <div class="input-block">
+                <h5 class="m-b-0 p-0">SLA Targets</h5>
+                <p>Set Service Level Targets for each ticket priority</p>
+            </div>
+            <div class="p-14 bg-theme-bg">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="avgWaitTime" formArrayName="policyTarget">
+                        <!-- <table formArrayName="policyTarget"> -->
+                        <thead>
+                            <tr>
+                                <th>Priority</th>
+                                <th>Respond within</th>
+                                <th>Resolve within</th>
+                                <!-- <th>Operational Hrs</th> -->
+                                <th>Escalation email</th>
+                                <th>Reminder email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let slatarget of GetControls('policyTarget');let index=index" [formGroupName]="index" (change)="Validate(index,slatarget.value.responseTimeKey,slatarget.value.responseTimeVal,slatarget.value.resolvedTimeKey,slatarget.value.resolvedTimeVal)">
+                                <td>{{slatarget.value.priority}}</td>
+                                <td>
+                                    <div class="input-group-sm">
+                                        <input type="number" name="responseTimeKey" min="0" max="50" class="form-control m-0" formControlName="responseTimeKey" value="15">
+                                        <div class="sel style1 sel-sm">
+                                            <select class="form-control m-0" formControlName="responseTimeVal">
+												<option value="mins">Mins</option>
+												<option value="hour">Hours</option>
+												<option value="day">Days</option>
+												<option value="month">Months</option>
+											</select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group-sm">
+                                        <input type="number" name="resolvedTimeKey" [id]="index" min="0" max="50" class="form-control m-0" formControlName="resolvedTimeKey" value="15">
+                                        <div class="sel style1 sel-sm">
+                                            <select class="form-control m-0" formControlName="resolvedTimeVal">
+												<option value="mins">Mins</option>
+												<option value="hour">Hours</option>
+												<option value="day">Days</option>
+												<option value="month">Months</option>
+											</select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!--
+								<td>
+									<div class="input-block">
+										<div class="sel style1 sel-sm" disabled>
+											<select class="form-control input-sm" formControlName="hours">
+												<option value="businessHours">Business Hours</option>
+												<option value="operationalHours" disabled>Operational Hours</option>
+											</select>
+										</div>
+									</div>
+								</td>
+								-->
+                                <td>
+                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                        <input type="checkbox" formControlName="emailActivationEscalation" />
+                                        <div class="state p-on">
+                                            <label></label>
+                                        </div>
+                                        <div class="state p-off">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                        <input type="checkbox" formControlName="emailActivationReminder" />
+                                        <div class="state p-on">
+                                            <label></label>
+                                        </div>
+                                        <div class="state p-off">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+
+        <hr class="clearfix bg-border m-t-b-30">
+        <!-- Reminder Both -->
+        <fieldset class="w100 clearfix">
+            <div class="input-block">
+                <h5 class="m-0 p-0">Due Time</h5>
+                <p>What happens when this SLA due time approaches?</p>
+            </div>
+            <button class="btn btn-sm btn-theme m-b-10" (click)="setSLAreminders()" *ngIf="!setReminder">
+				<span>Set SLA reminders</span>
+			</button>
+            <div class="list-items clearfix style4 p-0" *ngIf="setReminder">
+                <li class="item clearfix m-l-r-0 notif f-column" formArrayName="reminderResponse">
+                    <div class="input-block f-align-start">
+                        <p class="text-red">Set reminder rule when a ticket response approaches</p>
+                    </div>
+                    <ng-template ngFor let-remind [ngForOf]="GetControls('reminderResponse')" let-index="index">
+                        <div class="clearfix m-b-10" [formGroupName]="index">
+                            <div class="info clearfix">
+                                <div class="input-group-sm">
+                                    <div class="input-block">
+                                        <label>Remind Before</label>
+                                        <input type="number" name="responsetimeKey" class="form-control input-sm" formControlName="responsetimeKey" value="15">
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Time</label>
+                                        <div class="sel style1 sel-sm">
+                                            <select class="form-control input-sm" formControlName="responsetimeVal">
+												<option value="mins">Mins</option>
+												<option value="hour">Hours</option>
+												<option value="day">Days</option>
+												<option value="month">Months</option>
+											</select>
+                                        </div>
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Agents</label>
+                                        <app-custom-select class="form-control input-sm p-0" [items]="AgentsList" [selectLabel]="'Select Agents'" formControlName="notifyTo" [selectedItems]="((policyForm.controls['reminderResponse']).controls[0]).controls['notifyTo'].value" [bindLabel]="'email'"
+                                            [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreRemResp()" (onSearch)="onSearchRemResp($event)"></app-custom-select>
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Emails</label>
+                                        <app-chips-input class="input-sm tag-input" [regex]="emailPattern" name="emails" [items]="((policyForm.controls['reminderResponse']).controls[0]).controls['emails'].value" [placeholder]="'Additional Emails'" [delimiters]="[',']" formControlName="emails"
+                                            [errorMsg]="'Email is not valid'" [maxTag]="5">
+                                        </app-chips-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-transparent svgOnHover tooltip top-right" (click)="deleteReminder(index, 'reminderResponse')">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" />
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="clearfix">
+                        <button class="btn btn-sm btn-theme" (click)="addReminder('reminderResponse')" *ngIf="policyForm.get('reminderResponse')['controls'].length <1">
+							<span>Add New</span>
+						</button>
+                    </div>
+                </li>
+            </div>
+            <div class="list-items clearfix style4 p-0" *ngIf="setReminder">
+                <li class="item clearfix m-l-r-0 notif f-column" formArrayName="reminderResolution">
+                    <div class="input-block f-align-start">
+                        <p class="text-red">Set reminder rule when a ticket resolution approaches</p>
+                    </div>
+                    <ng-template ngFor let-remind [ngForOf]="GetControls('reminderResolution')" let-index="index">
+                        <div class="clearfix m-b-10" [formGroupName]="index">
+                            <div class="info clearfix">
+                                <div class="input-group-sm">
+                                    <div class="input-block">
+                                        <label>Remind Before</label>
+                                        <input type="number" name="resolvedtimeKey" class="form-control input-sm" formControlName="resolvedtimeKey" value="15">
+                                    </div>
+                                    <div class="input-block">
+                                        <label>Time</label>
+                                        <div class="sel style1 sel-sm">
+                                            <select class="form-control input-sm" formControlName="resolvedtimeVal">
+												<option value="mins">Mins</option>
+												<option value="hour">Hours</option>
+												<option value="day">Days</option>
+												<option value="month">Months</option>
+											</select>
+                                        </div>
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Agents</label>
+                                        <app-custom-select class="form-control input-sm p-0" [items]="AgentsList" [selectLabel]="'Select Agents'" formControlName="notifyTo" [selectedItems]="((policyForm.controls['reminderResolution']).controls[0]).controls['notifyTo'].value" [bindLabel]="'email'"
+                                            [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreRemResv()" (onSearch)="onSearchRemResv($event)"></app-custom-select>
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Emails</label>
+                                        <app-chips-input class="input-sm tag-input" [regex]="emailPattern" name="emails" [items]="((policyForm.controls['reminderResolution']).controls[0]).controls['emails'].value" [placeholder]="'Additional Emails'" [delimiters]="[',']" formControlName="emails"
+                                            [errorMsg]="'Email is not valid'" [maxTag]="5">
+                                        </app-chips-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-transparent svgOnHover tooltip top-right" (click)="deleteReminder(index,'reminderResolution')">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" />
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="clearfix">
+                        <button class="btn btn-sm btn-theme" (click)="addReminder('reminderResolution')" *ngIf="policyForm.get('reminderResolution')['controls'].length <1">
+							<span>Add rule</span>
+						</button>
+                    </div>
+                </li>
+            </div>
+            <button type="button" class="btn btn-sm bg-red" (click)="UnsetReminder()" *ngIf="setReminder">
+				<span>Cancel</span>
+			</button>
+        </fieldset>
+
+        <hr class="clearfix bg-border m-t-b-30">
+        <!-- SLA Violation both-->
+        <fieldset class="w100 clearfix">
+            <div class="input-block">
+                <h5 class="m-0 p-0">Violations</h5>
+                <p>What happens when this SLA is violated?</p>
+            </div>
+            <div class="list-items clearfix style4 p-0">
+                <li class="item clearfix m-l-r-0 notif f-column" formArrayName="violationResponse">
+                    <div class="input-block f-align-start">
+                        <p class="text-red">Set escalation rule when a ticket is not responded on time</p>
+                    </div>
+                    <ng-template ngFor let-violate [ngForOf]="GetControls('violationResponse')" let-index="index">
+                        <div class="clearfix m-b-10" [formGroupName]="index">
+                            <div class="info clearfix">
+                                <div class="input-group-sm">
+                                    <div class="input-block">
+                                        <label>Escalate</label>
+                                        <div class="sel style1 sel-sm">
+                                            <select class="form-control input-sm" formControlName="duration">
+												<option value="" selected>Select Duration</option>
+												<option value="0_mins">Immediately</option>
+												<option value="30_mins">After 30 Minutes</option>
+												<option value="1_hour">After 1 hour</option>
+												<option value="2_hour">After 2 hours</option>
+												<option value="4_hour">After 4 hours</option>
+												<option value="8_hour">After 8 hours</option>
+												<option value="12_hour">After 12 hours</option>
+												<option value="1_day">After 1 day</option>
+												<option value="2_day">After 2 days</option>
+												<option value="1_week">After 1 week</option>
+												<option value="2_week">After 2 weeks</option>
+											</select>
+                                        </div>
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Agents</label>
+                                        <app-custom-select class="form-control input-sm p-0" style="height: max-content;" [items]="AgentsList" [selectLabel]="'Select Agents'" formControlName="notifyTo" [selectedItems]="((policyForm.controls['violationResponse']).controls[0]).controls['notifyTo'].value"
+                                            [bindLabel]="'email'" [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreVioResp($event)" (onSearch)="onSearchVioResp($event)"></app-custom-select>
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Emails</label>
+                                        <app-chips-input class="input-sm tag-input" [regex]="emailPattern" name="emails" [items]="((policyForm.controls['violationResponse']).controls[0]).controls['emails'].value" [placeholder]="'Additional Emails'" [delimiters]="[',']" formControlName="emails"
+                                            [errorMsg]="'Email is not valid'" [maxTag]="5">
+                                        </app-chips-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-transparent svgOnHover tooltip top-right" (click)="deleteViolation(index, 'violationResponse')">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" />
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="clearfix">
+                        <button class="btn btn-sm btn-theme m-b-10" (click)="addViolation('violationResponse')" *ngIf="policyForm.get('violationResponse')['controls'].length <1">
+							<span>Add rule</span>
+						</button>
+                    </div>
+                </li>
+            </div>
+            <div class="list-items clearfix style4 p-0">
+                <li class="item clearfix m-l-r-0 notif f-column" formArrayName="violationResolution">
+                    <div class="input-block f-align-start">
+                        <p class="text-red">Set escalation hierarchy when a ticket is not resolved on time</p>
+                    </div>
+                    <ng-template ngFor let-violate [ngForOf]="GetControls('violationResolution')" let-j="index">
+                        <div class="clearfix m-b-10" [formGroupName]="j">
+                            <div class="info clearfix">
+                                <div class="input-group-sm">
+                                    <div class="input-block">
+                                        <label>Escalate</label>
+                                        <div class="sel style1 sel-sm">
+                                            <select class="form-control input-sm" formControlName="duration">
+												<option value="" selected>Select Duration</option>
+												<ng-template ngFor let-violate
+													[ngForOf]="GetAvailableViolationDurations(j) | keys"
+													let-index="index">
+													<option value="{{violate.name}}">{{violate.details}}
+													</option>
+												</ng-template>
+											</select>
+                                        </div>
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Agents</label>
+                                        <app-custom-select class="form-control input-sm p-0" style="height: max-content;" [items]="AgentsList" [selectLabel]="'Select Agents'" formControlName="notifyTo" [selectedItems]="((policyForm.controls['violationResolution']).controls[j]).controls['notifyTo'].value"
+                                            [bindLabel]="'email'" [bindValue]="'email'" [multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMoreVioResv()" (onSearch)="onSearchVioResv($event)"></app-custom-select>
+                                    </div>
+                                    <div class="input-block">
+                                        <label>To Emails</label>
+                                        <app-chips-input class="input-sm tag-input" [regex]="emailPattern" name="emails" [items]="((policyForm.controls['violationResolution']).controls[j]).controls['emails'].value" [placeholder]="'Additional Emails'" [delimiters]="[',']" formControlName="emails"
+                                            [errorMsg]="'Email is not valid'" [maxTag]="5">
+                                        </app-chips-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-transparent svgOnHover tooltip top-right" (click)="deleteViolation(j, 'violationResolution')">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" />
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="clearfix">
+                        <button class="btn btn-sm btn-theme" (click)="addViolation('violationResolution')" *ngIf="policyForm.get('violationResolution')['controls'].length <4">
+							<span>Add level {{policyForm.get('violationResolution').controls.length + 1}} rule</span>
+						</button>
+                    </div>
+                </li>
+            </div>
+        </fieldset>
+
+        <!-- Action Buttons -->
+        <div class="clearfix actions">
+            <button type="button" class="btn btn-xs bg-blue" *ngIf="!selectedPolicy" (click)="AddPolicy()" [disabled]="!policyForm.valid || disableButton">
+				<span>Save</span>
+			</button>
+            <!-- [disabled]="!policyForm.valid || disableButton" -->
+            <button type="button" class="btn btn-xs bg-blue" *ngIf="selectedPolicy" (click)="UpdatePolicy()" [disabled]="disableButton">
+				<span>Update</span>
+			</button>
+            <button type="button" class="btn btn-xs bg-red" (click)="Cancel()">
+				<span>Cancel</span>
+			</button>
+        </div>
+    </form>
+</div>

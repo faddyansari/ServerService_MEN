@@ -1,0 +1,30 @@
+<div class="date-range-container">
+	<div class="date-range-inner">
+		<div class="date-box">
+			<div class="btn-group clearfix m-b-10">
+				<button class="btn btn-xs btn-theme" [ngClass]="(buttonSelected == 'today') ? 'bg-blue' : ''" (click)="DateSelected('today')">Today</button>
+				<button class="btn btn-xs btn-theme" [ngClass]="(buttonSelected == 'yesterday') ? 'bg-blue' : ''" (click)="DateSelected('yesterday')">Yesterday</button>
+				<button class="btn btn-xs btn-theme" [ngClass]="(buttonSelected == 'week') ? 'bg-blue' : ''" (click)="DateSelected('week')">Week</button>
+				<button class="btn btn-xs btn-theme" [ngClass]="(buttonSelected == 'month') ? 'bg-blue' : ''" (click)="DateSelected('month')">Month</button>
+				<button class="btn btn-xs btn-theme" [ngClass]="(buttonSelected == 'pastsixmonths') ? 'bg-blue' : ''" (click)="DateSelected('pastsixmonths')">Past 6 Month</button>
+			</div>
+		</div>
+		<div class="calendar-container">
+			<div class="input-group-sm">
+				<div class="input-block">
+					<label>From: </label>
+					<input #fromElem type="text" class="w0 h0 from-control input-sm disabled" [(ngModel)]="dates.from" name="from" placeholder="From" theme="dp-material" [dpDayPicker]="datePickerConfig"  (ngModelChange)="DateSelected('')"/>
+				</div>
+				<div class="input-block">
+					<label>To: </label>
+					<input #toElem type="text" class="w0 h0 from-control input-sm disabled" [(ngModel)]="dates.to" name="to" placeholder="To" theme="dp-material" [dpDayPicker]="datePickerConfig"  (ngModelChange)="DateSelected('')">
+				</div>
+			</div>
+		</div>
+		<p class="text-red" *ngIf="showError">{{showError}}</p>
+		<div class="btn-group clearfix m-b-10" *ngIf="showButton">
+			<button class="btn btn-xs btn-theme"
+				(click)="Submit()">OK</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,108 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Add FAQs</h5>
+					</div>
+				</div>
+				<div class="activateScrollbar clearfix p-0">
+					<form [formGroup]="faqForm">
+						<div class="input-block">
+							<input type="file" class="form-control input-sm" [formControl]="faqForm.controls['file']" (change)="Change($event)">
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue"
+							[disabled]="(faqForm.invalid)"
+							(click)="Submit()"
+							[ngClass]="(loading) ? 'btnSpinner' : ''">
+
+							<span>Submit</span>
+						</button>
+						<br>
+						<p class="text-red" *ngIf="faqForm.get('file').hasError('nameError')">Invalid Name</p>
+						<p class="text-red" *ngIf="faqForm.get('file').hasError('type')">Unsupported File Format</p>
+						<p class="text-red" *ngIf="faqForm.get('file').hasError('sizeError')">File Size Too Big</p>
+						<p class="text-red" *ngIf="faqForm.get('file').hasError('isEmailUnique')">Invalid Error</p>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>FAQs</h5>
+					</div>
+				</div>
+				<div class="toolbox clearfix">
+					<div class="searchForm clearfix">
+						<div class="search-bar">
+							<form [formGroup]="docSearchForm">
+								<div class="input-block m-0">
+									<input type="text" class="form-control input-sm"
+										placeholder="search documents ...."
+										autocomplete="off"
+										formControlName="searchValue">
+								</div>
+							</form>
+						</div>
+						<div class="search-icon svgOnHover">
+							<svg class="svg active">
+								<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+							</svg>
+						</div>
+					</div>
+				</div>
+				<div class="document-list clearfix" *ngIf="knowledgeBaseList.length">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix"
+							*ngFor="let data of knowledgeBaseList | filter: docSearchForm.get('searchValue').value : ['fileName', 'month', 'year', 'uploadedBy', 'uploadedDate'] : false">
+							<div class="info">
+								<div class="avatar ava-xl">
+									<img class="svg" src="/assets/img/icons/documents.png" width="100%">
+								</div>
+								<div class="name">
+									<b>{{data.fileName}}</b>
+									<span class="groups">{{data.uploadedBy}}</span>
+								</div>
+								<div class="name">
+									<b>For Month:</b>
+									<br>
+									<span>{{data.month | dateFormat}} | {{data.year}}</span>
+								</div>
+								<div class="name">
+									<b>Uploaded Date:</b>
+									<br>
+									<span>{{data.uploadedDate | date:'mediumDate'}}</span>
+								</div>
+								<div class="status">
+									<button class="btn btn-xs" [ngClass]="(data.active) ? 'bg-green' : 'bg-red'" (click)="ToggleActivate(data.fileName,data.active)">
+										<span>{{ (data.active) ? 'Active' : 'Inactive'}}</span>
+									</button>
+								</div>
+								<div class="actions">
+									<a class="svgOnHover tooltip top"
+										[target]="(data.url | attachmentType) == 'document' ? '_parent' : '_blank'" [attr.href]="data.url">
+										<svg class="svg svg-blue active">
+											<use href="(data.url | attachmentType) == 'document' ? '/assets/img/icons/icons-sprite.svg#internal-link' : '/assets/img/icons/icons-sprite.svg#external-link'"/>
+										</svg>
+										<span class="tooltip-inner">Download File</span>
+									</a>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="notAvailable floatToCenter" *ngIf="fetching">
+					<app-preloader type="spin-loader-page"></app-preloader>
+				</div>
+				<div class="notAvailable floatToCenter" *ngIf="!fetching && !knowledgeBaseList.length">
+					<span>No FAQs Found</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

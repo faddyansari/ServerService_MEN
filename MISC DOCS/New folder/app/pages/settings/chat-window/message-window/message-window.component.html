@@ -1,0 +1,351 @@
+<div class="box clearfix animated fadeIn delay-400 displaySettings" id="chatCustomizationComponent"
+    *ngIf="displaySettings">
+    <div class="box-body clearfix p-0">
+        <div class="row clearfix">
+            <div class="col-sm-6 col-xs-12">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Message Window Theme & Content Settings</h5>
+                    </div>
+                </div>
+                <div class="activateScrollbar clearfix">
+                    <div class="box-subtitle clearfix">
+                        <div>
+                            <h5>Edit Content</h5>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <button class="btn btn-sm" [ngClass]="(enableEdit) ? 'bg-red' : 'bg-blue'"
+                            (click)="EnableEdit(!enableEdit)">
+                            <span>{{(enableEdit) ? 'Cancel' : 'Edit'}}</span>
+                        </button>
+                        <button class="btn btn-sm bg-olive" (click)="SubmitForm(true)" [disabled]="form.invalid"
+                            [ngClass]="(loading) ? 'disabled' : (loadingContent) ? 'btnSpinner' : ''">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                    <form [formGroup]="form">
+                        <div class="box-subtitle clearfix">
+                            <div>
+                                <h5>Sent Messages Pallet</h5>
+                            </div>
+                        </div>
+                        <div class="pallet-list">
+                            <div class="pallet-box">
+                                <label>Background</label>
+                                <input class="btn btn-xs btn-block color-picker-handle" formControlName="sentBGColor"
+                                    (colorPickerChange)="ColorChange('sentBGColor', $event)"
+                                    [(colorPicker)]="displaySettings.sentBGColor" [cpPosition]="'right'"
+                                    [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                    [style.background]="displaySettings.sentBGColor">
+
+                            </div>
+                            <div class="pallet-box">
+                                <label>Text</label>
+                                <input class="btn btn-xs btn-block color-picker-handle" formControlName="sentForeColor"
+                                    (colorPickerChange)="ColorChange('sentForeColor', $event)"
+                                    [(colorPicker)]="displaySettings.sentForeColor" [cpPosition]="'right'"
+                                    [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                    [style.background]="displaySettings.sentForeColor">
+
+                            </div>
+                            <!-- <div class="pallet-box">
+                                <label>Avatar Background</label>
+                                <input class="btn btn-xs btn-block color-picker-handle"
+                                    formControlName="sentBGAvatarColor"
+                                    (colorPickerChange)="ColorChange('sentBGAvatarColor', $event)"
+                                    [(colorPicker)]="displaySettings.sentBGAvatarColor" [cpPosition]="'left'"
+                                    [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                    [style.background]="displaySettings.sentBGAvatarColor">
+                            </div>
+                            <div class="pallet-box">
+                                <label>Name Initials</label>
+                                <input class="btn btn-xs btn-block color-picker-handle"
+                                    formControlName="sentForeAvatarColor"
+                                    (colorPickerChange)="ColorChange('sentForeAvatarColor', $event)"
+                                    [(colorPicker)]="displaySettings.sentForeAvatarColor" [cpPosition]="'right'"
+                                    [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                    [style.background]="displaySettings.sentForeAvatarColor">
+                            </div> -->
+                        </div>
+                        <div class="box-subtitle clearfix">
+                            <div>
+                                <h5>Recieved Messages Pallet</h5>
+                            </div>
+                        </div>
+                        <div class="pallet-list">
+                            <div class="pallet-box">
+                                <label>Background</label>
+                                <input class="btn btn-xs btn-block color-picker-handle" formControlName="recieveBGColor"
+                                    (colorPickerChange)="ColorChange('recieveBGColor', $event)"
+                                    [(colorPicker)]="displaySettings.recieveBGColor" [cpPosition]="'right'"
+                                    [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                    [style.background]="displaySettings.recieveBGColor">
+                            </div>
+                            <div class="pallet-box">
+                                <label>Text</label>
+                                <input class="btn btn-xs btn-block color-picker-handle"
+                                    formControlName="recieveForeColor"
+                                    (colorPickerChange)="ColorChange('recieveForeColor', $event)"
+                                    [(colorPicker)]="displaySettings.recieveForeColor" [cpPosition]="'right'"
+                                    [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                    [style.background]="displaySettings.recieveForeColor">
+                            </div>
+                            <!-- <div class="pallet-box">
+                                <label>Avatar Background</label>
+                                <input class="btn btn-xs btn-block color-picker-handle"
+                                    formControlName="recieveBGAvatarColor"
+                                    (colorPickerChange)="ColorChange('recieveBGAvatarColor', $event)"
+                                    [(colorPicker)]="displaySettings.recieveBGAvatarColor" [cpPosition]="'left'"
+                                    [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                    [style.background]="displaySettings.recieveBGAvatarColor">
+                            </div>
+                            <div class="pallet-box">
+                                <label>Name Initials</label>
+                                <input class="btn btn-xs btn-block color-picker-handle"
+                                    formControlName="recieveForeAvatarColor"
+                                    (colorPickerChange)="ColorChange('recieveForeAvatarColor', $event)"
+                                    [(colorPicker)]="displaySettings.recieveForeAvatarColor" [cpPosition]="'right'"
+                                    [cpWidth]="'200'" [cpHeight]="'270'" [cpDialogDisplay]="'popup'"
+                                    [style.background]="displaySettings.recieveForeAvatarColor">
+                            </div> -->
+                        </div>
+                        <div class="flex f-row f-wrap f-gap5 m-b-10">
+                            <div>
+                                <button class="btn btn-sm bg-blue" (click)="SubmitForm(false)" [disabled]="form.invalid"
+                                    [ngClass]="(loadingContent) ? 'disabled' : (loading) ? 'btnSpinner' : ''">
+
+                                    <span>Save</span>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm bg-olive" (click)="Reset()">
+
+                                    <span>Restore</span>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm bg-black" (click)="ResetToDefaults()">
+
+                                    <span>Reset To Default</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Preview</h5>
+                    </div>
+                </div>
+                <div class="activateScrollbar clearfix">
+                    <div id="bz-cw" class="right">
+                        <div id="messageWindow" class="messageWindow cd-form active"
+                            [ngStyle]="(themeSettings && (themeSettings.bgImage | json) != ({} | json)) ? {'background-image': 'url(' + themeSettings.bgImage.links + ')','background-repeat': 'no-repeat', 'background-size' : '100%' } : {'background-color': themeSettings.bgColor } ">
+                            <div id="chatHeaderArea" class="chatHeaderArea no-news no-agents"
+                                [ngStyle]="(themeSettings) ?  ApplyHeaderColorWithGradient(themeSettings.headerColor) : ''">
+                                <div id="headerTools" class="headerTools">
+                                    <form [formGroup]="form" *ngIf="enableEdit">
+                                        <input class="form-control input-sm m-0" type="text" formControlName="heading" [(ngModel)]="displaySettings.heading" >
+                                    </form>
+                                    <h1 *ngIf="!enableEdit">
+                                        <span class="ellipsis"
+                                            [ngStyle]="(themeSettings) ? {'color': themeSettings.headerTextColor } : ''">{{displaySettings.heading}}</span>
+                                    </h1>
+                                    <button id="cd-notification" class="cd-btn svgOnHover notif">
+										<svg class="svg active">
+											<use href="/assets/img/icons/icons-sprite.svg#bell-on" class="text-white"/>
+										</svg>
+                                        <span class="notif-count right">22</span>
+                                    </button>
+                                    <button id="cd-volume" class="cd-btn svgOnHover">
+										<svg class="svg active">
+											<use href="/assets/img/icons/icons-sprite.svg#volume-on" class="text-white"/>
+										</svg>
+                                    </button>
+                                    <button id="cd-minimize" class="cd-btn svgOnHover">
+										<svg class="svg active">
+											<use href="/assets/img/icons/icons-sprite.svg#minimize" class="text-white"/>
+										</svg>
+                                    </button>
+                                    <button id="cd-close" class="cd-btn svgOnHover">
+										<svg class="svg active">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white"/>
+										</svg>
+                                    </button>
+                                </div>
+                                <div id="agentInfo" class="agentInfo">
+                                    <div class="agentDetail">
+                                        <div></div>
+                                        <div class="avatar notif">
+                                            <div class="initials">AN</div>
+                                            <span class="notif-count no-count bg-green"
+                                                [ngStyle]="(themeSettings) ? {'border-color': themeSettings.headerSecondryColor } : ''"></span>
+                                        </div>
+                                        <div>
+                                            <p>
+                                                <span
+                                                    [ngStyle]="(themeSettings) ? {'color': themeSettings.headerTextColor } : ''">Agent
+                                                    Name Here</span>
+                                                <br>
+                                                <small
+                                                    [ngStyle]="(themeSettings) ? {'color': themeSettings.headerTextColor } : ''">
+                                                    <em
+                                                        title="(please note this ID to keep track of your conversation)">5cd3b22d70ca5b223423234234234
+                                                        ...</em>
+                                                </small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="headerTools">
+                                        <button class="cd-btn svgOnHover">
+											<svg class="svg active">
+												<use href="/assets/img/icons/icons-sprite.svg#call" class="text-white"/>
+											</svg>
+                                        </button>
+                                        <button class="cd-btn svgOnHover">
+                                            <svg class="svg active">
+												<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white"/>
+											</svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="chatContentArea" class="chatContentArea">
+                                <div id="msgList" class="msgList">
+                                    <div class="messages clearfix">
+                                        <div class="chat-msg msg_sent">
+                                            <div [ngStyle]="(displaySettings) ? {'background-color': displaySettings.sentBGColor , color : displaySettings.sentForeColor} : ''"
+                                                class="chat-text">converstaions text comes here ...</div>
+                                            <div [ngStyle]="(displaySettings) ? { color : displaySettings.sentForeColor} : ''"
+                                                class="chat-info"><span>May 11, 2019 9:38 PM</span>
+                                            </div>
+                                        </div>
+                                        <div class="chat-msg msg_recieved">
+                                            <div [ngStyle]="(displaySettings) ? {'background-color': displaySettings.recieveBGColor , color : displaySettings.recieveForeColor} : ''"
+                                                class="chat-text">converstaions text comes here ...</div>
+                                            <div [ngStyle]="(displaySettings) ? { color : displaySettings.recieveForeColor} : ''"
+                                                class="chat-info">
+                                                <span>May 11, 2019 9:40 PM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chatContentFooterArea">
+                                    <div id="msgArea" class="msgArea">
+                                        <ul class="attachment-area recording">
+                                            <li>
+                                                <div class="icon animated pulse">
+                                                    <svg class="svg w100 h100 svg-default active">
+														<use href="/assets/img/icons/icons-sprite.svg#mic-on"/>
+													</svg>
+                                                </div>
+                                                <div class="progress-bar">
+                                                    <div id="progressBarParent">
+                                                        <span id="progressBar" class="w30"></span>
+                                                    </div>
+                                                    <div class="counter">
+                                                        <span>01:00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="actions">
+                                                    <button class="btn bg-gray-light svgOnHover tooltip top">
+                                                        <svg class="svg w100">
+															<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+														</svg>
+														<svg class="svg w100 colored">
+															<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+														</svg>
+                                                        <span class="tooltip-inner">Cancel Recording</span>
+                                                    </button>
+                                                    <button class="btn bg-gray-light svgOnHover tooltip top-right"
+                                                        title="Send">
+                                                        <svg class="svg svg-default active">
+															<use href="/assets/img/icons/icons-sprite.svg#send-message"/>
+														</svg>
+                                                        <span class="tooltip-inner">Send</span>
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="attachment-area document">
+                                            <ul>
+                                                <li>
+                                                    <span>
+                                                        <span>filename.docx</span><br>
+                                                        <span class="text-red">format not supported</span>
+                                                    </span>
+                                                    <app-preloader type='stat-loader-black'></app-preloader>
+                                                    <button class="btn btn-xs btn-transparent pull-right svgOnHover">
+                                                        <svg class="svg svg-default">
+															<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+														</svg>
+														<svg class="svg colored">
+															<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+														</svg>
+														<span class="tooltip-inner">Delete</span>
+                                                    </button>
+                                                </li>
+                                                <li class="bg-danger">
+                                                    <span>
+                                                        <span>filename.docx</span>
+                                                        <br>
+                                                        <span>Please Enter a valid file type! Max size 5MB</span>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                            <div class="attachment-footer">
+                                                <div>
+                                                    <button class="btn btn-xxs bg-olive">
+                                                        <span>Send Attachment</span>
+                                                    </button>
+                                                    <button class="btn btn-xxs bg-red">
+                                                        <span>Remove All</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <textarea maxlength="20000"
+                                            placeholder="Type and hit 'Enter' to send"></textarea>
+                                        <div class="chatAdons">
+											<label class="svgOnHover tooltip top-left">
+                                                <svg class="svg w-25 h-25 svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+												</svg>
+                                                <input type="file" class="hide" multiple="multiple">
+                                                <span class="tooltip-inner">Attach File</span>
+                                            </label>
+                                            <button class="svgOnHover tooltip top">
+                                                <svg class="svg w-25 h-25 svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#smiley"/>
+												</svg>
+												<svg class="svg w-25 h-25 colored">
+													<use href="/assets/img/icons/icons-sprite.svg#smiley-colored" class="text-mustard-light"/>
+												</svg>
+                                                <span class="tooltip-inner">Emojis</span>
+                                            </button>
+                                            <button class="svgOnHover tooltip top">
+                                                <svg class="svg w-25 h-25 svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#mic-on"/>
+												</svg>
+                                                <span class="tooltip-inner">Voice Note</span>
+                                            </button>
+                                            <button class="svgOnHover tooltip top-right">
+                                                <svg class="svg svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#send-message"/>
+												</svg>
+                                                <span class="tooltip-inner">Send</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+@import '../../assets/sass/partials/variables';
+@import '../../assets/sass/partials/mixins';
+@import '../../assets/sass/partials/extensions';
+
+#emoji-div-wrapper {
+	width: 100%;
+	height: 200px;
+	position: absolute;
+	@extend %p0;
+	right: 0px;
+	border-top: 1px solid var(--gray-dark);
+	border-bottom: none;
+	opacity: 0;
+	display: block;
+	&.showEmoji {
+		@extend %transitionAll300;
+		visibility: visible;
+		opacity: 1;
+		bottom: 89px;
+		z-index: 10;
+	}
+	&.hideEmoji {
+		@extend %transitionAll300;
+		opacity: 0;
+		bottom: -100px;
+		z-index: -10;
+		visibility: hidden;
+	}
+	#emoji-div {
+		height: 200px;
+		width: 100%;
+		overflow: hidden;
+		overflow-y: scroll;
+		background: white;
+		border-bottom: none;
+		padding: 15px;
+		p {
+			text-align: left;
+			a {
+				font-size: 22px;
+				width: 34px;
+				height: 34px;
+				margin: 0px;
+				text-align: center;
+				display: inline-block;
+				transform: scale(1);
+				transition: transform 200ms ease;
+				&:hover {
+					transform: scale(1.3);
+				}
+			}
+		}
+	}
+	#emoji-menu {
+		width: 100%;
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+		position: absolute;
+		background: white;
+		text-align: center;
+		top: 100%;
+		li {
+			display: inline-block;
+			padding: 8.8px;
+			&:hover,
+			&.active {
+				background: #ccc;
+			}
+		}
+		i {
+			font-style: unset;
+		}
+	}
+}
+
+#emojiBox {
+	position: inherit;
+	right: 20px;
+	float: right;
+}
+
+[data-title]:hover::before {
+	content: attr(data-title);
+	position: absolute;
+	display: inline-block;
+	padding: 3px 5px;
+	@extend %themeRadius;
+	background: #000;
+	color: #fff;
+	font-size: 10px;
+	font-family: sans-serif;
+	line-height: 1.5;
+	white-space: inherit;
+	top: 40px;
+	width: auto;
+}
+
+.icon-emoji:before {
+	content: '\1F60A';
+	font-size: 17px;
+}
+.icon-emoji-smiley:before {
+	content: '\1F60A';
+}
+.icon-emoji-animal:before {
+	content: '\1F415';
+}
+.icon-emoji-activity:before {
+	content: '\1F3C4';
+}
+.icon-emoji-people:before {
+	content: '\1F468';
+}
+.icon-emoji-object:before {
+	content: '\1F559';
+}
+.icon-emoji-place:before {
+	content: '\1F686';
+}
+.icon-emoji-food:before {
+	content: '\1F354';
+}
+.icon-emoji-cloth:before {
+	content: '\1F454';
+}
+.icon-emoji-sport:before {
+	content: '\26BD';
+}
+.icon-emoji-size {
+	font-size: 17px;
+}

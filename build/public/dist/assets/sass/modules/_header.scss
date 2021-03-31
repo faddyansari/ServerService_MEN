@@ -1,0 +1,180 @@
+.main-header {
+  @extend %posAbsolute;
+  @extend %width100;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  .sidebar {
+    animation-duration: 150ms;
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: #{$sidebarHeader};
+      @extend %width100;
+      @extend %transitionAll300;
+      > .logo {
+        padding: 15px;
+        width: 60px;
+        height: #{$sidebarHeader};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-color: var(--charcoal-light);
+        .svg {
+          color: var(--white);
+        }
+        &:hover,
+        &.active {
+          background-color: var(--orange);
+        }
+      }
+      > .navbar-toggle {
+        height: #{$sidebarHeader};
+        padding: 0;
+        img {
+          padding: 20px 0;
+          width: 60px;
+          height: #{$sidebarHeader};
+        }
+      }
+      > .searchbar {
+        position: fixed;
+        display: flex;
+        top: 10px;
+        right: 265px;
+        align-items: center;
+        justify-content: space-between;
+        width: 0px;
+        @extend %transitionAll300;
+        opacity: 0;
+        &.active {
+          width: 350px;
+          top: 10px;
+          opacity: 1;
+          @extend %transitionAll300;
+        }
+        > div {
+          width: 100%;
+          input {
+            border: 0;
+            color: var(--charcoal-light);
+            font-weight: 600;
+            letter-spacing: 0.02rem;
+            &::placeholder {
+              color: var(--charcoal-light);
+            }
+          }
+          h4 {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0;
+          }
+          .notAvailable {
+            height: 100%;
+          }
+          .view-all-tickets,
+          .close-searchbar {
+            position: absolute;
+            right: 7px;
+            top: 7px;
+          }
+          > .popover-form {
+            top: 44px;
+            height: 350px;
+            width: 100%;
+            margin: 0;
+            box-shadow: none;
+            padding: 0;
+            .activateScrollbar {
+              height: 304px;
+              overflow-x: hidden;
+            }
+          }
+        }
+      }
+      > .toolbox {
+        height: #{$sidebarHeader};
+      }
+      .sidebar-menu {
+        width: calc(100% - 365px);
+        height: #{$sidebarHeader};
+        display: flex;
+        align-items: center;
+        @extend %transitionAll300;
+        @extend %m0;
+        overflow: hidden;
+        overflow-x: auto;
+        margin: 0 20px;
+        > li {
+          @extend %transitionAll300;
+          @extend %posRelative;
+          margin-left: 10px;
+          &:first-child {
+            margin-left: 0px;
+          }
+          > a {
+            @extend %displayFlex;
+            @extend %flexAlignCenter;
+            @extend %noUserSelect;
+            @extend %op05;
+            @extend %m0;
+            color: var(--white);
+            @include text-shadow(0, -1px, 0, var(--black-alpha5));
+            > img,
+            > span {
+              @extend %transitionAll300;
+            }
+            > img {
+              width: 20px;
+              height: 20px;
+            }
+            > span {
+              @extend %fw-6;
+              letter-spacing: 0.05em;
+              @extend %uppercase;
+              @include only_phone {
+                display: none;
+              }
+            }
+            &:after {
+              content: '';
+              width: 0;
+              position: absolute;
+              left: 0;
+              right: 0;
+              bottom: -10px;
+              margin: auto;
+              border-bottom-width: 2px;
+              border-bottom-style: solid;
+              @extend %transitionAll300;
+            }
+          }
+          > .notif-count {
+            right: 0px;
+            top: 0px;
+            @extend %noRad;
+          }
+          &:hover,
+          &:active,
+          &.active {
+            > a {
+              @extend %posRelative;
+              @extend %op1;
+            }
+          }
+          &.active {
+            > a {
+              &:after {
+                width: 100%;
+                @extend %transitionAll300;
+                border-bottom-color: var(--orange);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

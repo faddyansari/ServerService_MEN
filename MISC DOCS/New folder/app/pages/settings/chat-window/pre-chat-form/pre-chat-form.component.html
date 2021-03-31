@@ -1,0 +1,760 @@
+<div class="box clearfix animated fadeIn delay-400" id="chatCustomizationComponent" *ngIf="displaySettings">
+  <div class="box-body clearfix p-0">
+    <div class="row clearfix">
+      <div class="col-sm-9 col-md-8 col-xs-12">
+        <div class="box-subtitle clearfix">
+          <div>
+            <h5 *ngIf="enableEdit">Editing Fields</h5>
+            <h5 *ngIf="!enableEdit">Add More Fields</h5>
+          </div>
+          <div>
+            <button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="EnableEdit(!enableEdit)"
+              [ngClass]="(!enableEdit) ? 'border-blue' : 'border-red'">
+              <span>{{(!enableEdit) ? 'Add' : 'Cancel'}}</span>
+              <svg class="svg active" [ngClass]="(!enableEdit) ? 'bg-blue' : 'bg-red'">
+                <use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!enableEdit" />
+                <use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="enableEdit" />
+              </svg>
+            </button>
+            <button class="btn btn-xs bg-blue" *ngIf="enableEdit" (click)="SubmitForm()"
+              [disabled]="!CustomFormFields || CustomFormFields.invalid" [ngClass]="(loading) ? 'btnSpinner' : ''">
+              <span>Save</span>
+            </button>
+          </div>
+        </div>
+        <div class="customFieldDesigner" *ngIf="enableEdit">
+          <!-- Draggable Area -->
+          <ul class="activateScrollbar clearfix form-element list-items clearfix style5">
+            <li class="item notif clearfix ch" id="checkbox" (dragstart)="drag($event)" draggable="true">
+              <div>
+                <div class="svgOnHover">
+                  <svg class="svg w-40 h-40 svg-default" draggable="false">
+                    <use href="/assets/img/icons/icons-sprite.svg#checkbox-field" draggable="false" />
+                  </svg>
+                  <svg class="svg w-40 h-40 colored" draggable="false">
+                    <use href="/assets/img/icons/icons-sprite.svg#checkbox-field-colored" draggable="false" />
+                  </svg>
+                  <b>CHECKBOX</b>
+                </div>
+              </div>
+            </li>
+            <li class="item notif clearfix" id="radio" (dragstart)="drag($event)" draggable="true">
+              <div>
+                <div class="svgOnHover">
+                  <svg class="svg w-40 h-40 svg-default" draggable="false">
+                    <use href="/assets/img/icons/icons-sprite.svg#radio-field" draggable="false" />
+                  </svg>
+                  <svg class="svg w-40 h-40 colored" draggable="false">
+                    <use href="/assets/img/icons/icons-sprite.svg#radio-field-colored" draggable="false" />
+                  </svg>
+                  <b>RADIO FIELD</b>
+                </div>
+              </div>
+            </li>
+            <li class="item notif clearfix in" id="textbox" (dragstart)="drag($event)" draggable="true">
+              <div>
+                <div class="svgOnHover">
+                  <svg class="svg w-40 h-40 svg-default" draggable="false">
+                    <use href="/assets/img/icons/icons-sprite.svg#input-field" draggable="false" />
+                  </svg>
+                  <svg class="svg w-40 h-40 colored" draggable="false">
+                    <use href="/assets/img/icons/icons-sprite.svg#input-field-colored" draggable="false" />
+                  </svg>
+                  <b>INPUT FIELD</b>
+                </div>
+              </div>
+            </li>
+            <li class="item notif clearfix dd" id="dropdown" (dragstart)="drag($event)" draggable="true">
+              <div>
+                <div class="svgOnHover">
+                  <svg class="svg w-40 h-40 svg-default" draggable="false">
+                    <use href="/assets/img/icons/icons-sprite.svg#select-field" draggable="false" />
+                  </svg>
+                  <svg class="svg w-40 h-40 colored" draggable="false">
+                    <use href="/assets/img/icons/icons-sprite.svg#select-field-colored" draggable="false" />
+                  </svg>
+                  <b>SELECT FIELD</b>
+                </div>
+              </div>
+            </li>
+          </ul>
+
+          <!-- Droppable Area -->
+          <div class="activateScrollbar clearfix form-items list-items clearfix style5 droppable-area"
+            [formGroup]="CustomFormFields" (drop)="drop($event)" (dragover)="allowDrop($event)"
+            (dragleave)="DragLeave($event)">
+            <div formArrayName="fields"
+              *ngIf="CustomFormFields.value && CustomFormFields.value.fields && CustomFormFields.value.fields.length">
+              <div class="item notif clearfix" [formGroupName]="i" *ngFor="let field of GetFields(); let i = index;"
+                [ngClass]="((selectedIndex == i) && (selectedIndex !== -1)) ? 'active' : ((selectedIndex !== i) && (selectedIndex !== -1)) ? 'disabled' : ''">
+                <div id="checkbox" *ngIf="field.get('elementType').value == 'checkbox'">
+                  <div>
+                    <div class="avatar ava-md bg-transparent">
+                      <div class="nameInitials svgOnHover">
+                        <svg class="svg w-40 h-40 svg-default">
+                          <use href="/assets/img/icons/icons-sprite.svg#checkbox-field" />
+                        </svg>
+                        <svg class="svg w-40 h-40 colored">
+                          <use href="/assets/img/icons/icons-sprite.svg#checkbox-field-colored" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="info">
+                    <div class="input-block">
+                      <label>
+                        <span class="ellipsis">{{field.get('label').value}}</span>
+                      </label>
+                      <div class="pretty p-svg p-fill p-smooth m-0">
+                        <input type="checkbox">
+                        <div class="state svgOnHover">
+                          <svg class="svg svg-icon active">
+                            <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+                          </svg>
+                          <label>{{field.get('elementType').value}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="actions" *ngIf="!field.get('default').value">
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="SetEdit(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#edit" />
+                      </svg>
+                      <span class="tooltip-inner">Edit</span>
+                    </button>
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top"
+                      [disabled]="field.get('mandatory').value" (click)="DeleteField(i)">
+                      <svg class="svg svg-default">
+                        <use href="/assets/img/icons/icons-sprite.svg#delete" />
+                      </svg>
+                      <svg class="svg colored">
+                        <use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+                      </svg>
+                      <span class="tooltip-inner">Delete</span>
+                    </button>
+                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="OrderUp(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#reorder-ascending" />
+                      </svg>
+                      <span class="tooltip-inner">Swap Up</span>
+                    </button>
+                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="OrderDown(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#reorder-descending" />
+                      </svg>
+                      <span class="tooltip-inner">Swap Down</span>
+                    </button>
+                  </div>
+                </div>
+                <div id="radio" *ngIf="field.get('elementType').value == 'radio'">
+                  <div>
+                    <div class="avatar ava-md bg-transparent">
+                      <div class="nameInitials svgOnHover">
+                        <svg class="svg w-40 h-40 svg-default">
+                          <use href="/assets/img/icons/icons-sprite.svg#radio-field" />
+                        </svg>
+                        <svg class="svg w-40 h-40 colored">
+                          <use href="/assets/img/icons/icons-sprite.svg#radio-field-colored" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="info">
+                    <div class="input-block">
+                      <label>
+                        <span class="ellipsis">{{field.get('label').value}}</span>
+                      </label>
+                      <div class="pretty p-default p-round m-0">
+                        <input type="radio" checked name="radiobtn">
+                        <div class="state">
+                          <label>{{field.get('elementType').value}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="actions" *ngIf="!field.get('default').value">
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="SetEdit(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#edit" />
+                      </svg>
+                      <span class="tooltip-inner">Edit</span>
+                    </button>
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top"
+                      [disabled]="field.get('mandatory').value" (click)="DeleteField(i)">
+                      <svg class="svg svg-default">
+                        <use href="/assets/img/icons/icons-sprite.svg#delete" />
+                      </svg>
+                      <svg class="svg colored">
+                        <use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+                      </svg>
+                      <span class="tooltip-inner">Delete</span>
+                    </button>
+                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="OrderUp(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#reorder-ascending" />
+                      </svg>
+                      <span class="tooltip-inner">Swap Up</span>
+                    </button>
+                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="OrderDown(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#reorder-descending" />
+                      </svg>
+                      <span class="tooltip-inner">Swap Down</span>
+                    </button>
+                  </div>
+                </div>
+                <div id="text" *ngIf="field.get('elementType').value == 'text'">
+                  <div>
+                    <div class="avatar ava-md bg-transparent">
+                      <div class="nameInitials svgOnHover">
+                        <svg class="svg w-40 h-40 svg-default" draggable="false">
+                          <use href="/assets/img/icons/icons-sprite.svg#input-field" draggable="false" />
+                        </svg>
+                        <svg class="svg w-40 h-40 colored" draggable="false">
+                          <use href="/assets/img/icons/icons-sprite.svg#input-field-colored" draggable="false" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="info">
+                    <div class="input-block m-b-0">
+                      <label>
+                        <span class="ellipsis">{{field.get('label').value}}</span>
+                      </label>
+                      <input type="text" class="form-control input-xs m-b-0" *ngIf="!field.get('multiline').value">
+                      <textarea type="text" class="form-control input-xs m-b-0"
+                        *ngIf="field.get('multiline').value"></textarea>
+                    </div>
+                  </div>
+                  <div class="actions" *ngIf="!field.get('default').value">
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="SetEdit(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#edit" />
+                      </svg>
+                      <span class="tooltip-inner">Edit</span>
+                    </button>
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top"
+                      [disabled]="field.get('mandatory').value" (click)="DeleteField(i)">
+                      <svg class="svg svg-default">
+                        <use href="/assets/img/icons/icons-sprite.svg#delete" />
+                      </svg>
+                      <svg class="svg colored">
+                        <use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+                      </svg>
+                      <span class="tooltip-inner">Delete</span>
+                    </button>
+                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="OrderUp(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#reorder-ascending" />
+                      </svg>
+                      <span class="tooltip-inner">Swap Up</span>
+                    </button>
+                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="OrderDown(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#reorder-descending" />
+                      </svg>
+                      <span class="tooltip-inner">Swap Down</span>
+                    </button>
+                  </div>
+                </div>
+                <div id="dropdown" *ngIf="field.get('elementType').value == 'dropdown'">
+                  <div>
+                    <div class="avatar ava-md bg-transparent">
+                      <div class="nameInitials svgOnHover">
+                        <svg class="svg w-40 h-40 svg-default">
+                          <use href="/assets/img/icons/icons-sprite.svg#select-field" />
+                        </svg>
+                        <svg class="svg w-40 h-40 colored">
+                          <use href="/assets/img/icons/icons-sprite.svg#select-field-colored" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="info">
+                    <div class="input-block m-b-0">
+                      <label>
+                        <span class="ellipsis">{{field.get('label').value}}</span>
+                      </label>
+                      <div class="sel style1 sel-xs">
+                        <select class="form-control input-xs m-b-0">
+                          <option value="{{option.value}}" *ngFor="let option of field.options">
+                            {{option.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="actions" *ngIf="!field.get('default').value">
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="SetEdit(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#edit" />
+                      </svg>
+                      <span class="tooltip-inner">Edit</span>
+                    </button>
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top"
+                      [disabled]="field.get('mandatory').value" (click)="DeleteField(i)">
+                      <svg class="svg svg-default">
+                        <use href="/assets/img/icons/icons-sprite.svg#delete" />
+                      </svg>
+                      <svg class="svg colored">
+                        <use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+                      </svg>
+                      <span class="tooltip-inner">Delete</span>
+                    </button>
+                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="OrderUp(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#reorder-ascending" />
+                      </svg>
+                      <span class="tooltip-inner">Swap Up</span>
+                    </button>
+                    <button class="btn btn-transparent svgOnHover tooltip top" (click)="OrderDown(i)">
+                      <svg class="svg svg-blue active">
+                        <use href="/assets/img/icons/icons-sprite.svg#reorder-descending" />
+                      </svg>
+                      <span class="tooltip-inner">Swap Down</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div id="droppableZone" class="elements-droppable no-elements no-pointer textClass">
+                <span>Drop Items Here ...</span>
+              </div>
+            </div>
+            <!-- Editing Area -->
+            <div [formGroup]="selectedField" *ngIf="selectedField">
+              <div class="item f-column no-shadow">
+                <div>
+                  <div class="info">
+                    <div class="input-block">
+                      <label>Label</label>
+                      <input formControlName="label" type="text" class="form-control input-sm" placeholder="Label"
+                        name="label">
+                    </div>
+                    <div class="input-block">
+                      <label>Field Name</label>
+                      <input formControlName="name" type="text" class="form-control input-sm" placeholder="Field Name"
+                        name="field-name">
+                    </div>
+                    <div class="input-block" *ngIf="selectedField.get('elementType').value == 'text'">
+                      <label>PlaceHolder</label>
+                      <input formControlName="placeholder" type="text" class="form-control input-sm"
+                        placeholder="placeholder" name="field-placeholder">
+                    </div>
+                    <div class="input-block" *ngIf="selectedField.get('elementType').value == 'text'">
+                      <div class="pretty p-svg p-fill p-smooth">
+                        <input formControlName="multiline" type="checkbox" name="field-multiline">
+                        <div class="state svgOnHover">
+                          <svg class="svg svg-icon active">
+                            <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+                          </svg>
+                          <label>MultiLine</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="input-block">
+                      <div class="pretty p-svg p-fill p-smooth">
+                        <input formControlName="visible" type="checkbox" name="field-visible">
+                        <div class="state svgOnHover">
+                          <svg class="svg svg-icon active">
+                            <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+                          </svg>
+                          <label>{{(selectedField.get('visible').value) ? 'Visible' : 'Hidden'}}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="input-block" *ngIf="selectedField.get('elementType').value == 'checkbox'">
+                      <label>Value</label>
+                      <input formControlName="value" type="text" list='checks' (change)="SetCheckBoxValue($event)"
+                        class="form-control input-sm" placeholder="select default" name="field-value">
+                    </div>
+                    <datalist id="checks">
+                      <option [value]="true">
+                      </option>
+                      <option [value]="false">
+                      </option>
+                    </datalist>
+                    <div class="input-block">
+                      <div class="pretty p-svg p-fill p-smooth">
+                        <input formControlName="required" type="checkbox" name="field-name">
+                        <div class="state svgOnHover">
+                          <svg class="svg svg-icon active">
+                            <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+                          </svg>
+                          <label>Required</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="item option-item" formArrayName="options"
+                *ngIf="(selectedField.get('elementType').value  == 'dropdown') || (selectedField.get('elementType').value  == 'radio')">
+                <ng-template ngFor [ngForOf]="GetOptions('options')" let-option let-i="index">
+                  <div [formGroupName]="i" class="m-b-10">
+                    <div class="info" id="text">
+                      <div class="input-group-xs">
+                        <input formControlName="name" type="text" class="form-control m-b-0" placeholder="Name">
+                        <input [attr.list]="(selectedField.get('elementType').value == 'radio') ? 'checks' : undefined"
+                          placeholder="Value"
+                          (change)="(selectedField.get('elementType').value == 'radio') ? SetCheckBoxValue($event) : undefined"
+                          formControlName="value" type="text" class="form-control m-b-0">
+                      </div>
+                    </div>
+                    <div class="actions">
+                      <button type="button" class="btn btn-transparent svgOnHover tooltip top"
+                        (click)="DeleteOption(i,'options')">
+                        <svg class="svg svg-default">
+                          <use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+                        </svg>
+                        <svg class="svg colored">
+                          <use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+                        </svg>
+                        <span class="tooltip-inner">Remove</span>
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+                <button type="button" class="btn btn-xs btn-theme" (click)="AddOption('options')"
+                  *ngIf="(selectedField.get('elementType').value == 'dropdown') || (selectedField.get('elementType').value == 'radio')">
+                  <span>Add More Option</span>
+                </button>
+              </div>
+              <div class="item option-item" formArrayName="customRegex"
+                *ngIf="(selectedField.get('elementType').value  == 'text')">
+                <ng-template ngFor [ngForOf]="GetOptions('customRegex')" let-option let-i="index">
+                  <div [formGroupName]="i" class="m-b-10">
+                    <div class="info" id="text">
+                      <div class="input-group-xs">
+                        <input formControlName="name" type="text" class="form-control m-b-0" placeholder="regex string">
+
+                        <div class="pretty p-default p-round" style="word-break: unset">
+                          <input type="radio" formControlName="value" [checked]="option.get('value').value"
+                            (change)="SetRegexValue(i,'customRegex',true )" />
+                          <div class="state">
+                            <label>Valid</label>
+                          </div>
+                        </div>
+                        <div class="pretty p-default p-round" style="word-break: unset">
+                          <input type="radio" formControlName="value" [checked]="!option.get('value').value"
+                            (change)="SetRegexValue(i,'customRegex' , false)" />
+                          <div class="state">
+                            <label>Invalid</label>
+                          </div>
+                        </div>
+
+                        <!-- <input [attr.list]="(selectedField.get('elementType').value == 'radio') ? 'checks' : undefined"
+                          placeholder="Value"
+                          (change)="(selectedField.get('elementType').value == 'radio') ? SetCheckBoxValue($event) : undefined"
+                          formControlName="value" type="text" class="form-control m-b-0"> -->
+                      </div>
+                    </div>
+                    <div class="actions">
+                      <button type="button" class="btn btn-transparent svgOnHover tooltip top"
+                        (click)="DeleteOption(i,'customRegex')">
+                        <svg class="svg svg-default">
+                          <use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+                        </svg>
+                        <svg class="svg colored">
+                          <use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+                        </svg>
+                        <span class="tooltip-inner">Remove</span>
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+                <button type="button" class="btn btn-xs btn-theme" (click)="AddOption('customRegex')"
+                  *ngIf="(selectedField.get('elementType').value == 'text')">
+                  <span>{{(selectedField.get('customRegex').value.length) ? 'Add More Regex' : 'Add Regex'}}</span>
+                </button>
+              </div>
+              <div class="clearfix m-t-10 p-t-10 b-t-1 border-gray">
+                <button [ngClass]="(saving) ? 'btnSpinner' : ''" (click)="SaveField()" [disabled]="!selectedField.valid"
+                  type="button" class="btn btn-xs bg-blue">
+                  <span>Save</span>
+                </button>
+                <button type="button" class="btn btn-xs bg-red" (click)="Clear()">
+                  <span>Cancel</span>
+                </button>
+              </div>
+              <div class="elements-droppable no-elements"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-md-4 col-xs-12">
+        <div class="box-subtitle clearfix">
+          <div>
+            <h5>Preview Content</h5>
+          </div>
+        </div>
+        <div class="activateScrollbar clearfix">
+          <!-- POST CHAT SURVEY -->
+          <form [formGroup]="form">
+            <div class="from-dialogs clearfix"
+              [ngStyle]="(themeSettings) ? {'background-color': themeSettings.dialogBgColor , color : themeSettings.dialogTextColor} : ''">
+              <ul>
+                <!-- <li id="Q1" class="clearfix m-b-20">
+                                  <div class="input-block" *ngIf="enableEdit">
+                                      <textarea type="text" class="form-control input-sm text-center"
+                                          formControlName="query1"></textarea>
+                                  </div>
+                                  <h6 *ngIf="!enableEdit" class="title-with-border m-0 b-0">{{displaySettings.query1}}
+                                  </h6>
+                                  <div class="pretty p-default p-round">
+                                      <input type="radio" id="radio-yes" name="q1" value="Yes" checked>
+                                      <div class="state">
+                                          <label for="radio-yes">Yes</label>
+                                      </div>
+                                  </div>
+                                  <div class="pretty p-default p-round">
+                                      <input type="radio" id="radio-no" name="q1" value="No">
+                                      <div class="state">
+                                          <label for="radio-no">No</label>
+                                      </div>
+                                  </div>
+                              </li>
+                              <li class="clearfix">
+                                  <hr class="bg-gray">
+                              </li>
+                              <li id="Q2" class="clearfix m-b-20">
+                                  <div class="input-block" *ngIf="enableEdit">
+                                      <textarea type="text" class="form-control input-sm text-center"
+                                          formControlName="query2"></textarea>
+                                  </div>
+                                  <h6 *ngIf="!enableEdit" class="title-with-border m-0 b-0">Q2 -
+                                      {{displaySettings.query2}}</h6>
+                                  <div class="pretty p-svg p-toggle m-b-10">
+                                      <input type="checkbox" id="good" name="rating" value="Good">
+                                      <div class="state svgOnHover p-off">
+                                          <svg class="svg svg-icon svg-default active">
+                      <use href="/assets/img/icons/icons-sprite.svg#thumbs-up"/>
+                    </svg>
+                                          <label class="b-0" for="good">Good</label>
+                                      </div>
+                                      <div class="state svgOnHover p-on">
+                                          <svg class="svg svg-icon svg-default active">
+                      <use href="/assets/img/icons/icons-sprite.svg#thumbs-up"/>
+                    </svg>
+                                          <label class="b-0 text-success" for="good">Good</label>
+                                      </div>
+                                  </div>
+                                  <br>
+                                  <div class="pretty p-svg p-toggle m-b-10">
+                                      <input type="checkbox" id="average" name="rating" value="Average">
+                                      <div class="state svgOnHover p-off">
+                                          <svg class="svg svg-icon svg-default active">
+                      <use href="/assets/img/icons/icons-sprite.svg#thumbs-up"/>
+                    </svg>
+                                          <label class="b-0" for="average">Average</label>
+                                      </div>
+                                      <div class="state svgOnHover p-on">
+                    <svg class="svg svg-icon svg-default active">
+                      <use href="/assets/img/icons/icons-sprite.svg#thumbs-up"/>
+                    </svg>
+                                          <label class="b-0" for="average">Average</label>
+                                      </div>
+                                  </div>
+                                  <br>
+                                  <div class="pretty p-svg p-toggle">
+                                      <input type="checkbox" id="bad" name="rating" value="Bad">
+                                      <div class="state svgOnHover p-off">
+                                          <svg class="svg svg-icon svg-default active">
+                      <use href="/assets/img/icons/icons-sprite.svg#thumbs-down"/>
+                    </svg>
+                                          <label class="b-0" for="bad">Poor</label>
+                                      </div>
+                                      <div class="state svgOnHover p-on">
+                    <svg class="svg svg-icon svg-white active">
+                      <use href="/assets/img/icons/icons-sprite.svg#thumbs-down"/>
+                    </svg>
+                                          <label class="b-0 text-danger" for="bad">Poor</label>
+                                      </div>
+                                  </div>
+                              </li> -->
+
+                <div *ngIf="CustomFormFields && CustomFormFields.value">
+                  <li *ngFor="let input of CustomFormFields.value.fields; let i = index;">
+                    <div class="input-block"
+                      *ngIf="(input.elementType == 'text')|| (input.elementType == 'password')|| (input.elementType == 'email')">
+                      <label><span class="text-red">{{(input.required) ? '* ' :''}}</span> {{input.label}}</label>
+                      <div class="input-group-sm">
+
+                        <textarea *ngIf="input.multiline" [disabled]="!enableEdit" class="form-control"
+                          name="{{(input.name) ? input.name : ''}}"
+                          placeholder="{{(input.placeholder) ? input.placeholder : ''}}"
+                          value="{{(input.value && !input.placeholder) ? input.value : undefined}}"></textarea>
+                        <input *ngIf="!input.multiline" [disabled]="!enableEdit" class="form-control"
+                          name="{{(input.name) ? input.name : ''}}"
+                          placeholder="{{(input.placeholder) ? input.placeholder : ''}}"
+                          value="{{(input.value && !input.placeholder) ? input.value : undefined}}">
+                        <!-- <div class="input-group-addon no-rad" *ngIf="input.elementType == 'password'">
+                                                  <div class="pretty p-svg p-toggle m-0"
+                                                      (click)="TogglePasswordVisibility($event,input.id)">
+                                                      <input type="checkbox">
+                                                      <div class="state svgOnHover p-success-o p-on">
+                                                          <svg class="svg w-15 h-15 svg-icon svg-default active">
+                              <use href="/assets/img/icons/icons-sprite.svg#show"/>
+                            </svg>
+                                                          <label class="b-0"></label>
+                                                      </div>
+                                                      <div class="state svgOnHover p-black-o p-off">
+                                                          <svg class="svg w-15 h-15 svg-icon svg-default active">
+                              <use href="/assets/img/icons/icons-sprite.svg#hide"/>
+                            </svg>
+                                                          <label class="b-0"></label>
+                                                      </div>
+                                                  </div>
+                                              </div> -->
+                      </div>
+                    </div>
+
+                    <div class="input-block" *ngIf="input.elementType == 'radio'">
+                      <label><span class="text-red">{{(input.required) ? '* ' :''}}</span> {{input.label}}</label>
+                      <div class="pretty p-default p-round" *ngFor="let opt of input.options">
+                        <input [disabled]="!enableEdit" type="{{input.elementType}}" name="{{input.name}}"
+                          [value]="opt.value" />
+                        <div class="state">
+                          <label>{{opt.name}}</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="input-block" *ngIf="input.elementType == 'checkbox'">
+                      <label><span class="text-red">{{(input.required) ? '* ' :''}}</span> {{input.label}}</label>
+                      <div class="pretty p-svg p-fill p-smooth">
+                        <input [disabled]="!enableEdit" [checked]="(input && input.value) ? input.value : false"
+                          type="{{input.elementType}}"
+                          value="{{(input && input.value && input.value.length) ? input.value[0]: ''}}" />
+                        <div class="state svgOnHover">
+                          <svg class="svg svg-icon active">
+                            <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+                          </svg>
+                          <label>{{(input && input.name ) ? input.name : ''}}</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="input-block" *ngIf="input.elementType == 'dropdown'">
+                      <label><span class="text-red">{{(input.required) ? '* ' :''}}</span> {{input.label}}</label>
+                      <div class="sel style1 sel-sm">
+                        <select [disabled]="!enableEdit" class="form-control input-sm" name="{{input.id}}">
+                          <option *ngIf="input.value" value="{{input.value}}" disabled="true" [selected]="input.value">
+                            {{input.name}}
+                          </option>
+                          <option *ngFor="let item of input.options" value="{{item.value}}">
+                            {{item.name}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <p *ngIf="input.required" id='error-{{input.id}}' class="hide text-red">
+                      please fill the given field</p>
+                    <p id='errorValid-{{input.id}}' class="hide text-red">
+                      please enter valid {{input.elementType}}</p>
+                  </li>
+                </div>
+
+                <li>
+                  <div class="pretty p-svg p-fill p-smooth">
+                    <input type="checkbox" checked>
+                    <div class="state svgOnHover">
+                      <svg class="svg svg-icon active">
+                        <use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+                      </svg>
+                      <label><small>{{displaySettings.transcriptContent}}</small></label>
+                    </div>
+                  </div>
+                  <div class="clearfix">
+                    <div class="input-block">
+                      <input id="email" name="email" class="form-control input-sm" placeholder="Email"
+                        autocomplete="off">
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <button type="submit" class="btn btn-sm btn-block no-rad"
+                    [ngStyle]="(themeSettings) ? {'background-color': themeSettings.dialogBtnColor, color : displaySettings.dialogBtnTextColor} : ''">
+
+                    <span *ngIf="!enableEdit">{{displaySettings.btnChat+ ' / '+ displaySettings.btnRegister}}</span>
+                    <input style="padding: 0;width: 100px;margin: 0; color: black;" *ngIf="enableEdit" type="text"
+                      class="form-control" formControlName="btnChat"> / <input
+                      style="padding: 0;width: 100px;margin: 0;color: black;" *ngIf="enableEdit" class="form-control"
+                      type="text" formControlName="btnRegister">
+                  </button>
+
+                </li>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- for form -->
+<!-- <li *ngFor="let input of inputFields;let ind = index">
+      <div class="input-block"
+          *ngIf="(input.elementType == 'text')|| (input.elementType == 'password')|| (input.elementType == 'email')">
+          <label> {{input.label}}{{(input.required) ? '*' :''}}</label>
+          <div class="input-group-sm">
+              <input *ngIf="!enableEdit" class="form-control"
+                  name="{{(input.name) ? input.name : ''}}"
+                  placeholder='{{input.placeholder}}' type="{{input.elementType}}"
+                  value="{{(input.value) ? input.value : ''}}">
+
+              <h6 *ngIf="!enableEdit && input.value" class="title-with-border m-0 b-0">Q2
+                  -
+                  {{(input.value) ? input.value : ''}}</h6>
+          </div>
+      </div>
+
+      <div class="input-block" *ngIf="input.elementType == 'radio'">
+          <label> {{input.label}}{{(input.required) ? '*' :''}}</label>
+          <div class="pretty p-default p-round" *ngFor="let opt of input.options">
+              <input *ngIf="!enableEdit" id="{{input.id}}" [checked]="input.value"
+                  type="{{input.elementType}}" value="{{opt.key}}" name="{{input.id}}"/>
+              <h6 *ngIf="!enableEdit && input.value" class="title-with-border m-0 b-0">
+                  Q[ind+2]
+                  -
+                  {{(input.value) ? input.value : ''}}</h6>
+              <div class="state">
+                  <label>{{opt.value}}</label>
+              </div>
+          </div>
+      </div>
+
+      <div class="input-block" *ngIf="input.elementType == 'checkbox'">
+          <label> {{input.label}}{{(input.required) ? '*' :''}}</label>
+          <div class="pretty p-default p-round">
+              <input class="form-control input-sm no-rad"
+                  [checked]="(input && input.value) ? input.value : false"
+                  type="{{input.elementType}}"
+                  value="{{(input && input.value && input.value.length) ? input.value[0]: ''}}"/>
+              <div class="state">
+                  <label>{{(input && input.value && input.value.length) ? input.value[0] : ''}}</label>
+              </div>
+          </div>
+      </div>
+
+      <div class="input-block" *ngIf="input.elementType == 'dropdown'">
+          <label> {{input.label}}{{(input.required) ? '*' :''}}</label>
+          <div class="sel style1 sel-sm">
+              <select class="form-control input-sm" name="{{input.id}}" >
+                  <option *ngIf="input.value" value="{{input.value}}" disabled="true"
+                      [selected]="input.value">
+                      {{input.value}}
+                  </option>
+                  <option *ngFor="let item of input.options"
+                      value="{{item.key}}">
+                      {{item.value}}
+                  </option>
+              </select>
+          </div>
+      </div>
+      <p *ngIf="input.required" id='error-{{input.id}}' class="hide text-red">
+          please fill the given field</p>
+      <p id='errorValid-{{input.id}}' class="hide text-red">
+          please enter valid {{input.elementType}}</p>
+  </li> -->

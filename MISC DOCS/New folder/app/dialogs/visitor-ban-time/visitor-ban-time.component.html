@@ -1,0 +1,22 @@
+<div mat-dialog-title>
+	<h3>Please Enter Time In Hours</h3>
+</div>
+
+<div mat-dialog-content>
+	<div class="input-block">
+		<label>Hours</label>
+		<input type="text" class="form-control input-sm" placeholder="enter hours(in number)" [ngStyle]="(invalidHours) ? {'border-color': 'red'} : ''" [(ngModel)]="hours">
+		<p class="text-red clearfix" *ngIf="invalidHours">Invalid Hours</p>
+	</div>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+	<mat-dialog-actions>
+		<button type="button" [disabled]="!hours" class="btn btn-xs bg-blue" (click)="BanChat()" [ngClass]="(loading) ? 'btnSpinner' : ''">
+			<span>Ban</span>
+		</button>
+		<button type="button" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Cancel</span>
+		</button>
+	</mat-dialog-actions>
+</div>

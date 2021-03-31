@@ -1,0 +1,192 @@
+<div id="templateData" class="p-r-20 clearfix">
+	<form class="clearfix m-b-10" [formGroup]="newTemplateForm">
+		<div class="row clearfix">
+			<div class="col-xs-12">
+				<div class="input-block">
+					<label>Template Name*</label>
+					<input type="text" class="form-control input-sm" name="templateName" id="templateName"
+						placeholder="Enter Template Name, Keep meaningful name.." formControlName="templateName">
+				</div>
+				<div class="input-block">
+					<label>Template Description</label>
+					<textarea autocomplete="off" class="form-control input-sm no-resize" rows="5"
+						placeholder="Enter Description" name="templateName" formControlName="templateDesc"></textarea>
+				</div>
+				<div class="input-block">
+					<label>Available for:</label>
+					<div class="input-group">
+						<div class="pretty p-default p-round">
+							<input type="radio" formControlName="availableFor" value="groupagents">
+							<div class="state">
+								<label>Agents in group</label>
+							</div>
+						</div>
+						<div class="pretty p-default p-round">
+							<input type="radio" formControlName="availableFor" value="allagents">
+							<div class="state">
+								<label>All Agents</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="newTemplateForm.get('availableFor').value == 'groupagents'">
+					<tag-input modelAsStrings='true' tabindex="5" editable='true' [onlyFromAutocomplete]="true"
+						secondaryPlaceholder='Select Group' formControlName="groupName">
+						<tag-input-dropdown [autocompleteItems]="groups" [showDropdownIfEmpty]="true">
+						</tag-input-dropdown>
+					</tag-input>
+					<p class="text-red m-b-5" class="text-red">
+						Please Select Group</p>
+				</div>
+			</div>
+		</div>
+
+		<hr class="bg-border">
+
+		<div class="row clearfix">
+			<div class="col-sm-6 col-xs-12">
+				<div class="input-block">
+					<label>Subject*</label>
+					<input type="text" class="form-control input-sm" name="subject" id="subject"
+						placeholder="Enter Subject" formControlName="subject">
+				</div>
+				<div class="input-block">
+					<label>Status*</label>
+					<div class="sel style1 sel-sm">
+						<select class="form-control input-sm" formControlName="status">
+							<option value='' selected disabled>Select State</option>
+							<option value="open">OPEN</option>
+							<option value="pending">PENDING</option>
+							<option value="solved">SOLVED</option>
+						</select>
+					</div>
+				</div>
+				<div class="input-block">
+					<label>Canned Form</label>
+					<div class="sel style1 sel-sm">
+						<select class="form-control input-sm" formControlName="cannedForm">
+							<option value='' selected disabled>Select Canned Form</option>
+							<option value={{form._id}} *ngFor="let form of all_Forms">{{form.formName}}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-xs-12">
+				<div class="input-block">
+					<label>Priority*</label>
+					<div class="sel style1 sel-sm">
+						<select class="form-control input-sm" formControlName="priority">
+							<option value='' selected disabled>Select Priority</option>
+							<option value="high">HIGH</option>
+							<option value="medium">MEDIUM</option>
+							<option value="low">LOW</option>
+							<option value="urgent">URGENT</option>
+						</select>
+					</div>
+				</div>
+				<div class="input-block">
+					<label>Group</label>
+					<div class="sel style1 sel-sm">
+						<select class="form-control input-sm" formControlName="group"
+							(change)="GetAvailableAgents()">
+							<option value='' selected disabled>Select Group</option>
+							<option value={{group.value}} *ngFor="let group of groups">{{group.value}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="input-block">
+					<label>Agent</label>
+					<div class="sel style1 sel-sm">
+						<select class="form-control input-sm" formControlName="agent">
+							<option [value]={} selected disabled>Select Agent</option>
+							<option value={{agent.email}} *ngFor="let agent of all_agents">{{agent.email}}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="input-block">
+					<label>Message</label>
+					<textarea [ngxSummernote]="config" class="form-control input-sm" name="msg"
+						formControlName="message" name="message" rows="15" id="msgBox"></textarea>
+					<div class="flex f-row f-gap5 right">
+						<!--
+						<div>
+							<label class="btn btn-transparent svgOnHover">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+								</svg>
+								<input #fileInput type="file" (change)="FileSelected($event)" class="hide" multiple>
+							</label>
+						</div>
+						-->
+						<div>
+							<button class="btn btn-transparent svgOnHover tooltip right"
+								[popper]="cannedMessages" [popperShowOnStart]="false" [popperTrigger]="'click'"
+								[popperHideOnClickOutside]="true" [popperHideOnScroll]="false"
+								[popperPlacement]="'top'">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#attach-canned-form"/>
+								</svg>
+								<span class="tooltip-inner">Canned Messages</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<label>Tags</label>
+				<div class="input-block m-b-0">
+					<app-chips-input class="input-sm tag-input" name="tags" [regex]="tagPattern"
+						[(ngModel)]="selectedTags" [maxTag]=6 formControlName="tags"
+						[placeholder]="'Add Tags start with #'" [delimiters]="[',']" [items]="selectedTags"
+						[errorMsg]="'Incorrect tag'">
+					</app-chips-input>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<label>Watchers</label>
+				<div class="input-block m-b-0">
+					<app-custom-select class="input-sm" [items]="watch_agents" [selectLabel]="'Select Watchers'"
+						[(ngModel)]="selectedWatchers" formControlName="watchers" [selectedItems]="selectedWatchers"
+						[bindLabel]="'email'" [bindValue]="'email'" [multiple]="true" [lazyLoading]="true"
+						(onLoadMore)="loadMoreAgents($event)" (onDeSelect)="onDeSelect($event)">
+					</app-custom-select>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="clearfix actions">
+			<button type="button" class="btn btn-xs bg-blue" *ngIf="!selectedTemplate && !cloneTemplate"
+				(click)="AddTicketTemplate()" [disabled]="!newTemplateForm.valid">
+				<span>Save</span>
+			</button>
+			<button type="button" class="btn btn-xs bg-blue" *ngIf="selectedTemplate && cloneTemplate"
+				(click)="AddTicketTemplate()" [disabled]="!newTemplateForm.valid">
+				<span>Done</span>
+			</button>
+			<button type="button" class="btn btn-xs bg-blue" *ngIf="selectedTemplate && !cloneTemplate"
+				(click)="UpdateTicketTemplate()">
+				<span>Update</span>
+			</button>
+			<button type="button" class="btn btn-xs bg-red" (click)="Cancel()">
+				<span>Cancel</span>
+			</button>
+		</div>
+	</form>
+</div>
+<popper-content #cannedMessages>
+	<ul class="activateScrollbar clearfix" *ngIf="automatedResponses">
+		<li>
+			<a href="javascript:void(0);" (click)="GotoAR()">
+				<span>Add new Automated message</span>
+			</a>
+		</li>
+		<li *ngFor="let res of automatedResponses" (click)="AddCannedMessage(res.hashTag)">
+
+			<a>
+				<span>{{res.hashTag}}</span>
+			</a>
+		</li>
+	</ul>
+</popper-content>

@@ -1,0 +1,198 @@
+<div class="mat-grid">
+	<div mat-dialog-title>
+		<h3>Convert Chat To Ticket </h3>
+	</div>
+	<div mat-dialog-content id="chatToTicket">
+		<div class="clearfix m-b-20" *ngIf="!submitted">
+			<form class="require-validation" [formGroup]="addTicketForm">
+				<fieldset formGroupName="visitor">
+					<div class="input-block">
+						<label>Subject</label>
+						<input type="text" autocomplete="off" class="form-control input-sm"
+							placeholder="Subject (Max Characters:100)" name="subject"
+							[formControl]="addTicketForm.controls['subject']" maxlength="100">
+					</div>
+					<div class="input-block">
+						<label>State</label>
+						<div class="sel style1 sel-sm">
+							<select id="state" name="state" class="form-control input-sm"
+								[formControl]="addTicketForm.controls['state']">
+								<option value="OPEN" [selected]="true">OPEN</option>
+								<option value="PENDING">PENDING</option>
+								<option value="SOLVED">SOLVED</option>
+								<option value="FACEBOOK">FACEBOOK</option>
+							</select>
+						</div>
+					</div>
+					<div class="input-block">
+						<label>Priority</label>
+						<div class="sel style1 sel-sm">
+							<select id="state" name="priority" class="form-control input-sm"
+								[formControl]="addTicketForm.controls['priority']">
+								<option value="LOW" [selected]="true">LOW</option>
+								<option value="MEDIUM">MEDIUM</option>
+								<option value="HIGH">HIGH</option>
+								<option value="URGENT">URGENT</option>
+							</select>
+						</div>
+					</div>
+					<div class="input-block">
+						<label>Visitor Name</label>
+						<input type="text" autocomplete="off" class="form-control input-sm"
+							placeholder="Name (Max Characters:100)" name="name" formControlName="name" maxlength="100">
+					</div>
+					<div class="input-block">
+						<label>Visitor Email</label>
+						<input type="email" autocomplete="off" class="form-control input-sm" placeholder="Email"
+							name="email" formControlName="email">
+					</div>
+					<!--
+					<div class="input-block">
+						<label>Message</label>
+						<textarea autocomplete="off" class="form-control input-sm no-resize" rows="5"  placeholder="Message" name="message" formControlName="message"></textarea>
+					</div>
+					-->
+				</fieldset>
+			</form>
+		</div>
+		<div class="list-items clearfix style2 dialog-list" *ngIf="!submitted && agent" #scrollbarRef>
+			<h5 class="title-with-border border-gray">Conversation</h5>
+			<ul class="clearfix p-0" *ngIf="filteredConversation">
+				<li class="item clearfix notif" *ngFor="let message of filteredConversation;let i = index">
+					<div class="clearfix">
+						<div>
+							<div class="avatar m-l-0" [attr.disabled]="message.unselected ? true : null"
+								[ngClass]="(message.unselected) ? 'disabled-Message' : ''"
+								*ngIf="message.body != ''" [ngStyle]="(displaySettings) ?
+										(message.type == 'Visitors') ? {'background-color': displaySettings.sentBGAvatarColor , color : displaySettings.sentForeAvatarColor}
+										: {'background-color': displaySettings.recieveBGAvatarColor , color : displaySettings.recieveForeAvatarColor}
+										: ''">
+								<div class="nameInitials" *ngIf="(message.type == 'Visitors') && message.type != 'Events'">
+									<span>{{currentConversation.visitorName | slice:0:1 | uppercase}}</span>
+								</div>
+								<div class="statusPicture" *ngIf="message.type == 'Agents' && !imageError">
+									<img [src]="agent.image" alt="" (error)="ImageBroken()">
+								</div>
+								<div class="nameInitials"
+									*ngIf="agent.username && (message.type == 'Agents') && (!agent.image || imageError)">
+									<span>{{agent.username | slice:0:1 | uppercase}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="info p-l-0">
+							<div class="name f-column"
+								[ngClass]="((message.type == 'Events') && (message.type != 'Visitors') && (message.type != 'Agents')) ? 'text-center w100 text-blue' : ''">
+								<div class="ellipsis" [attr.disabled]="message.unselected ? true : null"
+									[ngClass]="(message.unselected) ? 'disabled-Message' : ''"
+									[ngStyle]="(displaySettings) ? (message.type == 'Visitors') ? { color : displaySettings.sentForeColor} : { color : displaySettings.recieveForeColor}   :''"
+									*ngIf="message && !(message.attachment) && CheckAttachmentType(message.body) && (message.chatFormData)">
+									{{message.chatFormData}}
+								</div>
+								<div class="ellipsis" [attr.disabled]="message.unselected ? true : null"
+									[ngClass]="(message.unselected) ? 'disabled-Message' : ''"
+									[ngStyle]="(displaySettings) ? (message.type == 'Visitors') ? { color : displaySettings.sentForeColor} : { color : displaySettings.recieveForeColor}   :''"
+									*ngIf="message && !(message.attachment) && CheckAttachmentType(message.body) && !(message.chatFormData)"
+									[innerHTML]="message.body | safeUrl : 'html'"></div>
+								<div class="ellipsis" *ngIf="!message"
+									[attr.disabled]="message.unselected ? true : null"
+									[ngClass]="(message.unselected) ? 'disabled-Message' : ''"
+									[ngStyle]="(displaySettings) ? (message.type == 'Visitors') ? { color : displaySettings.sentForeColor} : { color : displaySettings.recieveForeColor}   :''"
+									[innerHTML]="conversation.messages[conversation.messages.length-1].body | safeUrl : 'html'">
+								</div>
+								<div class="svgOnHover ellipsis" [attr.disabled]="message.unselected ? true : null"
+									[ngClass]="(message.unselected) ? 'disabled-Message' : ''"
+									[ngStyle]="(displaySettings) ? (message.type == 'Visitors') ? { color : displaySettings.sentForeColor} : { color : displaySettings.recieveForeColor}   :''"
+									*ngIf="message && (message.attachment) && !(message.chatFormData)">
+									<svg class="svg w-12 h-12 svg-default active">
+										<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+									</svg>
+									<span
+										*ngIf="CheckAttachmentType(message.body)">{{(((message.filename) | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+									<span
+										*ngIf="!CheckAttachmentType(message.body) && message.body.length > 1">Attachments
+										({{message.body.length}})</span>
+									<span
+										*ngIf="!CheckAttachmentType(message.body) && message.body.length < 2">{{(((message.body[0].filename) | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+								</div>
+								<div class="ellipsis" [attr.disabled]="message.unselected ? true : null"
+									[ngClass]="(message.unselected) ? 'disabled-Message' : ''"
+									*ngIf="message.body != ''"
+									[ngStyle]="(displaySettings) ? (message.type == 'Visitors') ? { color : displaySettings.sentForeColor} : { color : displaySettings.recieveForeColor}   :''">
+									<span *ngIf="message.body != ''">{{ message.date | date :'mediumDate'}}
+										{{ message.date | date :'shortTime' }}</span>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="info p-l-0">
+							<div class="name">
+								<div [attr.disabled]="message.unselected ? true : null"
+									*ngIf="message.body != '' && message.attachment"
+									[ngStyle]="(displaySettings) ? (message.type == 'Visitors') ? {'background-color': displaySettings.sentBGColor , color : displaySettings.sentForeColor} : {'background-color': displaySettings.recieveBGColor , color : displaySettings.recieveForeColor} : ''"
+									[ngClass]="((message.body | attachmentType) == 'data') ? 'file' : ((message.body | attachmentType) == 'image') ? 'image' : ((message.body | attachmentType) == 'audio') ? 'audio' : ((message.body | attachmentType) == 'document') ? 'document' : (message.unselected) ? 'disabled-Message' : ''">
+									<a href="{{message.body}}" target="_blank">
+										<span>{{ (message.body | attachmentType) == 'document' ? message.filename : '' }}</span>
+										<span
+											*ngIf="message.attachment && ((message.body | attachmentType) == 'data')">{{message.filename}}</span>
+										<img src='{{message.body}}' width="100%" height="auto"
+											*ngIf="message.attachment && ((message.body | attachmentType) == 'image')">
+										<audio src='{{message.body}}' controls controlsList="nodownload"
+											*ngIf="message.attachment && ((message.body | attachmentType) == 'audio')"></audio>
+
+										<video controls width="250"
+											*ngIf="message.attachment && ((message.body | attachmentType) == 'video')">
+											<source src='{{message.body}}' type="video/mp4">
+										</video>
+									</a>
+								</div>
+								<div [attr.disabled]="message.unselected ? true : null"
+									*ngIf="message.body != '' && !message.attachment" [ngStyle]="(displaySettings) ? (message.type == 'Visitors') ? {'background-color': displaySettings.sentBGColor , color : displaySettings.sentForeColor}
+											: {'background-color': displaySettings.recieveBGColor , color : displaySettings.recieveForeColor} :''"
+									[ngClass]="(message.body | emojicheck) ? '' : (message.unselected) ? 'disabled-Message' : ''">
+									{{message.body}}</div>
+
+								<div [attr.disabled]="message.unselected ? true : null"
+									[ngClass]="(message.unselected) ? 'disabled-Message' : ''"
+									*ngIf="message.body != ''"
+									[ngStyle]="(displaySettings) ? (message.type == 'Visitors') ? { color : displaySettings.sentForeColor} : { color : displaySettings.recieveForeColor}   :''">
+									<span *ngIf="message.body != ''">{{ message.date | date :'mediumDate'}}
+										{{ message.date | date :'shortTime' }}</span>
+								</div>
+							</div>
+						</div> -->
+						<div class="actions">
+							<button class="btn btn-xs btn-transparent svgOnHover" *ngIf="!message.unselected"
+								(click)="EditMessage(filteredConversation[i],true)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+							</button>
+							<button class="btn btn-xs btn-transparent svgOnHover" *ngIf="message.unselected"
+								(click)="EditMessage(filteredConversation[i],false)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#plus-circle"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#plus-circle-colored"/>
+								</svg>
+							</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="mat-dialog-footer clearfix">
+		<mat-dialog-actions>
+			<button class="btn btn-xs bg-blue" [disabled]="(addTicketForm.invalid)"
+				[ngClass]="(loading) ? 'btnSpinner' : ''" (click)="submitForm(addTicketForm.value)">
+				<span>Submit</span>
+			</button>
+			<button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+				<span>Cancel</span>
+			</button>
+		</mat-dialog-actions>
+	</div>
+</div>

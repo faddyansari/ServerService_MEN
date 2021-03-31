@@ -1,0 +1,22 @@
+<div mat-dialog-title>
+	<h3>>Add Tags</h3>
+</div>
+
+<div mat-dialog-content>
+	<tag-input modelAsStrings='true' tabindex="5" editable='true' [(ngModel)]="tags" [onAdding]="transform()" placeholder='+Tag' secondaryPlaceholder='Enter Single or Multiple Tags..'>
+	</tag-input>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+	 <mat-dialog-actions>
+		<button type="submit" class="btn btn-xs bg-blue"
+			[ngClass]="(tagEdit) ? 'btnSpinner' : ''"
+			(click)="BulkTagAssign(tags)"
+			[disabled]="!tags">
+			<span>Add</span>
+		</button>
+		<button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+			<span>Cancel</span>
+		</button>
+	</mat-dialog-actions>
+</div>

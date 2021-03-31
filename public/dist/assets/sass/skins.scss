@@ -1,0 +1,473 @@
+@charset "utf-8";
+
+@import './partials/mixins';
+@import './partials/variables';
+
+
+@each $color, $value in $skinColors {
+
+	$dashColor: '--' + $color;
+
+	.skin-#{$color} {
+
+        /* MAIN WRAPPER */
+        .scalable-wrapper {
+            .bc-app {
+                background-color: var(--white);
+                .wrapper {
+                    background-color: var(--white);
+
+                    /* MAIN CONTENT */
+                    .content-wrapper {
+                        background-color: var(--gray-alpha4);
+
+                        /* NAV TABS CUSTOM */
+                        .nav-tabs-custom {
+                            background-color: transparent;
+                            > .nav-tabs {
+                                background: transparent;
+                                @include tabletL {
+                                    border-right-color: var(--gray);
+                                }
+                                > li {
+                                    > a {
+                                        background-color: transparent;
+                                        > span {
+                                            color: var(--black-light);
+                                        }
+                                        > .badge {
+                                            color: var(--black-light);
+                                            background-color: var(--gray);
+                                        }
+                                    }
+                                    &:hover,
+                                    &.active {
+                                        > a {
+                                            > span {
+                                                color: var(--orange);
+                                            }
+                                            > .badge {
+                                                color: var(--white);
+                                                background-color: var(--orange);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            > .tab-content {
+                                background-color: transparent;
+                                @include tabletL {
+                                    border-right-color: var(--gray);
+                                }
+                            }
+                            &.vertical {
+                                > .nav-tabs {
+                                    // background-color: var(--gray-alpha6);
+                                    background-color: var(--white);
+                                    border-right: 1px solid var(--gray);
+                                    > ul {
+                                        .ng-scrollbar-view {
+                                            > li {
+                                                > a {
+                                                    background-color: var(--gray-alpha6);
+                                                    color: var(#{$dashColor});
+                                                }
+                                                &:hover,
+                                                &:focus,
+                                                &.active {
+                                                    > a {
+                                                        background-color: var(--orange);
+                                                        color: var(--white);
+                                                    }
+                                                }
+                                                > .dropdown-arrow {
+                                                    color: var(#{$dashColor});
+                                                }
+                                                &:hover,
+                                                &.active {
+                                                    > .dropdown-arrow {
+                                                        color: var(--white);
+                                                    }
+                                                    > ul {
+                                                        // background-color: var(--orange-alpha1);
+                                                        > li {
+                                                            &:hover,
+                                                            &.active {
+                                                                > a {
+                                                                    // color: var(--orange);
+                                                                    color: var(--white);
+                                                                    background-color: var(#{$dashColor}-light);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        /* BOX */
+                        .box {
+                            .box-header {
+                                background-color: var(--gray-light);
+                                border-bottom: 1px solid var(--gray);
+                                .box-title {
+                                    color: var(--black-light) !important;
+                                }
+                            }
+                        }
+                    }
+
+                    /* ACCESS FORM */
+                    .accessForm {
+                        .spinner {
+                            border: 4px solid var(#{$dashColor});
+                        }
+                    }
+                }
+            }
+        }
+
+        /* TOOLBOX */
+        .toolbox {
+            i,
+            img {
+                color: var(--gray-dark);
+            }
+            > span,
+            > form {
+                background-color: transparent;
+                .multiselect-dropdown {
+                    .dropdown-btn {
+                        background: none;
+                    }
+                }
+            }
+            > span {
+                color: var(--white);
+            }
+            > form {
+                color: var(#{$dashColor});
+            }
+        }
+
+        /* CHAT COMPONENT */
+        .viewChat {
+            .box {
+                .chatWindow {
+                    background-color: var(--white);
+                    > .box-footer {
+                        .msgArea {
+                            textarea {
+                                border-color: var(--gray);
+                                background-color: var(--gray-alpha5);
+                            }
+                            .tools {
+                                label,
+                                button {
+                                    color: var(--gray-dark);
+                                    background: transparent;
+                                    &:hover {
+                                        color: var(--orange);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /* MAIN SIDEBAR */
+        .main-sidebar {
+            background-color: var(#{$dashColor});
+            .logo {
+                background-color: var(#{$dashColor});
+            }
+            .sidebar-toggle {
+                color: var(--off-white);
+                background-color: var(#{$dashColor}-dark);
+                :hover {
+                    color: var(--orange);
+                }
+            }
+            .sidebar {
+                .sidebar-menu {
+                    > li {
+                        > a {
+                            color: var(--white-alpha4);
+                        }
+                        &:hover,
+                        &.active,
+                        &.menu-open {
+                            > a {
+                                // background-color: var(--black-alpha5);
+                                color: var(--white);
+                                > span {
+                                    background-color: var(#{$dashColor});
+                                    &:before {
+                                        color: var(#{$dashColor}-dark);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /* COMPONENTS */
+        #settingsComponent {
+            .settingsList,
+            .tagsList {
+                li {
+                    border: 1px solid var(--gray);
+                    &:hover {
+                        background-color: var(#{$dashColor}-alpha2);
+                    }
+                    &.active {
+                        background-color: var(--orange);
+                        color: var(--white);
+                    }
+                }
+            }
+        }
+        #chatCustomizationComponent {
+            /* CHAT BUBBLE */
+            .bizz-cb {
+                .bizz-cb-icon {
+                    background-color: var(--orange);
+                }
+                #cb-avatar {
+                    span {
+                        color: var(--white);
+                        background: var(--charcoal);
+                    }
+                }
+            }
+
+            /* CHAT BAR */
+            .bizz-cb.bar {
+                #title {
+                    color: var(--white);
+                }
+            }
+
+            /* CHAT WINDOW */
+            #bz-cw {
+                .cd-form {
+                    border-color: var(--gray) !important;
+                    background-color: var(--white);
+                    .miniBtns {
+                        > a {
+                            color: var(--off-white);
+                            background: var(--charcoal-alpha2);
+                            &:hover {
+                                background: var(--charcoal-alpha4);
+                                color: var(--off-white);
+                            }
+                        }
+                    }
+
+                    h1 {
+                        background-color: var(--orange);
+                        color: var(--off-white);
+                    }
+                    h3 {
+                        border-bottom-color: var(--gray) !important;
+                        color: var(#{$dashColor});
+                    }
+
+                    #contentArea {
+                        .activeAgentName {
+                            background-color: var(--gray);
+                            p {
+                                color: var(--slate-gray);
+                                span {
+                                    color: var(--orange);
+                                }
+                                #sess_id_note {
+                                    color: var(--red);
+                                }
+                            }
+                        }
+                        h1,
+                        button {
+                            > input,
+                            > input:focus {
+                                background: transparent;
+                                color: white;
+                                border-color: var(--gray-light);
+                            }
+                        }
+                        h3,
+                        button {
+                            > textarea {
+                                color: var(#{$dashColor});
+                            }
+                        }
+                        .msgArea {
+                            textarea {
+                                background: var(--white);
+                                border-color: var(--gray);
+                                &:focus {
+                                    border-color: var(--orange);
+                                    background: var(--off-white);
+                                }
+                            }
+                            .chatAdons {
+                                label {
+                                    color: var(--charcoal);
+                                }
+                            }
+                        }
+                        .cd-stamp {
+                            color: var(--orange);
+                            &:before {
+                                background-color: var(--gray);
+                            }
+                        }
+                        #attachmentArea {
+                            border-bottom-color: var(--gray);
+                            button {
+                                color: var(--charcoal);
+                            }
+                        }
+                        #emailAlert {
+                            color: var(--red);
+                        }
+                        label {
+                            color: var(--orange);
+                            background: var(--white);
+                        }
+                        input[type=text],
+                        input[type=email],
+                        input[type=tel],
+                        textarea {
+                            border-color: var(--gray-dark) !important;
+                        }
+                        input[type=radio] {
+                            color: #0f222b;
+                        }
+                        h1,
+                        button {
+                            > input,
+                            > input:focus {
+                                background: transparent !important;
+                                color: var(--white) !important;
+                                border-color: var(--gray-light) !important;
+                            }
+                        }
+                        h3,
+                        button {
+                            > textarea {
+                                border-color: var(--gray);
+                                color: var(#{$dashColor});
+                            }
+                        }
+                        #feedback-form {
+                            ul {
+                                > li {
+                                    border-bottom-color: var(--gray) !important;
+                                    p {
+                                        color: var(--orange);
+                                    }
+                                    .rate-area {
+                                        &:not(:checked) {
+                                            > label {
+                                                color: var(--gray);
+                                                &:hover,
+                                                &:hover~label {
+                                                    color: var(--yellow);
+                                                }
+                                            }
+                                        }
+                                        &:checked {
+                                            ~label {
+                                                color: var(--yellow);
+                                            }
+                                        }
+                                        > input {
+                                            &:checked {
+                                                +label:hover,
+                                                +label:hover~label,
+                                                ~label:hover,
+                                                ~label:hover~label,
+                                                .rate-area>label:hover~input:checked~label {
+                                                    color: var(--yellow);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .msgForm {
+                            border-color: var(--orange-alpha2);
+                            background: var(--off-white);
+                            label {
+                                background: transparent;
+                            }
+                            input[type=text],
+                            input[type=email] {
+                                border-color: var(--gray);
+                            }
+                            input[type=submit],
+                            button[type=submit] {
+                                background-color: var(--orange);
+                                color: var(--white);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /* CONTACT LIST ON MULTIPLE COMPONENTS */
+        .visitors,
+        .contact-list {
+            .list-items {
+                .item {
+                    background-color: var(--off-white);
+                    border-color: var(#{$dashColor}-alpha2);
+                    &:hover {
+                        background-color: var(--orange-alpha2);
+                    }
+                    &.active {
+                        background-color: var(--orange-alpha2);
+                        &:before {
+                            background-color: var(--orange);
+                        }
+                    }
+                    > div {
+                        .avatar {
+                            color: var(#{$dashColor});
+                            .nameInitials {
+                                color: var(#{$dashColor}-light);
+                                background-color: var(--gray);
+                            }
+                        }
+                        .info {
+                            color: var(--off-white);
+                            .name {
+                                color: var(#{$dashColor});
+                            }
+                            .msg {
+                                color: var(#{$dashColor}-alpha5);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.skin-black .ticket-controls button {
+    color: var(--white)
+}
+
+/*=====  End of black SKIN  ======*/

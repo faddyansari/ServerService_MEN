@@ -1,0 +1,20 @@
+<svg version="1.1" id="Layer_1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="70px" height="40px" viewBox="15 30 70 40" enable-background="new 15 30 70 40" xml:space="preserve">
+	<circle fill="#FE718D" cx="27.5" cy="57.5" r="5">
+		<animate fill="remove" restart="always" additive="replace" accumulate="none" repeatCount="indefinite" keySplines="0 0.5 0.5 1;0.5 0 1 0.5;0.5 0.5 0.5 0.5" keyTimes="0;0.3;0.6;1" calcMode="spline" values="57.5;42.5;57.5;57.5" dur="1s" begin="-0.6s" attributeName="cy">
+		</animate>
+	</circle>
+	<circle fill="#F47E60" cx="42.5" cy="46.999" r="5">
+		<animate fill="remove" restart="always" additive="replace" accumulate="none" repeatCount="indefinite" keySplines="0 0.5 0.5 1;0.5 0 1 0.5;0.5 0.5 0.5 0.5" keyTimes="0;0.3;0.6;1" calcMode="spline" values="57.5;42.5;57.5;57.5" dur="1s" begin="-0.44999999999999996s" attributeName="cy">
+		</animate>
+	</circle>
+	<circle fill="#F8B26A" cx="57.5" cy="42.796" r="5">
+		<animate fill="remove" restart="always" additive="replace" accumulate="none" repeatCount="indefinite" keySplines="0 0.5 0.5 1;0.5 0 1 0.5;0.5 0.5 0.5 0.5" keyTimes="0;0.3;0.6;1" calcMode="spline" values="57.5;42.5;57.5;57.5" dur="1s" begin="-0.3s" attributeName="cy">
+		</animate>
+	</circle>
+	<circle fill="#ABBD81" cx="72.5" cy="43.513" r="5">
+		<animate fill="remove" restart="always" additive="replace" accumulate="none" repeatCount="indefinite" keySplines="0 0.5 0.5 1;0.5 0 1 0.5;0.5 0.5 0.5 0.5" keyTimes="0;0.3;0.6;1" calcMode="spline" values="57.5;42.5;57.5;57.5" dur="1s" begin="-0.15s" attributeName="cy">
+		</animate>
+	</circle>
+</svg>

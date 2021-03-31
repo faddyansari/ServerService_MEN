@@ -1,0 +1,85 @@
+<div class="activateScrollbar clearfix p-0">
+	<ul class="list-items clearfix style5">
+		<li *ngIf="rulesList.length">
+			<input type="search" class="form-control input-sm"
+				placeholder="Search..." [(ngModel)]="searchValue">
+		</li>
+		<li class="item" *ngFor="let rule of rulesList | filter: searchValue : ['name'] : false">
+			<div>
+				<div class="info f-row f-responsive f-justify-between w100">
+					<div class="desc">
+						<b>{{rule.name}}</b>
+						<span>If</span>
+						<span *ngFor="let condition of rule.conditions; let i = index;">
+							<span *ngIf="i">
+								<span>{{(rule.operator == 'or') ? 'OR' : 'AND'}}</span>
+								<br>
+							</span>
+							<span>{{condition.key}} {{condition.matchingCriterea}}</span>
+							<br>
+							<span class="badge" *ngFor="let keyword of condition.keywords">
+								<span>{{keyword}}</span>
+							</span>
+						</span>
+						<span *ngFor="let action of rule.actions">
+							<span *ngIf="action.name == 'group'">
+								<br>
+								<span>Then Assign to Group : {{action.value}}</span>
+								<br>
+							</span>
+							<span *ngIf="action.name == 'agent'">
+								<span>Then Assign to Agent : {{action.value}}</span>
+								<br>
+							</span>
+							<span *ngIf="action.name == 'note'">
+								<span>Then Add Note : <div [innerHTML]="action.value"></div></span>
+								<br>
+							</span>
+							<span *ngIf="action.name == 'priority'">
+								<span>Then Set Priority : {{action.value | uppercase}}</span>
+							</span>
+						</span>
+					</div>
+					<div class="desc p-l-r-7">
+						<b>Modified: {{rule.lastmodified.date | agoPipe}}</b>
+						<br>
+						<span class="text-blue" title="{{rule.lastmodified.by}}"><b>By: </b>{{rule.lastmodified.by}}</span>
+					</div>
+				</div>
+				<div class="actions">
+					<div class="tooltip top p-r-7">
+						<div class="pretty p-switch p-smooth p-fill p-toggle w-28 m-0">
+							<input type="checkbox" [checked]="rule.isActive" (click)="ToggleActivation(rule._id,!rule.isActive)" [disabled]="!rulesetPermissions || !rulesetPermissions.enabled || !rulesetPermissions.canToggle"/>
+							<div class="state p-on">
+								<label *ngIf="rule.isActive"></label>
+							</div>
+							<div class="state p-off">
+								<label *ngIf="!rule.isActive"></label>
+							</div>
+						</div>
+						<span class="tooltip-inner">Enable / Disable</span>
+					</div>
+					<button class="btn btn-transparent svgOnHover tooltip top"
+					*ngIf="rulesetPermissions && rulesetPermissions.enabled && rulesetPermissions.canModify"
+						(click)="EditRule(rule)">
+						<svg class="svg svg-blue active">
+							<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+						</svg>
+						<span class="tooltip-inner">Edit</span>
+					</button>
+					<button class="btn btn-transparent svgOnHover tooltip top"
+					*ngIf="rulesetPermissions && rulesetPermissions.enabled && rulesetPermissions.canDelete"
+						(click)="DeleteRule(rule._id)">
+						<svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+						</svg>
+						<span class="tooltip-inner">Delete</span>
+					</button>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>

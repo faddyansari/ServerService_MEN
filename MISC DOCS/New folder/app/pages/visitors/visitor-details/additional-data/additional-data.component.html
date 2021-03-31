@@ -1,0 +1,42 @@
+<ul class="toggleList" *ngIf="visitorCarRequestData">
+  <li class="clearfix">
+      <h6 class="border-black-alpha2">Car Requested</h6>
+      <br>
+      <div class="ellipsis">
+          <div *ngIf="visitorCarRequestData.countryCode"> Country Code :
+              {{visitorCarRequestData.countryCode}}</div>
+          <div *ngIf="visitorCarRequestData.customerComments"> Customer Comments :
+              {{visitorCarRequestData.customerComments}}</div>
+          <div *ngIf="visitorCarRequestData.customerEmail"> Customer Email :
+              {{visitorCarRequestData.customerEmail}}</div>
+          <div *ngIf="visitorCarRequestData.customerID"> Customer ID :
+              {{visitorCarRequestData.customerID}}</div>
+          <div *ngIf="visitorCarRequestData.customerName"> Customer Name :
+              {{visitorCarRequestData.customerName}}</div>
+          <div *ngIf="visitorCarRequestData.customerPhone"> Customer Phone :
+              {{visitorCarRequestData.customerPhone}}</div>
+          <div *ngIf="visitorCarRequestData.customerType"> Customer Type :
+              {{visitorCarRequestData.customerType}}</div>
+          <div *ngIf="visitorCarRequestData.destinationCountry"> Destination Country :
+              {{visitorCarRequestData.destinationCountry}}</div>
+          <div *ngIf="visitorCarRequestData.destinationPort"> Destination Port :
+              {{visitorCarRequestData.destinationPort}}</div>
+          <div *ngIf="visitorCarRequestData.vehicle_body"> Vehicle Body :
+              {{visitorCarRequestData.vehicle_body}}</div>
+          <div *ngIf="visitorCarRequestData.vehicle_color"> Vehicle Color :
+              {{visitorCarRequestData.vehicle_color}}</div>
+          <div *ngIf="visitorCarRequestData.vehicle_make"> Vehicle Make :
+              {{visitorCarRequestData.vehicle_make}}</div>
+          <div *ngIf="visitorCarRequestData.vehicle_model"> Vehicle Model :
+              {{visitorCarRequestData.vehicle_model}}</div>
+          <div *ngIf="visitorCarRequestData.vehicle_month"> Vehicle Month :
+              {{visitorCarRequestData.vehicle_month}}</div>
+          <div *ngIf="visitorCarRequestData.vehicle_year"> Vehicle Year :
+              {{visitorCarRequestData.vehicle_year}}</div>
+          <div *ngIf="visitorCarRequestData.competitorStockLink">
+              <a href="{{visitorCarRequestData.competitorStockLink}}"
+                  target="_blank">View Stocks</a>
+          </div>
+      </div>
+  </li>
+</ul>

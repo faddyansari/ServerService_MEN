@@ -1,0 +1,4 @@
+<div class="searching-server">
+    <div class="signal-pop" [ngClass]="(status != 'Connected') ? (!logout) ? 'border-yellow' : 'border-red' : 'border-green'"></div>
+    <p class="signal-label" [ngClass]="(status != 'Connected') ? (!logout) ? 'bg-yellow-alpha1' : 'bg-red-alpha1' : 'bg-green-alpha1'">{{(status != 'Connected') ? (!logout) ? 'Connecting To Server' : 'Disconnected' : 'Connected'}}</p>
+</div>

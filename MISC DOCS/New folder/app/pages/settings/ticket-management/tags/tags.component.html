@@ -1,0 +1,251 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Group List</h5>
+					</div>
+					<div *ngIf="groupPermissions && groupPermissions.enabled && groupPermissions.canCreate">
+						<button class="btn btn-xs btn-icon bg-white right" (click)="ShowForm()"
+							[ngClass]="(!showForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showForm && (groupPermissions && groupPermissions.enabled && groupPermissions.canCreate)">
+					<form class="clearfix"
+						[formGroup]="addGroupForm">
+						<div class="input-block">
+							<label>Group Name</label>
+							<input type="text" class="form-control input-sm" name="group_name" id="group_name"
+								placeholder="Enter Group Name" formControlName="group_name">
+						</div>
+						<div class="input-block">
+							<label>Enter Group Description</label>
+							<textarea autocomplete="off" class="form-control input-sm no-resize" rows="5"
+								placeholder="Group Description" name="desc" formControlName="desc"></textarea>
+						</div>
+						<button type="submit" class="btn btn-sm bg-blue" [disabled]="(addGroupForm.invalid)"
+							(click)="insertGroup()">
+
+							<span>Add A Group</span>
+						</button>
+					</form>
+				</div>
+				<div class="document-list clearfix">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix" *ngIf="filteredGroups().length">
+							<input type="search" class="form-control input-sm"
+								placeholder="Search..." [(ngModel)]="searchValue">
+						</li>
+						<li class="notif clearfix"
+							(click)="setSelectedGroup(arrOfGroups.group_name)"
+							*ngFor="let arrOfGroups of filteredGroups() | filter: searchValue : ['group_name','group_desc', 'agent_list.email'] : false " [ngClass]="(selectedGroup && selectedGroup.group_name  == arrOfGroups.group_name) ? 'active' : ''">
+							<div class="info"
+								>
+								<div class="desc">
+									<b>{{arrOfGroups.group_name}}</b>
+									<br>
+									<span>{{arrOfGroups.group_desc}}</span>
+								</div>
+								<div class="actions" *ngIf="groupPermissions && groupPermissions.enabled && groupPermissions.canDelete">
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										(click)="deleteGroup(arrOfGroups.group_name)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="tagsData" class="col-md-8 col-sm-7 col-xs-12" *ngIf="selectedGroup && checkVisibility()">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Assigned</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon bg-white right m-r-10" [disabled]="(!selectedGroup)"
+						*ngIf="groupPermissions && groupPermissions.enabled && groupPermissions.canAddAgents"
+							(click)="ShowAssignAgentForm()"
+							[ngClass]="(!showAssignAgentForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showAssignAgentForm) ? 'Add Agents' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showAssignAgentForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showAssignAgentForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+						<!-- [disabled]="(!agent_list.length)" -->
+						<!-- <button class="btn btn-xs m-r-10"
+							*ngIf="(!isAgentSelected && !showAssignAgentForm)"
+							(click)="EnableDeleteForAgent()"
+							[disabled]="!(agent_list && agent_list.length)"
+							[ngClass]="(enableDeleteForAgent) ? 'bg-red' : 'bg-blue'">
+							<span>{{(enableDeleteForAgent) ? 'Cancel' : 'Edit'}}</span>
+						</button> -->
+						<button class="btn btn-xs bg-red m-r-10"
+							*ngIf="(isAgentSelected) && (groupPermissions && groupPermissions.enabled && groupPermissions.canRemoveAgents)"
+							(click)="UnAssignSelectedAgents()">
+							<span>Unassign Agents</span>
+						</button>
+						<button class="btn btn-xs bg-black m-r-10"
+							*ngIf="(isAgentSelected) && (groupPermissions && groupPermissions.enabled && groupPermissions.canRemoveAgents)"
+							(click)="cancelAssignAgent()">
+							<span>Cancel</span>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form" *ngIf="showAssignAgentForm && (groupPermissions && groupPermissions.enabled && groupPermissions.canAddAgents)">
+					<div class="input-block clearfix">
+						<div class="input-group-sm">
+							<app-custom-select class="input-sm" [items]="agentList" [selectLabel]="'Select Agents'"
+								[(ngModel)]="selectedAgents" [selectedItems]="selectedAgents" [bindLabel]="'email'" [bindValue]="'email'"
+								[multiple]="true" [lazyLoading]="true" (onLoadMore)="loadMore($event)"
+								(onSearch)="onSearch($event)" >
+							</app-custom-select>
+							<div class="input-group-btn">
+								<button type="submit" class="btn bg-green"
+									(click)="AssignAgent()">
+									<span>Assign</span>
+								</button>
+							</div>
+						</div>
+						<p>Assign agents for selected Group.</p>
+					</div>
+				</div>
+				<div class="document-list bg-transparent">
+					<div class="activateScrollbar clearfix p-0">
+						<div class="tabination clearfix">
+							<ul class="nav-tabs">
+								<li [ngClass]="(pill1) ? 'active' : ''"><a (click)="setPillActive('pill1')">Agents {{(selectedGroup.agent_list.length) ? '('+selectedGroup.agent_list.length+')' : ''}}</a></li>
+								<li [ngClass]="(pill2) ? 'active' : ''"><a (click)="setPillActive('pill2')" *ngIf="package && package.automation">Automation</a></li>
+							</ul>
+							<ul class="tab-content p-14 bg-theme-bg">
+								<li class="tab-pane" [ngClass]="(pill1) ? 'active' : ''">
+									<div class="document-list">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th class="text-center w-50">
+														<input type="checkbox" [checked]="isAllAgentsChecked()"
+															(change)="SelectAllAgents($event)" *ngIf="selectedGroup.agent_list.length && (groupPermissions && groupPermissions.enabled && groupPermissions.canRemoveAgents)"/></th>
+													<th>Agent</th>
+													<th class="text-center w-50">Count</th>
+													<th class="text-center w-100">
+														<div class="flex f-align-center f-justify-center">
+															<div class="svgOnHover tooltip top-right h-20 m-r-5">
+																<svg class="svg svg-default">
+																	<use href="/assets/img/icons/icons-sprite.svg#info-circle"/>
+																</svg>
+																<svg class="svg colored">
+																	<use href="/assets/img/icons/icons-sprite.svg#info-circle" class="text-blue"/>
+																</svg>
+																<span class="tooltip-inner"><span class="text-red-light">Note:</span> Admins will not be part of automation</span>
+															</div>
+															<span>Admin</span>
+														</div>
+													</th>
+													<th class="text-center w-100">
+														<div class="flex f-align-center f-justify-center">
+															<div class="svgOnHover tooltip top-right h-20 m-r-5">
+																<svg class="svg svg-default">
+																	<use href="/assets/img/icons/icons-sprite.svg#info-circle"/>
+																</svg>
+																<svg class="svg colored">
+																	<use href="/assets/img/icons/icons-sprite.svg#info-circle" class="text-blue"/>
+																</svg>
+																<span class="tooltip-inner"><span class="text-red-light">Note:</span> Excluded agents will not be part of automation</span>
+															</div>
+															<span>Exclude</span>
+														</div>
+													</th>
+													<!-- <th style="width: 40px">Action</th> -->
+												</tr>
+											</thead>
+											<tbody>
+												<tr *ngFor="let agent of selectedGroup.agent_list">
+													<td class="text-center w-50">
+														<input type="checkbox" (change)="agentChecked()"
+														*ngIf="groupPermissions && groupPermissions.enabled && groupPermissions.canRemoveAgents"
+															[(ngModel)]="agent.checked"/></td>
+													<td>{{agent.email}}</td>
+													<td class="text-center w-50">{{agent.count}}</td>
+													<td class="text-center w-80">
+														<div class="pretty p-switch p-smooth p-fill p-toggle">
+															<input type="checkbox" [(ngModel)]="agent.isAdmin" (change)="toggleAdmin(agent.email, $event.target.checked)"/>
+															<div class="state p-on">
+																<label></label>
+															</div>
+															<div class="state p-off">
+																<label></label>
+															</div>
+														</div>
+													</td>
+													<td class="text-center w-80">
+														<div class="pretty p-switch p-smooth p-fill p-toggle">
+															<input type="checkbox" [(ngModel)]="agent.excluded" (change)="toggleExclude(agent.email, $event.target.checked)"/>
+															<div class="state p-on">
+																<label></label>
+															</div>
+															<div class="state p-off">
+																<label></label>
+															</div>
+														</div>
+													</td>
+													<!-- <td><a (click)="UnAssignAgent(agent.email)">Unassign</a></td> -->
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</li>
+								<li class="tab-pane"
+									[ngClass]="(pill2) ? 'active' : ''"
+									*ngIf="Agent && selectedGroup && (package && package.automation)">
+									<div class="input-block clearfix">
+										<label>Allow Group Automation</label>
+										<div class="pretty p-switch p-smooth p-fill p-toggle">
+											<input type="checkbox" [checked]="selectedGroup.auto_assign.enabled" (click)="SetAutoAssign($event.toElement.checked)"/>
+											<div class="state p-on">
+												<label>On</label>
+											</div>
+											<div class="state p-off">
+												<label>Off</label>
+											</div>
+										</div>
+									</div>
+									<div class="input-block clearfix w-300">
+										<label>Automation Type</label>
+										<div class="sel style1 sel-sm">
+											<select class="form-control input-sm" [(ngModel)]="selectedGroup.auto_assign.type">
+												<!-- <option value="roundrobin" [selected]="selectedGroup.auto_assign.type == 'roundrobin_turn'">Round Robin (Turn by Turn)</option> -->
+												<option value="roundrobin" [selected]="selectedGroup.auto_assign.type == 'roundrobin'">Round Robin (Best fit)</option>
+												<option value="availableagents" [selected]="selectedGroup.auto_assign.type == 'availableagents'">Available Agents</option>
+											</select>
+										</div>
+									</div>
+									<button class="btn btn-sm bg-blue"  (click)="SaveAutoAssign()">
+
+										<span>Save</span>
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

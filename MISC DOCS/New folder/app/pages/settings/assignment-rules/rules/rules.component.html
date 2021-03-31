@@ -1,0 +1,223 @@
+<div class="row clearfix">
+	<div class="col-md-4 col-sm-5 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Add New Rule</h5>
+					</div>
+					<div>
+						<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="toggleRulesForm()"
+							[ngClass]="(!showRulesForm) ? 'border-blue' : 'border-red'">
+							<span>{{(!showRulesForm) ? 'Add' : 'Cancel'}}</span>
+							<svg class="svg active" [ngClass]="(!showRulesForm) ? 'bg-blue' : 'bg-red'">
+								<use [attr.href]="(!showRulesForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="popover-form"  *ngIf="showRulesForm">
+					<form [formGroup]="assignmentRuleForm">
+						<div class="input-block">
+							<label class="text-black">Rule Name</label>
+							<input #ruleName type="text" class="form-control input-sm" placeholder="Enter Tag Name"
+								[formControl]="assignmentRuleForm.controls['ruleName']" maxlength="51">
+							<p class="text-red" [hidden]="!assignmentRuleForm.get('ruleName').hasError('matched')">
+								<strong>Rule Name has been used already</strong><br></p>
+							<p class="error text-red"
+								[hidden]="!assignmentRuleForm.get('ruleName').hasError('maxlength')">Rule Name should be
+								less than 50 cahracters.<br></p>
+						</div>
+						<h4>Assignment Criteria</h4>
+						<div class="input-block">
+							<label class="text-black">Key Type</label>
+							<div class="sel style1 sel-sm">
+								<select class="form-control input-sm"
+									[formControl]="assignmentRuleForm.controls['ruleKeyType']">
+									<option value="" disabled="true"
+										[selected]="!assignmentRuleForm.controls['ruleKeyType'].value">Please Select Any
+										Type</option>
+									<option value='string' selected="selected">String</option>
+									<option value='number'>Integer</option>
+									<option value='boolean'>Boolean</option>
+									<option value='deximal'>Float</option>
+									<option value='any'>Other</option>
+								</select>
+							</div>
+						</div>
+						<div class="input-block">
+							<label class="text-black">Key Operator</label>
+							<div class="sel style1 sel-sm">
+								<select class="form-control input-sm"
+									[formControl]="assignmentRuleForm.controls['ruleKeyOperator']">
+									<option value="" disabled="true"
+										[selected]="!assignmentRuleForm.controls['ruleKeyOperator'].value">Please Select
+										Any Operator</option>
+									<option value='is' selected="selected">Matches</option>
+									<option value='isNot'>Not Match</option>
+								</select>
+							</div>
+						</div>
+						<div class="input-block">
+							<label class="text-black">Key Value *</label>
+							<input type="text" class="form-control input-sm" placeholder="Enter Key Value"
+								[formControl]="assignmentRuleForm.controls['ruleKeyValue']" maxlength="51">
+						</div>
+						<div class="input-block">
+							<label class="text-black">Key Name *</label>
+							<input list="filters" type="text" class="form-control input-sm" placeholder="Enter Key Name"
+								[formControl]="assignmentRuleForm.controls['ruleKeyName']" maxlength="51">
+						</div>
+						<datalist id="filters">
+							<option *ngFor="let key of filterKeys" [value]="key">
+							</option>
+						</datalist>
+						<button type="submit" class="btn btn-sm bg-blue"
+							[ngClass]="(loading) ? 'btnSpinner' : '' " [disabled]="assignmentRuleForm.invalid"
+							(click)="AddAssignmentRule()">Add Rule</button>
+					</form>
+				</div>
+				<div class="document-list clearfix">
+					<div class="activateScrollbar clearfix">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-sm-7 col-xs-12">
+		<div class="box clearfix animated fadeIn delay-400">
+			<div class="box-body clearfix p-0">
+				<div class="box-subtitle clearfix">
+					<div>
+						<h5>Rules List</h5>
+					</div>
+				</div>
+				<div class="document-list clearfix" *ngIf="!fetching">
+					<ul class="activateScrollbar clearfix">
+						<li class="notif clearfix" *ngFor="let rule of RulesList">
+							<div class="info">
+								<div class="desc">
+									<div *ngIf="!EditRule(rule._id)">
+										<p>
+											<strong>Rule Name:</strong>
+											<span class="text-green">{{rule.ruleName}}</span>
+										</p>
+										<br>
+										<p>
+											<strong>Key:</strong>
+											<span class="text-green">{{rule.key}}</span>
+										</p>
+										<p>
+											<strong>Value:</strong>
+											<span class="text-green">{{rule.value}}</span>
+										</p>
+										<p>
+											<strong>Type:</strong>
+											<span class="text-green">{{rule.type}}</span>
+										</p>
+										<p *ngIf="rule.operator">
+											<strong>Operator:</strong>
+											<span class="text-green">{{rule.operator}}</span>
+										</p>
+										<br>
+										<div class="badge  bg-blue-alpha6 text-black">
+											<span>{{rule.ruleName}}</span>
+										</div>
+									</div>
+									<div *ngIf="EditRule(rule._id)">
+										<div class="input-group-sm">
+											<div class="input-block">
+												<label>If Key:</label>
+												<input #ruleName type="text"
+													class="form-control"
+													[(ngModel)]="rulesMap[rule._id].key"
+													maxlength="51">
+											</div>
+											<div class="input-block">
+												<label>Has Value:</label>
+												<input #ruleName type="text" class="form-control"
+													[(ngModel)]="rulesMap[rule._id].value"
+													maxlength="51">
+											</div>
+											<div class="input-block">
+												<label>Is a:</label>
+												<div class="sel style1 sel-xs">
+													<select class="form-control" [(ngModel)]="rulesMap[rule._id].type">
+														<!-- <option value="" [selected]="rulesMap[rule._id].type">
+															{{rulesMap[rule._id].type}}</option> -->
+														<option value='string'>String</option>
+														<option value='int'>Integer</option>
+														<option value='boolean'>Boolean</option>
+														<option value='any'>Other</option>
+													</select>
+												</div>
+											</div>
+											<div class="input-block">
+												<label>Does It?:</label>
+												<div class="sel style1 sel-xs">
+													<select class="form-control" [(ngModel)]="rulesMap[rule._id].operator">
+														<!-- <option value="" [selected]="rulesMap[rule._id].operator">
+															{{rulesMap[rule._id].operator}}</option> -->
+														<option value='is' selected="selected">Matches</option>
+														<option value='isNot'>Not Match</option>
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="actions">
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										(click)="EnableEdit(rule._id)"
+										*ngIf="!CheckEdit(rule._id)">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+										</svg>
+										<span class="tooltip-inner">Edit</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										[ngClass]="CheckDelete(rule._id) ? 'btnSpinner' : ''"
+										(click)="DeleteAssignmetRule(rule._id)"
+										*ngIf="!CheckEdit(rule._id)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+										</svg>
+										<span class="tooltip-inner">Delete</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+									(click)="CancelEdit(rule)"
+										*ngIf="CheckEdit(rule._id)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Cancel</span>
+									</button>
+									<button class="btn btn-transparent svgOnHover tooltip left"
+										(click)="SubmitEdit(rule._id)"
+										*ngIf="CheckEdit(rule._id)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#ok-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#ok-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Save</span>
+									</button>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div class="notAvailable floatToCenter" *ngIf="fetching">
+						<app-preloader type="spin-loader-page"></app-preloader>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

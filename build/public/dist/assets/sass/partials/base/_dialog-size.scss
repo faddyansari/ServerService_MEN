@@ -1,0 +1,23 @@
+@mixin dialog-size($size) {
+	@if $size == 'xs' {
+		width: 30% !important;
+		max-width: 30% !important;
+	} @else if $size == 'sm' {
+		width: 55% !important;
+		max-width: 55% !important;
+	} @else if $size == 'md' {
+		width: 70% !important;
+		max-width: 70% !important;
+	} @else if $size == 'lg' {
+		width: 85% !important;
+		max-width: 85% !important;
+	} @else if $size == 'xl' {
+		width: 98% !important;
+		max-width: 98% !important;
+	} @else if $size == 'full' {
+		width: 100% !important;
+		max-width: 100% !important;
+		height: 100vh !important;
+		max-height: 100vh !important;
+	}
+}

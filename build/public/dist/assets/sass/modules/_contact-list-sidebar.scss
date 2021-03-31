@@ -1,0 +1,122 @@
+.contact-list-sidebar {
+  @extend %b0;
+  @extend %posRelative;
+  border-right-width: 1px;
+  border-right-style: solid;
+  background-color: var(--white);
+  border-right-color: var(--border);
+  @include phone {
+    width: 100%;
+    height: 283px;
+  }
+  @include tabletL {
+    width: #{$contactListSidebar};
+    height: 100%;
+  }
+  > .nav-tabs-custom {
+    @extend %posRelative;
+    @extend %m0;
+    @extend %noShadow;
+    @extend %noRad;
+    @extend %b0;
+    @extend %bgTransparent;
+    > .nav-tabs {
+      @extend %noRad;
+      @extend %width100;
+      @extend %b0;
+      height: #{$navTabsHeight + 1px};
+      > ul {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+        height: 32px;
+        > li {
+          @extend %width100;
+          border-bottom-width: 1px;
+          border-bottom-style: solid;
+          border-bottom-color: var(--border);
+          // border-top-left-radius: 15px;
+          // border-top-right-radius: 15px;
+          > a {
+            @extend %b0;
+            display: flex;
+            justify-content: center;
+            padding: 8px 0 7px 0;
+            > .badge {
+              @extend %pullRight;
+            }
+            img {
+              vertical-align: top;
+            }
+          }
+          &:first-child {
+            margin-left: 0;
+          }
+          &.header {
+            line-height: 35px;
+            padding: 0 10px;
+            color: #444;
+          }
+          &:hover,
+          &.active {
+            border-bottom-color: var(--orange);
+            // background-color: var(--theme-bg);
+            > a {
+              > span {
+                color: var(--orange);
+              }
+            }
+          }
+        }
+      }
+      &.filters {
+        height: #{$navTabsHeight};
+      }
+    }
+    > .tab-content {
+      @include tabletL {
+        // height: calc(100vh - #{$headerSpace});
+        height: calc(100vh - #{$collapsedHeaderSpace});
+      }
+      .tab-pane {
+        .list-items {
+          .activateScrollbar,
+          .notAvailable {
+            @extend %p0;
+            @include tabletL {
+              // height: calc(100vh - #{$listSidebarToolbox});
+              height: calc(100vh - #{$collapsedHeaderSpaceListSidebarToolbox});
+            }
+          }
+        }
+        &.preInstallation {
+          .list-items {
+            .activateScrollbar {
+              @include tabletL {
+                // height: calc(100vh - #{$headerSpace});
+                height: calc(100vh - #{$collapsedHeaderSpace});
+              }
+            }
+          }
+        }
+      }
+      .notAvailable {
+        @include tabletL {
+          // height: calc(100vh - #{$listSidebarToolbox});
+          height: calc(100vh - #{$collapsedHeaderSpaceListSidebarToolbox});
+        }
+      }
+    }
+    > .toolbox {
+      > .searchForm {
+        right: -1px;
+        input {
+          border-radius: 0;
+          border-top: 0;
+          border-color: var(--border);
+        }
+      }
+    }
+  }
+}

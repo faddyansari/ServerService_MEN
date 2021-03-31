@@ -1,0 +1,60 @@
+<div class="activateScrollbar clearfix" *ngIf="allSurveys && allSurveys.length">
+    <ul class="list-items clearfix style4">
+        <li class="item clearfix notif" *ngFor="let survey of allSurveys">
+            <div>
+                <div class="info f-row">
+                    <div class="name">
+                        <p>
+                            <b>Survey Name:</b>
+                            <span>{{survey.surveyName}}</span>
+                            <br>
+                            <span class="svgOnHover tooltip bottom" *ngIf="survey.created">
+                                <svg class="svg w-15 h-15 active">
+									<use href="/assets/img/icons/icons-sprite.svg#created-date" class="text-red"/>
+								</svg>
+                                <span class="text-red">{{survey.created.date | date :'mediumDate'}} | {{ survey.created.date | date :'shortTime' }}</span>
+                                <span class="tooltip-inner">Created Date</span>
+                            </span>
+                            <br>
+                            <span class="svgOnHover tooltip top" *ngIf="survey.lastModified">
+                                <svg class="svg w-15 h-15 active">
+									<use href="/assets/img/icons/icons-sprite.svg#updated-date" class="text-blue"/>
+								</svg>
+                                <span class="text-blue">{{survey.lastModified.date | date :'mediumDate'}} | {{ survey.lastModified.date | date :'shortTime' }}</span>
+                                <span class="tooltip-inner">Updated Date</span>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <div class="pretty p-switch p-smooth p-fill p-toggle tooltip top m-0">
+                        <span class="tooltip-inner" *ngIf="!survey.activated">Activate this survey</span>
+                        <span class="tooltip-inner" *ngIf="survey.activated">De-activate this survey</span>
+                        <input type="checkbox" [(ngModel)]="survey.activated" (change)="toggleActivation(survey._id, survey.activated)"/>
+                        <div class="state p-on">
+                            <label></label>
+                        </div>
+                        <div class="state p-off">
+                            <label></label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="editSurvey(survey)">
+                        <svg class="svg svg-blue active">
+							<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+						</svg>
+						<span class="tooltip-inner">Edit</span>
+                    </button>
+                    <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="deleteSurvey(survey._id)">
+                        <svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+						</svg>
+						<span class="tooltip-inner">Delete</span>
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,82 @@
+<div class="list-items clearfix style1">
+    <ul class="activateScrollbar clearfix" #scrollContainer (scroll)="ScrollChanged($event)">
+        <li class="item clearfix animated flipInX-delay notif clearfix p-0"
+            [ngClass]="(selectedConversation) ? (selectedConversation._id == conversation._id) ? 'active' : '' : ''"
+            *ngFor="let conversation of chatList | filter: searchValue : ['visitorName','tags','visitorEmail','agentEmail','clientID'] : false">
+            <div class="clearfix" (click)="_chatService.setCurrentConversation(conversation._id)">
+                <div>
+                    <div class="avatar ava-xs">
+                        <div class="nameInitials"
+                            [ngStyle]="(conversation.viewColor) ? {'background-color' : conversation.viewColor} : ''">
+                            {{(conversation.visitorName) ? (conversation.visitorName | slice:0:1) : ''}}{{(conversation.visitorName) ? (conversation.visitorName | split:' ') : ''}}
+                        </div>
+                    </div>
+                </div>
+                <div class="availability">
+					<svg class="svg w-11 h-11 p-2 svg-default active">
+						<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-gray" *ngIf="conversation.state == 3"/>
+						<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-green" *ngIf="conversation.state == 2 && !conversation.inactive"/>
+						<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-orange" *ngIf="conversation.state == 2 && conversation.inactive"/>
+						<use href="/assets/img/icons/icons-sprite.svg#dot" class="text-black" *ngIf="conversation.state == 1"/>
+					</svg>
+                </div>
+                <div class="info">
+                    <b class="name ellipsis fw-6">{{conversation.visitorName}}</b>
+                    <span class="ellipsis msg"
+                        *ngIf="conversation.messages.length > 0 && !(conversation.messages[conversation.messages.length -1].attachment) && CheckAttachmentType(conversation.messages[conversation.messages.length -1].body) && (conversation.messages[conversation.messages.length -1].chatFormData)">{{conversation.messages[conversation.messages.length -1].chatFormData}}
+                    </span>
+                    <span class="ellipsis msg"
+                        *ngIf="conversation.messages.length > 0 && !(conversation.messages[conversation.messages.length -1].attachment) && CheckAttachmentType(conversation.messages[conversation.messages.length -1].body) && !(conversation.messages[conversation.messages.length -1].chatFormData)"
+                        [innerHTML]="conversation.messages[conversation.messages.length -1].body | safeUrl : 'html'"></span>
+                    <span class="svgOnHover ellipsis msg"
+                        *ngIf="conversation.messages.length > 0 && (conversation.messages[conversation.messages.length -1].attachment) && !(conversation.messages[conversation.messages.length -1].chatFormData)">
+						<svg class="svg w-15 h-15 svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+						</svg>
+                        <span
+                            *ngIf="CheckAttachmentType(conversation.messages[conversation.messages.length -1].body)">{{(((conversation.messages[conversation.messages.length -1].filename) | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+                        <span
+                            *ngIf="!CheckAttachmentType(conversation.messages[conversation.messages.length -1].body) && conversation.messages[conversation.messages.length -1].body.length > 1">Attachments
+                            ({{conversation.messages[conversation.messages.length -1].body.length}})</span>
+                        <span
+                            *ngIf="!CheckAttachmentType(conversation.messages[conversation.messages.length -1].body) && conversation.messages[conversation.messages.length -1].body.length < 2">{{(((conversation.messages[conversation.messages.length -1].body[0].filename) | attachmentType) == 'image') ? ' Image' : ' Document' }}</span>
+                    </span>
+                    <!-- conversation.messages[conversation.messages.length -1].body -->
+				</div>
+                <div class="notif-count loader-count"
+                    *ngIf="conversation.typingState && conversation.state == 2 && !conversation.ended">
+                    <img class="svg w-30 h-20" src="/assets/img/loaders/msg-loader.svg">
+				</div>
+				<div class="notif-count msg-count"
+                    *ngIf="conversation.messageReadCount && conversation.state == 2">
+                    {{ conversation.messageReadCount }}
+				</div>
+                <div class="notif-count right bg-transparent">
+                    <span class="text-blue">{{ conversation.createdOn | agoPipe}}</span>
+				</div>
+				<!--
+				<div class="date-msg-count">
+					<div class="notif-count msg-count"
+						*ngIf="conversation.messageReadCount && conversation.state == 2">{{ conversation.messageReadCount }}</div>
+                    <span>{{ conversation.createdOn | agoPipe}}</span>
+				</div>
+				-->
+                <div class="missed-chats svgOnHover tooltip left" *ngIf="conversation.missed">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#missed-chats"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#missed-chats-colored"/>
+					</svg>
+                    <span class="tooltip-inner">Missed</span>
+                </div>
+            </div>
+        </li>
+        <li class="notAvailable" *ngIf="!(chatList | filter:  searchValue : ['visitorName','tags'] : false).length">
+            <svg class="svg w-100 h-100 active">
+				<use href="/assets/img/icons/icons-sprite.svg#chats" class="text-gray"/>
+			</svg>
+            <span>No Chats Found!</span>
+        </li>
+    </ul>
+</div>

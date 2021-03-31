@@ -1,0 +1,86 @@
+<div class="mat-grid">
+	<div mat-dialog-title>
+		<div class="text-center">
+			<h3 *ngIf="type == 'single'">New Conversation</h3>
+			<h3 *ngIf="type == 'group' && !groupSubmitted">New Group</h3>
+			<h3 *ngIf="type == 'group' && groupSubmitted">Add Participants</h3>
+		</div>
+	</div>
+	<div mat-dialog-content>
+		<!-- Avatar -->
+		<div class="flex f-column f-align-center f-justify-center"
+			*ngIf="type == 'group' && !groupSubmitted">
+			<div class="avatar ava-xxl bg-blue b-0 m-b-10">
+				<div class="nameInitials" *ngIf="type == 'group'">
+					{{(groupName | slice:0:1)}}{{(groupName | split:' ')}}
+				</div>
+			</div>
+			<input type="text" class="form-control input-md text-center"
+				autocomplete="off" placeholder="Enter Group Name"
+				[(ngModel)]="groupName">
+		</div>
+		<div class="floating-form" *ngIf="showList()">
+			<form [formGroup]="searchForm">
+				<div class="input-block">
+					<input type="search" class="form-control input-sm"
+						placeholder="Search agent" autocomplete="off"
+						formControlName="searchValue" (input)="searchInput.next()">
+				</div>
+			</form>
+		</div>
+		<ul class="list-items clearfix style2 dialog-list noXScroll" #scrollContainer (scroll)="ScrollChanged($event)"
+			*ngIf="showList()">
+			<ng-template ngFor [ngForOf]="agentList" let-agent>
+				<li class="item notif clearfix" [ngClass]="(agent.selected) ? 'active' : ''"
+					*ngIf="agent.email != currentAgent" (click)="toggleSelected(agent)">
+					<div class="animated flipInX-delay">
+						<div class="info">
+							<div>
+								<div class="avatar ava-md m-0">
+									<div class="nameInitials" *ngIf="(!agent.image)">{{( agent.nickname | slice:0:1)}}
+									</div>
+									<div class="avatar-img online" *ngIf="(agent.image)">
+										<img class="svg"  src="{{agent.image}}"attr.agentid="{{agent._id}}">
+									</div>
+								</div>
+							</div>
+							<div>
+								<div class="name">
+									<b>{{agent.nickname}}</b>
+									<span>{{agent.email }} </span>
+									<span class="text-blue">Active Chat: {{ (agent.chatCount) ? agent.chatCount : 0 }}</span>
+								</div>
+							</div>
+							<div class="notif-count right m-0 bg-transparent" *ngIf="agent.liveSession">
+								<span class="text-blue">Online: {{agent.liveSession.createdDate | timeDifferencePipe }}</span>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ng-template>
+		</ul>
+	</div>
+	<div class="mat-dialog-footer clearfix">
+		<mat-dialog-actions>
+			<button class="btn btn-xs bg-blue"
+				(click)="next()"
+				*ngIf="type == 'group' && !groupSubmitted">
+				<span>Next</span>
+			</button>
+			<button class="btn btn-xs bg-blue "
+				(click)="previous()"
+				*ngIf="type == 'group' && groupSubmitted">
+				<span>Previous</span>
+			</button>
+			<button class="btn btn-xs bg-orange"
+				[disabled]="checkDisabled()"
+				[mat-dialog-close]="startChat()"
+				*ngIf="showSubmit()">
+				<span>Start chat</span>
+			</button>
+			<button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+				<span>Cancel</span>
+			</button>
+		</mat-dialog-actions>
+	</div>
+</div>

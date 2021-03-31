@@ -1,0 +1,297 @@
+@import '../../../assets/sass/partials/variables';
+@import '../../../assets/sass/partials/mixins';
+@import '../../../assets/sass/partials/extensions';
+
+.additional-data-search {
+	margin-bottom: 0 !important;
+	input {
+		border-right: 0;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+		margin: 0 !important;
+		&:focus + .search-icon svg {
+			color: var(--black-light);
+		}
+	}
+	.search-icon {
+		border-radius: 4px;
+		border-left: 0;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		min-height: 36px;
+		line-height: 34px;
+		padding: 0 12px;
+		@extend %displayFlex;
+		@extend %flexAlignCenter;
+		@extend %flexJustifyCenter;
+	}
+	&:hover .search-icon svg {
+		color: var(--black-light);
+	}
+}
+
+.scalable-wrapper {
+	.bl-app {
+		.wrapper {
+			.content-wrapper {
+				.content {
+					.chat-list-sidebar {
+						@extend %b0;
+						@extend %posRelative;
+						border-right-width: 1px;
+						border-right-style: solid;
+						background-color: var(--white);
+						border-right-color: var(--border);
+						@include phone {
+							width: 100%;
+							height: 283px;
+						}
+						@include tabletL {
+							width: #{$contactListSidebar};
+							height: 100%;
+						}
+						> .nav-tabs-custom {
+							@extend %posRelative;
+							@extend %m0;
+							@extend %noShadow;
+							@extend %noRad;
+							@extend %b0;
+							@extend %bgTransparent;
+							> .nav-tabs {
+								@extend %noRad;
+								@extend %width100;
+								@extend %b0;
+								height: #{$navTabsHeight + 1px};
+								> ul {
+									display: flex;
+									align-items: center;
+									justify-content: space-between;
+									text-align: center;
+									height: 32px;
+									> li {
+										@extend %width100;
+										> a {
+											@extend %b0;
+											display: flex;
+											justify-content: center;
+											padding: 8px 0 7px 0;
+											> .badge {
+												@extend %pullRight;
+											}
+											img {
+												vertical-align: top;
+											}
+											span {
+												border-bottom-width: 2px;
+												border-bottom-style: solid;
+												border-bottom-color: transparent;
+												font-size: 16px;
+												@extend %fw-7;
+												color: var(--blue-light);
+											}
+										}
+										&:first-child {
+											margin-left: 0;
+										}
+										&.header {
+											line-height: 35px;
+											padding: 0 10px;
+											color: #444;
+										}
+										&:hover,
+										&.active {
+											// background-color: var(--theme-bg);
+											> a {
+												> span {
+													border-bottom-color: var(--blue);
+												}
+											}
+										}
+									}
+								}
+								&.filters {
+									height: #{$navTabsHeight};
+								}
+							}
+							> .chat-title {
+								@extend %displayFlex;
+								@include phone {
+									margin: 0px 30px 20px;
+								}
+								@include tabletL {
+									margin: 35px 30px 20px;
+								}
+								> div {
+									@extend %displayFlex;
+									@extend %flexAlignCenter;
+
+									&.heading {
+										flex: 2;
+										span {
+											margin: 0;
+											padding: 0;
+											margin-left: 5px;
+											font-size: 20px;
+											@extend %fw-7;
+										}
+									}
+									&.chat-btns-box {
+										.chat-btns {
+											padding: 3px;
+											border-radius: 4px;
+											margin-left: 5px;
+											&:hover {
+												background-color: inherit !important;
+											}
+										}
+									}
+								}
+							}
+							> .tab-content {
+								@include tabletL {
+									height: calc(100vh - #{$headerSpace});
+								}
+								.tab-pane {
+									.list-items {
+										.activateScrollbar,
+										.notAvailable {
+											@extend %p0;
+											@include tabletL {
+												height: calc(100vh - #{$listSidebarToolbox});
+											}
+										}
+										&.chat-list-items {
+											ul {
+												@include tabletL {
+													height: calc(100vh - 270px) !important;
+												}
+												li {
+													margin: 0;
+													border-bottom: 0;
+													@extend %width100;
+													&.notif {
+														.name {
+															color: var(--blue);
+														}
+														.msg-count {
+															background-color: var(--blue);
+															@extend %radCircle;
+														}
+													}
+													&.item {
+														@extend %card;
+														flex-direction: row;
+														padding: 0 !important;
+														margin: 0 !important;
+														border-bottom-width: 0;
+														width: 100%;
+														overflow: hidden;
+														box-shadow: none !important;
+														&:hover,
+														&.active {
+															background-color: #ececec;
+															&:after {
+																display: none;
+															}
+														}
+														> div {
+															padding-top: 15px;
+															.info {
+																@extend %p0;
+																width: 50%;
+															}
+															.date-msg-count {
+																flex-direction: column !important;
+																justify-content: end !important;
+																align-items: flex-end !important;
+																height: 35px;
+																width: 100%;
+															}
+														}
+														.msg-count {
+															margin-bottom: 5px;
+															position: inherit !important;
+															transform: translateY(0%);
+															border-radius: 50%;
+															background-color: var(--blue);
+														}
+														.loader-count {
+															right: 60px !important;
+															top: 10px !important;
+														}
+														&.notif {
+															.name,
+															.date-msg-count span {
+																color: var(--blue);
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+									&.preInstallation {
+										.list-items {
+											.activateScrollbar {
+												@include tabletL {
+													height: calc(100vh - #{$headerSpace});
+												}
+											}
+										}
+									}
+								}
+								.notAvailable {
+									@include tabletL {
+										height: calc(100vh - #{$listSidebarToolbox});
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		// chatComponent from collapsed
+		&.collapsed {
+			.wrapper {
+				.content-wrapper {
+					.content {
+						.chat-list-sidebar {
+							> .nav-tabs-custom {
+								> .tab-content {
+									@include tabletL {
+										height: calc(100vh - #{$collapsedHeaderSpace});
+									}
+									.tab-pane {
+										.list-items {
+											.activateScrollbar,
+											.notAvailable {
+												@include tabletL {
+													height: calc(100vh - #{$collapsedHeaderSpaceListSidebarToolbox});
+												}
+											}
+										}
+										&.preInstallation {
+											.list-items {
+												.activateScrollbar {
+													@include tabletL {
+														height: calc(100vh - #{$collapsedHeaderSpace});
+													}
+												}
+											}
+										}
+									}
+									.notAvailable {
+										@include tabletL {
+											height: calc(100vh - #{$collapsedHeaderSpaceListSidebarToolbox});
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

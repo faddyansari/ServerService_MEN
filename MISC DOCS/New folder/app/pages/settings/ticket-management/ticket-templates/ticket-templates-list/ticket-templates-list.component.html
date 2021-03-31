@@ -1,0 +1,73 @@
+<ul class="activateScrollbar clearfix" *ngIf="allTemplates && allTemplates.length">
+    <li *ngFor="let template of allTemplates;let index=index">
+        <div class="info">
+            <div class="name">
+                <b>Template Name:</b>
+                <br>
+                <span>{{template.templateName}}</span>
+                <br>
+                <b>Template Description:</b>
+                <br>
+                <span>{{template.templateDesc}}</span>
+            </div>
+            <div class="name">
+                <b>Created Date:</b>
+                <br>
+                <span class="flex-inline svgOnHover" *ngIf="template.created">
+					<svg class="svg w-15 h-15 active">
+						<use href="/assets/img/icons/icons-sprite.svg#created-date" class="text-red"/>
+					</svg>
+					<span class="text-red">{{template.created.date | date :'mediumDate'}} | {{ template.created.date | date :'shortTime' }}</span>
+                </span>
+                <br>
+                <b *ngIf="template.lastModified">Updated Date:</b>
+                <br>
+                <span class="flex-inline svgOnHover" *ngIf="template.lastModified">
+					<svg class="svg w-15 h-15 active">
+						<use href="/assets/img/icons/icons-sprite.svg#updated-date" class="text-blue"/>
+					</svg>
+					<span class="text-blue">{{template.lastModified.date | date :'mediumDate'}} | {{ template.lastModified.date | date :'shortTime' }}</span>
+                </span>
+            </div>
+            <!--
+			<div class="name" *ngIf="template.created">
+				<b>Created At:</b>
+				<span>{{template.created.date | agoPipe}}</span>
+				<br>
+				<b>Created By:</b>
+				<span class="text-blue">{{template.created.by }}</span>
+			</div>
+			<div class="name" *ngIf="template.lastModified">
+				<b>Modifed At:</b>
+				<span class="text-blue">{{template.lastModified.date | agoPipe }}</span>
+				<br>
+				<b>Modifed By:</b>
+				<span class="text-blue">{{template.lastModified.by }}</span>
+			</div>
+			-->
+            <div class="actions">
+                <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="cloneTemplate(template)" title="Clone Template">
+					<svg class="svg svg-green active">
+						<use href="/assets/img/icons/icons-sprite.svg#clone"/>
+					</svg>
+					<span class="tooltip-inner">Clone</span>
+				</button>
+                <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="editTemplate(template)">
+					<svg class="svg svg-blue active">
+						<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+					</svg>
+					<span class="tooltip-inner">Edit</span>
+				</button>
+                <button type="button" class="btn btn-transparent svgOnHover tooltip top" (click)="deleteTemplate(template._id)">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+					</svg>
+					<span class="tooltip-inner">Delete</span>
+				</button>
+            </div>
+        </div>
+    </li>
+</ul>

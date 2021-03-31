@@ -1,0 +1,137 @@
+<div class="vhList card clearfix" *ngIf="selectedSession">
+    <div class="nav-tabs-custom">
+        <ul class="nav-tabs">
+            <!-- VISITOR HISTORY -->
+            <li [ngClass]="(tabs['visitorHistory']) ? 'active' : ''">
+                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top"
+                    (click)="vhListTabs('visitorHistory')"
+                    title="Visitor History">
+                    <svg class="svg active"  [ngClass]="(tabs['visitorHistory']) ? '' : 'svg-default'">
+						<use [attr.href]="(tabs['visitorHistory']) ? '/assets/img/icons/icons-sprite.svg#visitor-history-colored' : '/assets/img/icons/icons-sprite.svg#visitor-history'"/>
+					</svg>
+                    <span class="tooltip-inner">Visitor History</span>
+                </h5>
+            </li>
+            <!-- BROWSING HISTORY -->
+            <li [ngClass]="(tabs['browsingHistory']) ? 'active' : ''">
+                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top"
+                (click)="vhListTabs('browsingHistory')"
+                    title="Browsing History">
+                    <svg class="svg active">
+						<use href="/assets/img/icons/icons-sprite.svg#browsing-history" [ngClass]="(tabs['browsingHistory']) ? 'text-teal' : 'text-theme-pro-gray'"/>
+					</svg>
+                    <span class="tooltip-inner ">Browsing History</span>
+                </h5>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <!-- VISITOR HISTORY -->
+            <div class="tab-pane" [ngClass]="(tabs['visitorHistory']) ? 'active' : ''">
+                <dl class="dl-horizontal">
+                    <dt>
+                        <span>Returning</span>
+                    </dt>
+                    <dd class="text-red" *ngIf="!selectedSession.returningVisitor">NO</dd>
+                    <dd class="text-green" *ngIf="selectedSession.returningVisitor">YES</dd>
+                </dl>
+                <dl class="dl-horizontal" *ngIf="selectedSession.agent && selectedSession.agent.name">
+                    <dt>
+                        <span>Agent Name</span>
+                    </dt>
+                    <dd>{{selectedSession.agent.name}}</dd>
+                </dl>
+                <dl class="dl-horizontal" *ngIf="selectedSession.deviceInfo">
+                    <dt class="svg">Device</dt>
+                    <dd class="svgOnHover" *ngIf="(selectedSession.deviceInfo.name | lowercase) == 'android'">
+						<svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#android-colored"/>
+						</svg>
+                        <span>Android</span>
+                    </dd>
+                    <dd class="svgOnHover" *ngIf="(selectedSession.deviceInfo.name | lowercase) == 'apple'">
+                        <svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#apple-colored"/>
+						</svg>
+                        <span>Apple</span>
+                    </dd>
+                    <dd class="svgOnHover" *ngIf="(selectedSession.deviceInfo.name | lowercase) == 'windows'">
+                        <svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#windows-colored"/>
+						</svg>
+                        <span>Windows</span>
+                    </dd>
+                </dl>
+                <dl class="dl-horizontal" *ngIf="selectedSession.deviceInfo">
+                    <dt class="svg">Browser</dt>
+                    <dd class="svgOnHover" *ngIf="(selectedSession.deviceInfo.os | lowercase) == 'chrome'">
+                        <svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#chrome-colored"/>
+						</svg>
+                        <span>{{selectedSession.deviceInfo.version}}</span>
+                    </dd>
+                    <dd class="svgOnHover" *ngIf="(selectedSession.deviceInfo.os | lowercase) == 'safari'">
+                        <svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#safari-colored"/>
+						</svg>
+                        <span>{{selectedSession.deviceInfo.version}}</span>
+                    </dd>
+                    <dd class="svgOnHover" *ngIf="(selectedSession.deviceInfo.os | lowercase) == 'firefox'">
+                        <svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#firefox-colored"/>
+						</svg>
+                        <span>{{selectedSession.deviceInfo.version}}</span>
+                    </dd>
+                </dl>
+                <!--
+                <dl class="dl-horizontal" *ngIf="selectedSession.deviceID">
+                    <dt>
+                        <span>Device ID</span>
+                    </dt>
+                    <dd>{{selectedSession.deviceID}}</dd>
+                </dl>
+                -->
+                <!--
+                <dl class="dl-horizontal" *ngIf="(selectedSession.state == 2) && (pageState && pageState != 'left') ">
+                    <dt>
+                        <span>Want To</span>
+                    </dt>
+                    <dd>
+                        <button class="btn btn-xs bg-blue" (click)="performAction('inviteChat')">
+                            <span>Invite To Chat</span>
+                        </button>
+                    </dd>
+                </dl>
+                <dl class="dl-horizontal" *ngIf="(visitor.state == 3 && visitor.agent.id == agent.csid) && (pageState && pageState != 'left') ">
+                    <dt>
+                        <span>Want To</span>
+                    </dt>
+                    <dd>
+                        <button class="btn btn-xs bg-olive" (click)="performAction('transferChat')">
+                            <span>Transfer Chat</span>
+                        </button>
+                    </dd>
+                </dl>
+                -->
+            </div>
+            <!-- BROWSING HISTORY -->
+            <div class="tab-pane" [ngClass]="(tabs['browsingHistory']) ? 'active' : ''">
+                <ul class="toggleList">
+                    <li class="clearfix" *ngFor="let url of selectedSession.url">
+                        <div class="ellipsis">
+                            <a href="{{url}}" target="_blank" class="p-0" title="{{url}}">{{url}}</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="vhList card notif clearfix p-0" *ngIf="!selectedSession">
+    <div class="notAvailable">
+        <svg class="svg w-100 h-100 active">
+			<use href="/assets/img/icons/icons-sprite.svg#no-visitors-colored" class="text-gray"/>
+		</svg>
+        <span>No Session Selected</span>
+    </div>
+</div>

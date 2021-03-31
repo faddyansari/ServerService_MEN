@@ -1,0 +1,47 @@
+<app-analytics-datebox name="totalchats" [agentEnabled]="true" (onResult)="onFilterResult($event)"></app-analytics-datebox>
+<div class="statistics clearfix">
+	<!-- <app-preloader type="cube-grid" *ngIf="loading" class="floatToCenter"></app-preloader> -->
+	<div id="highchart" style="height:300px;"></div>
+	<br>
+	<p class="text-center fw-6"  *ngIf="additionalData">Total: {{additionalData.total}}, Assigned: {{additionalData.assigned}}, Unassigned: {{additionalData.unassigned}}</p>
+	<br>
+	<button class="btn btn-xs bg-green" style="position: fixed;bottom: 40px;left: 100px;z-index: 99999;" (click)="Export()" *ngIf="options.series[0] && options.series[0].data">Export</button>
+	<div class="table-area clearfix">
+		<!-- <app-preloader type="cube-grid" *ngIf="loadingTableData" class="floatToCenter"></app-preloader>
+		<div class="export" *ngIf="table_totalchats.length && !loadingTableData">
+			<button class="btn bg-green no-rad" (click)="ExportToExcel(table_totalchats,'totalchats')">Export</button>
+		</div> -->
+		<div class="table-responsive" *ngIf="options.series[0] && options.series[0].data">
+			<table class="table table-bordered" id="totalChats">
+				<thead>
+					<tr>
+						<th>Series</th>
+						<ng-template ngFor [ngForOf]="options.series" let-series>
+							<th>{{series.name}}</th>
+						</ng-template>		
+					</tr>
+				</thead>
+				<tbody>
+					<ng-template ngFor [ngForOf]="options.xAxis.categories" let-category let-index="index">
+						<tr>
+							<td>{{category}}</td>
+							<ng-template ngFor [ngForOf]="options.series" let-series>
+								<td>{{series.data[index]}}</td>
+							</ng-template>					
+						</tr>
+					</ng-template>
+					<tr>
+						<td><b>Total</b></td>
+						<!-- <td><b>{{showTotal(false)}}</b></td> -->
+						<ng-template ngFor [ngForOf]="options.series" let-series let-index="index">
+							<td><b>{{showTotal(true, index)}}</b> <b *ngIf="additionalData">(Assigned: {{additionalData.assigned}}, Unassigned: {{additionalData.unassigned}})</b></td>
+						</ng-template>		
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- <div *ngIf="unreachable">
+	Server unreachable.
+</div> -->

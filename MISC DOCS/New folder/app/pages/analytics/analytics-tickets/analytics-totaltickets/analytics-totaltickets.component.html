@@ -1,0 +1,66 @@
+<app-analytics-datebox [agentEnabled]="true" [groupEnabled]="true" (onResult)="onFilterResult($event)"></app-analytics-datebox>
+<div class="statistics clearfix">
+	<!-- <app-preloader type="cube-grid" *ngIf="loading" class="floatToCenter"></app-preloader> -->
+	<div id="highchart" style="height:300px;"></div>
+	<br>
+	<br>
+	<button class="btn btn-xs bg-green" style="position: fixed;bottom: 40px;left: 100px;z-index: 99999;" (click)="Export()" *ngIf="options.series[0] && options.series[0].data">Export</button>
+	<div class="table-area clearfix">
+		<!-- <app-preloader type="cube-grid" *ngIf="loadingTableData" class="floatToCenter"></app-preloader>
+		<div class="export" *ngIf="table_firstticketresponse.length">
+			<button class="btn bg-green no-rad"
+				(click)="ExportToExcel(table_firstticketresponse,'firstticketresponse')">Export</button>
+		</div> -->
+		<div class="table-responsive" *ngIf="options.series[0] && options.series[0].data">
+			<table class="table table-bordered" id="totalTickets">
+				<thead class="thead-dark">
+					<tr>
+						<th>Series</th>
+						<ng-template ngFor [ngForOf]="options.xAxis.categories" let-data let-index="index">
+							<th>{{data}}</th>
+						</ng-template>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<ng-template ngFor [ngForOf]="options.series" let-series let-index="index">
+						<tr>
+							<td>{{series.name}}</td>
+							<ng-template ngFor [ngForOf]="series.data" let-data>
+								<td>{{data}}</td>
+							</ng-template>
+							<td>{{showTotal(true,index)}}</td>
+						</tr>
+					</ng-template>
+					<tr>
+						<td [attr.colspan]="options.xAxis.categories.length + 1"><b>Total</b></td>
+						<td><b>{{showTotal(false)}}</b></td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- <table class="table table-bordered">
+				<thead class="thead-dark">
+					<tr>
+						<th>Series</th>
+						<ng-template ngFor [ngForOf]="options.xAxis.categories" let-data let-index="index">
+							<th>{{data}}</th>
+						</ng-template>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Total chats</td>
+						<ng-template ngFor [ngForOf]="options.series[0].data" let-data let-index="index">
+							<td>{{time_convert(data)}}</td>
+						</ng-template>
+						<td>{{time_convert(totalResponse)}}</td>
+					</tr>
+				</tbody>				
+			</table> -->
+		</div>
+	</div>
+</div>
+<!-- <div *ngIf="unreachable">
+	Server unreachable.
+</div> -->

@@ -1,0 +1,274 @@
+<section class="content clearfix animated fadeIn">
+    <div class="content-view">
+        <div class="activateScrollbar clearfix">
+            <app-contact-list-sidebar *ngIf="showContacts"></app-contact-list-sidebar>
+            <app-conv-list-sidebar *ngIf="showConversations"></app-conv-list-sidebar>
+            <div class="box contact-detail" *ngIf="showContactInfo">
+                <app-preloader type="cube-grid" *ngIf="loadingContactInfo" class="floatToCenter"></app-preloader>
+                <div class="conditionalDiv" *ngIf="(selectedContact | json) != ({} | json) && !loadingContactInfo && verified">
+                    <div class="contactHeader clearfix">
+                        <div class="box-title">
+                            <div class="avatar ava-xxl b-4 m-r-0";
+                                [ngClass]="!(selectedContact.status) ? 'border-border' : 'border-green' ">
+                                <div class="nameInitials">
+                                    <span *ngIf="!(selectedContact.image)">{{(selectedContact.name | slice:0:2) | uppercase}}</span>
+                                    <img class="svg" *ngIf="(selectedContact.image)" src="{{selectedContact.image}}" alt="User Image">
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="" [ngClass]="(edit) ? 'editable' : ''">
+                            <li *ngIf="!edit">
+                                <h5 class="ellipsis">{{ selectedContact.name }}</h5>
+                            </li>
+                            <li *ngIf="edit">
+                                <div class="input-block">
+                                    <input type="text" class="form-control input-sm" [formControl]="name_control" [(ngModel)]="name" placeholder="Full Name">
+                                </div>
+                            </li>
+                            <li title="{{ selectedContact.designation }}">
+                                <span class="ellipsis" >{{ selectedContact.designation }}</span>
+                            </li>
+                            <li title="{{ selectedContact.group }} - {{ selectedContact.subGroup }}">
+                                <span class="ellipsis" >{{selectedContact.group}} - {{ selectedContact.subGroup }}</span>
+                            </li>
+                        </ul>
+                        <div class="box-tools">
+                            <button class="btn btn-sm btn-outline basic black svgOnHover tooltip top" (click)="Edit()" title="Edit Profile">
+                                <svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+								</svg>
+								<span class="tooltip-inner">Edit</span>
+                            </button>
+                            <button class="btn btn-sm btn-outline basic red" *ngIf="edit" title="Delete Profile" (click)="Delete(selectedContact._id,selectedContact.email)">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+                            </button>
+                            <button class="btn btn-sm btn-outline basic green svgOnHover tooltip top" *ngIf="edit" [ngClass]="!(loading) ? '' : 'btnSpinner'" (click)="Save()" [disabled]="name_control.invalid || phone_no_control.invalid" title="Save Edit">
+                                <svg class="svg svg-green active">
+									<use href="/assets/img/icons/icons-sprite.svg#floppy"/>
+								</svg>
+								<span class="tooltip-inner">Save</span>
+                            </button>
+                            <button class="btn btn-sm btn-outline basic red" *ngIf="edit" (click)="Cancel()" title="Cancel">
+								<svg class="svg svg-default active">
+									<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+								</svg>
+								<span class="tooltip-inner">Cancel</span>
+                            </button>
+                        </div>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-sm btn-outline basic gray" (click)="ToggleChat()" *ngIf="selectedContact.email != agent.email" title="Chat">
+                                <svg class="svg active">
+									<use href="/assets/img/icons/icons-sprite.svg#chatting" class="text-theme-gray"/>
+								</svg>
+                            </button>
+                            <button class="btn btn-sm btn-outline basic green svgOnHover" *ngIf="((selectedContact.email != agent.email) && (selectedContact._id)) && !production" (click)="TryCall(selectedContact)" title="Call">
+								<svg class="svg w-15 h-15 active">
+									<use href="/assets/img/icons/icons-sprite.svg#call" class="text-green"/>
+								</svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="contactBody clearfix agent-stats">
+                        <div class="vhList notif clearfix" [ngClass]="(showContactAccessInfo) ? 'active' : ''">
+                            <h5 class="title-with-border border-black-alpha2" (click)="toggleContactAccessInfo()">CONTACT INFO</h5>
+                            <div class="notif-count svgOnHover">
+								<svg class="svg active">
+									<use [attr.href]="(showContactAccessInfo) ? '/assets/img/icons/icons-sprite.svg#minus-circle' : '/assets/img/icons/icons-sprite.svg#plus-circle'" [ngClass]="(showContactAccessInfo) ? 'text-red' : 'text-green'"/>
+								</svg>
+                            </div>
+                            <div class="toggleList">
+                                <ul class="clearfix" [ngClass]="(edit) ? 'editable' : ''" *ngIf="(((selectedContact.group | lowercase) != ('ENGRO' | lowercase)))">
+                                    <li title="{{selectedContact.email}}">
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Email:</label>
+                                            </dt>
+                                            <dd>
+                                                <span class="ellipsis">{{ selectedContact.email }}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal" *ngIf="!edit">
+                                            <dt>
+                                                <label>Phone:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{ selectedContact.phone_no }}</span>
+                                            </dd>
+                                        </dl>
+                                        <dl class="dl-horizontal" *ngIf="edit">
+                                            <dt>
+                                                <label>Phone:</label>
+                                            </dt>
+                                            <dd>
+                                                <input type="text" class="form-control input-sm w100" [formControl]="phone_no_control" [(ngModel)]="phone_no" (keypress)="NumbersOnly($event)" placeholder="eg. XXXX-XXXXXXX">
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Gender:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{ selectedContact.gender }}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Extension:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{selectedContact.extension}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Designation:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{ selectedContact.designation}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Department:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{ selectedContact.department}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Line Manager:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{ selectedContact.lineManager}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Group:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{ selectedContact.group}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Available To:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>Chat</span>
+                                                <span *ngIf="selectedContact.status">&nbsp;/&nbsp;Call</span>
+                                                <!-- <span *ngIf="selectedContact.communicationAccess.voicecall">&nbsp;/&nbsp;Voice Call</span>
+                                                <span *ngIf="selectedContact.communicationAccess.videocall">&nbsp;/&nbsp;Video Call</span> -->
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Creation Date:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{selectedContact.created_date | date}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+                                <ul class="clearfix" *ngIf="(selectedContact.group && (((selectedContact.group | lowercase) == ('ENGRO' | lowercase)) || ((selectedContact.group | lowercase) ==  ('POC' | lowercase))))">
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Available To:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>Chat</span>
+                                                <!-- <span *ngIf="selectedContact.communicationAccess.voicecall">&nbsp;/&nbsp;Voice Call</span>
+                                                <span *ngIf="selectedContact.communicationAccess.videocall">&nbsp;/&nbsp;Video Call</span> -->
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Extension:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{selectedContact.extension}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Line Manager:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{ selectedContact.lineManager}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Location:</label>
+                                            </dt>
+                                            <dd>
+                                                <span>{{selectedContact.location}}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    <li >
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                <label>Support<br>Applications:</label>
+                                            </dt>
+                                            <dd>
+                                                <span [title]="selectedContact.supportApps">{{ selectedContact.supportApps }}</span>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="viewChat contacts-chat" *ngIf="showConversations">
+                <div class="preInstallation" *ngIf="!verified && !sbt">
+                    <div class="chatScreen">
+                        <img class="svg"  src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="50%">
+                        <h3>Looking for chats?</h3>
+                        <p>Install Beelinks on your website and start closing leads!</p>
+                        <button class="btn btn-sm bg-blue m-t-b-10">Install Now</button>
+                        <p>Or <a href="">send instructions to developer</a></p>
+                    </div>
+                </div>
+                <app-contact-chat *ngIf="selectedThread && verified"></app-contact-chat>
+                <div class="preInstallation" *ngIf="!selectedThread && verified">
+                    <div class="chatScreen">
+                        <img class="svg"  src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="50%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

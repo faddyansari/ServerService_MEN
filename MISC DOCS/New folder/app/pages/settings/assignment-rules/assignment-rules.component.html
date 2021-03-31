@@ -1,0 +1,22 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Assignment Rulesets</h5>
+			</div>
+			<div *ngIf="!selectedRule && !addRule">
+				<button class="btn btn-xs btn-icon bg-white right"
+					[ngClass]="(!selectedRule && !addRule) ? 'border-blue' : 'border-red'" (click)="AddRule()">
+					<span>{{(!selectedRule && !addRule) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!selectedRule && !addRule) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!selectedRule && !addRule) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'"
+							class="text-white" />
+					</svg>
+				</button>
+			</div>
+		</div>
+		<app-rulesets-list class="document-list clearfix" *ngIf="!addRule"></app-rulesets-list>
+		<app-rulesets-form *ngIf="(addRule)"> -->
+		</app-rulesets-form>
+	</div>
+</div>

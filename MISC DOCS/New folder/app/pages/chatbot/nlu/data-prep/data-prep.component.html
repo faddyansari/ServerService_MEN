@@ -1,0 +1,62 @@
+<div class="sub-nav-tabs">
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			[ngClass]="(intent) ? 'active' : ''"
+			(click)="setPillActive('intent')">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Intents</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			[ngClass]="(entity) ? 'active' : ''"
+			(click)="setPillActive('entity')">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Entities</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			[ngClass]="(synonyms) ? 'active' : ''"
+			(click)="setPillActive('synonyms')">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Synonyms</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			[ngClass]="(regex) ? 'active' : ''"
+			(click)="setPillActive('regex')">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Regex</span>
+		</a>
+	</div>
+</div>
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-t-0">
+		<app-dp-intent *ngIf="intent"></app-dp-intent>
+		<app-dp-entity *ngIf="entity"></app-dp-entity>
+		<app-dp-synonyms *ngIf="synonyms"></app-dp-synonyms>
+		<app-dp-regex *ngIf="regex"></app-dp-regex>
+	</div>
+</div>

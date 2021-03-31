@@ -1,0 +1,171 @@
+.toolbox {
+  @extend %posRelative;
+  height: #{$toolboxHeight};
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+  i,
+  img {
+    color: var(--gray-dark);
+  }
+  > span,
+  > form {
+    background-color: transparent;
+  }
+  > span {
+    color: var(--white);
+  }
+  form {
+    @extend %posRelative;
+    .multiselect-dropdown {
+      .dropdown-btn {
+        display: inline-block;
+        @extend %b0;
+        padding: 6px 0;
+        background: none;
+      }
+    }
+    .form-control {
+      @extend %m0;
+      @extend %noShadow;
+    }
+  }
+  > .searchForm {
+    position: absolute;
+    right: 7px;
+    top: 0;
+    background-color: var(--white);
+    @extend %transitionAll500;
+    display: flex;
+    justify-content: space-between;
+    .close-search,
+    .search-icon {
+      height: 37px;
+      width: 37px;
+      display: flex;
+      position: absolute;
+      right: 0;
+      z-index: 10;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      img {
+        width: 37px;
+        height: 37px;
+        padding: 10px;
+      }
+    }
+    .search-bar {
+      @extend %width100;
+      input {
+        min-width: 220px;
+      }
+    }
+  }
+  .actions {
+    @extend %m0;
+    @extend %p0;
+    flex: 1;
+    display: flex;
+    &:last-child {
+      @extend %flexNone;
+    }
+    > ul {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      > li {
+        height: 60px;
+        &.user-info {
+          > a {
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            .caret {
+              width: 25px;
+              padding: 0px 5px;
+              img {
+                width: 100%;
+                @extend %p0;
+                @include rotate(90deg);
+              }
+            }
+            > i,
+            > img,
+            > .svg {
+              padding: 10px 0;
+              height: 40px;
+            }
+          }
+          &:hover {
+            > a {
+              background-color: transparent !important;
+            }
+          }
+        }
+        &.has-submenu {
+          @extend %transitionAll300;
+          @extend %m0;
+          .sub-menu {
+            li {
+              &.user-info {
+                height: inherit;
+                @extend %p0;
+                padding-bottom: 0;
+                .sub-menu {
+                  width: 240px;
+                  max-height: 295px;
+                }
+                > a {
+                  cursor: pointer;
+                  padding: 0;
+                  padding-bottom: 7px;
+                  margin-bottom: 7px;
+                  border: 0;
+                  border-bottom: 1px solid var(--border-dark);
+                  background: transparent;
+                }
+              }
+            }
+          }
+          .ngxp__arrow {
+            display: block;
+            border-width: 0 10px 10px;
+            top: -8px;
+            border-bottom-color: var(--card);
+            margin: 0;
+          }
+        }
+        .notif-count {
+          &.no-count {
+            right: 0px;
+            top: 15px;
+            line-height: inherit;
+            border-color: var(--charcoal);
+          }
+        }
+      }
+      li {
+        vertical-align: top;
+        @extend %posRelative;
+        padding: 0px 7px;
+        margin-left: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:first-child {
+          margin-left: 0;
+        }
+        > a {
+          cursor: pointer;
+          > i,
+          > img,
+          > .svg {
+            @extend %textCenter;
+          }
+        }
+      }
+    }
+  }
+}

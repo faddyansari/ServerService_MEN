@@ -1,0 +1,27 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5 *ngIf="!selectedScenario && !addScenario">Ticket Scenario Designer</h5>
+				<h5 *ngIf="addScenario && !selectedScenario">Add New Ticket Scenario</h5>
+				<h5 *ngIf="addScenario && selectedScenario">Edit Ticket Scenario</h5>
+			</div>
+			<div *ngIf="!selectedScenario && !addScenario">
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="AddScenario()"
+					[ngClass]="(!selectedScenario && !addScenario) ? 'border-blue' : 'border-red'">
+					<span>{{(!selectedScenario && !addScenario) ? 'New Ticket Scenario' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!selectedScenario && !addScenario) ? 'bg-blue' : 'bg-red'">
+						<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!selectedScenario && !addScenario"/>
+						<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="selectedScenario && addScenario"/>
+					</svg>
+				</button>
+
+			</div>
+		</div>
+		<div class="activateScrollbar clearfix p-0">
+			<app-add-ticket-scenario-automation [TicketScenarioObject]="(addScenario) ? ticketScenarioObject : selectedScenario"
+			[ngClass]="(!selectedScenario && !addScenario) ? 'hide' : '' " *ngIf="addScenario || selectedScenario"></app-add-ticket-scenario-automation>
+			<app-ticket-scenario-automation-list class="document-list" *ngIf="!addScenario && !selectedScenario"></app-ticket-scenario-automation-list>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,67 @@
+<!--
+<div class="tabination clearfix">
+	<ul class="nav-tabs">
+		<li class="active"><a>NLU Data</a></li>
+	</ul>
+	<ul class="tab-content">
+		<li class="tab-pane active f-column f-align-start">
+			<button class="btn btn-xs bg-blue m-b-10" (click)="createCustomJSON()">
+				<span>Load Data</span>
+			</button> 
+			<div class="input-block">
+				<textarea class="form-control input-sm rawHtml"
+					style="height:500px;">{{rasaJSON | json}}</textarea>
+			</div>
+		</li>
+	</ul>
+</div>
+<div class="tabination clearfix">
+	<ul class="nav-tabs">
+		<li class="active">
+			<a>
+				<span>Core Data</span>
+			</a>
+			
+		</li>
+	</ul>
+	<ul class="tab-content">
+		<li class="tab-pane active">
+			<div class="activateScrollbar clearfix">
+				<div class="row clearfix">
+					<div class="col-sm-6 col-xs-12">
+						<div class="input-block">
+							<div class="input-group m-b-10 f-justify-between">
+								<label for="">Domain:</label>
+								<button class="btn btn-xs bg-blue" (click)="load_domain()">Load Domain</button>
+							</div>
+							<textarea class="form-control input-sm rawHtml"
+								style="height:300px;">{{domain_data}}</textarea>
+						</div>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<div class="input-block">
+							<div class="input-group m-b-10 f-justify-between">
+								<label for="">Stories:</label>
+								<button class="btn btn-xs bg-blue" (click)="load_stories()">Load Stories</button>
+							</div>
+							<textarea class="form-control input-sm rawHtml"
+								style="height:300px;">{{stories_data}}</textarea>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
+-->
+<!-- 
+<button class="btn btn-xs bg-blue"
+	[disabled]="!(domain_data && stories_data && this.rasaJSON.rasa_nlu_data.common_examples.length)"
+	(click)=Execute()>
+	<span>Training</span>
+</button>
+
+<app-preloader type="training-overlay" *ngIf="loader"></app-preloader> -->

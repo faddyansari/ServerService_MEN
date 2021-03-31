@@ -1,0 +1,15 @@
+*groups extracted of dev.
+*excluding groups:
+	-today is mon: taken shift start and duration.
+	-calculated kab tak.
+	-excluded groups calculated
+
+*get 2 days dev tickets not of above excluded groups.
+*check if assigned or not
+ -if yes: shift end hone mai time hai and entertained time dekha if guzar gay ahai to cheen lia
+	-if shift ended, no assignment wil take place.
+
+
+-find agent, founded, assign, else fallback
+*if iteration barhi, iteration == limit
+-if all done: fallback limit exceed agent

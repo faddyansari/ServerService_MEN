@@ -1,0 +1,35 @@
+<div class="mat-grid">
+  <div mat-dialog-title>
+    <h3>Preview Acknowledgement Message</h3>
+  </div>
+  <div mat-dialog-content>
+    <p>This preview uses sample content for placeholders to generate the message</p>
+    <ul class="list-items clearfix style4">
+      <li class="item clearfix notif">
+        <div class="clearfix">
+          <div class="info">
+            <div class="name" *ngIf="data.name">
+              <b>Message Name: </b>
+              <span class="text-blue"> {{data.name}}</span>
+            </div>
+            <br>
+            <br>
+            <div class="name">
+              <b>Message: </b>
+              <span [innerHTML]=TransformMessage(data.message)></span>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+  <div class="mat-dialog-footer clearfix">
+    <mat-dialog-actions>
+
+      <button type="button" class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+        <span>Cancel</span>
+      </button>
+    </mat-dialog-actions>
+  </div>
+</div>

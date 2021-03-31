@@ -1,0 +1,45 @@
+<ul class="activateScrollbar clearfix">
+    <li *ngFor="let template of all_templates">
+        <div class="info">
+            <div class="name">
+                <b>Template Type:</b>
+                <span>{{template.sourceType}}</span>
+                <br>
+                <b>Template Name:</b>
+                <span class="text-blue">{{template.templateName}}</span>
+            </div>
+            <div class="name">
+                <b>Created at:</b>
+                <span>{{template.createdDate | agoPipe}}</span>
+                <br>
+                <b>Created By:</b>
+                <span class="text-blue">{{template.createdBy }}</span>
+                <br>
+                <b>At Nsp:</b>
+                <span class="text-blue">{{template.nsp }}</span>
+            </div>
+            <div class="name" *ngIf="isEmpty(lastModified)">
+                <b>Last Modified At:</b>
+                <span class="text-blue">{{template.lastModified.date }}</span>
+            </div>
+            <div class="actions">
+                <button type="button" class="btn btn-transparent svgOnHover tooltip left" (click)="EditTemplate(template)">
+                    <svg class="svg svg-blue active">
+						<use href="/assets/img/icons/icons-sprite.svg#edit"/>
+					</svg>
+					<span class="tooltip-inner">Edit</span>
+                </button>
+                <button type="button" class="btn btn-transparent svgOnHover tooltip left" (click)="DeleteTemplate(template._id)">
+                    <svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+					</svg>
+					<span class="tooltip-inner">Delete</span>
+                </button>
+                <!-- *ngIf="template.type == 'htmlEditor || templateBuilder'" -->
+            </div>
+        </div>
+    </li>
+</ul>

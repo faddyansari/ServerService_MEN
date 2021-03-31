@@ -1,0 +1,64 @@
+<div class="row intent-list clearfix">
+	<div class="col-xs-12">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5>Synonyms</h5>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+					(click)="toggleSynonymForm()"
+					[ngClass]="(!showSynonymForm) ? 'border-blue' : 'border-red'">
+					<span>{{(!showSynonymForm) ? 'Add' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!showSynonymForm) ? 'bg-blue' : 'bg-red'">
+						<use [attr.href]="(!showSynonymForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'" class="text-white"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="popover-form" *ngIf="showSynonymForm">
+			<form [formGroup]="SynonymForm">
+				<div class="input-block">
+					<div class="sel style1 sel-sm">
+						<select class="form-control input-sm" formControlName="entity_value" (change)="selectSynonymValue($event)">
+							<option value="" selected>Select</option>
+							<option *ngFor="let e of phrase_values; let i = index" [value]="e.value">
+								{{e.value}}
+							</option>
+						</select>
+					</div>
+				</div>
+				<button class="btn btn-sm bg-blue"
+					(click)="addSynonymValue(selectedValue)"
+					[disabled]="!selectedValue">
+					<span>Add</span>
+				</button>
+			</form>
+		</div>
+		<div class="document-list">
+			<ul class="activateScrollbar clearfix">
+				<ng-template [ngIf="synonym_list.length"]>
+					<li class="notif" *ngFor="let i of synonym_list; let index=index;">
+						<div class="info">
+							<div class="w-100 m-r-14">
+								<b>{{i.entity_value}}</b>
+							</div>
+							<app-chips-input class="form-control input-sm tag-input w100" placeholder="Enter Synonyms..." (onAdd)="onEnter($event,i)" (onRemove)="onRemoveTag($event,i)" [items]= i.synonyms></app-chips-input>
+							<div class="actions">
+								<button class="btn btn-transparent svgOnHover tooltip left"
+									(click)="deleteSynonymValue(i, index)">
+									<svg class="svg svg-default">
+										<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+									</svg>
+									<svg class="svg colored">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+									</svg>
+									<span class="tooltip-inner">Delete</span>
+								</button>
+							</div>
+						</div>
+					</li>
+				</ng-template>
+			</ul>
+		</div>
+	</div>
+</div>

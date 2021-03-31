@@ -1,0 +1,239 @@
+<form class="m-t-b-14" [formGroup]="msgForm" (keydown.enter)="$event.preventDefault()">
+	<div class="input-block">
+		<div class="input-group-sm">
+			<!-- <input [ngClass]="(msgForm.get('to').hasError('invalid')) ? 'border-red' : ''" type="text" class="form-control" placeholder="Recipient" name="to" formControlName="to"> -->
+			<app-chips-input class="form-control input-sm tag-input w100" [items]="msgForm.get('to').value" [valueDisabled]="msgForm.get('to').disabled"
+				[ngClass]="(msgForm.get('to').hasError('invalid')) ? 'border-red' : ''" name="to" [placeholder]="'Recipients'" [delimiters]="[',']" formControlName="to">
+			</app-chips-input>
+			<!-- <input *ngIf="type == 'reply'" [ngClass]="(msgForm.get('to').hasError('invalid')) ? 'border-red' : ''" type="text" class="form-control" placeholder="Recipient" name="to" formControlName="to"> -->
+			<!-- <app-chips-input *ngIf="type != 'reply'" class="form-control" [ngClass]="(msgForm.get('to').hasError('invalid')) ? 'border-red' : ''" name="to" [placeholder]="'Recipients'" [delimiters]="[',']" formControlName="to"></app-chips-input> -->
+
+			<div class="input-group-btn w-250">
+				<button (click)="ToggleCC($event)" class="btn btn-transparent svgOnHover text-black">
+					<span>Cc</span>
+					<svg class="svg svg-default">
+						<use [attr.href]="!(showCC)? '/assets/img/icons/icons-sprite.svg#plus-circle' : '/assets/img/icons/icons-sprite.svg#minus-circle'"/>
+					</svg>
+					<svg class="svg colored">
+						<use [attr.href]="!(showCC)? '/assets/img/icons/icons-sprite.svg#plus-circle-colored' : '/assets/img/icons/icons-sprite.svg#minus-circle-colored'"
+						[ngClass]="!(showCC)? 'text-green' : 'text-red'"/>
+					</svg>
+				</button>
+				<button (click)="ToggleBCC($event)" class="btn btn-transparent svgOnHover text-black">
+					<span>Bcc</span>
+					<svg class="svg svg-default">
+						<use [attr.href]="!(showBCC)? '/assets/img/icons/icons-sprite.svg#plus-circle' : '/assets/img/icons/icons-sprite.svg#minus-circle'"/>
+					</svg>
+					<svg class="svg colored">
+						<use [attr.href]="!(showBCC)? '/assets/img/icons/icons-sprite.svg#plus-circle-colored' : '/assets/img/icons/icons-sprite.svg#minus-circle-colored'"
+						[ngClass]="!(showBCC)? 'text-green' : 'text-red'"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+		<!-- <p class="text-red m-b-5" [hidden]="!msgForm.get('to').hasError('invalid')">Invalid Email</p> -->
+	</div>
+	<div *ngIf="showCC" class="input-block">
+		<app-chips-input class="form-control input-sm tag-input w100" [ngClass]="(msgForm.get('cc').hasError('invalid')) ? 'border-red' : ''" [items]="msgForm.get('cc').value"
+			name="cc" [placeholder]="'CC'" [delimiters]="[',']" formControlName="cc"></app-chips-input>
+		<p class="text-red m-b-5" [hidden]="!msgForm.get('cc').hasError('invalid')">Invalid Email</p>
+	</div>
+	<div *ngIf="showBCC" class="input-block">
+		<!-- <input  class="form-control" placeholder="BCC"> -->
+		<app-chips-input class="form-control input-sm tag-input w100" [ngClass]="(msgForm.get('bcc').hasError('invalid')) ? 'border-red' : ''" name="bcc" [placeholder]="'BCC'"
+			[delimiters]="[',']" formControlName="bcc"></app-chips-input>
+		<p class="text-red m-b-5" [hidden]="!msgForm.get('bcc').hasError('invalid')">Invalid Email</p>
+	</div>
+	<div class="input-block">
+		<input type="text" name="subject" class="form-control input-sm" placeholder="Subject" formControlName="subject">
+	</div>
+	<div class="input-block" [ngClass]="(sending) ? 'disabled' : ''">
+		<!-- <textarea rows="3"  (paste)="onPaste($event)" (paste-image)="pasteImage($event)" > </textarea> -->
+		<textarea [ngxSummernote]="config" class="form-control input-sm" name="msg" formControlName="msg" name="message" rows="15" #msgBox id="msgBox" autofocus></textarea>
+	</div>
+	<ul class="ticket-attachment-area clearfix p-0">
+		<li *ngFor="let attachment of GetControls('attachments'); let i = index;"
+			formArrayName="attachments">
+			<div [formGroupName]="i"
+				[ngClass]="(attachment.get('file').value.type.split('/')[0] === 'image') ? 'attachment-image' : 'attachment-doc'">
+				<span>
+					<span class="file-icon" *ngIf="(attachment.get('file').value.type != 'image')">
+						<svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#file" class="text-black"/>
+						</svg>
+					</span>
+					<span class="file-name" [title]="attachment.get('file').value.name">
+						<span>{{attachment.get('file').value.name}}</span>
+						<span class="text-red" *ngIf="!fileValid">file max size: 5 MB</span>
+					</span>
+					<span
+						class="file-size">{{((attachment.get('file').value.size / 1024 ) > 1024) ? ((attachment.get('file').value.size / 1024 / 1024 |  number:'1.0-0') + ' MB') : ((attachment.get('file').value.size / 1024 | number:'1.0-0') + ' KB')}}</span>
+				</span>
+				<button class="btn btn-xs btn-transparent svgOnHover tooltip top remove"
+					(click)="RemoveAttachment(i)">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+					</svg>
+					<span class="tooltip-inner">Remove File</span>
+				</button>
+			</div>
+		</li>
+		<!-- <app-preloader *ngIf="uploading" type='stat-loader'></app-preloader> -->
+		<li class="w100 b-0 p-0" *ngIf="((selectedForm && selectedForm.length) || (selectedFeedbackSurvey))">
+			<hr class="bg-gray">
+		</li>
+		<li *ngIf="selectedForm && selectedForm.length">
+			<div class="attachment-form">
+				<span>
+					<b>Selected Form:</b>
+					<br>
+					<span>{{selectedForm[0].formName}}</span>
+				</span>
+				<button class="btn btn-xs btn-transparent svgOnHover tooltip top remove"
+					(click)="RemoveForm()">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+					</svg>
+					<span class="tooltip-inner">Remove Form</span>
+				</button>
+			</div>
+		</li>
+		<li *ngIf="selectedFeedbackSurvey">
+			<div class="attachment-form">
+
+				<span>
+					<b>Satisfaction Survey Added</b>
+					<br>
+				</span>
+
+				<button class="btn btn-xs btn-transparent svgOnHover tooltip top remove"
+					(click)="RemoveSurveyForm()">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+					</svg>
+					<span class="tooltip-inner">Remove Survey Form</span>
+				</button>
+			</div>
+		</li>
+
+	</ul>
+	<div class="input-group-sm f-justify-between">
+		<div class="input-group-btn m-0">
+			<button [ngClass]="(sending) ? 'btnSpinner' : ''" [disabled]=(msgForm.invalid) type="submit" (click)="Send($event)" class="btn btn-xs btn-theme m-b-0">
+				<span>Send</span>
+			</button>
+		</div>
+		<div class="flex f-row f-gap5">
+			<div>
+				<label class="btn btn-transparent svgOnHover tooltip top">
+					<svg class="svg svg-default active">
+						<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+					</svg>
+					<span class="tooltip-inner">Attach File</span>
+					<input #fileInput type="file" (change)="FileSelected($event)" class="hide" multiple>
+				</label>
+			</div>
+			<div>
+				<button class="btn btn-transparent svgOnHover tooltip top" (click)="Delete()">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+					</svg>
+					<span class="tooltip-inner">Delete</span>
+				</button>
+			</div>
+			<div>
+				<button class="btn btn-transparent svgOnHover tooltip top-right"
+					[popper]="cannedMessages"
+					[popperShowOnStart]="false"
+					[popperTrigger]="'click'"
+					[popperHideOnClickOutside]="true"
+					[popperHideOnScroll]="false"
+					[popperPlacement]="'bottom'"
+					(popperOnShown)="SetCannedMessages($event,CannedFormsList)"
+					(popperOnHidden)="popperOnHidden($event)"
+					(popperOnUpdate)="popperOnUpdateCannedMessage($event)">
+					<svg class="svg svg-default active">
+						<use href="/assets/img/icons/icons-sprite.svg#attach-canned-form"/>
+					</svg>
+					<span class="tooltip-inner">Canned Forms</span>
+				</button>
+			</div>
+			<div>
+				<button class="btn btn-transparent svgOnHover tooltip top"
+					[popper]="cannedResponsePopper"
+					[popperShowOnStart]="false"
+					[popperTrigger]="'click'"
+					[popperHideOnClickOutside]="true"
+					[popperHideOnScroll]="false"
+					[popperPlacement]="'bottom'">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#plus-circle"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#plus-circle-colored"/>
+					</svg>
+					<span class="tooltip-inner">Add Canned Responses</span>
+				</button>
+			</div>
+			<div *ngIf="survey && survey.length && survey[0].sendWhen == 'manually_attached'">
+				<button class="btn btn-transparent svgOnHover tooltip top" (click)="SelectActivatedPolicy()">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#smiley"/>
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#smiley-colored"/>
+					</svg>
+					<span class="tooltip-inner">Send Activated Survey</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+<popper-content #cannedResponsePopper>
+	<ul class="activateScrollbar clearfix" *ngIf="automatedResponses">
+		<li>
+			<a href="javascript:void(0);" (click)="GotoAR()">
+				<span>Add new Canned message</span>
+			</a>
+		</li>
+		<li *ngFor="let res of automatedResponses" (click)="InsertCannedMessage(res.hashTag)">
+				<a>
+					<span>{{res.hashTag}}</span>
+				</a>
+
+		</li>
+	</ul>
+</popper-content>
+
+<popper-content #cannedMessages>
+	<ul class="activateScrollbar clearfix" *ngIf="CannedFormsList && CannedFormsList.length">
+		<li *ngFor="let form of CannedFormsList" (click)="UpdateCannedMessages(form,true)">
+			<a>
+				<span>{{form.formName}}</span>
+			</a>
+		</li>
+	</ul>
+</popper-content>
+
+<!-- <popper-content #feedbackSurveys>
+	<ul class="activateScrollbar clearfix" *ngIf="SurveyList && SurveyList.length">
+		<li *ngFor="let survey of SurveyList" (click)="UpdateFeedbackSurvey(survey,true)">
+			<a>
+				<span>{{survey.surveyName}}</span>
+			</a>
+		</li>
+	</ul>
+</popper-content> -->

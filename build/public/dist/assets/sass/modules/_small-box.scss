@@ -1,0 +1,50 @@
+.small-box {
+	position: relative;
+	display: block;
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: var(--white);
+	@extend %transitionAll300;
+	// border-radius: 5px;
+	// border: 1px solid var(--gray);
+	// @include box-shadow-tri (0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12));
+	&:hover {
+		text-decoration: none;
+		color: var(--charcoal);
+	}
+	a {
+		font-weight: 600;
+		color: var(--black-light);
+	}
+	/*
+    :before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        height: 70%;
+        margin: auto;
+        background: var(--gray-dark);
+    }
+    */
+	h3 {
+		@extend %width100;
+		display: block;
+		border-bottom: 1px dotted var(--gray);
+		img,
+		span {
+			@extend %pullLeft;
+			height: 25px;
+		}
+		img {
+			width: 25px;
+			margin-right: 10px;
+		}
+		span {
+			padding-top: 3px;
+			font-size: 20px;
+		}
+	}
+}

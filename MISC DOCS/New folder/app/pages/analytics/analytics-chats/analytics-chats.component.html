@@ -1,0 +1,113 @@
+<div class="sub-nav-tabs clearfix">
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-chats/totalchats"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Total Chats</span>
+		</a>
+	</div>
+	<!-- <div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-chats/totalchatsnew"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Total Chats New</span>
+		</a>
+	</div> -->
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-chats/chatduration"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Chat Duration</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-chats/agentfeedback"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Feedback</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-chats/experience"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Chat Experience</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-chats/firstresponsetime"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>First Response Time</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-chats/avgresponsetime"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Average Response Time</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-chats/missedchats"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Missed Chats</span>
+		</a>
+	</div>
+</div>
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="activateScrollbar clearfix p-0">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>

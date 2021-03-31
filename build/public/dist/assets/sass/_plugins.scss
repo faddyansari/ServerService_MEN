@@ -1,0 +1,32 @@
+@import './plugins/pretty-checkbox';
+
+.highcharts-contextmenu {
+    > .highcharts-menu {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--white) !important;
+        border-color: var(--border) !important;
+        box-shadow: 0px 2px 5px var(--shadow) !important;
+        padding: 0 !important;
+        > .highcharts-menu-item {
+            border: 1px solid transparent !important;
+            border-left: 0 !important;
+            border-right: 0 !important;
+            &:hover {
+                border-top-color: var(--border) !important;
+                border-bottom-color: var(--border) !important;
+                background-color: var(--card) !important;
+                background-image: linear-gradient(to bottom, var(--card), var(--shadow)) !important;
+                color: var(--black) !important;
+            }
+        }
+        > hr {
+            background-color: var(--gray);
+        }
+    }
+}
+
+rect.highcharts-button-box,
+rect.highcharts-background {
+    fill: none !important;
+}

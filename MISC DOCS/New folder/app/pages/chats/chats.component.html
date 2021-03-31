@@ -1,0 +1,1403 @@
+<section class="content clearfix animated fadeIn info-hidden" id="chatComponent">
+    <div class="content-view">
+        <app-chat-list-sidebar class="contact-list-sidebar"></app-chat-list-sidebar>
+        <div class="activateScrollbar clearfix p-7">
+            <div class="viewChat" *ngIf="!verified && !sbt" [ngClass]="!verified ? 'not-verified' : ''">
+                <div class="preInstallation">
+                    <div class="chatScreen">
+                        <img class="svg" src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="50%" />
+                        <h3>Looking for chats?</h3>
+                        <p>Install Beelinks on your website and start closing leads!</p>
+                        <button class="btn btn-sm bg-blue m-t-b-10">Install Now</button>
+                        <p>Or <a href="">send instructions to developer</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="viewChat" *ngIf="verified">
+                <div class="preInstallation" *ngIf="(currentConversation | json) == ({} | json)">
+                    <div class="chatScreen">
+                        <img class="svg" src="/assets/img/illustrations/pre-installation-chat-screens.svg" alt="" width="50%" />
+                    </div>
+                </div>
+                <div class="chatWindow card p-0" *ngIf="(currentConversation | json) != ({} | json)">
+                    <div class="box clearfix animated fadeIn delay-400">
+                        <div class="box-header">
+                            <h5 class="box-title ellipsis">
+                                <span>{{ currentConversation.visitorName }} </span>
+                                <span *ngIf="currentConversation.CustomerInfo "> CM ID:
+									{{currentConversation.CustomerInfo.customerId}}</span>
+                            </h5>
+                            <div class="box-tools">
+                                <button class="btn btn-xs btn-theme" (click)="OpenViewHistory()">
+									<span>Open History</span>
+								</button>
+                            </div>
+                        </div>
+                        <div class="overlay-drag" *ngIf="isDragged"></div>
+                        <div class="box-body clearfix p-0" (dragover)="OnDragOver($event)" (drop)="onDrop($event)" (dragleave)="onDragLeave($event)">
+                            <div class="chatBody" [ngClass]="[activeTab == 'INBOX' ? 'inbox' : 'archive', !(currentConversation.state < 3 && currentConversation.state != 1) ? 'chat-ended' : '']">
+                                <app-messages (scroll)="scrollChanged()"></app-messages>
+                                <!-- <div *ngIf="(currentConversation.typingState && currentConversation.state == 2)"
+                                    class="new-chat-loader dot-loader from">
+                                    <img class="svg w-30 h-20" src="/assets/img/loaders/msg-loader.svg">
+                                    <em>{{ currentConversation.visitorName}} is typing &nbsp;&nbsp;</em>
+                                    <span>{{ (currentConversation.typingData) ? currentConversation.typingData : ''}}</span>
+                                    <br>
+                                </div> -->
+                                <!-- <app-blob-attachment [uploading]="uploading"
+                                    [fileArray]="currentConversation.arrToDialog"
+                                    [fileValid]="fileValid" [files]="files" (onClear)="onClear($event)"
+                                    [actionForm]="actionForm" [errorFile]="errorFile" *ngIf="ShowAttachmentAreaDnd">
+                                </app-blob-attachment> -->
+                                <app-blob-attachment [uploading]="uploading" [fileValid]="fileValid" [fileArray]="attachmentGallery" (onClear)="onClear($event)" [actionForm]="actionForm" *ngIf="ShowAttachmentAreaDnd">
+                                </app-blob-attachment>
+                            </div>
+                            <div class="chatFooter" *ngIf="(currentConversation.state < 3 && currentConversation.state != 1) || (agentPermissions.chatSuperVisionIntrusion && CheckIfChatSuperVised(currentConversation.superviserAgents))">
+                                <div class="sneakpeak-area animated slideInUp svgOnHover" *ngIf="currentConversation && currentConversation.typingData && currentConversation.typingState && !currentConversation.ended && currentConversation.state == 2">
+                                    <span [innerHTML]="currentConversation.typingData | safeUrl: 'html'"></span>
+                                    <svg class="svg w-40 h-20 active" *ngIf="currentConversation.typingState && currentConversation.state == 2">
+										<use href="/assets/img/loaders/msg-loader.svg" class="text-red" />
+									</svg>
+                                </div>
+                                <form novalidate>
+                                    <div class="msgArea">
+                                        <div class="tools">
+                                            <label class="btn btn-transparent svgOnHover tooltip top-left" [ngClass]="!chatPermissions.allowAttachments ? 'disabled' : ''">
+												<svg class="svg w-25 h-25 svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#attachment" />
+												</svg>
+												<span class="tooltip-inner">Attach File</span>
+												<input #fileInput [disabled]="!fileSharePermission" type="file"
+													class="hide" (change)="FileSelected($event)" multiple>
+											</label>
+                                            <button class="btn btn-transparent svgOnHover tooltip top" *ngIf="seconds" (click)="cancelRecording()">
+												<svg class="svg w-25 h-25 svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+												</svg>
+												<svg class="svg w-25 h-25 colored">
+													<use
+														href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+												</svg>
+												<span class="tooltip-inner">Cancel Recording</span>
+											</button>
+                                            <button class="btn btn-transparent svgOnHover tooltip top" (click)="startRecording()" *ngIf="!seconds && !loading" [disabled]="!chatPermissions.allowVoicenotes || recordingStarted">
+												<svg class="svg w-25 h-25 svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#mic-on" />
+												</svg>
+												<span class="tooltip-inner">Voice Note</span>
+											</button>
+                                            <button class="btn text-black-light fs-13 wAuto" *ngIf="seconds">
+												<span>{{mins|numberpad:1}}:{{seconds|numberpad:2}}</span>
+											</button>
+                                            <button class="btn btn-transparent svgOnHover tooltip top" *ngIf="loading" style="cursor: default;">
+												<img class="svg w-25 h-25"
+													src="/assets/img/loaders/spin-loader-gray.svg" />
+												<span class="tooltip-inner">Loading ...</span>
+											</button>
+                                            <button class="btn btn-transparent svgOnHover tooltip top" *ngIf="seconds" (click)="stopRecording()">
+												<svg class="svg svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#ok-circle" />
+												</svg>
+												<svg class="svg colored">
+													<use href="/assets/img/icons/icons-sprite.svg#ok-circle-colored" />
+												</svg>
+												<span class="tooltip-inner">Submit Recording</span>
+											</button>
+                                            <button class="btn btn-transparent svgOnHover tooltip top" (click)="EmojiWrapper = !EmojiWrapper" [ngClass]="EmojiWrapper ? 'active' : ''" [disabled]="!chatPermissions.allowEmoji">
+												<svg class="svg w-25 h-25 svg-default">
+													<use href="/assets/img/icons/icons-sprite.svg#smiley" />
+												</svg>
+												<svg class="svg w-25 h-25 colored">
+													<use href="/assets/img/icons/icons-sprite.svg#smiley-colored"
+														class="text-mustard-light" />
+												</svg>
+												<span class="tooltip-inner">Emojis</span>
+											</button>
+                                        </div>
+                                        <textarea appAutoGrow [minHeight]="24" [maximumHeight]="200" #chatMessage [restrictAutoSize]="restrictAutoSize" autocomplete="off" name="message" maxlength="20000" placeholder="Type Message ..." [ngModelOptions]="{ standalone: true }" [(ngModel)]="msgBody"
+                                            [matAutocomplete]="auto" (keydown)="keydown($event)" (keyup)="keyup($event)" (keypress)="keyPress($event)" [disabled]="currentConversation.ended" (input)="TypingEvent($event)"></textarea>
+                                        <div class="tools">
+                                            <button class="btn btn-transparent svgOnHover tooltip top-right" [disabled]="currentConversation.ended || !( msgBody || (attachmentGallery && attachmentGallery.length))" (click)="keyDownFunction($event)">
+												<svg class="svg svg-default active">
+													<use href="/assets/img/icons/icons-sprite.svg#send-message" />
+												</svg>
+												<span class="tooltip-inner">Send</span>
+											</button>
+                                        </div>
+                                        <!-- (optionSelected)='ItemSelected($event.option.value)'(onSelectionChange)="ItemSelected($event)" -->
+                                        <!-- <mat-option *ngFor="let automatedMessage of filteredAutomatedMessages" [value]="ItemSelected(automatedMessage.responseText)" (click)="setShift()">{{ automatedMessage.hashTag }}</mat-option> -->
+
+                                        <mat-autocomplete class="ccAutoComplete" #auto="matAutocomplete" (optionSelected)="ItemSelected($event)" autoActiveFirstOption>
+                                            <mat-option *ngFor="let automatedMessage of filteredAutomatedMessages" (click)="setShift()" [value]="!formHashQuery ? automatedMessage.responseText : automatedMessage.formName">
+                                                {{!formHashQuery ? automatedMessage.hashTag: automatedMessage.formName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <!-- <mat-autocomplete class="ccAutoComplete" #CannedForm="matAutocomplete" autoActiveFirstOption>
+                                            <mat-option *ngFor="let form of CannedForms" [value]="SelectedForm(CannedForms.formName)" (click)="setShift()">{{ form.formName }}</mat-option>
+                                        </mat-autocomplete> -->
+                                        <app-emoji *ngIf="EmojiWrapper" (emojiClicked)="Emoji($event)"></app-emoji>
+                                        <!--
+										<div [ngClass]="(EmojiWrapper) ? 'showEmoji' : 'hideEmoji'" id="emoji-div-wrapper" *ngIf="EmojiWrapper">
+                                            <ul id="emoji-menu" #emoji_header>
+                                                <li id="emoji-icon-Smileys" class="active" (click)="EmojiHeader('Smileys')">
+                                                    <a id="emoji-icon-li-Smileys" class="icon-emoji-size" data-title="Smileys">
+                                                        <i class="icon-emoji-smiley"></i>
+                                                    </a>
+                                                </li>
+                                                <li id="emoji-icon-Animals" (click)="EmojiHeader('Animals')">
+                                                    <a id="emoji-icon-li-Animals" class="icon-emoji-size" data-title="Animals & Nature">
+                                                        <i class="icon-emoji-animal"></i>
+                                                    </a>
+                                                </li>
+                                                <li id="emoji-icon-Activities" (click)="EmojiHeader('Activities')">
+                                                    <a id="emoji-icon-li-Activities" class="icon-emoji-size" data-title="Activities">
+                                                        <i class="icon-emoji-activity"></i>
+                                                    </a>
+                                                </li>
+                                                <li id="emoji-icon-People" (click)="EmojiHeader('People')">
+                                                    <a id="emoji-icon-li-People" class="icon-emoji-size" data-title="People">
+                                                        <i class="icon-emoji-people"></i>
+                                                    </a>
+                                                </li>
+                                                <li id="emoji-icon-Objects" (click)="EmojiHeader('Objects')">
+                                                    <a id="emoji-icon-li-Objects" class="icon-emoji-size" data-title="Objects & Symbols">
+                                                        <i class="icon-emoji-object"></i>
+                                                    </a>
+                                                </li>
+                                                <li id="emoji-icon-Places" (click)="EmojiHeader('Places')">
+                                                    <a id="emoji-icon-li-Places" class="icon-emoji-size" data-title="Travel & Places">
+                                                        <i class="icon-emoji-place"></i>
+                                                    </a>
+                                                </li>
+                                                <li id="emoji-icon-Food" (click)="EmojiHeader('Food')">
+                                                    <a id="emoji-icon-li-Food" class="icon-emoji-size" data-title="Food & Drink">
+                                                        <i class="icon-emoji-food"></i>
+                                                    </a>
+                                                </li>
+                                                <li id="emoji-icon-Clothing" (click)="EmojiHeader('Clothing')">
+                                                    <a id="emoji-icon-li-Clothing" class="icon-emoji-size" data-title="Clothing & Accessories">
+                                                        <i class="icon-emoji-cloth"></i>
+                                                    </a>
+                                                </li>
+                                                <li id="emoji-icon-Sports" (click)="EmojiHeader('Sports')">
+                                                    <a id="emoji-icon-li-Sports" class="icon-emoji-size" data-title="Sports & Games">
+                                                        <i class="icon-emoji-sport"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <div id="emoji-div" #emoji_content (click)="EmojiContentAppend($event)">
+                                                <p id="Activities" class="show">
+                                                    <a id="emoji-{{activity}}" [innerHTML]="activity" *ngFor="let activity of Emojis.Activities ; let i = index"></a>
+                                                </p>
+                                                <p id="Smileys" class="hide">
+                                                    <a id="emoji-{{smileys}}" [innerHTML]="smileys" *ngFor="let smileys of Emojis.Smileys; let i = index"></a>
+                                                </p>
+                                                <p id="Animals" class="hide">
+                                                    <a id="emoji-{{animals}}" [innerHTML]="animals" *ngFor="let animals of Emojis.Animals; let i = index"></a>
+                                                </p>
+                                                <p id="People" class="hide">
+                                                    <a id="emoji-{{people}}" [innerHTML]="people" *ngFor="let people of Emojis.People; let i = index"></a>
+                                                </p>
+                                                <p id="Objects" class="hide">
+                                                    <a id="emoji-{{objects}}" [innerHTML]="objects" *ngFor="let objects of Emojis.Objects; let i = index"></a>
+                                                </p>
+                                                <p id="Places" class="hide">
+                                                    <a id="emoji-{{place}}" [innerHTML]="place" *ngFor="let place of Emojis.Places; let i = index"></a>
+                                                </p>
+                                                <p id="Food" class="hide">
+                                                    <a id="emoji-{{food}}" [innerHTML]="food" *ngFor="let food of Emojis.Food; let i = index"></a>
+                                                </p>
+                                                <p id="Clothing" class="hide">
+                                                    <a id="emoji-{{clothing}}" [innerHTML]="clothing" *ngFor="let clothing of Emojis.Clothing; let i = index"></a>
+                                                </p>
+                                                <p id="Sports" class="hide">
+                                                    <a id="emoji-{{sport}}" [innerHTML]="sport" *ngFor="let sport of Emojis.Sports; let i = index"></a>
+                                                </p>
+                                            </div>
+										</div>
+										-->
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="viewHistory card p-0" *ngIf="showViewHistory && (currentConversation | json) != ({} | json)">
+                    <button class="btn btn-xxs bg-red closeInfo" (click)="CloseViewHistory()">
+						<span>Close</span>
+					</button>
+                    <div class="box clearfix animated fadeIn delay-400">
+                        <div class="box-body clearfix p-0">
+                            <div class="activateScrollbar clearfix" #scrollContainer (scroll)="ScrollChanged($event)">
+                                <div class="vhDetails notif clearfix" *ngIf="(currentConversation.state < 4 ) || (currentConversation.state == 5)">
+                                    <div class="avatar ava-xl" title="{{ selectedVisitor.username }}" *ngIf="(selectedVisitor | json) != ({} | json)">
+                                        <div class="nameInitials" [ngStyle]="selectedVisitor.viewColor ? { 'background-color': selectedVisitor.viewColor } : ''">
+                                            <span>{{ selectedVisitor.username | slice: 0:2 | uppercase }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="avatar ava-xl" title="{{ currentConversation.visitorName }}" *ngIf="(selectedVisitor | json) == ({} | json)">
+                                        <div class="nameInitials" [ngStyle]="currentConversation.viewColor ? {'background-color': currentConversation.viewColor} : { 'background-color': 'var(--blue)' }">
+                                            <span class="ellipsis">{{ currentConversation.visitorName | slice: 0:2 | uppercase }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="details" *ngIf="(selectedVisitor | json) != ({} | json)">
+                                        <div class="name" title="{{ selectedVisitor.username }}">
+                                            <span class="ellipsis">{{ selectedVisitor.username}}</span>
+                                        </div>
+                                        <div class="email" *ngIf="selectedVisitor.email" title="{{ selectedVisitor.email }}">
+                                            <span>{{ selectedVisitor.email }}</span>
+                                        </div>
+                                        <div class="email" *ngIf="currentConversation.Registered " title="{{currentConversation.Registered}}">
+                                            <span>{{currentConversation.Registered}}</span>
+                                        </div>
+                                        <div class="country svgOnHover" *ngIf="selectedVisitor.country">
+                                            <i class="flag ff-sm flag-{{ selectedVisitor.country }}" title="{{ selectedVisitor.fullCountryName }}"></i>
+                                            <span>{{ selectedVisitor.country }}</span>
+                                        </div>
+
+                                        <div class="ip svgOnHover" *ngIf="selectedVisitor.ip">
+                                            <svg class="svg w-15 h-15 svg-default active">
+												<use href="/assets/img/icons/icons-sprite.svg#ip" />
+											</svg>
+                                            <span>{{ selectedVisitor.ip }}</span>
+                                        </div>
+                                        <!--
+										<div class="email" title="{{currentConversation.basicData}}"
+											*ngIf="currentConversation.basicDataId && currentConversation.basicDataRank && currentConversation.basicDataCountry ">
+											<span>{{currentConversation.basicDataId}} / {{currentConversation.basicDataRank}} /
+												{{currentConversation.basicDataCountry}} </span>
+										</div>
+										<div class="email" title="{{currentConversation.sAlesPerson}}"
+											*ngIf="currentConversation.salesPersonCode && currentConversation.salesPersonOffice ">
+											<span>{{currentConversation.salesPersonCode}} / {{currentConversation.salesPersonOffice}} </span>
+										</div>
+                                        <div *ngIf="!selectedVisitor.email">
+                                            <span class="ellipsis">{{currentConversation.visitorEmail}}</span>
+                                            <br>
+                                            <span class="text-red">
+                                                <b>OFFLINE</b>
+                                            </span>
+                                        </div>
+                                        <div *ngIf="selectedVisitor.email">
+                                            <span class="text-green">
+                                                <b>ONLINE</b>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span>
+                                                Registered?
+                                                <b class="text-red"
+                                                    *ngIf="(selectedVisitor.email | lowercase) == 'unregistered'">
+                                                    NO</b>
+                                                <b class="text-green"
+                                                    *ngIf="(selectedVisitor.email | lowercase) != 'unregistered'">YES</b>
+                                            </span>
+                                        </div>
+                                        -->
+                                    </div>
+                                    <div class="notif-count">
+                                        <span class="id" *ngIf="currentConversation.clientID">ID:
+											{{ currentConversation.clientID }}</span>
+                                    </div>
+                                    <div class="details" *ngIf="(selectedVisitor | json) == ({} | json)">
+                                        <div class="name" *ngIf="currentConversation.visitorName" title="{{ currentConversation.visitorName }}">
+                                            <span class="ellipsis">{{ currentConversation.visitorName }}</span>
+                                        </div>
+                                        <div class="email" *ngIf="currentConversation.visitorEmail" title="{{ currentConversation.visitorEmail }}">
+                                            <span>{{ currentConversation.visitorEmail }}</span>
+                                        </div>
+                                        <div class="email" *ngIf="currentConversation.Registered " title="{{currentConversation.Registered}}">
+                                            <span>{{currentConversation.Registered}}</span>
+                                        </div>
+                                        <div class="email" title="{{ currentConversation.visitorEmail }}" *ngIf="currentConversation.session && currentConversation.session.fullCountryName">
+                                            <span>{{ currentConversation.session.fullCountryName }}</span>
+                                        </div>
+                                        <!--
+										<div class="email" title="{{currentConversation.basicData}}"
+				                    		*ngIf="currentConversation.basicDataId && currentConversation.basicDataRank && currentConversation.basicDataCountry ">
+											<span>{{currentConversation.basicDataId}} / {{currentConversation.basicDataRank}} / {{currentConversation.basicDataCountry}}</span>
+										</div>
+										<div class="email" title="{{currentConversation.sAlesPerson}}"
+											*ngIf="currentConversation.salesPersonCode && currentConversation.salesPersonOffice ">
+										<span>{{currentConversation.salesPersonCode}} / {{currentConversation.salesPersonOffice}}</span>
+										</div>
+										-->
+                                    </div>
+                                </div>
+                                <div class="vhDetails notif clearfix" *ngIf="currentConversation.state == 4">
+                                    <div class="avatar ava-xl" *ngIf="currentConversation.visitorName" title="{{ currentConversation.visitorName }}">
+                                        <div class="nameInitials" [ngStyle]="currentConversation.viewColor ? {'background-color': currentConversation.viewColor} : { 'background-color': 'var(--blue)' }">
+                                            <span>{{ currentConversation.visitorName | slice: 0:2 | uppercase }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="details">
+                                        <div class="name" title="{{ currentConversation.visitorName }}">
+                                            <span class="ellipsis">{{ currentConversation.visitorName }}</span>
+                                        </div>
+                                        <div class="email" title="{{ currentConversation.visitorEmail }}">
+                                            <span>{{ currentConversation.visitorEmail }}</span>
+                                        </div>
+                                        <div class="feedback svgOnHover" *ngIf="currentConversation.feedback?.Q2 && isArray(currentConversation.feedback.Q2)" title="{{ currentConversation.feedback.Q2 }}">
+                                            <svg class="svg w-15 h-15 svg-default active" *ngFor="let star of feedback">
+												<use href="/assets/img/icons/icons-sprite.svg#star-colored" />
+											</svg>
+                                        </div>
+                                        <div class="feedback svgOnHover" *ngIf="currentConversation.feedback?.Q2 && !isArray(currentConversation.feedback.Q2)" title="{{ currentConversation.feedback.Q2 }}">
+                                            <svg class="svg active" *ngIf="currentConversation.feedback.Q2 == 'good'">
+												<use href="/assets/img/icons/icons-sprite.svg#thumbs-up"
+													class="text-green" />
+											</svg>
+                                            <svg class="svg active" *ngIf="currentConversation.feedback.Q2 == 'bad'">
+												<use href="/assets/img/icons/icons-sprite.svg#thumbs-down"
+													class="text-red" />
+											</svg>
+                                            <svg class="svg active" *ngIf="currentConversation.feedback.Q2 == 'average'">
+												<use href="/assets/img/icons/icons-sprite.svg#thumbs-down"
+													class="text-gray-dark" />
+											</svg>
+                                            <span>{{ currentConversation.feedback.Q2 == "good" ? "Good" : currentConversation.feedback.Q2 == "bad" ? Bad : "Average" }}</span>
+                                        </div>
+                                        <div class="agent svgOnHover" *ngIf="currentConversation.agentEmail">
+                                            <svg class="svg active">
+												<use href="/assets/img/icons/icons-sprite.svg#agents-colored" />
+											</svg>
+                                            <span class="ellipsis">{{ currentConversation.agentEmail }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="notif-count">
+                                        <span *ngIf="currentConversation.createdOn">Chat Date:
+											{{ currentConversation.createdOn | date: "shortTime" }}
+											{{ currentConversation.createdOn | date: "mediumDate" }}
+										</span>
+                                        <br />
+                                        <span class="id" *ngIf="currentConversation.clientID">ID:
+											{{ currentConversation.clientID }}</span>
+                                    </div>
+                                </div>
+                                <div class="vhActions notif clearfix">
+                                    <div class="want-to-actions">
+                                        <div class="svgOnHover tooltip top-left" *ngIf="agent.email == currentConversation.agentEmail" [ngClass]="((currentConversation.state > 2) || currentConversation.inactive || (currentConversation.state == 1) || !chatPermissions.allowChatTransfer) ? 'disabled' : ''"
+                                            (click)="TransferChat($event, selectedVisitor.location)">
+                                            <svg class="svg">
+												<use href="/assets/img/icons/icons-sprite.svg#transfer-chat" />
+											</svg>
+                                            <svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#transfer-chat-colored" />
+											</svg>
+                                            <span class="tooltip-inner">Transfer Chat</span>
+                                        </div>
+                                        <div class="svgOnHover tooltip top" *ngIf="(!production || sbt) && currentConversation.state != 1 && !currentConversation.inactive" [ngClass]="((!(selectedVisitor.email && callSettings.permissions.a2v)) || !chatPermissions.allowCalling) ? 'disabled' : ''"
+                                            (click)="TryCall(selectedVisitor)">
+                                            <svg class="svg">
+												<use href="/assets/img/icons/icons-sprite.svg#call-visitor" />
+											</svg>
+                                            <svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#call-visitor-colored" />
+											</svg>
+                                            <span class="tooltip-inner">Call Now</span>
+                                        </div>
+                                        <div class="svgOnHover tooltip top-left" *ngIf="agentPermissions && agentPermissions.chatSuperVision && CheckIfChatSuperVised(currentConversation.superviserAgents)" [ngClass]="currentConversation.state > 2 ? 'disabled' : ''" (click)="EndSuperVision($event, selectedVisitor)"
+                                            title="End SuperVision">
+                                            <svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#chat-end" />
+											</svg>
+                                            <svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#chat-end-colored" />
+											</svg>
+                                            <span class="tooltip-inner">End SuperVision</span>
+                                        </div>
+                                        <div class="svgOnHover tooltip top" (click)="EndChat($event)" *ngIf="!(CheckIfChatSuperVised(currentConversation.superviserAgents))" [ngClass]="((currentConversation.state > 2) || currentConversation.inactive || currentConversation.state == 1 || (agent.email != currentConversation.agentEmail) && currentConversation.state != 5) ? 'disabled' : ''">
+                                            <svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#chat-end" />
+											</svg>
+                                            <svg class="svg colored">
+												<use href="/assets/img/icons/icons-sprite.svg#chat-end-colored" />
+											</svg>
+                                            <span class="tooltip-inner">End Chat</span>
+                                        </div>
+                                        <div class="svgOnHover tooltip top" (click)="StopChat($event)" [ngClass]="currentConversation.state != 3 || currentConversation.state == 1 ? 'disabled' : ''">
+                                            <svg class="svg svg-default">
+												<use href="/assets/img/icons/icons-sprite.svg#chat-to-archive" />
+											</svg>
+                                            <svg class="svg colored">
+												<use
+													href="/assets/img/icons/icons-sprite.svg#chat-to-archive-colored" />
+											</svg>
+                                            <span class="tooltip-inner">Move to Archive</span>
+                                        </div>
+                                        <div class="svgOnHover tooltip top" (click)="BanChat($event)" *ngIf="package && package.chats.banning.allowed" [ngClass]="currentConversation.state == 4 || currentConversation.state == 1 ? 'disabled' : ''">
+                                            <svg class="svg svg-red active">
+												<use href="/assets/img/icons/icons-sprite.svg#ban-visitor" />
+											</svg>
+                                            <span class="tooltip-inner">Ban Visitor</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="vhList clearfix">
+                                    <div class="nav-tabs-custom">
+                                        <ul class="nav-tabs">
+                                            <!-- Chat Actions -->
+                                            <li>
+                                                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-left" [ngClass]="tabs['visitorHistory'] ? 'active' : ''" (click)="vhListTabs('visitorHistory')">
+                                                    <svg class="svg svg-default">
+														<use
+															href="/assets/img/icons/icons-sprite.svg#visitor-history" />
+													</svg>
+                                                    <svg class="svg colored">
+														<use
+															href="/assets/img/icons/icons-sprite.svg#visitor-history-colored" />
+													</svg>
+                                                    <span class="tooltip-inner">Chat Actions</span>
+                                                </h5>
+                                            </li>
+                                            <!-- CHAT HISTORY -->
+                                            <li>
+                                                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" [ngClass]="tabs['chatHistory'] ? 'active' : ''" (click)="vhListTabs('chatHistory')">
+                                                    <svg class="svg active" [ngClass]="tabs['chatHistory'] ? 'colored' : 'svg-default'">
+														<use
+															[attr.href]="tabs['chatHistory'] ? '/assets/img/icons/icons-sprite.svg#chat-history-colored' : '/assets/img/icons/icons-sprite.svg#chat-history'" />
+													</svg>
+                                                    <span class="tooltip-inner">Chat History</span>
+                                                </h5>
+                                            </li>
+                                            <!-- BROWSING HISTORY -->
+                                            <li>
+                                                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" [ngClass]="tabs['browsingHistory'] ? 'active' : ''" (click)="vhListTabs('browsingHistory')">
+                                                    <svg class="svg active">
+														<use href="/assets/img/icons/icons-sprite.svg#browsing-history"
+															[ngClass]="tabs['browsingHistory'] ? 'text-teal' : 'text-theme-pro-gray'" />
+													</svg>
+                                                    <span class="tooltip-inner">Browsing History</span>
+                                                </h5>
+                                            </li>
+                                            <!-- ADDITIONAL DATA -->
+                                            <!-- *ngIf="(chatPermissions.canRegisterIconCustomer || chatPermissions.canSeeRegisteredIconCustomer || chatPermissions.canSeeRelatedCustomerInfo) && (agent.nsp == '/sbtjapan.com' || agent.nsp == '/sbtjapaninquiries.com')" -->
+                                            <li>
+                                                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" [ngClass]="tabs['additionalData'] ? 'active' : ''" (click)="vhListTabs('additionalData')">
+                                                    <svg class="svg active" [ngClass]="tabs['additionalData'] ? '' : 'svg-default'">
+														<use
+															[attr.href]="tabs['additionalData'] ? '/assets/img/icons/icons-sprite.svg#additional-data-colored' : '/assets/img/icons/icons-sprite.svg#additional-data'" />
+													</svg>
+                                                    <span class="tooltip-inner">Additional Data</span>
+                                                </h5>
+                                            </li>
+                                            <!-- <li>
+                                                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" [ngClass]="tabs['stockList'] ? 'active' : ''" (click)="vhListTabs('stockList')">
+                                                    <svg class="svg active" [ngClass]="tabs['stockList'] ? '' : 'svg-default'">
+														<use
+															[attr.href]="tabs['stockList'] ? '/assets/img/icons/icons-sprite.svg#additional-data-colored' : '/assets/img/icons/icons-sprite.svg#additional-data'" />
+													</svg>
+                                                    <span class="tooltip-inner">Stock Search </span>
+                                                </h5>
+                                            </li> -->
+                                            <!-- CONVERT CHAT TO TICKET -->
+                                            <li>
+                                                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top" [ngClass]="tabs['convertChatToTicket'] ? 'active' : currentConversation.state > 2 || (currentConversation.state == 1 && currentConversation.endingDate) ? '' : 'disabled'" (click)="vhListTabs('convertChatToTicket')">
+                                                    <svg class="svg active" [ngClass]="tabs['convertChatToTicket'] ? '' : 'svg-default'">
+														<use
+															[attr.href]="tabs['convertChatToTicket'] ? '/assets/img/icons/icons-sprite.svg#chat-to-ticket-colored' : '/assets/img/icons/icons-sprite.svg#chat-to-ticket'" />
+													</svg>
+                                                    <span class="tooltip-inner">Convert To Ticket</span>
+                                                </h5>
+                                            </li>
+                                            <!-- EMAIL TRANSCRIPT -->
+                                            <li>
+                                                <!-- for ended chats condition
+                                                ((currentConversation.state > 2) || (currentConversation.state == 1 &&
+                                                currentConversation.endingDate)) ? '' : 'disabled' -->
+                                                <h5 class="title-with-border border-black-alpha2 svgOnHover tooltip top-right" [ngClass]="tabs['emailTranscript'] ? 'active' : ''" (click)="vhListTabs('emailTranscript')">
+                                                    <!-- (click)="EmailTranscript($event)"> -->
+                                                    <svg class="svg active">
+														<use href="/assets/img/icons/icons-sprite.svg#email-transcript"
+															[ngClass]="tabs['emailTranscript'] ? 'text-teal' : 'svg-default'" />
+													</svg>
+                                                    <span class="tooltip-inner">Email Transcript</span>
+                                                </h5>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <!-- Chat Actions -->
+                                            <div class="tab-pane" [ngClass]="tabs['visitorHistory'] ? 'active' : ''">
+                                                <div class="clearfix m-b-20">
+                                                    <div class="input-block">
+                                                        <label>Tag As</label>
+                                                        <div *ngIf="currentConversation.tags">
+                                                            <div class="badge svgOnHover m-r-5 text-black" *ngFor="let tags of currentConversation.tags; let i = index">
+                                                                <span>{{ tags }}</span>
+                                                                <svg class="svg w-15 h-15 active dismiss" (click)="DeleteTag(i)">
+																	<use href="/assets/img/icons/icons-sprite.svg#cancel"
+																		class="text-black" />
+																</svg>
+                                                            </div>
+                                                        </div>
+                                                        <!-- [ngClass]="tagForm && tagForm.get('hashTag').hasError('pattern') ? 'error' : 'no-error' "
+                                                        [hidden]="!tagForm.get('hashTag').hasError('matched')" -->
+                                                        <form [formGroup]="tagForm">
+                                                            <div class="input-block">
+                                                                <div class="input-group-sm">
+                                                                    <!-- <input type="text" class="form-control w100"
+                                                                        placeholder="#tag"
+                                                                        [formControl]="tagForm.controls['hashTag']"> -->
+                                                                    <input list="tags" type="text" (change)="selectTag($event)" class="form-control input-sm" placeholder="Select any tag" [formControl]="tagForm.controls['hashTag']" maxlength="51" />
+                                                                </div>
+                                                                <datalist id="tags">
+																	<option *ngFor="let tag of tagList" [value]="tag">
+																	</option>
+																</datalist>
+                                                                <!-- <p class="text-red" >This HashTag has been used already</p> -->
+                                                                <!-- <p>To tag a chat, type # followed by the word.</p> -->
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div *ngFor="let field of fields">
+                                                        <div class="input-block" *ngIf="field.elementType == 'textbox'">
+                                                            <label>{{field.name}}</label>
+                                                            <div class="input-group-xs">
+                                                                <input [(ngModel)]="currentConversation.dynamicFields[field.name]" type="text" class="form-control w100" [placeholder]="field.label">
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-theme min-w-80" *ngIf="field.elementType == 'textbox'" [ngClass]="(savingCustomFields[field.name]) ? 'btnSpinner' : ''" (click)="SaveCustomField(currentConversation._id,field.name,currentConversation.dynamicFields[field.name])">
+																		<span>Save</span>
+																	</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="input-block" *ngIf="field.elementType == 'checkbox'">
+                                                            <label>{{field.name}}</label>
+                                                            <div class="input-group-xs f-justify-between">
+                                                                <div class="pretty p-default m-t-7">
+                                                                    <input [(ngModel)]="currentConversation.dynamicFields[field.name]" type="checkbox" name="field-name">
+                                                                    <div class="state"><label>{{field.name}}</label></div>
+                                                                </div>
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-theme min-w-80" [ngClass]="(savingCustomFields[field.name]) ? 'btnSpinner' : ''" (click)="SaveCustomField(currentConversation._id,field.name,currentConversation.dynamicFields[field.name])">
+																		<span>Save</span>
+																	</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="input-block" *ngIf="field.elementType == 'dropdown'">
+                                                            <label>{{field.name}}</label>
+                                                            <div class="input-group-xs">
+                                                                <div class="sel style1 sel-xs w100">
+                                                                    <select [(ngModel)]="currentConversation.dynamicFields[field.name]" class="form-control">
+																		<option value=''>Select {{field.name}}</option>
+																		<option value={{option.value}}
+																			*ngFor="let option of field.options; let i=index">
+																			{{option.name}}</option>
+																	</select>
+                                                                </div>
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-theme min-w-80" [ngClass]="(savingCustomFields[field.name]) ? 'btnSpinner' : ''" (click)="SaveCustomField(currentConversation._id,field.name,currentConversation.dynamicFields[field.name])">
+																		<span>Save</span>
+																	</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-block">
+                                                        <label>Tickets</label>
+                                                        <ul class="list-items clearfix style2" *ngIf="currentConversation.tickets">
+                                                            <!-- { id , clientID , subject , createdby , createdDate  } -->
+                                                            <li class="item clearfix notif" *ngFor="let ticket of currentConversation.tickets">
+                                                                <div>
+                                                                    <div class="info p-7 p-t-20">
+                                                                        <a [routerLink]="'/tickets/ticket-view/' + ticket.id" class="w100">
+                                                                            <b class="ellipsis text-black">{{ ticket.subject }}</b>
+                                                                            <small class="text-blue">{{ ticket.createdby }}</small>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="notif-count left p-0 bg-transparent text-purple">
+                                                                    ID: {{ ticket.clientID }}
+                                                                </div>
+                                                                <div class="notif-count right p-0 bg-transparent text-blue">
+                                                                    {{ ticket.createdDate | agoPipe }}
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- CHAT HISTORY -->
+                                            <!-- [ngClass]="(selectedCustomerConversation) ? (selectedCustomerConversation._id == conversation._id) ? 'active' : '' : ''" -->
+                                            <div class="tab-pane" [ngClass]="tabs['chatHistory'] ? 'active' : ''">
+                                                <div class="list-items clearfix style6" *ngIf="selectedChatHistory && selectedChatHistory.conversations && selectedChatHistory.conversations.length">
+                                                    <li class="item clearfix notif" *ngFor="let conversation of selectedChatHistory.conversations">
+                                                        <div (click)="ShowConversationInfo(conversation)">
+                                                            <div class="m-0">
+                                                                <div class="avatar ava-sm">
+                                                                    <!-- [ngStyle]="selectedVisitor.viewColor ? { 'background-color': selectedVisitor.viewColor } : ''" -->
+                                                                    <div class="nameInitials bg-blue-light" *ngIf="conversation.visitorName">
+                                                                        {{ conversation.visitorName | slice: 0:1 }}{{ conversation.visitorName | split: " " }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="info">
+                                                                <div class="name">
+                                                                    <b class="ellipsis">
+																		{{ conversation.visitorName }}
+																	</b>
+                                                                    <span class="ellipsis" *ngIf="conversation.lastMessage && !conversation.lastMessage.attachment && CheckAttachmentType(conversation.lastMessage.body) && conversation.lastMessage.chatFormData">{{ conversation.lastMessage.chatFormData }}
+																	</span>
+                                                                    <span class="ellipsis" *ngIf="conversation.lastMessage && !conversation.lastMessage.attachment && CheckAttachmentType(conversation.lastMessage.body) && !conversation.lastMessage.chatFormData" [innerHTML]="conversation.lastMessage.body | safeUrl: 'html'"></span>
+                                                                    <span class="ellipsis" *ngIf="!conversation.lastMessage && conversation.messages && conversation.messages.length" [innerHTML]="conversation.messages[conversation.messages.length - 1].body | safeUrl: 'html'"></span>
+                                                                    <span class="svgOnHover ellipsis" *ngIf="conversation.lastMessage && conversation.lastMessage.attachment && !conversation.lastMessage.chatFormData">
+																		<svg class="svg w-12 h-12 svg-default active">
+																			<use
+																				href="/assets/img/icons/icons-sprite.svg#attachment" />
+																		</svg>
+																		<span
+																			*ngIf="CheckAttachmentType(conversation.lastMessage.body)">{{ (conversation.lastMessage.filename | attachmentType) == "image" ? " Image" : " Document" }}</span>
+                                                                    <span *ngIf="!CheckAttachmentType(conversation.lastMessage.body) && conversation.lastMessage.body.length > 1">Attachments
+																			({{ conversation.lastMessage.body.length }})</span>
+                                                                    <span *ngIf="!CheckAttachmentType(conversation.lastMessage.body) && conversation.lastMessage.body.length < 2">{{ (conversation.lastMessage.body[0].filename | attachmentType) == "image" ? " Image" : " Document" }}</span>
+                                                                    </span>
+                                                                </div>
+                                                                <!-- <div class="ellipsis msg"
+																	*ngIf="conversation.lastMessage && !conversation.lastMessage.attachment">
+																	<span>{{conversation.lastMessage.body}}</span>
+																</div>
+																<div class="ellipsis msg"
+																	*ngIf="conversation.lastMessage && conversation.lastMessage.attachment">
+																	<span class="svgOnHover">
+																		<svg class="svg w-25 h-25 svg-default active">
+																			<use href="/assets/img/icons/icons-sprite.svg#attachment"/>
+																		</svg>
+																		{{((conversation.lastMessage.body | attachmentType) == 'image') ? ' Image' : ' Document' }}
+																	</span>
+																	<br>
+																	<span>{{ conversation.lastMessage.date | date:'mediumDate'}}</span>
+																</div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="notif-count right text-theme-gray bg-transparent">
+                                                            {{ conversation.lastMessage.date | date: "mediumDate" }}
+                                                        </div>
+                                                    </li>
+                                                    <li *ngIf="fetchingConversation">
+                                                        <app-preloader type="dot-loader"></app-preloader>
+                                                    </li>
+                                                </div>
+                                                <div class="text-center m-t-10" *ngIf="selectedChatHistory && selectedChatHistory.conversations && !selectedChatHistory.conversations.length">
+                                                    No chats found!
+                                                </div>
+                                            </div>
+                                            <!-- BROWSING HISTORY -->
+                                            <div class="tab-pane" [ngClass]="tabs['browsingHistory'] ? 'active' : ''">
+                                                <ul class="toggleList" *ngIf="selectedVisitor.url">
+                                                    <li class="clearfix" *ngFor="let url of selectedVisitor.url">
+                                                        <div class="ellipsis">
+                                                            <a href="{{ url }}" target="_blank" class="p-0">{{ url }}</a>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- ADDITIONAL DATA -->
+                                            <!-- && (chatPermissions.canRegisterIconCustomer || chatPermissions.canSeeRegisteredIconCustomer || chatPermissions.canSeeRelatedCustomerInfo) && (agent.nsp == '/sbtjapan.com' || agent.nsp == '/sbtjapaninquiries.com') -->
+                                            <div class="tab-pane" [ngClass]="tabs['additionalData'] ? 'active' : ''">
+                                                <app-icon-customer-registation *ngIf="tabs['additionalData'] && (chatPermissions.canRegisterIconCustomer || chatPermissions.canSeeRegisteredIconCustomer || chatPermissions.canSeeRelatedCustomerInfo)" [visitorEmail]="(currentConversation && (currentConversation.visitorEmail != 'Unregistered')) ? currentConversation.visitorEmail : ''"
+                                                    [CustomerInfo]="currentConversation.CustomerInfo" [selectedThreadId]="currentConversation._id" [visitorPhone]="(selectedVisitor && selectedVisitor.phone) ? selectedVisitor.phone : (currentConversation && currentConversation.session && currentConversation.session.phone) ? currentConversation.session.phone : (countryCode) ? countryCode : ''"
+                                                    [visitorName]="(currentConversation && currentConversation.visitorName) ? currentConversation.visitorName : ''" [RelatedCustomerInfo]="currentConversation.RelatedCustomerInfo" [CustomerInfo]="currentConversation.CustomerInfo"
+                                                    [permissions2]="chatPermissions" [agentEmail]="agent.email" [agentName]="agentName != '' ? agentName : ''" [loadingReg]="loadingReg" (registrationData)="RegisterCustomer($event)" [countryName]="countryName != '' ? countryName : ''">
+                                                </app-icon-customer-registation>
+
+
+                                                <ul class="toggleList" *ngIf="selectedVisitor.additionalData">
+                                                    <li class="clearfix">
+                                                        <h6 class="border-black-alpha2">Negotiation</h6>
+                                                        <br />
+                                                        <div class="ellipsis">
+                                                            <div *ngIf="selectedVisitor.additionalData.StockID">
+                                                                StockID : {{ selectedVisitor.additionalData.StockID }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.StockName">
+                                                                StockName: {{ selectedVisitor.additionalData.StockName }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.StockCC">
+                                                                StockCC : {{ selectedVisitor.additionalData.StockCC }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.StockFuel">
+                                                                StockFuel: {{ selectedVisitor.additionalData.StockFuel }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.Currency">
+                                                                Currency: {{ selectedVisitor.additionalData.Currency }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.Country">
+                                                                Country: {{ selectedVisitor.additionalData.Country }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.CountryPort">
+                                                                CountryPortID: {{ selectedVisitor.additionalData.CountryPort }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.ShipmentType">
+                                                                ShipmentType: {{selectedVisitor.additionalData.ShipmentType}}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.ShipmentDate">
+                                                                ShipmentDate: {{ selectedVisitor.additionalData.ShipmentDate }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.StockMileage">
+                                                                StockMileage: {{ selectedVisitor.additionalData.StockMileage }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.FOB">
+                                                                CarPriceFOB: {{ selectedVisitor.additionalData.FOB }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.totalFOBPriceKES">
+                                                                TotalFOBPriceKES: {{ selectedVisitor.additionalData.totalFOBPriceKES }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.TotalPrice">
+                                                                TotalPrice: {{ selectedVisitor.additionalData.TotalPrice }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.Freight">
+                                                                Freight: {{ selectedVisitor.additionalData.Freight }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.Inspection">
+                                                                Inspection: {{ selectedVisitor.additionalData.Inspection }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.Insurance">
+                                                                Insurance: {{ selectedVisitor.additionalData.Insurance }}
+                                                            </div>
+                                                            <!-- <div *ngIf="selectedVisitor.additionalData.InsuranceCheck">       InsuranceCheck      : {{selectedVisitor.additionalData.InsuranceCheck      }} </div> -->
+                                                            <!-- <div *ngIf="selectedVisitor.additionalData.InspectionSelected">   InspectionSelected  : {{selectedVisitor.additionalData.InspectionSelected  }} </div>
+																	<div *ngIf="selectedVisitor.additionalData.PortSelected">         PortSelected        : {{selectedVisitor.additionalData.PortSelected        }} </div> -->
+                                                            <div *ngIf="selectedVisitor.additionalData.NearestDepartureDate">
+                                                                NearestDepartureDate: {{ selectedVisitor.additionalData.NearestDepartureDate }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.NearestArrivalDate">
+                                                                NearestArrivalDate: {{ selectedVisitor.additionalData.NearestArrivalDate }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.additionalData.message">
+                                                                Message: {{ selectedVisitor.additionalData.message }}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <ul class="toggleList" *ngIf="selectedVisitor.carRequestData">
+                                                    <li class="clearfix">
+                                                        <h6 class="border-black-alpha2">Car Requested</h6>
+                                                        <br />
+                                                        <div class="ellipsis">
+                                                            <div *ngIf="selectedVisitor.carRequestData.countryCode">
+                                                                Country Code : {{ selectedVisitor.carRequestData.countryCode }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.customerComments">
+                                                                Customer Comments : {{ selectedVisitor.carRequestData.customerComments }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.customerEmail">
+                                                                Customer Email : {{ selectedVisitor.carRequestData.customerEmail }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.customerID">
+                                                                Customer ID : {{ selectedVisitor.carRequestData.customerID }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.customerName">
+                                                                Customer Name : {{ selectedVisitor.carRequestData.customerName }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.customerPhone">
+                                                                Customer Phone : {{ selectedVisitor.carRequestData.customerPhone }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.customerType">
+                                                                Customer Type : {{ selectedVisitor.carRequestData.customerType }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.destinationCountry">
+                                                                Destination Country : {{ selectedVisitor.carRequestData.destinationCountry }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.destinationPort">
+                                                                Destination Port : {{ selectedVisitor.carRequestData.destinationPort }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.vehicle_body">
+                                                                Vehicle Body : {{ selectedVisitor.carRequestData.vehicle_body }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.vehicle_color">
+                                                                Vehicle Color : {{ selectedVisitor.carRequestData.vehicle_color }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.vehicle_make">
+                                                                Vehicle Make : {{ selectedVisitor.carRequestData.vehicle_make }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.vehicle_model">
+                                                                Vehicle Model : {{ selectedVisitor.carRequestData.vehicle_model }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.vehicle_month">
+                                                                Vehicle Month : {{selectedVisitor.carRequestData.vehicle_month}}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.vehicle_year">
+                                                                Vehicle Year : {{ selectedVisitor.carRequestData.vehicle_year }}
+                                                            </div>
+                                                            <div *ngIf="selectedVisitor.carRequestData.competitorStockLink">
+                                                                <a href="{{ selectedVisitor.carRequestData.competitorStockLink }}" target="_blank">
+                                                                    <span>View Stocks</span>
+                                                                </a>
+                                                            </div>
+                                                            <!--
+																<div *ngIf="selectedVisitor.carRequestData.competitorStocks"> Competitor Stocks
+																	<div *ngFor="let Stock of selectedVisitor.carRequestData.competitorStocks">
+																		<div *ngIf="Stock.anchor"> Anchor : {{Stock.anchor}}</div>
+																		<div *ngIf="Stock.brandName"> Anchor : {{Stock.brandName}}</div>
+																		<div *ngIf="Stock.cnfPrice"> Anchor : {{Stock.cnfPrice}}</div>
+																		<div *ngIf="Stock.engine_capacity"> Anchor : {{Stock.engine_capacity}}</div>
+																		<div *ngIf="Stock.image"> Anchor : {{Stock.image}}</div>
+																		<div *ngIf="Stock.mileage"> Anchor : {{Stock.mileage}}</div>
+																		<div *ngIf="Stock.price"> Anchor : {{Stock.price}}</div>
+																		<div *ngIf="Stock.reference_number"> Anchor : {{Stock.reference_number}}</div>
+																		<div *ngIf="Stock.stock_name"> Anchor : {{Stock.stock_name}}</div>
+																		<div *ngIf="Stock.stock_year"> Anchor : {{Stock.stock_year}}</div>
+																		<div *ngIf="Stock.anchor"> Anchor : {{Stock.anchor}}</div>
+																	</div>
+																</div> -->
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- <div class="tab-pane" [ngClass]="tabs['stockList'] ? 'active' : ''">
+
+                                                <form class="require-validation" [formGroup]="stockListForm">
+                                                    <fieldset>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="makerId" (change)="AutoCarName()" [formControl]=" stockListForm.controls['makerId']">
+																	<option value="" selected>Make:</option>
+																	<option *ngFor="let maker of carMakerID "
+																		[value]="maker.ItemCode">
+																		{{maker.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="carName" (change)="AutoCarModel()" [formControl]=" stockListForm.controls['carName']">
+																	<option value="" selected>Car Name:</option>
+																	<option *ngFor="let car of carsName "
+																		[value]="car.ItemCode">
+																		{{car.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="modelCode" [formControl]=" stockListForm.controls['modelCode']">
+																	<option value="" selected> Model:</option>
+																	<option *ngFor="let model of carModel "
+																		[value]="model.ItemCode">
+																		{{model.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="steeringId" [formControl]=" stockListForm.controls['steeringId']">
+																	<option value="" selected>Steering:</option>
+																	<option value="1">LHD</option>
+																	<option value="0">RHD</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="bodyTypeId" [formControl]=" stockListForm.controls['bodyTypeId']">
+																	<option value="" selected>Body Type:</option>
+																	<option *ngFor="let body of carBodyID "
+																		[value]="body.ItemCode">
+																		{{body.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="subBodyTypeId" [formControl]=" stockListForm.controls['subBodyTypeId']">
+																	<option value="" selected>Sub Body Type:</option>
+																	<option *ngFor="let subBody of carBodySubID "
+																		[value]="subBody.ItemCode">
+																		{{subBody.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="driveId" [formControl]=" stockListForm.controls['driveId']">
+																	<option value="" selected>Drive:</option>
+																	<option value="2">2WD</option>
+																	<option value="4">4WD</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="regYearFrom" [formControl]=" stockListForm.controls['regYearFrom']">
+																	<option value="" selected> Registration Year From:
+																	</option>
+																	<option *ngFor="let year of registrationYear "
+																		[value]="year">
+																		{{year}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="regMonthFrom" [formControl]=" stockListForm.controls['regMonthFrom']">
+																	<option value="" selected>Registration Month From:
+																	</option>
+																	<option *ngFor="let month of registrationMonth "
+																		[value]="month">
+																		{{month}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="regYearTo" [formControl]=" stockListForm.controls['regYearTo']">
+																	<option value="" selected>Registration Year To:
+																	</option>
+																	<option *ngFor="let year of registrationYear "
+																		[value]="year">
+																		{{year}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="regMonthTo" [formControl]=" stockListForm.controls['regMonthTo']">
+																	<option value="" selected>Registration Month To:
+																	</option>
+																	<option *ngFor="let month of registrationMonth "
+																		[value]="month">
+																		{{month}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="vehiclePriceFrom" [formControl]=" stockListForm.controls['vehiclePriceFrom']">
+																	<option value="" selected>Price From:</option>
+																	<option *ngFor="let price of priceRangeFrom "
+																		[value]="price.ItemCode">
+																		{{price.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="vehiclePriceTo" [formControl]=" stockListForm.controls['vehiclePriceTo']">
+																	<option value="" selected>Price To:</option>
+																	<option *ngFor="let price of priceRangeTo "
+																		[value]="price.ItemCode">
+																		{{price.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="ccFrom" [formControl]=" stockListForm.controls['ccFrom']">
+																	<option value="" selected>CC From:</option>
+																	<option *ngFor="let cc of ccList "
+																		[value]="cc.ItemCode">
+																		{{cc.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="ccTo" [formControl]=" stockListForm.controls['ccTo']">
+																	<option value="" selected>CC To:</option>
+																	<option *ngFor="let cc of ccList "
+																		[value]="cc.ItemCode">
+																		{{cc.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="mileageFrom" [formControl]=" stockListForm.controls['mileageFrom']">
+																	<option value="" selected>Mileage From:</option>
+																	<option *ngFor="let mile of mileage "
+																		[value]="mile.ItemCode">
+																		{{mile.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="mileageTo" [formControl]=" stockListForm.controls['mileageTo']">
+																	<option value="" selected>Mileage To:</option>
+																	<option *ngFor="let mile of mileage "
+																		[value]="mile.ItemCode">
+																		{{mile.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="transmission" [formControl]=" stockListForm.controls['transmission']">
+																	<option value="" selected>Transmission:</option>
+																	<option value="0">Manual</option>
+																	<option value="1">Automatic</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="fuelId" [formControl]=" stockListForm.controls['fuelId']">
+																	<option value="" selected>Fuel:</option>
+																	<option *ngFor="let fuel of carFuelID "
+																		[value]="fuel.ItemCode">
+																		{{fuel.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="colorId" [formControl]=" stockListForm.controls['colorId']">
+																	<option value="" selected>Color:</option>
+																	<option *ngFor="let color of carColorID "
+																		[value]="color.ItemCode">
+																		{{color.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="bodyLengthId" [formControl]=" stockListForm.controls['bodyLengthId']">
+																	<option value="" selected>Body Length:</option>
+																	<option *ngFor="let carBody of carBodyLengthID "
+																		[value]="carBody.ItemCode">
+																		{{carBody.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="loadingCapacityId" [formControl]=" stockListForm.controls['loadingCapacityId']">
+																	<option value="" selected>Loading Capacity:</option>
+																	<option
+																		*ngFor="let carLoad of carLoadingCapacityID "
+																		[value]="carLoad.ItemCode">
+																		{{carLoad.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="prodYearFrom" [formControl]=" stockListForm.controls['prodYearFrom']">
+																	<option value="" selected>Production Year From:
+																	</option>
+																	<option *ngFor="let year of registrationYear "
+																		[value]="year">
+																		{{year}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="prodYearTo" [formControl]=" stockListForm.controls['prodYearTo']">
+																	<option value="" selected>Production Year To:
+																	</option>
+																	<option *ngFor="let year of registrationYear "
+																		[value]="year">
+																		{{year}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="truckSize" [formControl]=" stockListForm.controls['truckSize']">
+																	<option value="" selected>Truck Size:</option>
+																	<option *ngFor="let tSize of carTruckSizeID "
+																		[value]="tSize.ItemCode">
+																		{{tSize.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="purchaseCountryId" [formControl]=" stockListForm.controls['purchaseCountryId']">
+																	<option value="" selected>Purchase Country:</option>
+																	<option *ngFor="let pCountry of purchaseCountryID "
+																		[value]="pCountry.ItemCode">
+																		{{pCountry.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="locationPortId" [formControl]=" stockListForm.controls['locationPortId']">
+																	<option value="" selected>Location:</option>
+																	<option *ngFor="let lPort of locationPortID "
+																		[value]="lPort.ItemCode">
+																		{{lPort.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="customerCountryId" [formControl]=" stockListForm.controls['customerCountryId']">
+																	<option value="" selected>Customer Country:</option>
+																	<option *ngFor="let count of countryID "
+																		[value]="count.ItemCode">
+																		{{count.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="currencyId" [formControl]=" stockListForm.controls['currencyId']">
+																	<option value="" selected>Currency:</option>
+																	<option value="1">JPY</option>
+																	<option value="2">USD</option>
+																</select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="destinationCountryId" (change)="AutoPort()" [formControl]=" stockListForm.controls['destinationCountryId']">
+																	<option value="" selected>Destination Country:
+																	</option>
+																	<option *ngFor="let count of countryID "
+																		[value]="count.ItemCode">
+																		{{count.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="destinationPortId" [formControl]=" stockListForm.controls['destinationPortId']">
+																	<option value="" selected>Destination Port:</option>
+																	<option *ngFor="let port of autoPort"
+																		[value]="port.ItemCode">
+																		{{port.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="shipmentId" [formControl]=" stockListForm.controls['shipmentId']">
+																	<option value="" selected>Shipment:</option>
+																	<option value="1">Roro</option>
+																	<option value="2">Container</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="freightPaymentId" [formControl]=" stockListForm.controls['freightPaymentId']">
+																	<option value="" selected>Freight:</option>
+																	<option value="0">Prepaid</option>
+																	<option value="1">Collect</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="protectionProgramId" [formControl]=" stockListForm.controls['protectionProgramId']">
+																	<option value="" selected>Protection Program:
+																	</option>
+																	<option *ngFor="let protection of gpp"
+																		[value]="protection.ItemCode">
+																		{{protection.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input-block">
+                                                            <div class="sel style1 sel-sm">
+                                                                <select class="form-control input-sm" name="sortingTypeId" [formControl]=" stockListForm.controls['sortingTypeId']">
+																	<option value="" selected>Sorting:</option>
+																	<option *ngFor="let sort of carSortTypeID"
+																		[value]="sort.ItemCode">
+																		{{sort.ItemName}}</option>
+																</select>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                    <fieldset>
+                                                        <div class="input-block"><label>Emission Code:
+																<input type="checkbox" name="emissionCode3"
+																	[formControl]="stockListForm.controls['emissionCode3']">
+															</label>
+                                                            <label>Air Bags:
+																<input type="checkbox" name="accessoryAB"
+																	[formControl]="stockListForm.controls['accessoryAB']">
+															</label>
+                                                            <label> Anti Lock Braking System:
+																<input type="checkbox" name="accessoryABS"
+																	[formControl]="stockListForm.controls['accessoryABS']">
+															</label>
+                                                            <label>Air Conditioner:
+																<input type="checkbox" name="accessoryAC"
+																	[formControl]="stockListForm.controls['accessoryAC']">
+															</label>
+                                                            <label>Alloy Wheels :
+																<input type="checkbox" name="accessoryAW"
+																	[formControl]="stockListForm.controls['accessoryAW']">
+															</label>
+                                                            <label>Back Tire:
+																<input type="checkbox" name="accessoryBT"
+																	[formControl]="stockListForm.controls['accessoryBT']">
+															</label>
+                                                            <label>Fog Lights :
+																<input type="checkbox" name="accessoryFOG"
+																	[formControl]="stockListForm.controls['accessoryFOG']">
+															</label>
+                                                            <label>Grill Guard:
+																<input type="checkbox" name="accessoryGG"
+																	[formControl]="stockListForm.controls['accessoryGG']">
+															</label>
+                                                            <label>Leather Seats:
+																<input type="checkbox" name="accessoryLS"
+																	[formControl]="stockListForm.controls['accessoryLS']">
+															</label>
+                                                            <label>Navigation:
+																<input type="checkbox" name="accessoryNV"
+																	[formControl]="stockListForm.controls['accessoryNV']">
+															</label>
+                                                            <label>Power Steering:
+																<input type="checkbox" name="accessoryPS"
+																	[formControl]="stockListForm.controls['accessoryPS']">
+															</label>
+                                                            <label>Power Windows:
+																<input type="checkbox" name="accessoryPW"
+																	[formControl]="stockListForm.controls['accessoryPW']">
+															</label>
+                                                            <label>Roof Rails:
+																<input type="checkbox" name="accessoryRR"
+																	[formControl]="stockListForm.controls['accessoryRR']">
+															</label>
+                                                            <label>Rear Spoiler:
+																<input type="checkbox" name="accessoryRS"
+																	[formControl]="stockListForm.controls['accessoryRS']">
+															</label>
+                                                            <label>Sun Roof:
+																<input type="checkbox" name="accessorySR"
+																	[formControl]="stockListForm.controls['accessorySR']">
+															</label>
+                                                            <label>TV:
+																<input type="checkbox" name="accessoryTV"
+																	[formControl]="stockListForm.controls['accessoryTV']">
+															</label>
+                                                            <label>Dual Air Bags:
+																<input type="checkbox" name="accessoryWAB"
+																	[formControl]="stockListForm.controls['accessoryWAB']">
+															</label>
+                                                        </div>
+
+
+                                                        <button class="btn btn-xs bg-blue" (click)="SearchStockList()" [disabled]="stockListForm.invalid">
+															<span>Search </span>
+														</button>
+                                                    </fieldset>
+                                                </form>
+                                            </div> -->
+                                            <!-- CONVERT CHAT TO TICKET -->
+                                            <div class="tab-pane" [ngClass]="tabs['convertChatToTicket'] ? 'active' : ''">
+                                                <ul class="toggleList">
+                                                    <li class="clearfix">
+                                                        <form class="require-validation" [formGroup]="addTicketForm">
+                                                            <fieldset>
+                                                                <div class="input-block">
+                                                                    <label>Subject</label>
+                                                                    <!-- <input autocomplete="off"
+																			class="form-control input-sm" maxlength="100"
+																			name="subject"
+																			placeholder="Subject (Max Characters:100)"
+																			type="text"> -->
+                                                                    <input type="text" autocomplete="off" class="form-control input-sm" placeholder="Subject (Max Characters:100)" name="subject" [formControl]="addTicketForm.controls['subject']" maxlength="100" />
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label>State</label>
+                                                                    <div class="sel style1 sel-sm">
+                                                                        <select id="state" name="state" class="form-control input-sm" [formControl]="addTicketForm.controls['state']">
+																			<option value="OPEN">OPEN</option>
+																			<option value="PENDING">PENDING</option>
+																			<option value="SOLVED">SOLVED</option>
+																			<option value="FACEBOOK">FACEBOOK</option>
+																		</select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label>Priority</label>
+                                                                    <div class="sel style1 sel-sm">
+                                                                        <select class="form-control input-sm" id="state" [formControl]="addTicketForm.controls['priority']" name="priority">
+																			<option value="LOW">LOW</option>
+																			<option value="MEDIUM">MEDIUM</option>
+																			<option value="HIGH">HIGH</option>
+																			<option value="URGENT">URGENT</option>
+																		</select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label>Visitor Name</label>
+                                                                    <!-- <input autocomplete="off"
+																			class="form-control input-sm" maxlength="100"
+																			name="name"
+																			placeholder="Name (Max Characters:100)"
+																			type="text"> -->
+                                                                    <input type="text" autocomplete="off" maxlength="100" class="form-control input-sm" placeholder="Name (Max Characters:100)" [formControl]="addTicketForm.controls['visitor'].controls['name']" />
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label>Visitor Email</label>
+                                                                    <!-- <input autocomplete="off"
+																			class="form-control input-sm" name="email"
+																			placeholder="Email" type="email"> -->
+                                                                    <input type="email" autocomplete="off" class="form-control input-sm" placeholder="Email" [formControl]="addTicketForm.controls['visitor'].controls['email']" />
+                                                                </div>
+                                                                <div class="input-block">
+                                                                    <label>Visitor Phone</label>
+                                                                    <!-- <input autocomplete="off"
+																			class="form-control input-sm" name="email"
+																			placeholder="Email" type="email"> -->
+                                                                    <input type="email" autocomplete="off" class="form-control input-sm" placeholder="Phone" [formControl]="addTicketForm.controls['visitor'].controls['phone']" />
+                                                                </div>
+                                                                <div class="clearfix flex f-justify-between">
+                                                                    <button class="btn btn-xs bg-blue" [disabled]="addTicketForm.invalid" [ngClass]="loading ? 'btnSpinner' : loadingWithArchive ? disabled : ''" (click)="ConvertChatToTIcket()">
+																		<span>Submit</span>
+																	</button>
+                                                                    <button (click)="ClearForm()" class="btn btn-xs bg-charcoal-light">
+																		<span>Clear</span>
+																	</button>
+                                                                </div>
+                                                                <br />
+                                                                <button class="btn btn-xs bg-olive" *ngIf="currentConversation.state == 3" [disabled]="addTicketForm.invalid" [ngClass]="loadingWithArchive ? 'btnSpinner' : loading ? disabled : ''" (click)="ConvertChatToTIcket(true)">
+																	<span>Submit & Archive</span>
+																</button>
+                                                            </fieldset>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- EMAIL TRANSCRIPT -->
+                                            <div class="tab-pane" [ngClass]="tabs['emailTranscript'] ? 'active' : ''">
+                                                <ul class="toggleList">
+                                                    <li class="clearfix require-validation">
+                                                        <fieldset>
+                                                            <div class="input-block">
+                                                                <label>Email</label>
+                                                                <input type="text" class="form-control input-sm" placeholder="email" [ngStyle]="invalidEmail ? { 'border-color': 'red' } : ''" [formControl]="emailTranscriptForm.controls['email']" />
+                                                                <!-- <input class="form-control input-sm" placeholder="email"
+																		type="text"> -->
+                                                            </div>
+                                                            <div class="clearfix">
+                                                                <button [disabled]="emailTranscriptForm.invalid" class="btn btn-xs bg-blue" (click)="EmailTranscript()" [ngClass]="loading ? 'btnSpinner' : ''">
+																	<span>Send</span>
+																</button>
+                                                                <!-- <button class="btn btn-xs bg-charcoal-light">
+																		<span>Cancel</span>
+																	</button> -->
+                                                            </div>
+                                                        </fieldset>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

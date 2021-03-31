@@ -1,0 +1,139 @@
+<div class="sub-nav-tabs clearfix">
+	<!-- <div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/totalvisitors"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Total Visitors</span>
+		</a>
+	</div> -->
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/totalVisitorsNew"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Total Visitors</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/totalRegViaLiveChat"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Total Registrations Via LiveChat</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/visitorLeftWithoutLiveChat"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Visitors Left Without Registration</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/visitorLeftFromFirstPage"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Visitors Left From First Page</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/returnVisitorRatio"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Ratio Of Return Visitors</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/uniquevisitors"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Unique Visitors</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/returningvisitors"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Returning Visitors</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/avgwaittime"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Average Wait Time</span>
+		</a>
+	</div>
+	<div>
+		<a class="btn btn-transparent svgOnHover"
+			routerLink="/analytics/analytics-visitors/invites"
+			[routerLinkActive]="['active']">
+			<svg class="svg svg-default">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-theme-gray"/>
+			</svg>
+			<svg class="svg colored">
+				<use href="/assets/img/icons/icons-sprite.svg#stats-graph" class="text-orange"/>
+			</svg>
+			<span>Greetings</span>
+		</a>
+	</div>
+</div>
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="activateScrollbar clearfix p-0">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>

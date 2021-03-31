@@ -1,0 +1,80 @@
+<div class="row clearfix">
+	<div class="col-md-6">
+		<div class="text-center">
+			<label class="fw-6">From:</label>
+			<input class="form-control" type="datetime-local" [(ngModel)]="selectedDate.from"
+				[value]="selectedDate.from" [max]="today">
+			<label class="fw-6">To:</label>
+			<input class="form-control" type="datetime-local" [(ngModel)]="selectedDate.to" [value]="selectedDate.to"
+				[max]="today">
+		</div>
+	</div>
+	<div class="col-md-4" *ngIf="permissions && permissions.canView == 'all'">
+		<div class="input-group" *ngIf="permissions && permissions.canView == 'all'">
+			<button type="button" class="btn btn-xs btn-theme" (click)="toggle()"
+				*ngIf="filterType == 'agent'">Agent</button>
+			<button type="button" class="btn btn-xs btn-theme" (click)="toggle()"
+				*ngIf="filterType == 'group'">Group</button>
+			<app-custom-select class="form-control w100 p-0 b-0 m-b-0" [items]="agentsList"
+				[selectLabel]="'Select agents'" [(ngModel)]="selectedAgents" [selectedItems]="selectedAgents"
+				[bindLabel]="'email'" [bindValue]="'email'" [multiple]="true" [lazyLoading]="true"
+				(onLoadMore)="loadMore($event)" (onSearch)="onSearch($event)" (onSelect)="onItemSelect($event)"
+				(onDeSelect)="onItemDeSelect($event)" *ngIf="filterType == 'agent'">
+			</app-custom-select>
+			<app-custom-select class="form-control w100 p-0 b-0 m-b-0" [items]="groupList"
+				[selectLabel]="'Select groups'" [(ngModel)]="selectedGroups" [selectedItems]="selectedGroups"
+				[multiple]="false" (onSelect)="onGroupSelect($event)" (onDeSelect)="onGroupDeSelect($event)"
+				*ngIf="filterType == 'group'">
+			</app-custom-select>
+		</div>
+	</div>
+	<div [ngClass]="(permissions && permissions.canView == 'all') ? 'col-md-2' : 'col-md-6'">
+		<button type="button" class="btn btn-xs btn-theme" (click)="onFilterResult()">Go</button>
+	</div>
+</div>
+<div class="statistics clearfix agents-stats" *ngIf="loading">
+	<div class="table-responsive" style="width: 80% !important;">
+		<p class="w100 text-center">Loading...</p>
+	</div>
+</div>
+<div class="statistics clearfix agents-stats" *ngIf="!loading">
+	<!-- <div id="scorecard" style="height:300px; width: 80% !important;" *ngIf="scorecardData.length"></div> -->
+	<button class="btn btn-xs bg-green" style="position: fixed;bottom: 40px;left: 100px;z-index: 99999;"
+		(click)="Export('scorecard')" *ngIf="scorecardData.length">Export</button>
+	<br>
+	<br>
+	<div class="table-responsive" style="width: 80% !important;" *ngIf="scorecardData.length">
+		<table class="table table-bordered" id="scorecard">
+			<thead>
+				<tr>
+					<th>Email</th>
+					<th>Chats</th>
+					<th>First Response Time</th>
+					<th>Feedback (Yes)</th>
+					<th>Feedback (No)</th>
+					<th>Feedback Yes (%) </th>
+					<th>Feedback (Unfilled)</th>
+					<th>Average Response Time</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let scorecard of scorecardData">
+					<td>{{scorecard.email}}</td>
+					<td class="text-center">{{scorecard.total}}</td>
+					<td class="text-center">{{time_convert_sec(scorecard.FirstResponseTime)}}</td>
+					<td class="text-center">{{scorecard.feedback_yes}}</td>
+					<td class="text-center">{{scorecard.feedback_no}}</td>
+					<td class="text-center">
+						{{showPercentage(scorecard.feedback_yes / (scorecard.feedback_yes + scorecard.feedback_no))}}
+					</td>
+					<td class="text-center">
+						{{(scorecard.total - scorecard.feedback_yes - scorecard.feedback_no)}}</td>
+					<td class="text-center">{{time_convert_sec(scorecard.AvgResponseTime)}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="table-responsive" style="width: 80% !important;" *ngIf="!scorecardData.length">
+		<p class="w100 text-center">No Data</p>
+	</div>
+</div>

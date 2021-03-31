@@ -1,0 +1,65 @@
+<!-- <li class="clearfix">
+	<a class="svgOnHover">
+		<svg class="svg svg-blue active">
+			<use href="/assets/img/icons/icons-sprite.svg#inbox"/>
+		</svg>
+		<span>Inbox</span>
+		<span class="badge">999+</span>
+	</a>
+</li>
+<li class="clearfix">
+	<a>
+		<span>Starred</span>
+		<span class="badge">100</span>
+	</a>
+</li>
+<li class="clearfix m-b-25">
+	<a class="svgOnHover">
+		<svg class="svg svg-red active">
+			<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+		</svg>
+		<span>Trash</span>
+		<span class="badge">100</span>
+	</a>
+</li> -->
+<li class="clearfix" [ngClass]="(viewState == 'OPEN') ? 'active' : ''" (click)="setView('OPEN')">
+	<a>
+		<h6>Open</h6>
+		<span>{{openTicketsCount}}</span>
+	</a>
+</li>
+<li class="clearfix" [ngClass]="(viewState == 'PENDING') ? 'active' : ''" (click)="setView('PENDING')">
+	<a>
+		<h6>Pending</h6>
+		<span>{{pendingTicketsCount}}</span>
+	</a>
+</li>
+<li class="clearfix" [ngClass]="(viewState == 'SOLVED') ? 'active' : ''" (click)="setView('SOLVED')">
+	<a>
+		<h6>Solved</h6>
+		<span>{{solvedTicketsCount}}</span>
+	</a>
+</li>
+
+<li class="clearfix" [ngClass]="(viewState == 'MERGED') ? 'active' : ''" (click)="setView('MERGED')">
+	<a>
+		<h6>Merged</h6>
+		<span>{{groupedTicketsCount}}</span>
+	</a>
+</li>
+
+<li class="clearfix" [ngClass]="(viewState == 'CLOSED') ? 'active' : ''" (click)="setView('CLOSED')">
+	<a>
+		<h6>Closed</h6>
+		<span>{{closedTicketsCount}}</span>
+	</a>
+</li>
+
+
+<!-- <li class="clearfix" [ngClass]="(viewState == 'FACEBOOK') ? 'active' : ''" (click)="setView('FACEBOOK')"
+	*ngIf="(agent.email == 'mufakhruddin9417@sbtjapan.com' || (!redirectURI && agent.email != 'mufakhruddin9417@sbtjapan.com'))">
+	<a>
+		<span>Facebook</span>
+		<span class="badge">{{FilterFacebookTickets((listtoview == 'filtered') ? filteredTicketList : ticketsList).length}}</span>
+	</a>
+</li> -->

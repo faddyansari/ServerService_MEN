@@ -1,0 +1,82 @@
+<p>Respectfully,</p>
+<p><strong>Registration request detaila are as follows:</strong></p>
+<table style="height: 237px; width: 392px; float: left;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 185px;">Customer Name</td>
+<td style="width: 201px;">fdsf</td>
+</tr>
+<tr>
+<td style="width: 185px;">Company Name</td>
+<td style="width: 201px;">uuuu</td>
+</tr>
+<tr>
+<td style="width: 185px;">Email</td>
+<td style="width: 201px;">sdd</td>
+</tr>
+<tr>
+<td style="width: 185px;">Email (Alternate)</td>
+<td style="width: 201px;">sdf</td>
+</tr>
+<tr>
+<td style="width: 185px;">Country</td>
+<td style="width: 201px;">sd</td>
+</tr>
+<tr>
+<td style="width: 185px;">City</td>
+<td style="width: 201px;">dsdf</td>
+</tr>
+<tr>
+<td style="width: 185px;">cxvx</td>
+<td style="width: 201px;">puu</td>
+</tr>
+<tr>
+<td style="width: 185px;">Port</td>
+<td style="width: 201px;">adsd</td>
+</tr>
+<tr>
+<td style="width: 185px;">Default Phone</td>
+<td style="width: 201px;">xcxz</td>
+</tr>
+<tr>
+<td style="width: 185px;">Phone (Alternate)</td>
+<td style="width: 201px;">dfds</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>Introducer details are as follows:</strong></p>
+<table style="height: 56px; float: left;" width="306">
+<tbody>
+<tr>
+<td style="width: 145px;">Employee id</td>
+<td style="width: 145px;">sds</td>
+</tr>
+<tr>
+<td style="width: 145px;">Employee Name</td>
+<td style="width: 145px;">sdsd</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;"><strong>Sales-Person details are as follows:</strong></p>
+<table style="height: 61px; float: left;" width="297">
+<tbody>
+<tr>
+<td style="width: 139px;">Employee id</td>
+<td style="width: 142px;">sdas</td>
+</tr>
+<tr>
+<td style="width: 139px;">Employee Name</td>
+<td style="width: 142px;">dsad</td>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,179 @@
+.customFieldDesigner,
+.formDesigner {
+	width: 100%;
+	display: flex;
+	background-color: var(--theme-bg);
+	.form-element,
+	.field-edit {
+		@extend %p14;
+		flex-direction: column;
+	}
+	.form-element {
+		width: 120px !important;
+		.item {
+			flex-direction: column;
+			justify-content: center;
+			@extend %fs10;
+			@extend %fw-6;
+			> div {
+				@extend %width100;
+				align-items: center;
+				flex-direction: column;
+				justify-content: center;
+				text-align: center;
+				> div {
+					@extend %width100;
+					text-align: center;
+					img {
+						margin-bottom: 7px;
+						width: 40px;
+					}
+				}
+			}
+		}
+	}
+	.form-items {
+		width: calc(100% - 500px) !important;
+	}
+	.field-edit {
+		width: 380px !important;
+	}
+	
+	.container {
+	width: 400px;
+	margin: 0 auto;
+	}
+	
+	.nested {
+	padding: 4px 0;
+	border: 1px dotted #bbb;
+	}
+	
+	.item {
+	padding: 8px;
+	}
+	
+	.imageClass{
+	width: 100%;  
+	height: auto;
+	}
+}
+
+.formDesigner {
+	.list-items {
+		.actions {
+			position: absolute;
+			right: -1px;
+			top: calc(100% + -1px);
+			> .btn {
+				width: 34px;
+				height: 34px;
+				padding: 7px;
+				background-color: var(--white);
+				border: 1px solid var(--border);
+			}
+		}
+		.main_Edit {
+			position: relative;
+			> .actions {
+				top: inherit;
+				bottom: calc(100% + -1px);
+			}
+		}
+		div[id*="Insection-elementId-"],
+		div[id*="elementId-"] {
+			position: relative;
+			z-index: 1;
+			td {
+				border: 1px solid var(--blue-alpha4);
+			}
+			.actions {
+				display: none;
+			}
+			&:hover,
+			&.active {
+				z-index: 2;
+				box-shadow: 0px 0px 10px var(--black-alpha1);
+			}
+			&:hover {
+				border-color: var(--blue) !important;
+			}
+			&.active {
+				border-color: var(--olive) !important;
+				td {
+					border-color: var(--olive) !important;
+				}
+			}
+		}
+		div[id*="Insection-elementId-"] {
+			.actions {
+				right: inherit;
+				left: -1px;
+			}
+			&:hover,
+			&.active {
+				.actions {
+					display: flex;
+				}
+			}
+		}
+		div[id*="elementId-"] {
+			> .svgOnHover {
+				> .svg {
+					height: inherit;
+				}
+			}
+			> .actions {
+				right: -1px;
+			}
+			&:hover,
+			&.active {
+				> .actions {
+					display: flex;
+				}
+			}
+		}
+	}
+}
+
+.elements-droppable {
+	&.no-elements {
+		padding: 60px 0;
+		background-color: var(--white-alpha4);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 30px;
+		font-weight: 600;
+		color: var(--blue-alpha2);
+		@extend %posRelative;
+		// &:after {
+		// 	content: 'Drop Here';
+		// 	color: var(--gray);
+		// }
+	}
+}
+
+.overlay-drag {
+	border: dashed 3px var(--gray-dark);
+	background-color: var(--white-alpha7);
+	display: flex;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+	font-size: 30px;
+	font-weight: 700;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	text-align: center;
+	height: 100%;
+	pointer-events: none;
+	user-select: none;
+	z-index: 999;
+	&:after {
+		content: 'Drop Files Here';
+		color: var(--gray);
+	}
+}

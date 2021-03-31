@@ -1,0 +1,8 @@
+<app-preloader type="overlay" *ngIf="loadingRouteConfig"></app-preloader>
+
+<app-visitors-fixed-chat-sidebar class="viewChat" [ngClass]="(showChatBar) ? 'sh12 active' : (navbarSidebar_state) ? 'bl-app-collapsed' : ''" *ngIf="chatBarEnabled && login && state != 'register' && (permissions && permissions.enabled)" id="visitorsSidebar"></app-visitors-fixed-chat-sidebar>
+
+<div class="bl-app animated fadeIn" id="bl-app" *ngIf="display" [ngClass]="(navbarSidebar_state) ? 'collapsed' : ''">
+    <app-login class="accessApp" *ngIf="!login && state=='login'"></app-login>
+    <main *ngIf="login && state != 'register'"></main>
+</div>

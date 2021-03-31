@@ -1,0 +1,47 @@
+<app-analytics-datebox [allEnabled]="true" [agentEnabled]="false" [compareEnabled]="false"
+	[groupEnabled]="true" [customFieldsEnabled]="true" [customFieldsType]="'tickets'" (onResult)="onFilterResult($event)"></app-analytics-datebox>
+<div class="statistics clearfix" [ngClass]="(loading) ? 'disabled': ''" >
+	<div id="highchart" style="height:300px;"></div>
+</div>
+<div class="row" [ngClass]="(loading) ? 'disabled': ''" *ngIf="!customFields.length">
+	<div id="spiderweb-{{d._id}}" style="height:300px;" class="col-md-4" *ngFor="let d of data"></div>
+</div>
+<!-- <div class="statistics clearfix">
+</div> -->
+<div class="table-area clearfix p-l-r-20 p-t-20 p-b-50" [ngClass]="(loading) ? 'disabled': ''" *ngIf="!customFields.length">
+	<button class="btn btn-xs bg-green" style="position: fixed;bottom: 40px;left: 110px;z-index: 99999;" (click)="Export()" *ngIf="data.length">Export</button>
+	<div class="table-responsive">
+		<table class="table table-bordered" id="ticketDashboard">
+			<thead class="thead-dark">
+				<tr>
+					<th>Market</th>
+					<th>Inquiries</th>
+					<th>Weekdays</th>
+					<th>Weekends</th>
+					<th>Assigned</th>
+					<th>Unassigned</th>
+					<th>Tagged</th>
+					<th>Free</th>
+					<th>Complete</th>
+					<th>In-Complete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<ng-template ngFor [ngForOf]="data" let-d let-index="index">
+					<tr>
+						<td>{{d._id}}</td>
+						<td>{{d.total}}</td>
+						<td>{{d.weekdays}}</td>
+						<td>{{d.weekends}}</td>
+						<td>{{d.assigned}}</td>
+						<td>{{d.unassigned}}</td>
+						<td>{{d.tagged}}</td>
+						<td>{{d.free}}</td>
+						<td>{{d.complete}}</td>
+						<td>{{d['in-complete']}}</td>
+					</tr>
+				</ng-template>
+			</tbody>
+		</table>
+	</div>
+</div>

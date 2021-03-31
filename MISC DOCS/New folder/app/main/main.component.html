@@ -1,0 +1,13 @@
+<div class="wrapper">
+
+    <app-drawer-left class="drawer" [ngClass]="(drawerActive) ? 'animated active' : (exit || drawerActive_exit) ? 'animated' : ''"></app-drawer-left>
+
+    <app-main-header class="main-header" [ngClass]="(navbarState) ? 'active' : (exit || navbarState_exit && !navbarSidebar_state) ? '' : ''"></app-main-header>
+    <div class="content-wrapper" (click)="closeDrawerAndNavBar()">
+        <app-preloader type="spin-loader-page" class="floatToCenter" *ngIf="loadingNestedRouteConfig"></app-preloader>
+        <router-outlet  *ngIf="!loadingRouteConfig && !loadingNestedRouteConfig"></router-outlet>
+    </div>
+
+	<app-alert-bar class="alertBars" *ngIf="!fetching && !verified && !sbt"></app-alert-bar>
+
+</div>

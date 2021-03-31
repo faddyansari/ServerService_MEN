@@ -1,0 +1,263 @@
+<div class="box clearfix animated fadeIn delay-400">
+    <div class="box-body clearfix p-0">
+        <div class="notAvailable" *ngIf="!authSettings">
+            You dont have access to this page!
+        </div>
+        <div class="row cleafix">
+            <div class="col-md-4">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Global</h5>
+                    </div>
+                </div>
+                <div class="document-list clearfix">
+                    <ul style="height: 42px;width: 100%;background: none;">
+                        <li>
+                            <div class="info">
+                                <div class="desc">
+                                    <b class="ellipsis">Forgot Password Feature</b>
+                                </div>
+                                <div class="actions">
+                                    <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                        <input type="checkbox" [(ngModel)]="authSettings.forgotPasswordEnabled"
+                                            (change)="toggleForgotPassword($event.target.checked)">
+                                        <div class="state p-on">
+                                            <label></label>
+                                        </div>
+                                        <div class="state p-off">
+                                            <label></label>
+                                        </div>
+                                        <!-- TODO UI Add tooltip on this area -->
+                                        <!-- <span class="tooltip-inner">{{() ? 'Enabled' : 'Disabled'}}</span> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>SSO</h5>
+                    </div>
+                </div>
+                <div class="document-list clearfix f-column">
+                    <ul class="activateScrollbar clearfix">
+                        <li>
+                            <input type="search" class="form-control input-sm" placeholder="Search..."
+                                [(ngModel)]="roleSearchValue">
+                        </li>
+                        <ng-template ngFor [ngForOf]="roles | filter: roleSearchValue : [] : false" let-role>
+                            <li *ngIf="role != 'superadmin'">
+                                <div class="info">
+                                    <div class="desc">
+                                        <b class="ellipsis">{{role | uppercase}}</b>
+                                    </div>
+                                    <div class="actions">
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                            <input type="checkbox" [(ngModel)]="authSettings[role].enableSSO"
+                                                (change)="toggleSSO(role, $event.target.checked)">
+                                            <div class="state p-on">
+                                                <label>SSO</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>SSO</label>
+                                            </div>
+                                            <!-- TODO UI Add tooltip on this area -->
+                                            <!-- <span class="tooltip-inner">{{() ? 'Enabled' : 'Disabled'}}</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="actions">
+                                        <div class="pretty p-switch p-smooth p-fill p-toggle">
+                                            <input type="checkbox" [(ngModel)]="authSettings[role].TwoFA"
+                                                (change)="toggle2FA(role, $event.target.checked)">
+                                            <div class="state p-on">
+                                                <label>2FA</label>
+                                            </div>
+                                            <div class="state p-off">
+                                                <label>2FA</label>
+                                            </div>
+                                            <!-- TODO UI Add tooltip on this area -->
+                                            <!-- <span class="tooltip-inner">{{() ? 'Enabled' : 'Disabled'}}</span> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ng-template>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Allowed IPs</h5>
+                    </div>
+                    <div>
+                        <button class="btn btn-xs btn-icon bg-white right" (click)="ToggleAllowedIpsForm()"
+                            [ngClass]="(!allowedIpsForm) ? 'border-blue' : 'border-red'">
+                            <span>{{(!allowedIpsForm) ? 'Add' : 'Cancel'}}</span>
+                            <svg class="svg active" [ngClass]="(!allowedIpsForm) ? 'bg-blue' : 'bg-red'">
+                                <use [attr.href]="(!allowedIpsForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'"
+                                    class="text-white" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="popover-form" *ngIf="allowedIpsForm">
+                    <div class="input-block clearfix">
+                        <div class="input-group-sm m-b-10">
+                            <input type="text" class="form-control input-sm" placeholder="Enter IP"
+                                (keydown)="enterPressed($event)" [(ngModel)]="ipInput">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn bg-green" (click)="addIP()"
+                                    [disabled]="!ipInput">Add</button>
+                            </div>
+                        </div>
+                        <p class="text-red" *ngIf="showError">{{showError}}</p>
+                    </div>
+                </div>
+                <div class="document-list clearfix">
+                    <div class="activateScrollbar clearfix">
+                        <li class="notif clearfix">
+                            <input type="search" class="form-control input-sm" placeholder="Search..."
+                                [(ngModel)]="IPSearchValue">
+                        </li>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>IPs</th>
+                                    <th class="text-center w-80">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let ip of authSettings.allowedIPs | filter: IPSearchValue : [] : false">
+                                    <td>{{ip}}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-transparent svgOnHover tooltip left"
+                                            (click)="removeIP(ip)">
+                                            <svg class="svg svg-default">
+                                                <use href="/assets/img/icons/icons-sprite.svg#delete" />
+                                            </svg>
+                                            <svg class="svg colored">
+                                                <use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+                                            </svg>
+                                            <span class="tooltip-inner">Delete</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box-subtitle clearfix">
+                    <div>
+                        <h5>Suppression List</h5>
+                    </div>
+                    <div>
+                        <button class="btn btn-xs btn-icon bg-white right" (click)="ToggleSuppressionForm()"
+                            [ngClass]="(!suppressionForm) ? 'border-blue' : 'border-red'">
+                            <span>{{(!suppressionForm) ? 'Add' : 'Cancel'}}</span>
+                            <svg class="svg active" [ngClass]="(!suppressionForm) ? 'bg-blue' : 'bg-red'">
+                                <use [attr.href]="(!suppressionForm) ? '/assets/img/icons/icons-sprite.svg#plus' : '/assets/img/icons/icons-sprite.svg#cancel'"
+                                    class="text-white" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="popover-form" *ngIf="suppressionForm">
+                    <div class="input-block clearfix">
+                        <div class="input-group-sm multi-select" [ngClass]="selectedAgents.length ? 'selected' : ''">
+                            <div class="sel style1 sel-sm" [popper]="agentPopper" [popperShowOnStart]="false"
+                                [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="false"
+                                [popperPlacement]="'bottom'">
+                                <div class="form-control" [ngClass]="selectedAgents.length ? 'selected-items' : ''">
+                                    <div class="badge svgOnHover" *ngFor="let agent of selectedAgents; let index=index"
+                                        title="{{agent}}">
+                                        <span>{{agent}}</span>
+                                        <svg class="svg w-15 h-15 active dismiss" (click)="clearAgent($event,agent)">
+                                            <use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-black" />
+                                        </svg>
+                                    </div>
+									<input type="text" placeholder="Search agent..." autocomplete="off"
+										[(ngModel)]="dropDown_typeahead" (input)="searchInput.next()">
+									<button class="btn btn-transparent svgOnHover tooltip top clearFIeld"
+										*ngIf="selectedAgents.length > 1" (click)="clearAllAgents($event)">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Clear Search</span>
+									</button>
+                                </div>
+                            </div>
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn bg-green" [disabled]="!selectedAgents.length"
+                                    (click)="setSuppressionList()">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="document-list clearfix">
+                    <div class="activateScrollbar clearfix">
+                        <li class="notif clearfix">
+                            <input type="search" class="form-control input-sm" placeholder="Search..."
+                                [(ngModel)]="suppressValue">
+                        </li>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Emails</th>
+                                    <th class="text-center w-80">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="let email of authSettings.suppressionList | filter: suppressValue : [] : false">
+                                    <td>{{email}}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-transparent svgOnHover tooltip left"
+                                            (click)="removeAgent(email)">
+                                            <svg class="svg svg-default">
+                                                <use href="/assets/img/icons/icons-sprite.svg#delete" />
+                                            </svg>
+                                            <svg class="svg colored">
+                                                <use href="/assets/img/icons/icons-sprite.svg#delete-colored" />
+                                            </svg>
+                                            <span class="tooltip-inner">Delete</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<popper-content #agentPopper>
+    <ul class="activateScrollbar clearfix" #scrollContainer (scroll)="onScroll($event)">
+        <li *ngFor="let agent of agentList" (click)="onItemSelect_dropdown(agent.email)"
+            [ngClass]="(agent.selected) ? 'hide' : ''">
+            <a>
+                <div (click)="clearAgent($event,agent.email)" *ngIf="agent.selected">
+                    <svg class="svg w-15 h-15 svg-default">
+                        <use href="/assets/img/icons/icons-sprite.svg#cancel" />
+                    </svg>
+                    <svg class="svg w-15 h-15 colored">
+                        <use href="/assets/img/icons/icons-sprite.svg#cancel-colored" />
+                    </svg>
+                    <span class="tooltip-inner">Cancel</span>
+                </div>
+                <span>{{agent.email}}</span>
+            </a>
+        </li>
+        <li *ngIf="!agentList.length || showNoAgents">
+            <span>No Agents!</span>
+        </li>
+    </ul>
+</popper-content>

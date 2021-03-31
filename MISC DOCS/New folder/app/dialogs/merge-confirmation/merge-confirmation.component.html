@@ -1,0 +1,53 @@
+<div class="mat-grid">
+	<div mat-dialog-title>
+		<h3>Confirm Primary Merging Ticket</h3>
+		<p>Select ticket which merges other tickets</p>
+	</div>
+	<div mat-dialog-content>
+		<form>
+			<fieldset>
+				<ul class="list-items clearfix style5 p-0">
+					<li class="item clearfix notif" *ngFor="let data of checkedList">
+						<div class="clearfix" >
+							<div>
+								<div class="avatar ava-xs">
+									<span class="nameInitials">{{ (data.details.visitor.name | slice:0:1) }}</span>
+								</div>
+							</div>
+							<div class="info">
+								<div class="name">
+									<b class="ellipsis">{{ data.subject }}</b>
+									<span class="ellipsis">({{ data._id }})</span>
+								</div>
+							</div>
+							<div class="actions">
+								<div class="pretty p-svg p-fill p-smooth m-0">
+									<input type="checkbox" (change)="setPrimaryTicket(data._id, $event)" [checked]="data.checked">
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white"/>
+										</svg>
+										<label>Primary</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</fieldset>
+		</form>
+	</div>
+	<div class="mat-dialog-footer clearfix">
+		<mat-dialog-actions>
+			<button class="btn btn-xs bg-blue"
+				[ngClass]="(loading) ? 'btnSpinner' : ''"
+				(click)="submitForm()"
+				[disabled]="submitError">
+				<span>Submit</span>
+			</button>
+			<button class="btn btn-xs bg-charcoal-light" mat-dialog-close>
+				<span>Cancel</span>
+			</button>
+		</mat-dialog-actions>
+	</div>
+</div>

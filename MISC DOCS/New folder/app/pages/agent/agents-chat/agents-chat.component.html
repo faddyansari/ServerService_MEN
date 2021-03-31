@@ -1,0 +1,179 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-header">
+		<h5 class="box-title ellipsis">
+			<span
+				*ngIf="selectedAgentConversation.type == 'single'">{{(selectedAgentConversation.members[0].email == this.agent.email) ? selectedAgentConversation.members[1].email : selectedAgentConversation.members[0].email}}</span>
+			<span *ngIf="selectedAgentConversation.type == 'group'">{{selectedAgentConversation.group_name}}</span>
+		</h5>
+		<div class="box-tools">
+			<button class="btn btn-xs btn-theme" (click)="OpenViewHistory()">
+				<span>Open History</span>
+			</button>
+		</div>
+	</div>
+
+	<div class="overlay-drag" *ngIf="isDragged"></div>
+	<div class="box-body clearfix p-0" (dragover)="OnDragOver($event)" (drop)="onDrop($event)"
+		(dragleave)="onDragLeave($event)">
+		<div class="chatBody">
+			<div class="chat-messages" *ngIf="selectedAgentConversation" #scrollContainer
+				(scroll)="ScrollbarChanged($event)">
+				<div class="chat-msg" [ngClass]="message.from == agent.email ? 'msg_sent' : ' msg_recieved' "
+					*ngFor="let message of selectedAgentConversation.messages">
+					<!-- when attachment present -->
+					<div class="day-separator clearfix"
+						*ngIf="message.type && message.type == 'Event' && message.type != 'Visitors' && message.type != 'Agents' ">
+						<span>
+							<span class="ellipsis" title="{{message.body}}">
+								{{message.body}}
+							</span>
+							<br>
+							<span class="date">{{ message.date | date :'mediumDate'}}
+								{{ message.date | date :'shortTime' }}</span>
+						</span>
+					</div>
+					<!-- [ngStyle]="(message.viewColor) ? {'background-color' : message.viewColor} : ''" -->
+					<div class="chat-text attachment"
+						*ngIf="message.attachment && message.body && message.body.length && message.type != 'Event'">
+						<a href="{{attach.path}}" *ngFor="let attach of message.body; let index = index"
+							[ngClass]="((attach.filename | attachmentType) == 'data') ? 'document' : ((attach.filename | attachmentType) == 'image') ? 'image' : ((attach.filename | attachmentType) == 'audio') ? 'audio' : ((attach.filename | attachmentType) == 'document') ? 'document' : ''"
+							[target]="((attach.filename | attachmentType) == 'document' ? '_parent' : '_blank')">
+							<div class="thumbnail svgOnHover">
+								<img class="svg active" src='{{attach.path}}'
+									*ngIf="(attach.filename | attachmentType) == 'image'">
+								<svg class="svg active"
+									*ngIf="(((attach.filename | attachmentType) == 'document') || ((attach.filename | attachmentType) == 'data'))">
+									<use href="/assets/img/icons/icons-sprite.svg#file" class="text-black" />
+								</svg>
+								<audio *ngIf="(attach.filename | attachmentType) == 'audio'" src='{{attach.path}}'
+									controls></audio>
+								<video controls width="250" *ngIf="(attach.filename | attachmentType) == 'video'">
+									<source src='{{attach.path}}' type="video/mp4">
+								</video>
+							</div>
+							<div class="file-name tooltip top">
+								<span class="ellipsis">{{attach.filename}}</span>
+								<span class="tooltip-inner">{{attach.filename}}</span>
+							</div>
+						</a>
+						<!-- [ngStyle]="(message.viewColor) ? {'border-top-color' : message.viewColor} : ''" -->
+						<span class="arrow"></span>
+					</div>
+					<!-- [ngStyle]="(message.viewColor) ? {'background-color' : message.viewColor} : ''" -->
+					<div class="chat-text" *ngIf="message.body != '' && !message.attachment && message.type != 'Event'">
+						<p [ngClass]="(message.body | emojicheck) ? 'onlyEmoji' : ''">
+							<span>{{message.body}}</span>
+						</p>
+						<!-- [ngStyle]="(message.viewColor) ? {'border-top-color' : message.viewColor} : ''" -->
+						<span class="arrow"></span>
+					</div>
+					<div *ngIf="message.body != '' && message.type != 'Event'" class="chat-info">
+						<span *ngIf="message.body != ''">{{ message.from}}</span>
+						<span *ngIf="message.body != ''">{{ message.date | date :'mediumDate'}}
+							{{ message.date | date :'shortTime' }}</span>
+						<ng-template [ngIf]="selectedAgentConversation.type == 'single'">
+							<ng-template ngFor [ngForOf]="selectedAgentConversation.LastSeen" let-seenInfo>
+								<ng-template [ngIf]="seenInfo.email == message.to && message.from == agent.email">
+									<span class="status svgOnHover">
+										<svg class="svg w-15 h-15 active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok-done"
+												[ngClass]="((seenInfo.DateTime.split('.')[0] >= message.date.split('.')[0])) ? 'text-blue' : 'text-gray-dark'" />
+										</svg>
+									</span>
+								</ng-template>
+							</ng-template>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+			<app-blob-attachment [uploading]="uploading" [fileValid]="fileValid" [fileArray]="attachmentGallery"
+				(onClear)="onClear($event)" *ngIf="ShowAttachmentAreaDnd">
+			</app-blob-attachment>
+		</div>
+		<div class="chatFooter" *ngIf="displayMessageArea()">
+			<div class="msgArea">
+				<div class="tools">
+					<label class="btn btn-transparent svgOnHover tooltip top-left"
+						[ngClass]="(!fileSharePermission) ? 'disabled' : ''">
+						<svg class="svg w-25 h-25 svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#attachment" />
+						</svg>
+						<span class="tooltip-inner">Attach File</span>
+						<input #fileInput [disabled]="!fileSharePermission" type="file" class="hide"
+							(change)="FileSelected($event)" multiple>
+					</label>
+					<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="(seconds)"
+						(click)="cancelRecording()">
+						<svg class="svg w-25 h-25 svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#cancel-circle" />
+						</svg>
+						<svg class="svg w-25 h-25 colored">
+							<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored" />
+						</svg>
+						<span class="tooltip-inner">Cancel Recording</span>
+					</button>
+					<button class="btn btn-transparent svgOnHover tooltip top"
+						(click)="startRecording()"
+						*ngIf="!seconds && !loading"
+						[disabled]="(recordingStarted)">
+						<svg class="svg w-25 h-25 svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#mic-on" />
+						</svg>
+						<span class="tooltip-inner">Voice Note</span>
+					</button>
+					<button class="btn text-black-light fs-13" *ngIf="(seconds)">
+						<span *ngIf="(seconds)">{{mins|numberpad:1}}:{{seconds|numberpad:2}}</span>
+					</button>
+					<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="(loading)" style="cursor:default">
+						<img class="svg w-25 h-25" src="/assets/img/loaders/spin-loader-gray.svg">
+						<span class="tooltip-inner">Loading ...</span>
+					</button>
+					<button class="btn btn-transparent svgOnHover tooltip top" *ngIf="(seconds)"
+						(click)="stopRecording()">
+						<svg class="svg w-25 h-25 svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#ok-circle" />
+						</svg>
+						<svg class="svg w-25 h-25 colored">
+							<use href="/assets/img/icons/icons-sprite.svg#ok-circle-colored" />
+						</svg>
+						<span class="tooltip-inner">Submit Recording</span>
+					</button>
+					<button class="btn btn-transparent svgOnHover tooltip top" (click)="EmojiWrapper = !EmojiWrapper;"
+						[ngClass]="EmojiWrapper ? 'active': ''">
+						<svg class="svg w-25 h-25 svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#smiley" />
+						</svg>
+						<svg class="svg w-25 h-25 colored">
+							<use href="/assets/img/icons/icons-sprite.svg#smiley-colored" class="text-mustard-light" />
+						</svg>
+						<span class="tooltip-inner">Emojis</span>
+					</button>
+				</div>
+				<!-- <textarea appAutoGrow [minHeight]="24" [maximumHeight]="200" [restrictAutoSize]='restrictAutoSize'
+					class="form-control" name="message" [ngModelOptions]="{standalone: true}" [(ngModel)]="msgBody"
+					(keydown)="keydown($event)" (keyup)="keyup($event)" (keypress)="keyPress($event)"
+					[matAutocomplete]="auto" placeholder="Enter message here ..."></textarea> -->
+
+				<textarea appAutoGrow [minHeight]="24" [maximumHeight]="200" [restrictAutoSize]='restrictAutoSize'
+					class="form-control" autocomplete="off" name="message" maxlength="10000"
+					placeholder="Type Message ..." [ngModelOptions]="{standalone: true}" [(ngModel)]="msgBody"
+					(keydown)="keydown($event)" #messageTextArea></textarea>
+				<div class="tools">
+					<button class="btn btn-transparent svgOnHover tooltip top-right"
+						[disabled]="(!msgBody && !(files.length))" (click)="SendMessage($event)">
+						<svg class="svg svg-default active">
+							<use href="/assets/img/icons/icons-sprite.svg#send-message" />
+						</svg>
+						<span class="tooltip-inner">Send</span>
+					</button>
+				</div>
+				<!-- <mat-autocomplete class="ccAutoComplete" #auto="matAutocomplete" autoActiveFirstOption>
+					<mat-option *ngFor="let automatedMessage of filteredAutomatedMessages"
+						[value]="(msgBody | slice:0:hashIndex) + automatedMessage.responseText" (click)="setShift()">
+						{{ automatedMessage.hashTag }}</mat-option>
+				</mat-autocomplete> -->
+				<app-emoji *ngIf="EmojiWrapper" (emojiClicked)="Emoji($event)"></app-emoji>
+			</div>
+		</div>
+	</div>
+</div>

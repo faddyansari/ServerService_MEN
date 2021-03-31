@@ -1,0 +1,609 @@
+
+// Created By Saad Ismail Shaikh
+// Date : 22-1-18
+import { Db, Collection, InsertOneWriteOpResult, Timestamp, ObjectID, ObjectId } from "mongodb";
+import { VisitorSchema } from '../schemas/visitorSchema';
+import * as _ from 'lodash';
+import { VisitorSessionSchema } from "../schemas/VisitorSessionSchema";
+import { ArchivingDB } from "../globals/config/databses/Analytics-Logs-DB";
+import { TicketSchema } from "../schemas/ticketSchema";
+
+export class Visitor {
+
+
+    static db: Db;
+    static collection: Collection;
+    static leftVisitor: Collection;
+    static initialized = false;
+
+    public static async Initialize(): Promise<boolean> {
+
+        try {
+            this.db = await ArchivingDB.connect();
+            this.collection = await this.db.createCollection('visitors')
+            this.leftVisitor = await this.db.createCollection('leftVisitors')
+            console.log(this.collection.collectionName);
+            console.log(this.leftVisitor.collectionName);
+
+            Visitor.initialized = true;
+            return Visitor.initialized;
+        } catch (error) {
+            console.log('error in Initializing Visitor Model');
+            throw new Error(error);
+        }
+        // Database Connection For Visitors Based Operation on Visitor Collections
+
+
+    }
+
+
+
+
+
+
+    // -------------------------------x---------------------------------------------------x ||
+    //                              Functions operatiing on Databases 
+    //--------------------------------x---------------------------------------------------x ||
+
+    public static getVisitorsByID(): number {
+        return 0;
+    }
+    public static async getVisitorsByName(name: string) {
+        try {
+            return await this.collection
+                .find({ username: name })
+                .limit(1)
+                .toArray();
+        } catch (error) {
+            console.log(error);
+            throw new Error("Can't Find Agent In Exists");
+        }
+    }
+
+    public static async getVisitorsByEmail(email: string) {
+        try {
+            return await this.collection
+                .find({ userEmail: email })
+                .limit(1)
+                .toArray();
+        } catch (error) {
+            console.log(error);
+            throw new Error("Can't Find Agent In Exists");
+        }
+    }
+
+    public static async insertVisitor(params: any, nsp?: string): Promise<InsertOneWriteOpResult<any>> {
+        try {
+            let visitor: VisitorSchema = {
+                "username": params.username,
+                "email": params.email,
+                "createdDate": new Date().toISOString(),
+                "location": params.location,
+                "count": 1,
+                "ipAddress": params.ipAddress,
+                "deviceID": params.deviceID,
+                "sessions": [],
+                "nsp": nsp,
+                "phone": params.phone
+            }
+            return await this.collection.insertOne(JSON.parse(JSON.stringify(visitor)));
+        }
+        catch (error) {
+            throw new Error("Can't Insert Visitor");
+        }
+
+    }
+    public static async visitorExists(userEmail: string): Promise<boolean> {
+        // //console.log(this.collection);
+        try {
+            return !!(await this.collection
+                .find({ email: userEmail })
+                .limit(1)
+                .toArray()).length;
+        } catch (error) {
+
+            throw new Error("Can't Find Visitor In Exists");
+        }
+
+    }
+
+    public static async visitorDeviceIDExists(userDeviceID: string): Promise<boolean> {
+        // //console.log(this.collection);
+        try {
+            return !!(await this.collection
+                .find({ deviceID: userDeviceID })
+                .limit(1)
+                .toArray()).length;
+        } catch (error) {
+
+            throw new Error("Can't Find Visitor Device ID In Exists");
+        }
+
+    }
+
+    //Addtoset method doesn't add if exists while push add the value whether it exists or not
+
+    // public static UpdateVisitorSessionByDeviceID(userDeviceID, sessionid) {
+    //     try {
+    //         return this.collection.findOneAndUpdate({ deviceID: userDeviceID }, {
+    //             $push: {
+    //                 sessions: sessionid
+    //             }
+    //         }, { returnOriginal: false, upsert: true });
+    //     } catch (error) {
+    //         console.log(error);
+    //         console.log('error in Insert Automated Message');
+    //     }
+    // }
+
+    public static UpdateVisitorSessionByDeviceID(userDeviceID, sessionid) {
+        try {
+            return this.collection.findOneAndUpdate(
+                {
+                    deviceID: userDeviceID,
+                },
+                {
+                    $addToSet: { sessions: sessionid }
+                }, { returnOriginal: false, upsert: false, });
+        } catch (error) {
+            console.log('Error in Updating Sessions');
+            console.log(error);
+        }
+    }
+
+    public static async getVisitorSessionsByDeviceID(userDeviceID) {
+
+        try {
+            return this.collection.find(
+                {
+                    deviceID: userDeviceID
+                },
+                {
+                    fields: {
+                        sessions: 1
+                    }
+                })
+                .toArray();
+        } catch (error) {
+            console.log('Error in Getting Sessions');
+            console.log(error);
+        }
+    }
+
+    public static async getVisitorByDeviceID(userDeviceID) {
+
+        try {
+            return this.collection.find({ deviceID: userDeviceID }).limit(1).toArray();
+        } catch (error) {
+            console.log('Error in Getting Sessions');
+            console.log(error);
+        }
+    }
+
+
+
+
+    public static async UpdateVisitor(userDeviceID, visitor) {
+        let obj: any = {};
+        Object.assign(obj, visitor);
+        // console.log("Update Visitor");
+        // console.log(visitor);
+        delete obj._id;
+        let updatedVisitor = await this.collection.update(
+            { deviceID: userDeviceID },
+            { $set: JSON.parse(JSON.stringify(obj)) },
+            {
+                upsert: false,
+                multi: false
+            }
+        );
+        if (updatedVisitor && updatedVisitor.result) return updatedVisitor.result;
+        else return undefined;
+    }
+
+
+    public static async UpdateVisitorInfoByDeviceID(userDeviceID, data) {
+        try {
+
+            console.log('updating visitor info');
+            
+            if (data.phone) return this.collection.findOneAndUpdate(
+                { deviceID: userDeviceID },
+                {
+                    $set: {
+                        username: data.username,
+                        phone: data.phone,
+                        email: data.email
+                    }
+                }, { returnOriginal: false, upsert: false });
+
+            else return this.collection.findOneAndUpdate(
+                { deviceID: userDeviceID },
+                {
+                    $set: {
+                        username: data.username,
+                        email: data.email
+                    }
+                }, { returnOriginal: false, upsert: false });
+        } catch (error) {
+            console.log(error);
+            console.log('Error in Update Visitor Conversation by Device ID');
+
+        }
+    }
+
+    public static async UpdateVisitorInfoById(id, data) {
+        try {
+            console.log(id);
+
+            return this.collection.findOneAndUpdate(
+                { _id: new ObjectId(id) },
+                {
+                    $set: {
+                        username: data.username,
+                        phone: data.phone,
+                        email: data.email,
+                        location: data.location
+                    }
+                }, { returnOriginal: false, upsert: false });
+        } catch (error) {
+            console.log(error);
+            console.log('Error in Update Visitor Conversation by Device ID');
+
+        }
+    }
+
+    public static async UpdateContactDetailsByDeviceID(userDeviceID, username, phone, email) {
+        try {
+            return this.collection.findOneAndUpdate(
+                { deviceID: userDeviceID },
+                {
+                    $set: {
+                        username: username,
+                        phone: phone,
+                        email: email
+                    }
+                }, { returnOriginal: false, upsert: false });
+        } catch (error) {
+            console.log(error);
+            console.log('Error in Update Visitor Conversation by Device ID');
+
+        }
+    }
+
+    public static async DeleteVisitor(email) {
+
+        try {
+            return await this.collection.deleteOne({ email: email });
+        } catch (error) {
+            console.log('Error in deleting customer');
+            console.log(error);
+        }
+    }
+
+    //-------------------------------x-------------------------------------------------------x ||
+    //                  Functions operating on Live Clients. ( Visitor List Arra)              ||
+    //--------------------------------x------------------------------------------------------- ||
+
+    public static NotifyAll(session): string {
+        return 'Visitors' + session.location;
+    }
+
+    public static BraodcastToVisitors(): string {
+        return 'Visitors';
+    }
+
+    public static NotifyOne(session: VisitorSessionSchema): string {
+        try {
+            switch (session.type) {
+                case 'Visitors':
+                    return (session._id as string) || (session.id as string);
+                default:
+                    return '';
+            }
+        } catch (error) {
+            console.log('Error in Notify One Visitors');
+            // console.log;
+            return '';
+        }
+    }
+
+    //CRM Events
+
+    public static async getAllVisitors(nsp, exclude?: string) {
+        try {
+            // console.log(session)
+            let visitorList = await this.collection.find({ nsp: nsp }).sort({ _id: -1 }).limit(20).toArray();
+            if (visitorList.length) return visitorList
+            else return [];
+
+        } catch (error) {
+            console.log('Error in Sending Visitors List');
+            console.log(error);
+        }
+    }
+
+    // public static async getAllVisitorsWithoutLimit(nsp) {
+    //     try {
+    //         // console.log(session)
+    //         let visitorList = await this.collection.find({ nsp: nsp }).toArray();
+    //         if (visitorList.length) return visitorList
+    //         else return [];
+
+    //     } catch (error) {
+    //         console.log('Error in Sending Visitors List');
+    //         console.log(error);
+    //     }
+    // }
+    public static async getFilteredVisitors(nsp, dateFrom, dateTo, location, source, group) {
+        try {
+            // console.log(session)
+            //let visitorList = await this.collection.find({ nsp: nsp }).toArray();
+            let visitorList: any[] = [];
+            if (dateFrom != '' && dateTo != '' && location != '' && source != '') {
+                visitorList = await this.collection.find(
+                    {
+                        "$and": [{
+                            "nsp": nsp,
+                            "createdDate": {
+                                "$gte": dateFrom,
+                                "$lt": dateTo
+                            },
+                            "location": { "$in": location }
+                        }]
+                    }).toArray();
+            } else if (dateFrom != '' && dateTo != '' && location == '') {
+                visitorList = await this.collection.find(
+                    {
+                        "$and": [{
+                            "nsp": nsp,
+                            "createdDate": {
+                                "$gte": dateFrom,
+                                "$lt": dateTo
+                            }
+                        }]
+                    }).toArray();
+            } else if (dateFrom == '' && dateTo == '' && location != '') {
+                visitorList = await this.collection.find(
+                    {
+                        "$and": [{
+                            "nsp": nsp,
+                            "location": { "$in": location }
+                        }]
+                    }).toArray();
+            } else if (source != '' || group != '' && visitorList.length == 0) {
+                visitorList = await this.collection.find(
+                    {
+                        "nsp": nsp
+                    }).toArray();
+            }
+            if (visitorList.length) return visitorList
+            else return [];
+
+        } catch (error) {
+            console.log('Error in Sending Visitors List');
+            console.log(error);
+        }
+    }
+
+    public static async getMoreCustomersByCid(session, id) {
+
+        //new ObjectID()
+        try {
+            return await this.collection.aggregate([
+                { "$match": { "nsp": session.nsp } },
+                { "$sort": { _id: -1 } },
+                { "$match": { "_id": { $lt: new ObjectID(id) } } },
+                { "$limit": 15 }
+            ]).toArray();
+            // return await this.collection.find({ nsp: session.nsp, _id: { $lt: new ObjectID(id) } }).sort({ _id: -1 }).limit(15).toArray();
+        }
+        catch (error) {
+            console.log('Error in Getting more customers');
+            console.log(error);
+            return [];
+        }
+
+    }
+
+
+    public static async InsertLeftVisitor(nsp, session) {
+        try {
+
+            let updated = await this.leftVisitor.findOneAndUpdate(
+                { nsp: nsp },
+                {
+                    $push: { "session": { $each: [session], $slice: -30 } },
+                },
+                { returnOriginal: false, upsert: true })
+            // let inserted = await this.leftVisitor.insertOne({ nsp: nsp, sessions: [session] });
+            return updated;
+
+        } catch (error) {
+            console.log(error);
+            console.log('error in inserting LeftVisitor');
+        }
+    }
+
+    public static async GetLeftVisitors(nsp) {
+        try {
+
+            let leftVisitors = await this.leftVisitor.find({ nsp: nsp }).limit(1).toArray();
+            if (leftVisitors.length) return leftVisitors[0].session
+            else return [];
+
+        } catch (error) {
+            console.log(error);
+            console.log('error in Getting LeftVisitor');
+            return [];
+        }
+    }
+
+    public static async GetBannedVisitorByDeviceID(userDeviceID) {
+
+        try {
+            return this.collection.find({
+                deviceID: userDeviceID, $and: [
+                    { banned: { $exists: true } },
+                    { banned: true }
+                ]
+            }).limit(1).toArray();
+        } catch (error) {
+            console.log('Error in Getting Sessions');
+            console.log(error);
+        }
+    }
+
+    public static async GetBannedVisitors(nsp) {
+        try {
+
+
+            let bannedtVisitors = await this.collection.find({ nsp: nsp, banned: true }).sort({ _id: -1 }).toArray();
+            if (bannedtVisitors.length) return bannedtVisitors
+            else return [];
+
+        } catch (error) {
+            console.log(error);
+            console.log('error in Getting Banned VIsitor');
+            return [];
+        }
+    }
+
+    public static async searchCustomers(nsp, keyword, chunk = '0') {
+
+        try {
+            if (chunk == '0') {
+                return await this.collection.find({
+                    nsp: nsp,
+                    '$or': [
+                        { username: new RegExp(keyword, 'i') },
+                        { email: new RegExp(keyword, 'i') },
+
+                    ]
+
+                }).sort({ _id: -1 }).limit(20).toArray();
+            } else {
+                return await this.collection.aggregate([
+                    {
+                        "$match": {
+                            "nsp": nsp,
+                            '$or': [
+                                { username: new RegExp(keyword, 'i') },
+                                { email: new RegExp(keyword, 'i') },
+
+                            ]
+                        }
+                    },
+                    { "$sort": { _id: -1 } },
+                    { "$match": { "_id": { $lt: new ObjectID(chunk) } } },
+                    { "$limit": 20 }
+                ]).toArray();
+            }
+        } catch (err) {
+            console.log('Error in Search Contacts');
+            console.log(err);
+            return [];
+        }
+    }
+
+
+    public static async BanVisitor(visitor, value, hours: number) {
+        try {
+            if (visitor.deviceID) {
+
+                return this.collection.findOneAndUpdate(
+                    { nsp: visitor.nsp, deviceID: visitor.deviceID },
+                    {
+                        $set:
+                        {
+                            banned: value,
+                            banSpan: hours,
+                            bannedOn: new Date().toISOString()
+                        }
+                    }, { returnOriginal: false, upsert: false },
+
+                );
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
+
+    public static async UnbanVisitor(deviceID, nsp) {
+        try {
+
+            if (deviceID) {
+
+                return this.collection.findOneAndUpdate(
+                    { nsp: nsp, deviceID: deviceID },
+                    {
+                        $set:
+                        {
+                            banned: false,
+                            banSpan: 0,
+                            bannedOn: ''
+                        }
+                    }, { returnOriginal: false, upsert: false },
+
+                );
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
+
+    public static async GetContactsForCompaign(nsp: any, country: any) {
+        try {
+
+            let visitorSessions = this.db.collection('visitorSessions');
+            return visitorSessions.find({ nsp: nsp, fullCountryName: { $in: country } }).project({ email: 1 }).toArray();
+
+        } catch (error) {
+            console.log('Error in getting email data');
+            console.log(error);
+        }
+    }
+
+    public static async MatchLocation(ticket: TicketSchema, operator: any, value: any) {
+        let locationFromDB = await this.db.collection('visitorSessions').find({ nsp: ticket.nsp }).project({ fullCountryName: 1 })
+        let regexLocation: Array<any> = [];
+        regexLocation.push({
+            operator: operator,
+            locations: value
+
+        });
+        let countMatchedLocation = 0;
+        let matched_location: Array<any> = [];
+        regexLocation.map(element => {
+            countMatchedLocation = 0;
+            element.locations.map(location => {
+
+                if (element.operator == "IS" && locationFromDB && locationFromDB == location) {
+                    return countMatchedLocation++;
+                }
+                else if (element.operator == "ISNOT" && locationFromDB && locationFromDB != location) {
+                    return countMatchedLocation++;
+                }
+
+                else {
+                    return countMatchedLocation;
+                }
+            });
+            return matched_location.push({
+                operator: element.operator,
+                count: countMatchedLocation
+            });
+        })
+        return ({ matchedLocationCount: matched_location, matchedboolean: (countMatchedLocation > 0) ? true : false })
+    }
+
+
+}
+
+
+
+

@@ -1,0 +1,95 @@
+<div class="contact-list-sidebar">
+    <div class="nav-tabs-custom clearfix">
+        <app-contacts-nav class="nav nav-tabs filters clearfix" *ngIf="verified"></app-contacts-nav>
+        <div class="tab-content clearfix">
+            <div class="toolbox clearfix">
+                <div class="searchForm clearfix"
+                    [ngClass]="contactSearchForm && contactSearchForm.get('searchValue').value ? 'active' : ''">
+                    <div class="search-bar">
+                        <form [formGroup]="contactSearchForm">
+                            <div class="input-block m-0">
+                                <input type="text" class="form-control input-sm"
+                                    placeholder="search ...."
+                                    autocomplete="off"
+                                    formControlName="searchValue"
+                                    (input)='onSearchInput.next()'>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="search-icon svgOnHover">
+                        <svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#spy-glass" class="text-theme-gray"/>
+						</svg>
+                    </div>
+                </div>
+            </div>
+            <!-- Pre Installation Data List Starts Here -->
+            <div class="tab-pane active preInstallation" *ngIf="!verified">
+                <div class="list-items clearfix style1">
+                    <ul class="activateScrollbar clearfix">
+                        <li class="item animated flipInX-delay clearfix" *ngFor="let item of [1,2,3,4,5,6,7,8,9,9]">
+                            <div class="clearfix">
+                                <div>
+                                    <div class="avatar ava-xs">
+                                        <div class="nameInitials"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Pre Installation Data List Ends Here -->
+            <div class="tab-pane active" *ngIf="verified">
+                <div class="list-items clearfix style1">
+                    <ul class="activateScrollbar clearfix">
+                        <li class="item notif animated flipInX-delay clearfix"
+                            [ngClass]="(selectedContact) ? (selectedContact._id == contact._id) ? 'active' : '' : ''"
+                            *ngFor="let contact of SortBy(contactList)">
+                            <div class="clearfix" (click)="setSelectedContact(contact._id)">
+                                <div>
+                                    <div class="avatar ava-xs">
+                                        <div class="nameInitials"
+                                            *ngIf="(!contact.image)">
+                                            {{(contact.name | slice:0:2)}}
+                                        </div>
+                                        <div class="avatar-img online"
+                                            *ngIf="(contact.image)">
+                                            <img class="svg" attr.contactid="{{contact._id}}"
+                                            [src]="(contact.image != '')
+                                                ? contact.image
+                                                : '/assets/img/icons/user_placeholder.png'">
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="notif-count msg-count"
+                                    *ngIf="contact.messageReadCount && contact.email != agent.email">
+                                    {{ contact.messageReadCount }}
+                                </span>
+                                <div class="info">
+                                    <b class="name ellipsis fw-6">{{(contact.name) ? contact.name : '&nbsp;'}}</b>
+                                    <div class="email  ellipsis">{{contact.email}}</div>
+                                    <!-- <div class="phone">
+                                        <a href="tel:{{contact.phone_no}}">{{contact.phone_no}}</a>
+                                    </div>                                          -->
+                                    <div class="date">{{contact.created_date | date:'mediumDate'}}</div>
+                                </div>
+                                <div class="availability">
+									<svg class="svg w-11 h-11 p-2 svg-default active">
+										<use href="/assets/img/icons/icons-sprite.svg#dot" [ngClass]="!(contact.status) ? 'text-gray' : 'text-green'"/>
+									</svg>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="text-center m-t-10" *ngIf="!contactList.length && !loading">
+                            No contacts found!
+                        </li>
+                    </ul>
+                    <div class="notAvailable floatToCenter" *ngIf="loading">
+                        <app-preloader type="spin-loader-page"></app-preloader>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

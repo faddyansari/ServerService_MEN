@@ -1,0 +1,34 @@
+<div class="drawer-body">
+	<ul class="list-style">
+		<li class="clearfix svgOnHover" (click)="ShowAddContactDialog()" *ngIf="package && package.contacts.allowed && permissions && permissions.crm.enabled">
+			<svg class="svg active">
+				<use href="/assets/img/icons/icons-sprite.svg#contacts-colored"/>
+			</svg>
+			<span>Create<br>Contact</span>
+		</li>
+		<!-- <li class="clearfix" (click)="ShowAddWhatsappContactDialog()" *ngIf="(role == 'admin' || role == 'superadmin') && (nsp == '/hrm.sbtjapan.com' || nsp == '/sps-uat' || !production)">
+			<svg class="svg active">
+				<use href="/assets/img/icons/icons-sprite.svg#whatsapp-colored"/>
+			</svg>
+			<span>Create<br>Whatsapp</span>
+		</li> -->
+		<li class="clearfix svgOnHover" (click)="ShowAddAgentDialog()" *ngIf="permissions &&  permissions.agents.enabled && permissions.agents.canCreate">
+			<svg class="svg active">
+				<use href="/assets/img/icons/icons-sprite.svg#agents-colored"/>
+			</svg>
+			<span>Create<br>Agent</span>
+		</li>
+		<li class="clearfix svgOnHover" (click)="ShowAddTicketDialog()" *ngIf="permissions && permissions.tickets.enabled && permissions.tickets.canCreate">
+			<svg class="svg active">
+				<use href="/assets/img/icons/icons-sprite.svg#tickets-colored"/>
+			</svg>
+			<span>Create<br>Ticket</span>
+		</li>
+		<!-- <li class="clearfix" (click)="ShowImportExportDialog()" *ngIf="(role == 'admin' || role == 'superadmin') && (nsp == '/hrm.sbtjapan.com' || nsp == '/sps-uat' || !production)">
+			<svg class="svg active">
+				<use href="/assets/img/icons/icons-sprite.svg#import-export-colored"/>
+			</svg>
+			<span>Import<br>Export</span>
+		</li> -->
+	</ul>
+</div>

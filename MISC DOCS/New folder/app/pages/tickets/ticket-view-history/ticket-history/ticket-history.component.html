@@ -1,0 +1,21 @@
+<div class="toggleList activityLog" *ngIf="visitor_ticket_history">
+    <div class="clearfix" *ngFor="let ticketlist of visitor_ticket_history">
+        <div class="logGroup">
+            <div class="dateLog">
+                <span>{{ ticketlist.date | dayDifferencePipe }}</span>
+            </div>
+            <ul class="list-items clearfix style4">
+                <li class="item clearfix notif" *ngFor="let ticket of ticketlist.groupedticketList" (click)="setSelectedThread(ticket._id)">
+                    <div>
+                        <div class="info">
+                            <span>{{ticket.subject}} {{ticket.CustomerInfo && ticket.CustomerInfo.customerId ? ' - CM ID: ' + ticket.CustomerInfo.customerId : ''}} {{ seeCMID(ticket) ?  ' - (Possible DUAL Id)' : ''}}</span>
+                            <br>
+                            <b class="fw-7" [ngClass]="(ticket.state == 'PENDING') ? 'text-orange' : (ticket.state == 'OPEN') ? 'text-red' : 'text-green'">{{ticket.state}}</b>
+                        </div>
+                        <span class="notif-count right bg-transparent p-0 text-blue">{{ticket.datetime | date:'shortTime'}}</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

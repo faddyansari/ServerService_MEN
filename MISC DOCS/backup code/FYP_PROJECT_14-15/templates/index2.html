@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>FLIGHT DASHBOARD</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../static/plugins/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="../static/plugins/colorpicker/bootstrap-colorpicker.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../static/dist/css/adminlte.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="../static/plugins/iCheck/flat/blue.css">
+  <!-- Morris chart -->
+  <link rel="stylesheet" href="../static/plugins/morris/morris.css">
+  <link rel="stylesheet" href="../static/plugins/select2/select2.min.css">
+  <!-- jvectormap -->
+  <link rel="stylesheet" href="../static/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
+  <!-- Date Picker -->
+  <link rel="stylesheet" href="../static/plugins/datepicker/datepicker3.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="../static/plugins/daterangepicker/daterangepicker-bs3.css">
+  <link rel="stylesheet" href="../static/plugins/timepicker/bootstrap-timepicker.min.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="../static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+ 
+   <link rel="stylesheet" href="../static/plugins/jquery-ui/jquery-ui.min.css">
+  <style>
+  body {
+  font-family: "helvetica";
+  font-size: 100%
+}
+select{
+border:2px solid #777;
+padding: .8rem 9rem .5rem 7rem;
+border-radius:3px;
+color:#565656;
+position: center;
+
+
+}
+.airline, .Source, .Destination{
+  display: inline-block;
+  position: relative;
+}
+
+.form-check-input {
+  position: inherit;
+  }
+/*.airline select {background: transparent;}*/
+/*.airline::after{
+  
+  content: "";
+  display: inline-block;
+  border-top: 10px solid #777;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  position:absolute;
+  top:calc(50% -5px);
+  top:50%;
+  right: .5rem;
+  
+  
+  /*z-index: -1; */
+  pointer-events: none;
+  */
+}
+
+.Source::after{
+  content: "";
+  display: inline-block;
+  border-top: 10px solid #777;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  position:absolute;
+  top:calc(50% -5px);
+  top:50%;
+  right: .5rem;
+  /*z-index: -1; */
+  pointer-events: none; 
+}
+
+
+.Destination::after{
+  content: "";
+  display: inline-block;
+  border-top: 10px solid #777;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  position:absolute;
+  top:calc(50% -5px);
+  top:50%;
+  right: .5rem;
+  /*z-index: -1; */
+  pointer-events: none; 
+}
+  
+  #fuel_sec
+  {
+    display: none;
+  }
+  .box{
+  
+  width: 600px 2px;
+  height: 100%;
+  padding: 20px;
+  box-shadow: 0px 0px 10px 2px grey;
+  border: 8px solid #49abc8;
+  font-family: helvetica;
+  background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpUdrK-Dxydd2nJ7wfjQ8lFpfKUrmeF-zLL8Tyga2fcK7hq2Yo);
+  background-size: cover;
+  text-align: center;
+  }
+  
+.butto {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border: 3px solid #3f8e48;
+    border-radius: 8%;
+} 
+
+.butto:hover
+{
+  background-color: #3f8e48;
+}
+
+
+.rio{
+   width: 50%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+.nrio{
+    padding: 9px 20px;
+    margin: 18px 12px;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+    color: #565656;
+}
+/*  input[type=text] {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 18px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+input[type=text]:focus {
+    border: 3px solid #555;
+}*/
+.rio:focus {
+    border: 3px solid #555;
+}
+  </style>
+  </head>
+  <body  class="hold-transition sidebar-mini" >
+  <div class="wrapper">
+
+<!-- Navbar -->
+  <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+  
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+          <div class="bg-info-gradient">
+        <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+      </li>
+  
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="index2.html" class="nav-link"><strong>Home</strong></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link"><strong>Contact</strong></a>
+      </li>
+    </ul>
+
+    <!-- SEARCH FORM -->
+    <form class="form-inline ml-3">
+      <div class="input-group input-group-sm">
+    
+        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-navbar" type="submit">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="Home.html" class="brand-link">
+      
+      <span  class="brand-text font-weight-light"> <strong>FLIGHT ANALYSIS</strong></span>
+    </a>
+
+    
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-secondary fa fa-dashboard"></i>
+              <p>
+                Dashboard
+                <i class="right fa fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="showfuel" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>FUEL CONSUMPTION</strong></p>
+         
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="showcharge" class="nav-link ">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>CHARGE ESTIMATION</strong></p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="comparision" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>FLIGHT COMPARISION</strong></p>
+                </a>
+          </li>
+
+              <li class="nav-item">
+                <a href="showmap" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>FLIGHT TRACKING</strong></p>
+                </a>
+
+              </li>
+        <li class="nav-item">
+                <a href="showgt" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p><strong>GENERAL TASKS</strong></p>
+                </a>
+          </li>
+             
+             
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+ <!-- Content Wrapper. Contains page content -->
+  
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    
+
+    <!-- Main content -->
+  <div class="box">
+<h1><b style="color: white"> CHARGE CALCULATIONS</b></h1>
+<div  class="card card-info" >
+      
+              <div class="card-header">
+                <h3 class="card-title">Information Required</h3>
+              </div>
+            <!-- <form role="form"> -->
+                <div class="card-body">
+        
+                  <div class="form-group">
+                    <select class="form-control" id="sourcef" class="rio">
+
+                       <option  value="" selected disabled hidden>Select Source</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <select class="form-control" id="destinationf" class="rio">
+                       <option  value="" selected disabled hidden>Select Destination</option>
+                    </select>
+                  </div>
+                  <!-- <div class="form-group">
+                    <select class="form-control" id="airlinef" class="rio">
+                       <option  value="" selected disabled hidden>Select Airline</option>
+                    </select>
+                    </div> -->
+          <!-- Date and time range -->
+            
+              <div class="card-body">
+
+                  <label class="float-left">Date</label>
+
+                  <div class="input-group">
+                    <button type="button" class="btn btn-info " id="daterange-btn">
+                      <i class="fa fa-calendar"></i> Date range picker
+                      <i class="fa fa-caret-down"></i>
+                    </button>
+                  </div>
+                </div>
+        <div class="form-group">
+                    <div class="col-sm-offset-5 col-sm-10">
+                      <div class="form-check float-left">
+                        <input type="checkbox" class="form-check-input float-left" id="exampleCheck2">
+                        <label class="form-check-label float-left" for="exampleCheck2">Check me if you are sure that the information provided is correct</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer" style="padding: 1.75rem 1.25rem">
+                  <button id="fuel_btn" type="submit" class="btn btn-success float-right">Submit</button>
+                  <button type="submit" class="btn btn-danger float-left">Cancel</button>
+                </div>
+                <!-- /.card-footer -->
+              <!-- </form> -->
+            </div>
+            <!-- /.card -->
+                <!-- /.form group -->
+
+           
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+      
+<!-- <div id="outer" class="container-fluid">
+<center>
+  <table>
+  
+  <div class="airlne" style="height: 50px; width: 50; length:10px;">
+  <select id="sourcef" class="rio">
+  <option  value="" selected disabled hidden>Select Airline</option>
+</select>
+  </div>
+  <br/><br/>
+  <div class="Sourc" style="height: 50px; width: 50;">
+  <select id="sourcef" class="rio">
+  <option  value="" selected disabled hidden>Select Source</option>
+</select>
+  </div>
+  <br/><br/>
+  
+  <div class="Destinatio" style="height: 50px; width: 50;">
+  <select id="sourcef" class="rio">
+  <option  value="" selected disabled hidden>Select Destination</option>
+</select>
+  </div>
+  <br/><br/>
+  
+    <input class="nrio" type="text" id="date" value="From"> 
+  
+    <input class="nrio" type="text" id="date1" value="To">
+  <br/><br/>
+  <a>
+  <button class="butto">Submit</button>
+  </a>
+  <br/><br/>
+  </center>
+  </table>
+</div>
+  </div> -->
+  
+  <section id="fuel_sec" class="content">
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <!-- Left col -->
+          <section class="col-lg-12 connectedSortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="card">
+              <div class="card-header d-flex p-0">
+                <h3 class="card-title p-3">
+                  <i class="fa fa-pie-chart mr-1"></i>
+                  GRAPHICAL REPRESENTATION
+                </h3>
+              </div><!-- /.card-header -->
+              <div  class="card-body">
+                <div class="tab-content p-0">
+                  <!-- Morris chart - Sales -->
+                  <div class="chart tab-pane active" id="fuel_details"
+                       style="position: relative; height: 500px; width: 100%;"></div>
+                  <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px; width: 100%;"></div>
+                </div>
+              </div><!-- /.card-body -->
+            </div>
+           
+          </section>
+          <!-- /.Left col -->
+          <!-- right col (We are only adding the ID to make the widgets sortable)-->
+         
+          <!-- right col -->
+        </div>
+        <div class="col-12">
+      
+            <div class="card">
+      <div class="bg-info-gradient">
+                            <div class="card-header">
+                <h3 class="card-title"><strong>ESTIMATIONS</strong></h3>
+</div>
+               
+              
+              <div class="card-body table-responsive p-0 container">
+  
+                <table  class="table table-hover" style="text-align: center;">
+        
+                  <tr >
+                    <th>ID</th>
+                    <th>ICAO</th>
+                    <th>MODEL</th>
+                    <th>TIME OF FLIGHT <br>(hr:min:sec)</th>
+                    <th>AVERAGE SPEED <br>(knots)</th>
+                    <th>AVERAGE ALTITUDE <br>(feets)</th>
+                    <th>MILES COVERED</th>
+                    <th>CHARGE PAYED <br>(dollars)</th>
+                    <th>COUNTRIES IN ROUTE</th>
+                  </tr>
+                  <tbody id="flight_details">
+                  <tr >
+                    <td>ID</td>
+                    <td><span class="tag tag-success">11393571</span></td>
+                    <td>Icao</td>
+                    <td><span class="tag tag-success">ADDA23 2002</span></td>
+          <td>Model</td>
+                    <td><span class="tag tag-success">BOEING 717-200</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Average Speed</td>
+                    <td><span class="tag tag-success">444.3586206896552</span></td>
+                    <td>Average Altitude</td>
+                    <td><span class="tag tag-success">29625.862068965518</span></td>
+                    <td>Miles</td>
+                    <td><span class="tag tag-success">3349.526411946571</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td style="overflow: hidden;">Countries in route</td>
+                    <td><span class="tag tag-success">United States Of America</span></td>
+                    <td>Country</td>
+                    <td><span class="tag tag-success">United States</span></td>
+          <td>Fuel</td>
+                    <td><span class="tag tag-success">16747.632059732856</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Total Fuel:</strong></td>
+                    <td><span class="tag tag-success"><strong>16747.632059732856</strong></span></td>
+                    <td>  </td>
+                    <td><span class="tag tag-success">  </span></td>
+          <td><strong>Total Miles:</strong></td>
+                    <td><span class="tag tag-success"></span><strong>3349.526411946571</strong></td>
+          <td></td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="../static/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  // $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="../static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<script src="../static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- Morris.js charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="../static/plugins/morris/morris.min.js"></script>
+<!-- Sparkline -->
+<script src="../static/plugins/sparkline/jquery.sparkline.min.js"></script>
+<!-- jvectormap -->
+<script src="../static/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="../static/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="../static/plugins/knob/jquery.knob.js"></script>
+<script src="../static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="../static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="../static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="../static/plugins/iCheck/icheck.min.js"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhv5a8EMnu3Vle0QC7c_QjjeVbMw2Ffr0&callback=initMap"></script> -->
+
+<script src="../static/plugins/select2/select2.full.min.js"></script>
+<!-- daterangepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="../static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- datepicker -->
+<script src="../static/plugins/datepicker/bootstrap-datepicker.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="../static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- Slimscroll -->
+<script src="../static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="../static/plugins/fastclick/fastclick.js"></script>
+<script type="text/javascript" src="../static/fue.js"></script>
+<!-- AdminLTE App -->
+<script src="../static/dist/js/adminlte.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../static/dist/js/pages/dashboard.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../static/dist/js/demo.js"></script>
+<script type="text/javascript" src="../static/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../static/jquery-ui/external/jquery/jquery.js"></script>
+<script type="text/javascript">
+  $("#date").datepicker();
+</script>
+<script type="text/javascript">
+  $("#date1").datepicker();
+</script>
+ <script>
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
+
+    //Date range picker
+    $('#reservation').daterangepicker()
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({
+      timePicker         : true,
+      timePickerIncrement: 30,
+      format             : 'MM/DD/YYYY h:mm A'
+    })
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+      {
+        ranges   : {
+          'Today'       : [moment(), moment()],
+          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        startDate: moment().subtract(29, 'days'),
+        endDate  : moment()
+      },
+      function (start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+      }
+    )
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass   : 'iradio_minimal-blue'
+    })
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass   : 'iradio_minimal-red'
+    })
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass   : 'iradio_flat-green'
+    })
+
+    //Colorpicker
+    $('.my-colorpicker1').colorpicker()
+    //color picker with addon
+    $('.my-colorpicker2').colorpicker()
+
+    //Timepicker
+    $('.timepicker').timepicker({
+      showInputs: false
+    })
+  })
+  </script> 
+
+
+  <script >
+
+
+    //****************************** UNIQUE FUNCTION FOR SELECTING UNIQUE VALUES ***************************//
+
+          Array.prototype.unique = function() {
+            return this.filter(function (value, index, self) { 
+              return self.indexOf(value) === index;
+            });
+          }
+
+     //****************************** TO/FROM/AIRLINE ***************************//
+
+              function find(id,arr)
+              {
+                var sel = document.getElementById(id);
+                arr=arr.unique();
+                for(var i = 0; i < arr.length; i++) 
+                {
+                    var opt = document.createElement('OPTION');
+                    txt = document.createTextNode(arr[i]);
+                    opt.appendChild(txt);
+                    opt.setAttribute("value",arr[i]);
+                    id.insertBefore(opt,id.lastChild);
+                }
+            }   
+
+     //****************************** GLOBAL VARIABLE ***************************//
+
+          var res;
+          var map;
+          var center_lat;
+          var center_long;
+
+     //****************************** MAP INITIALIZATION ***************************//
+
+        //     function initMap() 
+        //   {
+        //     map = new google.maps.Map(document.getElementById('map'), {
+        //   zoom: 6,
+        //   center: {lat: center_lat, lng: center_long}
+        //   });
+        // }
+
+   //****************************** PAGE INITIALIZATION ***************************//
+    
+
+      $(document).ready(function(){
+
+        
+
+     //****************************** SETTING DROPDOWN VALUES ***************************//
+
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:5000/flights",
+            success: function(response)
+            {
+
+     //****************************** FINDING from TO FILL SOURCE DROPDOWN ***************************//
+
+              var from=[];
+
+              res= JSON.parse(response);
+              length=res.length;
+              for (var i=0; i<length;i++)
+                from.push(res[i]["From"]);
+
+              find(sourcef,from);
+  
+     //****************************** DESTINATION AND AIRLINE DROPDOWN INITIALLY DISABLED ***************************//
+
+               document.getElementById("destinationf").disabled=true;
+               // document.getElementById("airlinef").disabled=true;
+
+     //****************************** WHEN SOURCE IS SELECTED ***************************//
+
+               document.getElementById("sourcef").onchange=function()
+               {
+     //****************************** GETTING SELECTED VALUE FROM SOURCE DROPDOWN ***************************//
+
+                  var fromf = document.getElementById("sourcef");
+          var from_chkf=fromf.options[fromf.selectedIndex].value; 
+
+     //****************************** FINDING DESTINATION W.R.T SOURCE ***************************//
+
+          var tof=["Select Destination"];
+                  for (var i=0; i<res.length;i++)
+                  {
+                if (res[i]["From"]==from_chkf)
+                {
+                    tof.push(res[i]["To"]);
+                }
+                }
+
+     //****************************** SETTING DESTINATION DROPDOWN ***************************//
+
+                var select = document.getElementById('destinationf');
+            select.innerHTML="";
+                  find(destinationf,tof);
+
+     //****************************** ENABELING DESTINATION DROPDOWN ***************************//
+
+                  document.getElementById("destinationf").disabled=false;
+
+               }
+
+     //****************************** WHEN DESTINATION IS SELECTED ***************************//
+
+                document.getElementById("destinationf").onchange=function()
+               {
+
+     //****************************** GETTING SELECTED VALUE FROM SOURCE DROPDOWN ***************************//
+
+                  var airf=["Select Airline"]
+                  var fromf = document.getElementById("sourcef");
+          var from_chkf=fromf.options[fromf.selectedIndex].value; 
+
+     //****************************** GETTING SELECTED VALUE FROM DESTINATION DROPDOWN ***************************//
+
+          var des= document.getElementById("destinationf");
+          var des_chkf=des.options[des.selectedIndex].value;  
+
+     //****************************** FINDING AIRLINE W.R.T SOURCE AND DESTINATION ***************************//
+
+                //   for (var i=0; i<res.length;i++)
+                //   {
+                // if(res[i]["From"]==from_chkf && res[i]["To"]==des_chkf)
+                //     airf.push(res[i]["Op"]);
+                // }
+
+     //****************************** SETTING AIRLINE DROPDOWN ***************************//
+
+            //     var select = document.getElementById('airlinef');
+            // select.innerHTML="";
+            // find(airlinef,airf);
+
+      //****************************** ENABLING AIRLINE DROPDOWN ***************************//
+                
+            // document.getElementById("airlinef").disabled=false;
+
+            }
+
+      //****************************** WHEN SUBMIT BUTTON IS PRESSED ***************************//
+
+            document.getElementById("fuel_btn").onclick = function() 
+            { 
+                var data={};
+
+                document.getElementById("fuel_sec").setAttribute("style","display:inline-block;");
+
+    //****************************** INITIALIZING MAP ***************************// 
+          
+    
+        //****************************** GETTING VALUES OF SOURCE, DESTINATION AND AIRLINE ***************************//   
+                
+              // data["airline"]=document.getElementById("airlinef").value;
+              data["to"]=document.getElementById("destinationf").value;
+              data["From"]=document.getElementById("sourcef").value;
+
+        //****************************** SENDING VALUES TO PYTHON TO GET RESPECTIVE RESULT ***************************//  
+
+              
+              $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/chargeres",
+                data: data,
+                success: function(response)
+                {
+
+        //****************************** GETTING RESULT IN res ***************************//
+
+                  var resu= JSON.parse(response);
+                  var res=resu["acList"]
+                    
+        //****************************** CREATING TABLE ***************************//
+                var table = document.getElementById("flight_details");
+                table.innerHTML="";
+                length=res.length;
+                for(var i=0; i<length-1; i++)
+                {
+                  var row = table.insertRow(i);
+                  var cell0 = row.insertCell(0);
+                var cell1 = row.insertCell(1);
+                var cell2 = row.insertCell(2);
+                var cell3 = row.insertCell(3);
+                var cell4 = row.insertCell(4);
+                var cell5 = row.insertCell(5);
+                var cell6 = row.insertCell(6);
+                var cell7 = row.insertCell(7);
+                var cell8 = row.insertCell(8);
+                cell0.innerHTML = res[i]["Id"];
+                cell1.innerHTML = res[i]["Icao"];
+                cell2.innerHTML = res[i]["Mdl"];
+                cell3.innerHTML = new Date((res[i]["Miles"]*1609.34)/(res[i]['Spd']*0.514444) * 1000).toISOString().substr(11, 8);
+                cell4.innerHTML = res[i]["Spd"].toFixed(3);
+                cell5.innerHTML = res[i]["Alt"].toFixed(3);
+                cell6.innerHTML = res[i]["Miles"].toFixed(3);
+                cell7.innerHTML = res[i]["Fuel"].toFixed(3)/2;
+                cell8.innerHTML = res[i]["BwCountries"];
+                }
+
+
+       //****************************** FINDING CENTER FOR MAP ***************************//
+
+            // var center=res[0]["LatLongAltSpd"].length/4;
+            // if(center%2!=0){
+            //   center_lat=res[0]["LatLongAltSpd"][center-3];
+            //   center_long=res[0]["LatLongAltSpd"][center-2];
+            // }
+            // else{
+            //   center_lat=res[0]["LatLongAltSpd"][center];
+            //   center_long=res[0]["LatLongAltSpd"][center+1];
+            // }
+            
+            // initMap();
+            
+
+        //****************************** SHOWING RESULT IN PARAGRAPH ***************************//
+
+                // para=document.getElementById("fuel_details");
+                // // para.innerHTML="Total Fuel is: " + res[res.length-1]// ["TFuel"] + " Total Miles is: " + res[res.length-1]// ["TMiles"];
+
+        //****************************** FINDING LAT, LONG FOR SHOWING PATH ON MAP ***************************//
+
+            // var fst_lat=res[0]["LatLongAltSpd"][0];
+            // var fst_long=res[0]["LatLongAltSpd"][1];
+
+            // var len=res[0]["LatLongAltSpd"].length;
+
+
+            // for (var i=0; i<res.length-1; i++)
+            // { 
+            //   var coordinates=[{"lat": fst_lat, "lng": fst_long}];
+            //   for(var j=0; j< res[i]["LatLongAltSpd"].length; j=j+4)
+            //   { 
+            //     var name={"lat": "", "lng": ""};
+            //     var lat=res[i]["LatLongAltSpd"][j];
+            //     var long=res[i]["LatLongAltSpd"][j+1];
+            //     name["lat"]=lat;
+            //     name["lng"]=long;
+            //     coordinates.push(name);
+            //   }
+              // coordinates.push({"lat": lst_lat, "lng": st_long})
+
+        //****************************** CREATING PATH ON MAP ***************************//
+                  //   google.maps.event.trigger(map, 'resize');
+
+
+                  // wavepoint(coordinates,map,i);
+                
+            // } //for loop
+
+        //****************************** CREATING DONUT CHART ***************************// 
+             
+                plot_donut(resu["data"],fuel_details); 
+            } //success
+          });   //ajax req
+            } //fuel btn
+      } //success of document.ready        
+        })  //ajax of doc.ready
+    });   //doc.ready
+
+
+        //****************************** MAP DRAWING FUNCTION ***************************// 
+
+  function wavepoint(flightPlanCoordinates,map,color)
+  { 
+
+        //****************************** SELECTING COLOUR OF PATHS'S LINE ***************************// 
+
+    if (color==0)
+      colour="red";
+    else
+      colour="blue";
+
+        //****************************** LINE'S PROPERTIES ***************************//  
+
+    var flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: colour,
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          });
+
+
+        //****************************** PLACING LINE ON MAP ***************************//  
+
+        flightPath.setMap(map);
+  }
+
+        //****************************** CREATING DONUT CHART ***************************// 
+
+
+  function plot_donut(data,div)
+  {
+
+    // var data = data;
+    // for(var i=0;i<data.length;i++)
+    // {
+    //   data[i]['y']=(data[i]['y'])/2;
+    //   console.log(data[i]['y']);
+      
+    // }
+    var layout = {yaxis: {title: 'Charge (dollars $)'},showlegend: false};
+
+    Plotly.newPlot(div, data, layout);
+  }
+
+  // function plot_donut(res)
+  // {
+
+        //****************************** MAKING ARRAY FOR FUEL AND LEGEND ***************************// 
+
+//     var xvalue=[];
+//     var yvalue=[];
+//     var label=[]
+//     for (var i=0; i<res.length-1; i++)
+//     {
+//       yvalue.push(res[i]["Fuel"]);
+//       xvalue.push(res[i]["Op"]);
+//       label.push("Id: "+res[i]["Id"]+" Model: "+res[i]["Mdl"]);
+//     } 
+
+
+//     var trace1 = {
+//   x: xvalue,
+//   y: yvalue,
+//   type: 'bar',
+//   text: label,
+//   marker: {
+//     color: 'rgb(142,124,195)'
+//   }
+// };
+
+// var data = [trace1];
+
+// var layout = {
+//   title: 'Fuel Consumed W.R.T Airline',
+//   font:{
+//     family: 'Raleway, sans-serif'
+//   },
+//   showlegend: false,
+//   xaxis: {
+//     title: "Icao Codes",
+//     tickangle: -45,
+//     tickvals: xvalue
+//   },
+//   yaxis: {
+//     title: "Fuel Consumed (Gallons)",
+//     zeroline: false,
+//     gridwidth: 2
+//   },
+//   bargap :0.05
+// };
+
+// console.log(data);
+// Plotly.newPlot('fuel_details', data, layout);
+// }
+        //****************************** SETTING DATA VARIABLE'S PROPERTIES ***************************// 
+
+    // var data = 
+    // [{
+    //     values: value,
+    //     labels: label,
+    //     domain: {
+    //       x: [0, .48]
+    //     },
+    //     name: 'Fuel Consumption',
+    //     hoverinfo: 'label+percent+name',
+    //     hole: .4,
+    //     type: 'pie'
+    // }];
+
+        //****************************** SETTING LAYOUT PROPERTIES ***************************//  
+
+    // var layout = 
+    // {
+    //     title: 'Fuel Consumption Estimation Pie Chart',
+    //     annotations: [
+    //       {
+    //         font: {
+    //           size: 15
+    //         },
+    //         showarrow: false,
+    //         text: 'Fuel',
+    //         x: 0.18,
+    //         y: 0.5
+    //       }
+    //     ],
+    //     height: 400,
+    //     width: 500
+    // };
+
+        //****************************** PLOTTING GRAPH ***************************// 
+
+  // Plotly.newPlot('fuel_details', data, layout);
+
+  // }
+
+  </script>
+  </body>
+  </html>

@@ -1,0 +1,41 @@
+<ul class="list-items style4" *ngIf="selectedThread.merged">
+    <li class="item clearfix m-l-r-0" *ngFor="let ticket of selectedThread.mergedTicketIds" (click)="ScrollintoView(ticket._id)" [ngStyle]="{'background-color' : ticket.viewColor + '20'}">
+        <div>
+            <div>
+                <div class="avatar ava-sm" [ngStyle]="{'background-color' : ticket.viewColor}">
+                    <div class="nameInitials">
+                        <span>{{ticket.visitor.name | slice:0:2}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="info" style="width: calc(100% - 100px);">
+                <div class="details">
+                    <b class="ellipsis">{{ticket.subject}} {{ticket.CustomerInfo && ticket.CustomerInfo.customerId ? ' - CM ID: ' + ticket.CustomerInfo.customerId : ''}} {{ seeCMID(ticket) ?  ' - (Possible DUAL Id)' : ''}}</b>
+                    <div class="flex svgOnHover">
+                        <svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#visitors-colored" />
+						</svg>
+                        <span class="ellipsis">{{ticket.visitor.email}}</span>
+                    </div>
+                    <div class="flex svgOnHover" *ngIf="ticket.assigned_to">
+                        <svg class="svg active">
+							<use href="/assets/img/icons/icons-sprite.svg#agents-colored" />
+						</svg>
+                        <span class="ellipsis">{{ticket.assigned_to}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-transparent svgOnHover tooltip top-right" (click)="Demerge(selectedThread._id,ticket._id)">
+					<svg class="svg svg-default">
+						<use href="/assets/img/icons/icons-sprite.svg#initiate-chat" />
+					</svg>
+					<svg class="svg colored">
+						<use href="/assets/img/icons/icons-sprite.svg#initiate-chat-colored" />
+					</svg>
+					<span top-right class="tooltip-inner">De Merge</span>
+				</button>
+            </div>
+        </div>
+    </li>
+</ul>

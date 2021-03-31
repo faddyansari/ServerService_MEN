@@ -1,0 +1,138 @@
+<div mat-dialog-title>
+    <h3>Let's get started</h3>
+</div>
+
+<div mat-dialog-content>
+    <form class="require-validation" [formGroup]="regForm">
+        <div class="row clearfix">
+            <div class="col-sm-6 col-xs-12">
+                <fieldset>
+                    <div class="input-block">
+                        <label>Full Name</label>
+                        <input type="text" autocomplete="off" name="full_name" class="form-control input-sm" placeholder="Full Name" [formControl]="regForm.controls['full_name']">
+                    </div>
+                    <div class="input-block">
+                        <label>User Name</label>
+                        <input type="username" autocomplete="off" name="username" class="form-control input-sm" placeholder="User Name" [formControl]="regForm.controls['username']">
+                    </div>
+                    <div class="input-block has-feedback">
+                        <label>Email Address</label>
+                        <input type="email" autocomplete="off" name="email" class="form-control input-sm" placeholder="Email Address" [formControl]="regForm.controls['email']" email/>
+                        <div class="form-control-feedback">
+                            <p class="error text-olive" [hidden]="!regForm.get('email').hasError('required')">Email Required<br></p>
+                            <p class="text-red" *ngIf="regForm.get('email').hasError('email') && !regForm.get('email').hasError('required')">Invalid Email</p>
+                            <p class="text-red" [hidden]="!regForm.get('email').hasError('isEmailUnique')">This email has been registered already</p>
+                        </div>
+                    </div>
+                    <div class="input-block has-feedback">
+                        <label>Password</label>
+                        <input type="password" id="pswd" name="pswd" class="form-control input-sm" placeholder="Password" [formControl]="regForm.controls['password']">
+                        <div class="form-control-feedback">
+                            <p class="error text-olive" [hidden]="!regForm.get('password').hasError('minlength')">Password Must Be 8 characters*</p>
+                        </div>
+                    </div>
+                    <div class="input-block has-feedback">
+                        <label>Confirm Password</label>
+                        <input type="password" id="pswd_again" name="pswd_again" class="form-control input-sm" placeholder="Confirm Password" [formControl]="regForm.controls['pswd_again']">
+                        <div class="form-control-feedback">
+                            <p class="error text-olive" [hidden]="!regForm.get('pswd_again').hasError('minlength')">Password Must Be 8 characters* <br></p>
+                            <p class="text-red" *ngIf="regForm.get('pswd_again').hasError('noMatch')">Password Not Matched</p>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="DoubleSepY h50"></div>
+
+            <div class="col-sm-6 col-xs-12">
+                <fieldset>
+                        <div class="input-block has-feedback">
+                        <label>Company Website</label>
+                        <input #website type="url" class="form-control input-sm" autocomplete="off" placeholder="http://example.com" name="website" [formControl]="regForm.controls['website']">
+                        <div class="form-control-feedback">
+                            <p class="text-red" [hidden]="!regForm.get('website').hasError('isWebsiteUnique')">This URL has been registered already</p>
+                        </div>
+                    </div>
+                    <div class="input-block">
+                        <label>Employees</label>
+                        <div class="sel style1 sel-sm">
+                            <select class="form-control input-sm" name="company_size" [formControl]="regForm.controls['company_size']">
+                                <!-- <option value="" disabled="">Number of employees</option> -->
+                                <option value="" disabled>Select Range</option>
+                                <option value="1-9">1-9</option>
+                                <option value="10-49">10-49</option>
+                                <option value="50-99">50-99</option>
+                                <option value="100-499">100-499</option>
+                                <option value="500-999">500-999</option>
+                                <option value="1000+">1000+</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-block">
+                        <label>Business Industry</label>
+                        <div class="sel style1 sel-sm">
+                            <select class="form-control input-sm" name="company_type" [formControl]="regForm.controls['company_type']">
+                                <option value="" disabled>Select Industry</option>
+                                <option value="Automotive">Automotive</option>
+                                <option value="Education">Education</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Games-Gambling">Games &amp; Gambling</option>
+                                <option value="Government-Non-profit">Government / Non-profit</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="HumanResources">Human Resources</option>
+                                <option value="IT">IT</option>
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Media-Telecom">Media &amp; Telecom</option>
+                                <option value="ProfessionalServices">Professional Services</option>
+                                <option value="RealEstate">Real Estate</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Software">Software</option>
+                                <option value="SupportServices">Support Services</option>
+                                <option value="Travel">Travel</option>
+                                <option value="WebApps">Web Apps</option>
+                                <option value="WebHosting">Web Hosting</option>
+                                <option value="Wholesale">Wholesale</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-block">
+                        <label>Business Country</label>
+                        <div class="sel style1 sel-sm">
+                            <select class="form-control input-sm" name="country_name" [formControl]="regForm.controls['country_name']" required>
+                                <option value="" disabled>Select Country</option>
+                                <option value="PK">Pakistan</option>
+                                <option value="USA">United States of America</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="CN">China</option>
+                                <option value="JP">Japan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-block">
+                        <label>Business Phone</label>
+                        <input type="tel" autocomplete="off" placeholder="+11-111-111-1111" name="phone_no" class="form-control input-sm" [formControl]="regForm.controls['phone_no']" (keypress)="_validationService.NumbersOnly($event)">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </form>
+</div>
+
+<div class="mat-dialog-footer clearfix">
+     <mat-dialog-actions>
+        <button class="btn btn-xs bg-blue"
+            [disabled]="(regForm.invalid)"
+            [ngClass]="(loading) ? 'btnSpinner' : ''"
+            (click)="submitForm(regForm.value)">
+            <span>Submit</span>
+        </button>
+        <button class="btn btn-xs bg-charcoal-light"
+            [mat-dialog-close]="{'error' : 'cancel', 'msg' : 'cancel'}">
+            <span>Cancel</span>
+        </button>
+    </mat-dialog-actions>
+</div>

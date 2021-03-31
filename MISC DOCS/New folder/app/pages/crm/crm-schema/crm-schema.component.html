@@ -1,0 +1,142 @@
+<!--
+<div class="box-body clearfix" id="crmSchemaComponent">
+	<div class="row clearfix">
+		<div class="col-md-4 col-sm-5 col-xs-12">
+			<div class="box-subtitle clearfix">
+				<div>
+					<h5>Schema List</h5>
+				</div>
+				<div>
+					<button class="b-0 bg-transparent p-0 svgOnHover" (click)="ShowAddSchemaForm()">
+						<svg class="svg active">
+							<use [attr.href]="(!showAddSchemaForm) ? '/assets/img/icons/icons-sprite.svg#plus-circle' : '/assets/img/icons/icons-sprite.svg#minus-circle'"
+								[ngClass]="(!showAddSchemaForm) ? 'text-green' : 'text-red'" />
+						</svg>
+					</button>
+				</div>
+			</div>
+			<form class="m-b-15 clearfix" [ngClass]="(showAddWorkFlowForm) ? '' : 'hide'" [formGroup]="addSchemaForm">
+				<div class="input-block">
+					<div class="text">
+						<label>Ssadchema Name</label>
+						<br>
+						<input type="text" class="form-control input-sm m-b-5" placeholder="Enter Schema Name"
+							[formControl]="addSchemaForm.controls['schemaName']">
+						<p class="text-red clearfix"
+							[ngClass]="!addSchemaForm.get('schemaName').hasError('matched') ? 'hide' : ''">Schema
+							Name has been used already.</p>
+						<br>
+
+					</div>
+				</div>
+				<button (click)="AddSchema()" [disabled]="addSchemaForm.invalid" type="submit"
+					class="btn btn-sm bg-blue">Add Schema</button>
+			</form>
+			<ul class="activateScrollbar clearfix p-0">
+				<li class="notif clearfix"
+					[ngClass]="(selectedSchema && selectedSchema._id == schema._id) ? 'active' : ''"
+					*ngFor="let schema of schemaList" (click)="SelectSchema(schema.name)">
+					<div class="name">
+						<span class="ellipsis"><b>{{schema.name}}</b></span>
+					</div>
+					<span *ngIf="schema.primary" class="notif-count label-count">P</span>
+				</li>
+			</ul>
+		</div>
+		<div class="col-md-8 col-sm-7 col-xs-12">
+			<div class="box-subtitle clearfix">
+				<div>
+					<h5>Define Schema &nbsp;<small *ngIf="selectedSchema && selectedSchema.primary"
+							class="text-green">(Primary)</small></h5>
+				</div>
+			</div>
+			<div class="formFieldArea clearfix" *ngIf="selectedSchema && selectedSchema.form.length">
+				<form>
+					<fieldset>
+						<div class="fieldsetData checkboxField clearfix"
+							*ngFor="let elem of selectedSchema.form; index as i">
+							<div class="printField m-b-10 clearfix" *ngIf="elem.type == 'checkBox'">
+								<div class="pretty p-svg p-fill p-smooth">
+									<input type="checkbox" value="{{elem.value}}" checked>
+									<div class="state svgOnHover">
+										<svg class="svg svg-icon active">
+											<use href="/assets/img/icons/icons-sprite.svg#ok" class="text-white" />
+										</svg>
+										<label>{{elem.label}}</label>
+									</div>
+								</div>
+								<button class="btn btn-xs bg-red pull-right" (click)="DeleteElement(i)">
+									<svg class="svg active">
+										<use href="/assets/img/icons/icons-sprite.svg#delete" class="text-white" />
+									</svg>
+								</button>
+							</div>
+							<div class="printField m-b-10 clearfix" *ngIf="elem.type == 'radioBtn'">
+								<div class="pretty p-thick p-smooth p-default">
+									<input type="radio" value="{{elem.value}}" checked>
+									<div class="state">
+										<label>{{elem.label}}</label>
+									</div>
+								</div>
+								<button class="btn btn-xs bg-red pull-right svgOnHover" (click)="DeleteElement(i)">
+									<svg class="svg active">
+										<use href="/assets/img/icons/icons-sprite.svg#delete-colored"
+											class="text-white" />
+									</svg>
+								</button>
+							</div>
+							<div class="printField  m-b-10 clearfix" *ngIf="elem.type == 'testBox'">
+								<label>{{elem.label}}</label>
+								<br>
+								<input type="email" class="form-control input-sm pull-left"
+									placeholder="elem.placeholder">
+								<button class="bo-rad bg-transparent pull-right" (click)="DeleteElement(i)"><i
+										class="icon-trash text-red fs-15"></i></button>
+							</div>
+						</div>
+					</fieldset>
+					<button class="btn btn-xs bg-blue" (click)="SubmitSchema()">Submit</button>
+					<button class="btn btn-xs bg-blue" *ngIf="selectedSchema"
+						(click)="MakePrimary(selectedSchema._id)">Make Primary</button>
+				</form>
+			</div>
+		</div>
+		<div class="col-sm-3 col-xs-12" *ngIf="selectedWorkflow">
+			<div class="box-subtitle clearfix">
+				<div>
+					<h5>Form Fields List</h5>
+				</div>
+			</div>
+			<div class="formFields">
+				<ul class="activateScrollbar p-0">
+					<li>
+						<label>Field Name</label>
+						<form [formGroup]="addSchemaField">
+							<div class="input-block clearfix dataFields">
+								<input type="text" class="form-control input-sm" placeholder="Define Value"
+									formControlName="value">
+								<input type="text" class="form-control input-sm" placeholder="Define Label"
+									formControlName="label">
+								<input #rdioBtnMachineNameElement type="text" class="form-control input-sm"
+									placeholder="Define State Machine"
+									[matAutocomplete]="rdioBtnMachineName"
+									(keyup)="keyupRdioBtn($event)"
+									(focus)="Focus('radio')"
+									formControlName="machineName">
+								<mat-autocomplete class="smAutoComplete" #rdioBtnMachineName="matAutocomplete"
+									autoActiveFirstOption>
+									<mat-option *ngFor="let machine of filteredstateMachineList" [value]="machine.name">
+										{{ machine.name }}
+									</mat-option>
+								</mat-autocomplete>
+							</div>
+							<button (click)="AddRadioButton()" [disabled]="addRadioBtnForm.invalid"
+								class="btn btn-xs bg-blue clearfix">ADD</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+-->

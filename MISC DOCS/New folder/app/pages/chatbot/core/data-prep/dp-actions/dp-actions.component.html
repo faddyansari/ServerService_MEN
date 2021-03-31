@@ -1,0 +1,50 @@
+<div class="intent-list clearfix">
+	<div class="box-subtitle clearfix">
+		<div>
+			<h5>Actions</h5>
+		</div>
+		<div>
+			<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+				(click)="AddActions()"
+				[ngClass]="(!showActionForm) ? 'border-blue' : 'border-red'">
+				<span>{{(!showActionForm) ? 'Add' : 'Cancel'}}</span>
+				<svg class="svg active" [ngClass]="(!showActionForm) ? 'bg-blue' : 'bg-red'">
+					<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!showActionForm"/>
+					<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="showActionForm"/>
+				</svg>
+			</button>
+		</div>
+	</div>
+	<div class="document-list">
+		<ul class="activateScrollbar clearfix">
+			<li class="notif clearfix" *ngFor="let i of action_list;let index = index;">
+				<div class="info">
+					<div class="desc">
+						<b>Action Name:</b>
+						<p class="ellipsis" id="i.action_name">{{i.action_name}}</p>
+					</div>
+					<div class="desc">
+						<b>URL:</b>
+						<p class="ellipsis" id="i.endpoint_url">{{i.endpoint_url}}</p>
+					</div>
+					<div class="desc">
+						<b>Template Sentence: </b>
+						<p class="ellipsis" id="i.template">{{i.template}}</p>
+					</div>
+					<div class="actions">
+						<button class="btn btn-xs btn-transparent svgOnHover tooltip left"
+							(click)="deleteAction(i, index)">
+							<svg class="svg svg-default">
+								<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+							</svg>
+							<svg class="svg colored">
+								<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+							</svg>
+							<span class="tooltip-inner">Delete</span>
+						</button>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

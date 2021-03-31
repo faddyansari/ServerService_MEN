@@ -1,0 +1,194 @@
+.nav-tabs-custom {
+	position: relative;
+	margin: 0;
+	width: 100%;
+	> .nav-tabs {
+		padding: 15px 15px 14px 15px;
+		@include phone {
+			width: 100%;
+			height: 200px;
+		}
+		@include tabletL {
+			width: 150px;
+			height: calc(100vh - 50px);
+			float: left;
+			border-right: 1px solid transparent;
+		}
+		&.pull-right {
+			> li {
+				&:first-child {
+					margin-right: 0;
+				}
+			}
+		}
+		> li {
+			width: 100%;
+			margin: 0 0 10px 0;
+			float: left;
+			padding: 0;
+			border: 0;
+			&:hover,
+			&.active {
+				opacity: 1;
+			}
+			> a {
+				padding: 0;
+				border: 0;
+				display: block;
+				&:after {
+					content: '';
+					width: 100%;
+					height: 1px;
+					position: absolute;
+					left: 0;
+					bottom: 0;
+					@include transition (border-bottom 0.5s ease-in-out);
+				}
+				> .badge {
+					float: right;
+				}
+			}
+			&:first-child {
+				margin-left: 0;
+			}
+			&.header {
+				line-height: 35px;
+				padding: 0 10px;
+				color: #444;
+			}
+		}
+	}
+	> .tab-content {
+		padding: 0px;
+		position: relative;
+		@include phone {
+			width: 100%;
+		}
+		@include tabletL {
+			width: 300px;
+			height: calc(100vh - 50px);
+			float: left;
+			border-right: 1px solid transparent;
+		}
+		.activateScrollbar {
+			@include phone {
+				height: 380px;
+				padding: 0;
+			}
+			@include tabletL {
+				height: calc(100vh - 96px);
+			}
+		}
+		.tab-pane {
+			display: block;
+		}
+	}
+	&.vertical {
+		margin: 0;
+		height: 100%;
+		> .nav-tabs {
+			@include tabletL {
+				width: 300px;
+			}
+			> ul {
+				height: 100%;
+				padding: 0;
+				.ng-scrollbar-view {
+					padding-left: 0;
+					> li {
+						width: 100%;
+						position: relative;
+						margin-bottom: 5px;
+						overflow: hidden;
+						@include transition (all .2s ease-in-out);
+						> a {
+							padding: 10px 36px 10px 15px;
+							font-size: 12px;
+							display: block;
+							border-radius: 25px;
+							font-family: var(--muli-bold);
+							@include transition (all .2s ease-in-out);
+						}
+						&:hover,
+						&:focus,
+						&.active {
+							> a {
+								&:after {
+									@include transition (border-bottom 0.5s ease-in-out);
+								}
+							}
+						}
+						> .dropdown-arrow {
+							width: 36px;
+							height: 36px;
+							padding: 8px 0;
+							text-align: center;
+							position: absolute;
+							right: 0;
+							top: 0;
+							font-size: 15px;
+							user-select: none;
+							cursor: pointer;
+							@include transform (rotate(-90deg));
+							@include transition (transform .2s ease-in-out);
+						}
+						> ul {
+							display: none;
+							margin: 0 15px;
+							@include transition (display .5s ease-in-out);
+							> li {
+								height: 0;
+								position: relative;
+								margin-top: 2px;
+								@include transition (all .2s ease-in-out);
+								> a {
+									padding: 8px 8px 8px 16px;
+									display: block;
+									font-family: var(--muli-bold);
+									border-radius: 25px;
+									@include transition (all .2s ease-in-out);
+									&:before {
+										content: '';
+										position: absolute;
+										left: 0px;
+										top: 15px;
+										width: 3px;
+										height: 1px;
+										@include transition (width .2s ease-in-out);
+									}
+								}
+							}
+						}
+						&.active {
+							> .dropdown-arrow {
+								@include transform (rotate(0deg));
+							}
+							> ul {
+								display: block;
+								@include transition (display .5s ease-in-out);
+								> li {
+									height: inherit;
+									&:hover,
+									&.active {
+										> a {
+											@include transition (all .2s ease-in-out);
+											&:before {
+												width: 10px;
+												@include transition (width .2s ease-in-out);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		> .tab-content {
+			@include tabletL {
+				width: calc(100% - 300px);
+			}
+		}
+	}
+}

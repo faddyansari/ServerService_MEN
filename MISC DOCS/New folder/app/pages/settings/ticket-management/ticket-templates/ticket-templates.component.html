@@ -1,0 +1,31 @@
+<div class="box clearfix animated fadeIn delay-400">
+	<div class="box-body clearfix p-0">
+		<div class="box-subtitle clearfix">
+			<div>
+				<h5 *ngIf="!selectedTemplate && !addTemplate">Ticket Template Designer</h5>
+				<h5 *ngIf="addTemplate && !selectedTemplate">Add New Ticket Template</h5>
+				<h5 *ngIf="addTemplate && selectedTemplate">Edit Ticket Template</h5>
+			</div>
+			<div *ngIf="!selectedTemplate && !addTemplate">
+				<button class="btn btn-xs btn-icon right bg-white svgOnHover" (click)="AddTemplate()"
+					[ngClass]="(!selectedTemplate && !addTemplate) ? 'border-blue' : 'border-red'">
+					<span>{{(!selectedTemplate && !addForm) ? 'New Ticket Template' : 'Cancel'}}</span>
+					<svg class="svg active" [ngClass]="(!selectedTemplate && !addTemplate) ? 'bg-blue' : 'bg-red'">
+						<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!selectedTemplate && !addTemplate"/>
+						<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="selectedTemplate && addTemplate"/>
+					</svg>
+				</button>
+
+			</div>
+		</div>
+		<div class="activateScrollbar clearfix p-0">
+
+			<app-add-ticket-templates [TicketTemplateObject]="(addTemplate) ? ticketTemplateObject : selectedTemplate"
+				[ngClass]="(!selectedTemplate && !addTemplate) ? 'hide' : '' " *ngIf="addTemplate || selectedTemplate">
+			</app-add-ticket-templates>
+			<app-ticket-templates-list class="document-list" *ngIf="!addTemplate && !selectedTemplate"></app-ticket-templates-list>
+
+		</div>
+	</div>
+</div>
+

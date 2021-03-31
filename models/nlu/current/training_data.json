@@ -1,0 +1,125 @@
+{
+  "rasa_nlu_data": {
+    "common_examples": [
+      {
+        "intent": "greet",
+        "text": "hey"
+      },
+      {
+        "intent": "greet",
+        "text": "hello"
+      },
+      {
+        "intent": "greet",
+        "text": "howdy"
+      },
+      {
+        "intent": "affirm",
+        "text": "ok"
+      },
+      {
+        "intent": "affirm",
+        "text": "okay"
+      },
+      {
+        "intent": "order_porduct",
+        "entities": [
+          {
+            "start": 23,
+            "end": 29,
+            "value": "router",
+            "entity": "product"
+          }
+        ],
+        "text": "i'm looking to order a router"
+      },
+      {
+        "intent": "order_porduct",
+        "entities": [
+          {
+            "start": 18,
+            "end": 24,
+            "value": "router",
+            "entity": "product"
+          }
+        ],
+        "text": "I want to order a router"
+      },
+      {
+        "intent": "order_porduct",
+        "entities": [
+          {
+            "start": 22,
+            "end": 28,
+            "value": "router",
+            "entity": "product"
+          },
+          {
+            "start": 13,
+            "end": 18,
+            "value": "types",
+            "entity": "product"
+          }
+        ],
+        "text": "What are the types of router you have"
+      },
+      {
+        "intent": "order_porduct",
+        "entities": [
+          {
+            "start": 20,
+            "end": 26,
+            "value": "router",
+            "entity": "product"
+          },
+          {
+            "start": 0,
+            "end": 4,
+            "value": "show",
+            "entity": "product"
+          },
+          {
+            "start": 8,
+            "end": 11,
+            "value": "all",
+            "entity": "product"
+          }
+        ],
+        "text": "show me all the 829 router"
+      },
+      {
+        "intent": "order_porduct",
+        "entities": [
+          {
+            "start": 11,
+            "end": 18,
+            "value": "murtaza",
+            "entity": "product"
+          },
+          {
+            "start": 3,
+            "end": 7,
+            "value": "name",
+            "entity": "product"
+          },
+          {
+            "start": 0,
+            "end": 2,
+            "value": "my",
+            "entity": "product"
+          },
+          {
+            "start": 8,
+            "end": 10,
+            "value": "is",
+            "entity": "product"
+          }
+        ],
+        "text": "my name is murtaza"
+      }
+    ],
+    "regex_features": [],
+    "lookup_tables": [],
+    "entity_synonyms": []
+  }
+}

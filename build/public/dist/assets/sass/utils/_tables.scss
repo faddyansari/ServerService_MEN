@@ -1,0 +1,238 @@
+caption {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color: var(--black-light);
+    text-align: left;
+}
+
+th {
+    text-align: left;
+}
+
+.table {
+    @extend %width100;
+    border-collapse: collapse;
+    background-color: var(--white);
+    col[class*="col-"] {
+        position: static;
+        display: table-column;
+        float: none;
+    }
+    td[class*="col-"],
+    th[class*="col-"] {
+        position: static;
+        display: table-cell;
+        float: none;
+    }
+    > thead,
+    > tbody,
+    > tfoot {
+        tr {
+            > th,
+            > td {
+                padding: 5px 10px;
+                width: 0;
+                border:0;
+                vertical-align: middle;
+            }
+        }
+        &.text-left {
+            tr {
+                > th,
+                > td {
+                    text-align: left;
+                }
+            }
+        }
+        &.text-center {
+            tr {
+                > th,
+                > td {
+                    text-align: center;
+                }
+            }
+        }
+        &.text-right {
+            tr {
+                > th,
+                > td {
+                    text-align: right;
+                }
+            }
+        }
+    }
+    > thead {
+        tr {
+            > th {
+                border-bottom: 2px solid var(--gray);
+                background-color: var(--card-light);
+                margin-bottom: 20px;
+                padding: 10px;
+                &.clickable {
+                    cursor: pointer;
+                    text-decoration: underline;
+                    padding: 5px 20px 5px 5px;
+                    @extend %posRelative;
+                    i {
+                        @extend %posAbsolute;
+                        right: 5px;
+                    }
+                }
+            }
+            &.collapse.in {
+                display: table-row;
+            }
+        }
+    }
+    > tbody {
+        border-top: 2px solid var(--gray);
+        tr {
+            > th,
+            > td {
+                line-height: 18px;
+                color: var(--black-light);
+            }
+            > th {
+                background-color: var(--gray);
+            }
+            &:nth-child(even) {
+                background-color: var(--gray-alpha1);
+            }
+            &:nth-child(odd) {
+                background-color: var(--gray-alpha3);
+            }
+            &:hover {
+                background-color: var(--gray-alpha4);
+            }
+        }
+        &.collapse.in {
+            display: table-row-group;
+        }
+    }
+    > tfoot {
+        tr {
+            > th {
+                background-color: var(--gray);
+            }
+        }
+    }
+    &.table-bordered {
+        @extend %b1;
+        @extend %borderGray;
+        > thead {
+            > tr {
+                > th,
+                > td {
+                    border-bottom-width: 2px;
+                }
+            }
+        }
+        > thead,
+        > tbody,
+        > tfoot {
+            > tr {
+                > th,
+                > td {
+                    @extend %b1;
+                    @extend %borderGray;
+                }
+            }
+        }
+    }
+    &.table-hover {
+        > tbody {
+            > tr:hover {
+                > td,
+                > th {
+                   background-color: var(--off-white);
+                }
+            }
+        }
+    }
+}
+
+.table-responsive {
+    width: 100%;
+    min-height: .01%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    @media print {
+        overflow: auto;
+        > .table {
+            > tr {
+                > th,
+                > td {
+                    white-space: normal !important
+                }
+            }
+        }
+    }
+}
+
+.table-responsive2 {
+    > .table {
+        height: 10px;
+    }
+}
+
+.scroll-desktop-160 {
+    .table-responsive,
+    .table-responsive2 {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        >.table {
+            width: 160% !important;
+            max-width: 160% !important;
+        }
+    }
+}
+
+.scroll-desktop {
+    .table-responsive,
+    .table-responsive2 {
+        @include phone {
+            overflow-x: scroll;
+            overflow-y: hidden;
+        }
+        @include tabletL {
+            overflow: inherit;
+        }
+        > .table {
+            width: 2235px !important;
+            max-width: 2235px !important;
+            @include phone {
+                width: 200%;
+                max-width: 200%;
+            }
+            @include tabletL {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-bottom: 20px;
+            }
+        }
+
+    }
+}
+
+.no-scroll-desktop {
+    .table-responsive,
+    .table-responsive2 {
+        @include phone {
+            overflow-x: scroll;
+            overflow-y: hidden;
+        }
+        @include tabletL {
+            overflow: inherit;
+        }
+        > .table {
+            @include phone {
+                width: 200%;
+                max-width: 200%;
+            }
+            @include tabletL {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+    }
+}

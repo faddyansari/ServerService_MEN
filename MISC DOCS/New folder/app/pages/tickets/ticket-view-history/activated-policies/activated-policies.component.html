@@ -1,0 +1,25 @@
+<div class="toggleList activityLog" *ngIf="allActivatedPolicies">
+  <div class="clearfix" *ngFor="let activity of allActivatedPolicies">
+    <div class="logGroup">
+      <div class="dateLog">
+        <span>{{ activity.policyName }}</span>
+      </div>
+      <ul class="list-items clearfix style4">
+        <li class="item clearfix notif">
+          <div>
+            <div class="info">
+              <p>Perform these actions:</p>
+              <div *ngFor="let operate of activity.operations;let index=index">
+              <span>{{index+1 }} Set {{operate.operationName}} :- </span> 
+              <span>{{operate.operationValue}}</span>
+              <br>
+              </div>
+              <br>
+              <span>within: {{ShowTime()}}</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

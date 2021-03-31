@@ -1,0 +1,106 @@
+<div class="intent-list clearfix">
+	<div class="box-subtitle clearfix">
+		<div>
+			<h5>Stories</h5>
+		</div>
+		<div>
+			<button class="btn btn-xs btn-icon right bg-white svgOnHover"
+				(click)="AddStory()"
+				[ngClass]="(!showStoryForm) ? 'border-blue' : 'border-red'">
+				<span>{{(!showStoryForm) ? 'Add' : 'Cancel'}}</span>
+				<svg class="svg active" [ngClass]="(!showStoryForm) ? 'bg-blue' : 'bg-red'">
+					<use href="/assets/img/icons/icons-sprite.svg#plus" class="text-white" *ngIf="!showStoryForm"/>
+					<use href="/assets/img/icons/icons-sprite.svg#cancel" class="text-white" *ngIf="showStoryForm"/>
+				</svg>
+			</button>
+		</div>
+	</div>
+	<div class="document-list">
+		<ul class="activateScrollbar clearfix">
+			<li class="notif clearfix" *ngFor="let i of story_list;let index = index;">
+				<div class="info">
+					<div class="desc">
+						<div class="flex f-row f-justify-start f-align-center">
+							<h4 id="i.story_name" (click)="showIntents(i)">{{i.story_name}}</h4>
+							<button class="btn btn-xs btn-transparent svgOnHover tooltip left b-l-1 p-l-10 m-l-14 border-border-dark"
+								*ngIf="!i.editable"
+								(click)="deleteStory(i, index)">
+								<svg class="svg svg-default">
+									<use href="/assets/img/icons/icons-sprite.svg#delete"/>
+								</svg>
+								<svg class="svg colored">
+									<use href="/assets/img/icons/icons-sprite.svg#delete-colored"/>
+								</svg>
+								<span class="tooltip-inner">Delete</span>
+							</button>
+						</div>
+						<div class="input-block b-b-1 border-border p-b-14 m-b-14" *ngFor="let intent of i.intents; let index_intent = index">
+							<p>
+								<b>Intent:</b>
+								<span>{{getIntentName(intent.intent_id)}}</span>
+							</p>
+							<p *ngFor="let resp of intent.respFuncs"><b>Response: </b> {{getResponseName(resp)}}</p>
+							<p *ngFor="let act of intent.actions"><b>Actions: </b>{{getActionName(act)}}</p>
+							<br>
+							<div class="input-group-sm">
+								<div class="input-block">
+									<label>Add Response</label>
+									<div class="input-group-sm">
+										<div class="sel style1 sel-xs">
+											<select class="form-control" (change)="selectRespFunc($event)">
+												<option value="">Select</option>
+												<option *ngFor="let r of resp_func_list" [value]="r._id">{{r.func_name}}</option>
+											</select>
+										</div>
+										<div class="input-group-btn">
+											<button class="btn bg-blue"
+												(click)="addRespFunc(i._id,intent.intent_id)">
+												<span>Add</span>
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="input-block">
+									&nbsp;&nbsp;&nbsp;&nbsp;
+								</div>
+								<!-- <div class="input-block">
+									<label>Add Action</label>
+									<div class="input-group-sm">
+										<div class="sel style1 sel-xs">
+											<select class="form-control m-b-0" (change)="selectAction($event)">
+												<option value="">Select</option>
+												<option *ngFor="let a of action_list" [value]="a._id">{{a.action_name}}</option>
+											</select>
+										</div>
+										<div class="input-group-btn">
+											<button class="btn bg-blue"
+												(click)="addAction(i._id,intent.intent_id)">
+												<span>Add</span>
+											</button>
+										</div>
+									</div>
+								</div> -->
+							</div>
+						</div>
+						<div *ngIf="!i.intents.length || i.intents[i.intents.length - 1].respFuncs.length || i.intents[i.intents.length - 1].actions.length">
+							<label>Add Intent</label>
+							<div class="input-group-sm">
+								<div class="sel style1 sel-sm">
+									<select class="form-control m-0" (change)="selectIntent($event)">
+										<option value="" selected>Select</option>
+										<option *ngFor="let j of intent_list" [value]="j._id">{{j.name}}</option>
+									</select>
+								</div>
+								<div class="input-group-btn">
+									<button class="btn bg-blue" (click)="AddIntentToStory(i)">
+										<span>Add</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

@@ -1,0 +1,118 @@
+@charset "utf-8";
+
+@import '../../assets/sass/partials/variables';
+@import '../../assets/sass/partials/mixins';
+@import '../../assets/sass/partials/extensions';
+
+#visitorsSidebar {
+	position: fixed;
+	top: 0px;
+	left: -300px;
+	@extend %transitionAll300;
+	z-index: 999;
+	&.active {
+		left: 0;
+		@extend %transitionAll300;
+	}
+	.chatWindow {
+		> .vis-list {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			width: 60px;
+			background-color: var(--theme-bg);
+			border-left: 1px solid var(--border);
+			z-index: 100;
+			> .activateScrollbar {
+				@extend %p0;
+				li {
+					height: 50px;
+					padding: 5px 4px 5px 4px;
+					@extend %posRelative;
+					cursor: pointer;
+					border-left-width: 2px;
+					border-left-style: solid;
+					border-left-color: transparent;
+					&:hover,
+					&.active {
+						border-left-color: var(--blue);
+						background-color: var(--blue-alpha1);
+						.availability {
+							> img {
+								border-color: #dee8f7;
+							}
+						}
+					}
+					@extend %availability;
+					.availability {
+						left: 3px;
+						bottom: 3px;
+						background-color: var(--theme-bg);
+						> img {
+							border-color: var(--theme-bg);
+						}
+					}
+				}
+			}
+		}
+		.box {
+			.box-header {
+				height: 60px;
+				background-color: var(--charcoal-light);
+				border: 0;
+				@extend %transitionAll300;
+				.vis-tabs {
+					width: calc(100% - 60px);
+					@extend %transitionAll300;
+				}
+				.vis-icon {
+					width: 60px;
+					height: 60px;
+					position: absolute;
+					right: 0;
+					top: 0;
+					padding: 10px;
+					cursor: pointer;
+					@extend %transitionAll300;
+					&:hover {
+						background-color: var(--orange);
+					}
+				}
+			}
+			.box-body {
+				> .chatBody {
+					background-color: var(--white);
+				}
+				> .chatFooter {
+					.msgArea {
+						flex-direction: column;
+						textarea {
+							width: calc(100% - 28px);
+							padding: 14px;
+							margin: 0;
+							border-bottom: 1px solid var(--border);
+						}
+						.tools {
+							padding: 7px 10px;
+							width: 100%;
+						    justify-content: center;
+							.input-group-btn {
+								width: 100%;
+								> * {
+									flex: 1;
+									display: flex;
+									justify-content: center;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		.chatFooter {
+			#emoji-div-wrapper.showEmoji {
+				bottom: 176px;
+			}
+		}
+	}
+}

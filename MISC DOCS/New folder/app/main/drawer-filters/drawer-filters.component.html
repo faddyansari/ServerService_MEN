@@ -1,0 +1,181 @@
+<div class="drawer-filters left">
+	<div class="box clearfix animated fadeIn delay-400" id="chatFilters">
+		<div class="box-header">
+			<h5 class="box-title">Filters</h5>
+			<div class="box-tools">
+				<div class="btn-group">
+					<button class="btn btn-xxs btn-theme" (click)="Reload()">
+						<span>Reload</span>
+					</button>
+					<button class="btn btn-xxs btn-theme" [disabled]="CheckFiltersEmpty()" (click)="ClearFields()">
+						<span>Clear</span>
+					</button>
+					<button class="btn btn-xxs bg-transparent tooltip svgOnHover bottom-right p-l-r-5"
+						(click)="CloseFilter()">
+						<svg class="svg svg-default">
+							<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+						</svg>
+						<svg class="svg colored">
+							<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+						</svg>
+						<span class="tooltip-inner">Close</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="box-body clearfix p-0">
+			<div class="activateScrollbar clearfix p-0">
+				<div class="vhList notif clearfix">
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="input-block">
+								<label>Sort by</label>
+								<div class="input-block m-b-20">
+									<div class="input-group">
+										<div class="pretty p-default p-round p-smooth m-r-20">
+											<input type="radio" value="1" [(ngModel)]="sortBy.type"
+												(change)="updateSort()">
+											<div class="state">
+												<label>ASC</label>
+											</div>
+										</div>
+										<div class="pretty p-default p-round p-smooth">
+											<input type="radio" checked value="-1" [(ngModel)]="sortBy.type"
+												(change)="updateSort()">
+											<div class="state">
+												<label>DESC</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-xs" (change)="updateSort()"
+										[(ngModel)]="sortBy.name">
+										<option value="createdOn">Created date</option>
+										<option value="lastmodified">Last updated</option>
+									</select>
+								</div>
+							</div>
+							<div class="input-block">
+								<label>Tickets Created</label>
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-xs" (change)="ApplyFilter()"
+										[(ngModel)]="textInputFilter['tickets']">
+										<option value="yes">Yes</option>
+										<option value="no">No</option>
+										<option value="all">All</option>
+									</select>
+								</div>
+							</div>
+							<div class="input-block">
+								<label>Select Date</label>
+								<div class="input-group-xs" [popper]="dateRangePopper" [popperShowOnStart]="false"
+									[popperTrigger]="'click'" [popperHideOnClickOutside]="true"
+									[popperHideOnScroll]="false" (popperOnShown)="ShowDateRange($event)"
+									[popperPlacement]="'right-start'">
+									<input type="text" class="form-control" *ngIf="daterange"
+										value="{{(daterange.from | date:'shortDate') + '-' +  (daterange.to | date:'shortDate')}}"
+										disabled>
+									<!-- <div *ngIf="daterange">
+												<span *ngIf="daterange.to">From : {{(daterange.from | date:'shortDate')}} -
+												</span>
+												<span *ngIf="daterange.from">To :
+													{{(daterange.to | date:'shortDate')}}</span>
+											</div> -->
+									<input type="text" class="form-control" *ngIf="!daterange"
+										placeholder="Select Period">
+									<div class="input-group-addon svgOnHover tooltip top-right" (click)="clearDate($event)"
+										*ngIf="daterange">
+										<svg class="svg svg-default">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle"/>
+										</svg>
+										<svg class="svg colored">
+											<use href="/assets/img/icons/icons-sprite.svg#cancel-circle-colored"/>
+										</svg>
+										<span class="tooltip-inner">Cancel</span>
+									</div>
+									<div class="input-group-addon svgOnHover tooltip top-right" *ngIf="!daterange">
+										<svg class="svg svg-blue active">
+											<use href="/assets/img/icons/icons-sprite.svg#calendar"/>
+										</svg>
+										<span class="tooltip-inner">Date Picker</span>
+									</div>
+								</div>
+							</div>
+							<div class="input-block" *ngIf="permissions && permissions.canView == 'all'">
+								<label>Chat Type</label>
+								<select class="form-control input-xs" (change)="chatTypeChanged()"
+									[(ngModel)]="chatType">
+									<option value="all" selected>All(not includes ended)</option>
+									<option value="attended">Attended</option>
+									<option value="unattended">Unattended</option>
+									<option value="ended">Ended</option>
+								</select>
+							</div>
+							<!-- <div class="input-block" *ngIf="permissions">
+								<label>Chat Status</label>
+								<select class="form-control input-xs" (change)="chatTypeChanged()"
+									[(ngModel)]="chatStatus">
+									<option value="all">All</option>
+									<option value="ended">Ended</option>
+									<option value="archived" selected>Archived</option>
+								</select>
+							</div> -->
+							<div class="input-block" *ngIf="permissions">
+								<label>Chat ID</label>
+								<input type="text" class="form-control input-xs" [(ngModel)]="textInputFilter['clientID']"
+									(input)="updateFilter($event , 'clientID')">
+							</div>
+							<div class="input-block" *ngIf="permissions">
+								<label>Visitor Email</label>
+								<div class="form-control input-xs">
+									<input type="text" [(ngModel)]="textInputFilter['visitorEmail']"
+										(input)="updateFilter($event ,'visitorEmail')">
+								</div>
+							</div>
+							<div class="input-block" *ngIf="permissions && permissions.canView == 'all'">
+								<label>Agents</label>
+								<app-custom-select [items]="agentList" [selectLabel]="'Select Agents'"
+									[(ngModel)]="selectedAgents" [selectedItems]="selectedAgents" [bindLabel]="'email'"
+									[bindValue]="'email'" [multiple]="true" [lazyLoading]="true"
+									(onLoadMore)="loadMore($event)" (onSearch)="onSearch($event)"
+									(onSelect)="onItemSelect($event)" (onDeSelect)="onDeSelect($event)">
+								</app-custom-select>
+							</div>
+							<div class="input-block">
+								<label>Type</label>
+								<div class="sel style1 sel-xs">
+									<select class="form-control input-xs" (change)="userTypeChanged()"
+										[(ngModel)]="userType">
+										<option value="all" selected>All</option>
+										<option value="registered">Registered</option>
+										<option value="unregistered">Unregistered</option>
+									</select>
+								</div>
+							</div>
+							<div class="input-block">
+								<label>Tags</label>
+								<!-- <app-chips-input class="form-control input-xs tag-input w100" placeholder="Enter Tags..."
+									(onAdd)="onEnter($event)" (onRemove)="onRemoveTag($event)"
+									[items]="selectedTags" [(ngModel)]="selectedTags"></app-chips-input> -->
+								<app-custom-select [items]="tagList" [selectLabel]="'Select Tags'"
+									[(ngModel)]="selectedTags" [selectedItems]="selectedTags" [multiple]="true"
+									(onSelect)="onItemSelect()" (onDeSelect)="onDeSelect()">
+								</app-custom-select>
+							</div>
+							<datalist id="tags">
+								<option *ngFor="let tag of chatTagList" [value]="tag">
+								</option>
+							</datalist>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<popper-content #dateRangePopper>
+	<app-date-range-picker class="date-range-picker in-popper" (submit)="onDateSelect($event)" #datePicker>
+	</app-date-range-picker>
+</popper-content>

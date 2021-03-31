@@ -1,0 +1,63 @@
+ <!-- Pre Installation Data List Starts Here -->
+ <div class="tab-pane active preInstallation" *ngIf="!verified">
+    <div class="list-items clearfix style1">
+        <ul class="activateScrollbar clearfix">
+            <li class="item clearfix" *ngFor="let item of [1,2,3,4,5,6,7,8,9,9]">
+                <div class="clearfix">
+                    <div>
+                        <div class="avatar ava-xs">
+                            <div class="nameInitials"></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- Pre Installation Data List Ends Here -->
+<div class="tab-pane active" *ngIf="verified">
+    <div class="list-items clearfix style1">
+        <ul class="activateScrollbar clearfix" #scrollContainer (scroll)="ScrollChanged($event)" >
+            <li class="item clearfix notif clearfix p-0"
+                [ngClass]="(selectedAgent) ? (selectedAgent._id == agent._id) ? 'active' : '' : ''"
+                *ngFor="let agent of agentList | filter: searchValue : ['email','nickname'] : false">
+                <div class="clearfix" (click)="setSelectedAgent(agent._id)" *ngIf="!loadingWithSearch">
+                    <div>
+                        <div class="avatar ava-xs">
+                            <div class="nameInitials"
+                                *ngIf="(!agent.image)">
+                                {{(agent.nickname | slice:0:1)}}{{(agent.nickname | split:' ')}}
+                            </div>
+                            <div class="avatar-img online" *ngIf="(agent.image)">
+                                <img class="svg" attr.agentid="{{agent._id}}" src="{{agent.image}}">
+                            </div>
+                        </div>
+					</div>
+					<!-- FIXME State not changing on realtime -->
+                    <div class="availability svgOnHover">
+						<svg class="svg w-11 h-11 p-2 active">
+							<use href="/assets/img/icons/icons-sprite.svg#dot" [ngClass]="!(agent.liveSession) ? 'text-gray' : (agent.liveSession.state == 'ACTIVE') ? 'text-green' : 'text-orange'"/>
+						</svg>
+                    </div>
+                    <div class="info">
+                        <b class="name ellipsis fw-6">{{agent.nickname}}</b>
+                        <span *ngIf="agent.liveSession" class="msg">Online : {{agent.liveSession.createdDate | timeDifferencePipe }} </span>
+                        <!-- <span class="msg">offline : {{agent.minutes}} Minutes ago</span> -->
+                    </div>
+                </div>
+            </li>
+			<li class="notAvailable" *ngIf="!(SortBy(agentList) | filter: searchValue : ['nickname','email']).length">
+                <svg class="svg w-100 h-100">
+					<use href="/assets/img/icons/icons-sprite.svg#agents" class="text-gray"/>
+				</svg>
+                <span>No Agents Found</span>
+            </li>
+            <li class="notAvailable floatToCenter" *ngIf="loading">
+                <app-preloader type="spin-loader-page"></app-preloader>
+            </li>
+            <li class="notAvailable floatToCenter" *ngIf="loadingMoreAgents">
+                <app-preloader type="dot-loader"></app-preloader>
+            </li>
+        </ul>
+    </div>
+</div>
